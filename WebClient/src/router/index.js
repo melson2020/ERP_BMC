@@ -1,0 +1,53 @@
+import Vue from "vue";
+import VueRouter from "vue-router";
+
+Vue.use(VueRouter);
+
+const originalPush = VueRouter.prototype.push;
+VueRouter.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err)
+};
+
+VueRouter.prototype.replace = function replace(location) {
+  return originalPush.call(this, location).catch(err => err)
+}
+
+const routes = [
+  {
+    path: "/login",
+    name: "Login",
+    component: ()=>import('../views/Login.vue')
+  },
+  {
+    path: "/register",
+    name: "Register",
+    component: ()=>import('../views/Register.vue')
+  },
+  {
+    path: "/operation",
+    name: "Operation",
+    component: ()=>import('../views/Operation.vue')
+  },
+  {
+    path: "/",
+    name: "root",
+    component: ()=>import('../views/Login.vue')
+  },
+  // {
+  //   path: "/about",
+  //   name: "About",
+  //   // route level code-splitting
+  //   // this generates a separate chunk (about.[hash].js) for this route
+  //   // which is lazy-loaded when the route is visited.
+  //   component: () =>
+  //     import(/* webpackChunkName: "about" */ "../views/About.vue")
+  // }
+];
+
+const router = new VueRouter({
+  mode: "history",
+  base: process.env.BASE_URL,
+  routes
+});
+
+export default router;
