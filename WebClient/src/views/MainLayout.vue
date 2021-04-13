@@ -82,7 +82,7 @@
           </el-dropdown>
         </div></el-header
       >
-      <el-main> <router-view /></el-main>
+      <el-main class="mainlayout-el-main"> <router-view /></el-main>
     </el-container>
   </el-container>
 </template>
@@ -184,5 +184,8 @@ export default {
   align-items: center;
   font-size: 1.1rem;
   letter-spacing: 5px;
+}
+.mainlayout-el-main{
+  padding: 0.5rem;
 }
 </style>
