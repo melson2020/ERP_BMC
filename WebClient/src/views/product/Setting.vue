@@ -1,5 +1,5 @@
 <template>
-  <div>this is order center11</div>
+  <div>this is settings</div>
 </template>
 <script>
 export default {};

@@ -97,6 +97,20 @@ export default {
      ...mapActions({
       SetLoginUserInfo: "SetLoginUserInfo",
     }),
+     logout: function() {
+      this.$messageBox
+        .confirm("确定退出？", "系统退出", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "info"
+        })
+        .then(() => {
+          localStorage.removeItem("userInfo");
+          localStorage.removeItem("menu");
+          this.$router.replace({ path: "/" });
+        })
+        .catch(e => e);
+    },
     menuCollapseChange() {
       this.isCollapse = !this.isCollapse;
       this.menuArrow = this.isCollapse ? "el-icon-s-unfold" : "el-icon-s-fold";

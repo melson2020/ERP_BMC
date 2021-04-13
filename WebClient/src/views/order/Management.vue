@@ -1,5 +1,7 @@
 <template>
-  <div>this is order center11</div>
+  <div>
+    <router-view />
+  </div>
 </template>
 <script>
 export default {};

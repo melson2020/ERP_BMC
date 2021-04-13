@@ -1,5 +1,5 @@
 <template>
-  <div>this is order center11</div>
+  <div>this is purchase</div>
 </template>
 <script>
 export default {};
