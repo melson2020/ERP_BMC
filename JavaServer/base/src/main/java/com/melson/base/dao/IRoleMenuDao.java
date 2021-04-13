@@ -4,6 +4,9 @@ import com.melson.base.entity.RoleMenu;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Set;
+
 /**
  * @Author Nelson
  * @Description
@@ -11,4 +14,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface IRoleMenuDao extends JpaRepository<RoleMenu,String> {
+    List<RoleMenu> findByRoleIdIn(Set<String> roleIds);
 }

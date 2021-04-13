@@ -9,7 +9,7 @@ spring:
       #mysql驱动
       driver-class-name: com.mysql.jdbc.Driver
       #基本属性
-      url: jdbc:mysql://localhost:3306/l2r?Unicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+      url: jdbc:mysql://localhost:3306/erp_bmc?Unicode=true&characterEncoding=UTF-8&serverTimezone=UTC
       username: root
       password: root
       #配置初始化大小/最小/最大

@@ -26,6 +26,10 @@ export default {
   //system 系统交互
   RegisterCompany(params){
     return service.post('/system/registerCompany',params)
+  },
+
+  SystemLogin(params){
+    return service.post('/system/login',params)
   }
 
 };

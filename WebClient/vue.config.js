@@ -31,7 +31,7 @@ module.exports = {
     proxy: {
       "/api": {
         // target: "http://121.4.112.204:8080/retailer/", //对应自己的接口
-        target: "http://localhost:8080/L2R", //对应自己的接口
+        target: "http://localhost:8080/ERP", //对应自己的接口
         changeOrigin: true,
         ws: true,
         pathRewrite: {

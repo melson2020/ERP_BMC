@@ -2,6 +2,7 @@ package com.melson.base.entity;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Author Nelson
@@ -23,6 +24,9 @@ public class User {
     private String companyCode;
     private String loginName;
     private String password;
+
+    @Transient
+    private List<Menu> menuList;
 
     public Integer getId() {
         return id;
@@ -102,5 +106,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public List<Menu> getMenuList() {
+        return menuList;
+    }
+
+    public void setMenuList(List<Menu> menuList) {
+        this.menuList = menuList;
     }
 }

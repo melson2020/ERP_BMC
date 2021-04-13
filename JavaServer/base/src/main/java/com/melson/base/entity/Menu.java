@@ -1,6 +1,7 @@
 package com.melson.base.entity;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * @Author Nelson
@@ -17,8 +18,15 @@ public class Menu {
     private String menuName;
     private String menuIcon;
     private String parentMenuId;
-    private Integer index;
+    private String index;
     private String description;
+    private String url;
+    private String path;
+    private String name;
+    private String viewPath;
+
+    @Transient
+    List<Menu> subMenuList;
 
     public Integer getId() {
         return id;
@@ -60,11 +68,11 @@ public class Menu {
         this.parentMenuId = parentMenuId;
     }
 
-    public Integer getIndex() {
+    public String getIndex() {
         return index;
     }
 
-    public void setIndex(Integer index) {
+    public void setIndex(String index) {
         this.index = index;
     }
 
@@ -74,5 +82,45 @@ public class Menu {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public List<Menu> getSubMenuList() {
+        return subMenuList;
+    }
+
+    public void setSubMenuList(List<Menu> subMenuList) {
+        this.subMenuList = subMenuList;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getViewPath() {
+        return viewPath;
+    }
+
+    public void setViewPath(String viewPath) {
+        this.viewPath = viewPath;
     }
 }

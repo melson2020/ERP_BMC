@@ -1,7 +1,7 @@
 <template>
   <div class="login-container" :style="loginBackground">
     <el-col :span="14"
-      ><div><span class="fz24 colorF">Leads To Revenue</span></div></el-col
+      ><div><span class="fz24 colorF">数 据 驱 动 生 产</span></div></el-col
     >
     <el-col :span="10"
       ><div class="login-box-card">
@@ -13,8 +13,8 @@
             <el-form-item>
               <el-input
                 class="login-input placeHolder-gray"
-                v-model="loginUser.name"
-                 prefix-icon="el-icon-user"
+                v-model="loginUser.loginName"
+                prefix-icon="el-icon-user"
                 size="large"
                 placeholder="用 户 名"
               ></el-input>
@@ -23,8 +23,8 @@
               <el-input
                 type="password"
                 class="login-input placeHolder-gray"
-                v-model="loginUser.region"
-                 prefix-icon="el-icon-lock"
+                v-model="loginUser.password"
+                prefix-icon="el-icon-lock"
                 size="large"
                 placeholder="密 码"
               ></el-input>
@@ -38,13 +38,15 @@
               >
             </el-form-item>
           </el-form>
-          <el-button type="text" @click="goRegister">无账户? 注册</el-button>
+          <!-- <el-button type="text" @click="goRegister">无账户? 注册</el-button> -->
         </div>
       </div></el-col
     >
   </div>
 </template>
 <script>
+import { mapGetters } from "vuex";
+import { mapActions } from "vuex";
 export default {
   data() {
     return {
@@ -56,13 +58,88 @@ export default {
       },
     };
   },
-  methods:{
-      goRegister(){
-          this.$router.push({path:'/register'})
-      },
-      onSubmit(){
-        console.log("系统登录")
-      }
+  methods: {
+    ...mapActions({
+      SystemLogin: "SystemLogin",
+      SetLoginUserInfo: "SetLoginUserInfo",
+      ReSetAllStates: "ReSetAllStates",
+      SetRoutes: "SetRoutes",
+    }),
+    goRegister() {
+      this.$router.push({ path: "/register" });
+    },
+    onSubmit() {
+      this.SystemLogin(this.loginUser)
+        .then((res) => {
+          if (res.resultStatus == 1) {
+            var initState = JSON.parse(localStorage.getItem("initState"));
+            localStorage.setItem("userInfo", JSON.stringify(res.data));
+            this.ReSetAllStates(initState);
+            this.SetLoginUserInfo(res.data);
+            this.addRoutes(res.data.menuList);
+          } else {
+            this.$message.error(res.message);
+          }
+        })
+        .catch((error) => {
+          this.$message.error(error.message);
+        });
+    },
+    //根据用户menuList 生成对应的routes 添加进路由中
+    addRoutes(userMenuList) {
+      const userRoutes = [];
+      var mainRoute = {
+        path: "/main",
+        name: "MainLayout",
+        meta: {
+          require: false,
+        },
+        componentPath: "MainLayout.vue",
+        children: [],
+      };
+      userMenuList.map((firstItem) => {
+        var route = {
+          path: firstItem.path,
+          name: firstItem.name,
+          meta: {
+            require: false,
+          },
+          componentPath: firstItem.viewPath
+        };
+        if (firstItem.subMenuList.length > 0) {
+          route.children = this.getChildren(firstItem);
+        }
+        mainRoute.children.push(route);
+      });
+      userRoutes.push(mainRoute);
+      this.$store.commit("SET_ROUTES", userRoutes);
+      this.$router.push({ path: "/main" });
+    },
+
+    getChildren(menu) {
+      var children = [];
+      menu.subMenuList.map((subMenu) => {
+        var subRoute = {
+          path: subMenu.path,
+          name: subMenu.name,
+          meta: {
+            require: false,
+          },
+          componentPath:subMenu.viewPath,
+        };
+        children.push(subRoute);
+        if (subMenu.subMenuList.length > 0) {
+          subRoute.children = this.getChildren(subMenu);
+        }
+      });
+      return children;
+    },
+  },
+  computed: {
+    ...mapGetters(["userInfo"]),
+  },
+  created(){
+    console.log('登录页面')
   }
 };
 </script>

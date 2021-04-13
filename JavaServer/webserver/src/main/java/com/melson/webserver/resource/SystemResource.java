@@ -44,6 +44,13 @@ public class SystemResource extends BaseResource {
     @RequestMapping(value = "/login",method = RequestMethod.POST)
     public Result SystemLogin(@RequestBody User loginUser){
         Result result=new Result();
+        User existUser=userService.SystemLogin(loginUser);
+        if(existUser==null){
+            result.setResultStatus(-1);
+            result.setMessage("Error UserInfo");
+        }else {
+            result.setData(existUser);
+        }
         return result;
     }
 }
