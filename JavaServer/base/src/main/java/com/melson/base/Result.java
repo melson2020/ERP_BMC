@@ -1,5 +1,7 @@
 package com.melson.base;
 
+import com.melson.base.constants.SysRespCode;
+
 /**
  * Created by Nelson on 2020/6/17.
  */
@@ -19,10 +21,10 @@ public class Result {
     public Result(Object data) {
 
         this.data = data;
-        resultStatus=1;
+        resultStatus = SysRespCode.SUCCESS;
     }
     public Result() {
-        resultStatus=1;
+        resultStatus = SysRespCode.SUCCESS;
     }
 
     public Result(Object data,Integer resultStatus) {

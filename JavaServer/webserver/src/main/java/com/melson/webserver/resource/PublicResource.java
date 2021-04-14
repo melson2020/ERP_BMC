@@ -5,17 +5,18 @@ import com.melson.base.Result;
 import com.melson.base.ResultType;
 import com.melson.base.entity.Area;
 import com.melson.base.entity.City;
-import com.melson.base.entity.Company;
 import com.melson.base.entity.Province;
-import com.melson.base.service.IArea;
-import com.melson.base.service.ICity;
-import com.melson.base.service.ICompany;
-import com.melson.base.service.IProvince;
+import com.melson.base.service.*;
+import com.melson.base.vo.CommonSelectVo;
+import com.melson.base.vo.SysDictVo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,6 +31,8 @@ public class PublicResource extends BaseResource {
     private final ICity cityService;
     private final IArea areaService;
     private final ICompany companyService;
+    @Autowired
+    private ISysDict sysDictService;
 
 
     public PublicResource(IProvince provinceService, ICity cityService, IArea areaService, ICompany companyService) {
@@ -71,12 +74,31 @@ public class PublicResource extends BaseResource {
     @RequestMapping("/checkPhone")
     public Result CheckPhone(HttpServletRequest request) {
         String phoneNumber = request.getParameter("phoneNumber");
-        if (StringUtils.isEmpty(phoneNumber)) return this.GenerateResult(ResultType.ParameterNeeded);
+        if (StringUtils.isEmpty(phoneNumber)) {
+            return this.GenerateResult(ResultType.ParameterNeeded);
+        }
         boolean exist = companyService.CheckPhone(phoneNumber);
         Result result = new Result();
         result.setResultStatus(exist ? -1 : 1);
         return result;
     }
 
-
+    /**
+     * 根据系统字典id获取下拉框数据源
+     *
+     * @param typeId 数据字典id
+     * @return
+     */
+    @GetMapping("/dictList")
+    public Result dictList(Integer typeId) {
+        if (typeId == null) {
+            return GenerateResult(ResultType.ParameterNeeded);
+        }
+        List<CommonSelectVo> list = new ArrayList<>();
+        List<SysDictVo> dictVoList = sysDictService.list(typeId);
+        if (dictVoList != null && !dictVoList.isEmpty()) {
+            dictVoList.forEach(dictVo -> list.add(new CommonSelectVo(dictVo.getCode(), dictVo.getValue(), dictVo.getDesc())));
+        }
+        return new Result(list);
+    }
 }

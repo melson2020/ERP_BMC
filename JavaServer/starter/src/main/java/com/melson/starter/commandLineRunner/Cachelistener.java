@@ -7,10 +7,7 @@ import com.melson.base.entity.Area;
 import com.melson.base.entity.City;
 import com.melson.base.entity.Province;
 import com.melson.base.entity.SystemConfig;
-import com.melson.base.service.IArea;
-import com.melson.base.service.ICity;
-import com.melson.base.service.IProvince;
-import com.melson.base.service.ISystemConfig;
+import com.melson.base.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,12 +34,14 @@ public class Cachelistener implements CommandLineRunner {
     private final ICity cityService;
     private final IArea areaService;
     private final ISystemConfig configService;
+    private final ISysDict sysDictService;
 
-    public Cachelistener(IProvince provinceService, ICity cityService, IArea areaService, ISystemConfig configService) {
+    public Cachelistener(IProvince provinceService, ICity cityService, IArea areaService, ISystemConfig configService,ISysDict sysDictService) {
         this.provinceService = provinceService;
         this.cityService = cityService;
         this.areaService = areaService;
         this.configService = configService;
+        this.sysDictService = sysDictService;
     }
 
 
@@ -57,6 +56,8 @@ public class Cachelistener implements CommandLineRunner {
         LoadArea();
         //加载系统设置至缓存
         LoadSysConfig();
+        //加载系统字典至缓存
+        LoadSysDict();
         log.info("---------------------cache init completed ------------------------");
 
     }
@@ -88,5 +89,11 @@ public class Cachelistener implements CommandLineRunner {
         List<Area> areaList = areaService.findAll();
         cacheUtil.Put(CacheKey.Area, areaList);
         log.info("--------------------- area added ----------------------------------");
+    }
+
+    private void LoadSysDict() {
+        log.info("--------------------- add system dict to cache -----------------------");
+        sysDictService.reloadCache();
+        log.info("--------------------- system dict added ------------------------------");
     }
 }
