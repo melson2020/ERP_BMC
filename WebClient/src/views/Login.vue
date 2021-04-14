@@ -27,6 +27,7 @@
                 prefix-icon="el-icon-lock"
                 size="large"
                 placeholder="密 码"
+                @keydown.enter.native="onSubmit"
               ></el-input>
             </el-form-item>
             <el-form-item>
@@ -34,6 +35,7 @@
                 class="login-submit-button"
                 type="primary"
                 @click="onSubmit"
+                @keydown.enter="onSubmit"
                 >登录</el-button
               >
             </el-form-item>
