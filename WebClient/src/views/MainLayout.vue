@@ -186,6 +186,6 @@ export default {
   letter-spacing: 5px;
 }
 .mainlayout-el-main{
-  padding: 0.5rem;
+  padding:0;
 }
 </style>
