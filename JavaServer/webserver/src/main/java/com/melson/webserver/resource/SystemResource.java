@@ -47,7 +47,7 @@ public class SystemResource extends BaseResource {
         User existUser=userService.SystemLogin(loginUser);
         if(existUser==null){
             result.setResultStatus(-1);
-            result.setMessage("Error UserInfo");
+            result.setMessage("用户信息错误！");
         }else {
             result.setData(existUser);
         }
