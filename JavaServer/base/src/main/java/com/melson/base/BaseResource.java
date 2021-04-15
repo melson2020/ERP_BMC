@@ -1,10 +1,14 @@
 package com.melson.base;
 
+import com.melson.base.constants.SysConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 public class BaseResource {
 
@@ -67,4 +71,23 @@ public class BaseResource {
         return result;
     }
 
+    protected Result success() {
+        return new Result();
+    }
+
+    protected Result success(Object object) {
+        return new Result(object);
+    }
+
+    protected Result failure(Integer respCode, String msg) {
+        return new Result(respCode, msg);
+    }
+
+    protected Integer getLoginUserId(HttpServletRequest request) {
+        HttpSession httpSession = request.getSession(false);
+        if (httpSession == null) {
+            return null;
+        }
+        return (Integer) httpSession.getAttribute(SysConstants.LOGIN_SESSION_USER_ID);
+    }
 }

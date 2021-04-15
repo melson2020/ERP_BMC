@@ -32,11 +32,11 @@ public class SysDict {
     /**
      * 排序
      */
-    private Integer order;
+    private Integer sort;
     /**
-     * 键值对描述
+     * 描述备注
      */
-    private String desc;
+    private String comments;
     /**
      * 最新编辑日期
      */
@@ -52,7 +52,7 @@ public class SysDict {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "n_id")
+    @Column(name = "id")
     public Integer getId() {
         return id;
     }
@@ -61,7 +61,7 @@ public class SysDict {
         this.id = id;
     }
 
-    @Column(name = "n_type_id", nullable = false)
+    @Column(name = "typeId", nullable = false)
     public Integer getTypeId() {
         return typeId;
     }
@@ -70,7 +70,7 @@ public class SysDict {
         this.typeId = typeId;
     }
 
-    @Column(name = "s_code", nullable = false, length = 100)
+    @Column(name = "code", nullable = false, length = 100)
     public String getCode() {
         return code;
     }
@@ -79,7 +79,7 @@ public class SysDict {
         this.code = code;
     }
 
-    @Column(name = "s_value", nullable = false)
+    @Column(name = "value", nullable = false)
     public String getValue() {
         return value;
     }
@@ -88,26 +88,26 @@ public class SysDict {
         this.value = value;
     }
 
-    @Column(name = "n_order", nullable = false)
-    public Integer getOrder() {
-        return order;
+    @Column(name = "sort", nullable = false)
+    public Integer getSort() {
+        return sort;
     }
 
-    public void setOrder(Integer order) {
-        this.order = order;
+    public void setSort(Integer sort) {
+        this.sort = sort;
     }
 
-    @Column(name = "s_desc", length = 50)
-    public String getDesc() {
-        return desc;
+    @Column(name = "comments", length = 50)
+    public String getComments() {
+        return comments;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public void setComments(String comments) {
+        this.comments = comments;
     }
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "d_modify", nullable = false)
+    @Column(name = "modify", nullable = false)
     public Date getModify() {
         return modify;
     }
@@ -116,7 +116,7 @@ public class SysDict {
         this.modify = modify;
     }
 
-    @Column(name = "n_modify_user", nullable = false)
+    @Column(name = "modifyUser", nullable = false)
     public Integer getModifyUser() {
         return modifyUser;
     }
@@ -125,7 +125,7 @@ public class SysDict {
         this.modifyUser = modifyUser;
     }
 
-    @Column(name = "s_state", nullable = false, length = 2)
+    @Column(name = "state", nullable = false, length = 2)
     public String getState() {
         return state;
     }

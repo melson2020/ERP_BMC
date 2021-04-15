@@ -54,7 +54,7 @@ public class SysDictImpl implements ISysDict {
         if (list == null || list.isEmpty()) {
             logger.error("系统字典为空");
         } else {
-            list.sort(Comparator.comparingInt(SysDict::getTypeId).thenComparingInt(SysDict::getOrder));
+            list.sort(Comparator.comparingInt(SysDict::getTypeId).thenComparingInt(SysDict::getSort));
             list.forEach(dictDetail -> {
                 if (cache.containsKey(dictDetail.getTypeId())) {
                     SysDictTypeVo dictTypeVo = cache.get(dictDetail.getTypeId());

@@ -23,9 +23,9 @@ public class SysDictTypeVo {
      */
     private String name;
     /**
-     * 字典描述
+     * 描述备注
      */
-    private String desc;
+    private String comments;
     /**
      * 字典明细集合
      */
@@ -55,12 +55,12 @@ public class SysDictTypeVo {
         this.name = name;
     }
 
-    public String getDesc() {
-        return desc;
+    public String getComments() {
+        return comments;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public void setComments(String comments) {
+        this.comments = comments;
     }
 
     public List<SysDictVo> getDictValueList() {

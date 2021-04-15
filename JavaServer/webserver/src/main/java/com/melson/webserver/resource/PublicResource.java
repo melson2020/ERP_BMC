@@ -27,20 +27,16 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/public")
 public class PublicResource extends BaseResource {
-    private final IProvince provinceService;
-    private final ICity cityService;
-    private final IArea areaService;
-    private final ICompany companyService;
     @Autowired
-    private ISysDict sysDictService;
-
-
-    public PublicResource(IProvince provinceService, ICity cityService, IArea areaService, ICompany companyService) {
-        this.provinceService = provinceService;
-        this.cityService = cityService;
-        this.areaService = areaService;
-        this.companyService = companyService;
-    }
+    private IProvince provinceService;
+    @Autowired
+    private ICity cityService;
+    @Autowired
+    private IArea areaService;
+    @Autowired
+    private ICompany companyService;
+    @Autowired
+    private ISysCache sysCacheService;
 
     @RequestMapping("/provinceList")
     public Result GetProvinceList() {
@@ -95,9 +91,9 @@ public class PublicResource extends BaseResource {
             return GenerateResult(ResultType.ParameterNeeded);
         }
         List<CommonSelectVo> list = new ArrayList<>();
-        List<SysDictVo> dictVoList = sysDictService.list(typeId);
+        List<SysDictVo> dictVoList = sysCacheService.getDictList(typeId);
         if (dictVoList != null && !dictVoList.isEmpty()) {
-            dictVoList.forEach(dictVo -> list.add(new CommonSelectVo(dictVo.getCode(), dictVo.getValue(), dictVo.getDesc())));
+            dictVoList.forEach(dictVo -> list.add(new CommonSelectVo(dictVo.getCode(), dictVo.getValue(), dictVo.getComments())));
         }
         return new Result(list);
     }

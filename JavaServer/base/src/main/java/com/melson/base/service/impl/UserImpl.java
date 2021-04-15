@@ -5,6 +5,8 @@ import com.melson.base.dao.*;
 import com.melson.base.entity.*;
 import com.melson.base.service.IUser;
 import com.melson.base.utils.MD5Util;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +20,9 @@ import java.util.*;
  */
 @Service
 public class UserImpl extends AbstractService<User> implements IUser {
+
+    private static final Logger logger = LoggerFactory.getLogger(UserImpl.class);
+
     private final IUserDao userDao;
     private final IUserRoleDao userRoleDao;
     private final IRoleDao roleDao;
@@ -37,6 +42,7 @@ public class UserImpl extends AbstractService<User> implements IUser {
         return userDao;
     }
 
+    @Override
     public User CreateUser(User user) {
         user.setUserId(UUID.randomUUID().toString());
         user.setCreateDate(new Date());
@@ -75,62 +81,76 @@ public class UserImpl extends AbstractService<User> implements IUser {
             return null;
         }
         //获取角色对应的MenuList  user-->userRole-->RoleMenu
-        List<UserRole> userRoleList=userRoleDao.findByUserId(existUser.getUserId());
-        if(userRoleList==null||userRoleList.size()<=0){
+        List<UserRole> userRoleList = userRoleDao.findByUserId(existUser.getUserId());
+        if (userRoleList == null || userRoleList.size() <= 0) {
             //无对应的角色 这种数据不该存在 注意核对数据
             return null;
         }
-        Set<String> roleIds=new HashSet<>(userRoleList.size());
-        for(UserRole userRole:userRoleList){
+        Set<String> roleIds = new HashSet<>(userRoleList.size());
+        for (UserRole userRole : userRoleList) {
             roleIds.add(userRole.getRoleId());
         }
-        List<RoleMenu> roleMenuList=roleMenuDao.findByRoleIdIn(roleIds);
-        if(roleMenuList==null||roleMenuList.size()<=0){
+        List<RoleMenu> roleMenuList = roleMenuDao.findByRoleIdIn(roleIds);
+        if (roleMenuList == null || roleMenuList.size() <= 0) {
             //无对应的菜单 这种数据不该存在 注意核对数据
             return null;
         }
-        Set<String> menuIds=new HashSet<>(roleMenuList.size());
-        for(RoleMenu roleMenu:roleMenuList){
+        Set<String> menuIds = new HashSet<>(roleMenuList.size());
+        for (RoleMenu roleMenu : roleMenuList) {
             menuIds.add(roleMenu.getMenuId());
         }
-        List<Menu> menuList=menuDao.findByMenuIdIn(menuIds);
-        List<Menu> sortedList=ReSortMenuList(menuList);
+        List<Menu> menuList = menuDao.findByMenuIdIn(menuIds);
+        List<Menu> sortedList = ReSortMenuList(menuList);
         existUser.setMenuList(sortedList);
         return existUser;
     }
 
     //重排菜单列表  把子菜单添加到对应的菜单内
-    private List<Menu> ReSortMenuList(List<Menu> menuList){
-        List<Menu> firstLev=new ArrayList<>();
-        List<Menu> remaindList=new ArrayList<>();
-        for(Menu menu:menuList){
-            if(menu.getParentMenuId().equals("-1")){
+    private List<Menu> ReSortMenuList(List<Menu> menuList) {
+        List<Menu> firstLev = new ArrayList<>();
+        List<Menu> remaindList = new ArrayList<>();
+        for (Menu menu : menuList) {
+            if (menu.getParentMenuId().equals("-1")) {
                 firstLev.add(menu);
-            }else {
+            } else {
                 remaindList.add(menu);
             }
         }
-        for(Menu menu:firstLev){
-            menu.setSubMenuList(GetChildList(menu.getMenuId(),remaindList));
+        for (Menu menu : firstLev) {
+            menu.setSubMenuList(GetChildList(menu.getMenuId(), remaindList));
         }
-       return firstLev;
+        return firstLev;
     }
 
     //获取子菜单
-    private List<Menu> GetChildList(String menuId,List<Menu>remaindList){
-       List<Menu> childList=new ArrayList<>();
-       List<Menu> reList=new ArrayList<>();
-       for(Menu menu:remaindList){
-           if(menu.getParentMenuId().equals(menuId)){
-               childList.add(menu);
-           }else {
-               reList.add(menu);
-           }
-       }
-       if(reList.size()<=0)return null;
-       for(Menu menu:childList){
-           menu.setSubMenuList(GetChildList(menu.getMenuId(),reList));
-       }
-       return childList;
+    private List<Menu> GetChildList(String menuId, List<Menu> remaindList) {
+        List<Menu> childList = new ArrayList<>();
+        List<Menu> reList = new ArrayList<>();
+        for (Menu menu : remaindList) {
+            if (menu.getParentMenuId().equals(menuId)) {
+                childList.add(menu);
+            } else {
+                reList.add(menu);
+            }
+        }
+        if (reList.size() <= 0) return null;
+        for (Menu menu : childList) {
+            menu.setSubMenuList(GetChildList(menu.getMenuId(), reList));
+        }
+        return childList;
+    }
+
+    @Override
+    public User get(Integer id) {
+        if (id == null) {
+            logger.error("用户id为空");
+            return null;
+        }
+        return userDao.findById(id);
+    }
+
+    @Override
+    public void updatePwd(Integer id, String pwd) {
+        userDao.updatePwd(id, pwd);
     }
 }

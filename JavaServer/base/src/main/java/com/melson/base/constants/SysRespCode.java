@@ -9,8 +9,33 @@ package com.melson.base.constants;
  */
 public class SysRespCode {
 
+    // 1-100系统相关
     /**
      * 成功
      */
     public static final int SUCCESS = 1;
+
+    // 101-150 登录相关
+    /**
+     * 登录超时
+     */
+    public static final int LOGIN_TIME_OUT = 101;
+    /**
+     * 登录失败
+     */
+    public static final int LOGIN_FAIL = 102;
+
+    // 151-200 用户管理相关
+    /**
+     * 用户ID无效
+     */
+    public static final int USER_ID_IS_INVALID = 151;
+    /**
+     * 用户密码为空
+     */
+    public static final int USER_PWD_IS_NULL = 152;
+    /**
+     * 密码相同
+     */
+    public static final int USER_PWD_IS_REPEAT = 153;
 }

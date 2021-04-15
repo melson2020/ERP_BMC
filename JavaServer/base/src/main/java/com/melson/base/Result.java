@@ -6,9 +6,42 @@ import com.melson.base.constants.SysRespCode;
  * Created by Nelson on 2020/6/17.
  */
 public class Result {
-    private Object data;
+
+    /**
+     * 返回码
+     */
     private Integer resultStatus;
+    /**
+     * 返回信息
+     */
     private String message;
+    /**
+     * 返回数据
+     */
+    private Object data;
+
+    public Result() {
+        this.resultStatus = SysRespCode.SUCCESS;
+    }
+
+    public Result(Object data) {
+        this.resultStatus = SysRespCode.SUCCESS;
+        this.data = data;
+
+    }
+
+    public Result(Integer resultStatus, String message) {
+        this.resultStatus = resultStatus;
+        this.message = message;
+    }
+
+    public Integer getResultStatus() {
+        return resultStatus;
+    }
+
+    public void setResultStatus(Integer resultStatus) {
+        this.resultStatus = resultStatus;
+    }
 
     public String getMessage() {
         return message;
@@ -18,33 +51,11 @@ public class Result {
         this.message = message;
     }
 
-    public Result(Object data) {
-
-        this.data = data;
-        resultStatus = SysRespCode.SUCCESS;
-    }
-    public Result() {
-        resultStatus = SysRespCode.SUCCESS;
-    }
-
-    public Result(Object data,Integer resultStatus) {
-        this.data = data;
-        this.resultStatus=resultStatus;
-    }
-
     public Object getData() {
         return data;
     }
 
     public void setData(Object data) {
         this.data = data;
-    }
-
-    public Integer getResultStatus() {
-        return resultStatus;
-    }
-
-    public void setResultStatus(Integer resultStatus) {
-        this.resultStatus = resultStatus;
     }
 }

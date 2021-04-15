@@ -26,9 +26,9 @@ public class SysDictType {
      */
     private String name;
     /**
-     * 字典描述
+     * 描述备注
      */
-    private String desc;
+    private String comments;
     /**
      * 最新编辑日期
      */
@@ -44,7 +44,7 @@ public class SysDictType {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "n_id")
+    @Column(name = "id")
     public Integer getId() {
         return id;
     }
@@ -53,7 +53,7 @@ public class SysDictType {
         this.id = id;
     }
 
-    @Column(name = "s_alias", nullable = false, unique = true, length = 100)
+    @Column(name = "alias", nullable = false, unique = true, length = 100)
     public String getAlias() {
         return alias;
     }
@@ -62,7 +62,7 @@ public class SysDictType {
         this.alias = alias;
     }
 
-    @Column(name = "s_name", nullable = false, length = 50)
+    @Column(name = "name", nullable = false, length = 50)
     public String getName() {
         return name;
     }
@@ -71,17 +71,17 @@ public class SysDictType {
         this.name = name;
     }
 
-    @Column(name = "s_desc", length = 50)
-    public String getDesc() {
-        return desc;
+    @Column(name = "comments", length = 50)
+    public String getComments() {
+        return comments;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public void setComments(String comments) {
+        this.comments = comments;
     }
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "d_modify", nullable = false)
+    @Column(name = "modify", nullable = false)
     public Date getModify() {
         return modify;
     }
@@ -90,7 +90,7 @@ public class SysDictType {
         this.modify = modify;
     }
 
-    @Column(name = "n_modify_user", nullable = false)
+    @Column(name = "modifyUser", nullable = false)
     public Integer getModifyUser() {
         return modifyUser;
     }
@@ -99,7 +99,7 @@ public class SysDictType {
         this.modifyUser = modifyUser;
     }
 
-    @Column(name = "s_state", nullable = false, length = 2)
+    @Column(name = "state", nullable = false, length = 2)
     public String getState() {
         return state;
     }

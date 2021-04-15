@@ -28,8 +28,12 @@ export default {
     return service.post('/system/registerCompany',params)
   },
 
+  //系统登录
   SystemLogin(params){
-    return service.post('/system/login',params)
+    return service.post('/login/login',params)
+  },
+  //注销登录
+  SystemLogout(){
+    return service.post('/login/logout')
   }
-
 };

@@ -27,11 +27,11 @@ public class SysDictVo {
     /**
      * 排序
      */
-    private Integer order;
+    private Integer sort;
     /**
-     * 键值对描述
+     * 描述备注
      */
-    private String desc;
+    private String comments;
 
     public Integer getId() {
         return id;
@@ -65,19 +65,19 @@ public class SysDictVo {
         this.value = value;
     }
 
-    public Integer getOrder() {
-        return order;
+    public Integer getSort() {
+        return sort;
     }
 
-    public void setOrder(Integer order) {
-        this.order = order;
+    public void setSort(Integer sort) {
+        this.sort = sort;
     }
 
-    public String getDesc() {
-        return desc;
+    public String getComments() {
+        return comments;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public void setComments(String comments) {
+        this.comments = comments;
     }
 }

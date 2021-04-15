@@ -16,4 +16,13 @@ public class SysConstants {
      * 启用:1
      */
     public static final String COMMON_ENABLE = "1";
+
+    /**
+     * 登录session键:用户id
+     */
+    public static final String LOGIN_SESSION_USER_ID = "LOGIN_SESSION_USER_ID";
+    /**
+     * 登录session键:用户session
+     */
+    public static final String LOGIN_SESSION_USER_SESSION = "LOGIN_SESSION_USER_SESSION";
 }
