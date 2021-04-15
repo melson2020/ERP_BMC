@@ -65,6 +65,12 @@ body {
 .fz12 {
     font-size: 1.2rem;
 }
+.fz9 {
+    font-size: 0.9rem;
+}
+.fz8 {
+    font-size: 0.8rem;
+}
 
 .fw {
     font-weight: 600;
