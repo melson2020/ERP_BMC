@@ -1,13 +1,13 @@
 <template>
-  <div class="create-constract-main-container">
+  <div class="contract-template-main-container">
     <div>
-      <div class="constract-div">
-        <div class="constract-header">
-          <span class="constract-header-title">销售合同确认书</span>
+      <div class="contract-template-div">
+        <div class="contract-template-header">
+          <span class="contract-template-header-title">销售合同确认书</span>
         </div>
-        <div class="constract-buyer-info-div">
-          <div class="constract-buyer-info-div-left">
-            <div class="constract-buyer-info-div-left-firstfloor">
+        <div class="contract-template-buyer-info-div">
+          <div class="contract-template-buyer-info-div-left">
+            <div class="contract-template-buyer-info-div-left-firstfloor">
               <div class="title-div-gray">买方:(0000001)</div>
               <span class="text-left-center">{{ vendeeInfo.name }}</span>
               <span class="text-left-center">{{ vendeeInfo.location }}</span>
@@ -20,7 +20,7 @@
                 >账号：{{ vendeeInfo.account }}</span
               >
             </div>
-            <div class="constract-buyer-info-div-left-secfloor">
+            <div class="contract-template-buyer-info-div-left-secfloor">
               <div class="title-div-gray">收货单位:(0000001)</div>
               <span class="text-left-center">{{ goodReceveInfo.name }}</span>
               <span class="text-left-center">{{
@@ -40,7 +40,7 @@
               >
             </div>
           </div>
-          <div class="constract-buyer-info-div-right">
+          <div class="contract-template-buyer-info-div-right">
             <div class="title-div-gray">资料</div>
             <span class="text-left-center"
               >销售单编号：{{ contractInfo.contractNo }}</span
@@ -78,7 +78,7 @@
           </div>
         </div>
 
-        <div class="constract-product-detail-div">
+        <div class="contract-template-product-detail-div">
           <el-table
             border
             style="width: 100%"
@@ -102,13 +102,13 @@
             <el-table-column prop="taxTotalPrice" label="含税总价">
             </el-table-column>
           </el-table>
-          <div class="constract-product-detail-summary-div fz9">
-            <div class="constract-product-detail-summary-item">
+          <div class="contract-template-product-detail-summary-div fz9">
+            <div class="contract-template-product-detail-summary-item">
               <span style="width: 180px; text-align: left">总额(含税)</span>
               <span style="width: 130px; margin-left: 380px">1</span>
               <span style="margin-left: 130px; text-align: right">3103.21</span>
             </div>
-            <div class="constract-product-detail-summary-item">
+            <div class="contract-template-product-detail-summary-item">
               <div style="width: 180px; text-align: left">销项税</div>
               <span style="width: 130px; margin-left: 510px">13%</span>
               <span style="text-align: right">357.00</span>
@@ -116,8 +116,8 @@
           </div>
         </div>
         <div class="fz8">
-          <p class="constract-content">{{ contractContent }}</p>
-          <div class="constract-remark-div">
+          <p class="contract-template-content">{{ contractContent }}</p>
+          <div class="contract-template-remark-div">
             <div class="remark-title-div">备注</div>
             <div>
               <div
@@ -163,7 +163,6 @@
 </template>
 <script>
 export default {
-  name: "m-create-intent-constract",
   data() {
     return {
       contractContent:
@@ -220,7 +219,7 @@ export default {
 };
 </script>
 <style>
-.constract-div {
+.contract-template-div {
   width: 1000px;
   padding: 1.2rem;
   border: 1px solid rgb(233, 229, 229);
@@ -228,47 +227,47 @@ export default {
   flex-direction: column;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
 }
-.create-constract-main-container {
+.contract-template-main-container {
   display: flex;
   align-items: flex-start;
   justify-content: center;
 }
-.constract-header {
+.contract-template-header {
   height: 60px;
   display: inline;
   line-height: 60px;
   vertical-align: center;
 }
-.constract-header-title {
+.contract-template-header-title {
   float: right;
   margin-right: 10px;
   letter-spacing: 7px;
   font-size: 1.5rem;
   color: #606266;
 }
-.constract-buyer-info-div {
+.contract-template-buyer-info-div {
   display: flex;
   flex-direction: row;
   height: 450px;
   border: 1px solid rgb(129, 127, 127);
 }
-.constract-buyer-info-div-left {
+.contract-template-buyer-info-div-left {
   height: 100%;
   width: 55%;
 }
-.constract-buyer-info-div-right {
+.contract-template-buyer-info-div-right {
   height: 100%;
   width: 45%;
   border-left: 1px solid rgb(129, 127, 127);
   display: flex;
   flex-direction: column;
 }
-.constract-buyer-info-div-left-firstfloor {
+.contract-template-buyer-info-div-left-firstfloor {
   height: 50%;
   display: flex;
   flex-direction: column;
 }
-.constract-buyer-info-div-left-secfloor {
+.contract-template-buyer-info-div-left-secfloor {
   display: flex;
   flex-direction: column;
   height: 50%;
@@ -287,23 +286,23 @@ export default {
   padding: 0.3rem;
   text-align: left;
 }
-.constract-product-detail-div {
+.contract-template-product-detail-div {
   margin-top: 15px;
   border: 1px solid rgb(129, 127, 127);
 }
-.constract-product-detail-summary-div {
+.contract-template-product-detail-summary-div {
   display: flex;
   flex-direction: column;
 }
-.constract-product-detail-summary-item {
+.contract-template-product-detail-summary-item {
   display: flex;
   flex-direction: row;
   align-items: center;
 }
-.constract-content {
+.contract-template-content {
   text-align: left;
 }
-.constract-remark-div {
+.contract-template-remark-div {
   display: flex;
   flex-direction: row;
 }
