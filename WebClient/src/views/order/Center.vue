@@ -97,7 +97,7 @@ export default {
     return {
       sumarys: [
         { title: "合同确认", number: 5,path:'/contract' },
-        { title: "订单下达", number: 6 },
+        { title: "订单下达", number: 6,path:'/release'},
         { title: "发货确认", number: 1 },
         { title: "即将截止", number: 9 },
       ],
