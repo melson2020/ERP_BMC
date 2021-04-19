@@ -38,4 +38,22 @@ public class SysRespCode {
      * 密码相同
      */
     public static final int USER_PWD_IS_REPEAT = 153;
+
+    // 201-300 合同管理相关
+    /**
+     * 待保存的合同信息为空
+     */
+    public static final int CONTRACT_SAVE_IS_NULL = 201;
+    /**
+     * 保存失败
+     */
+    public static final int CONTRACT_SAVE_FAIL = 202;
+    /**
+     * 作废失败
+     */
+    public static final int CONTRACT_INVALID_FAIL = 203;
+    /**
+     * 转为正式合同失败
+     */
+    public static final int CONTRACT_APPROVE_FAIL = 204;
 }

@@ -3,6 +3,7 @@ package com.melson.webserver.contract.resource;
 import com.melson.base.BaseResource;
 import com.melson.base.Result;
 import com.melson.base.constants.SysRespCode;
+import com.melson.webserver.contract.entity.Contract;
 import com.melson.webserver.contract.service.IContractService;
 import com.melson.webserver.contract.vo.ContractInfoVo;
 import org.slf4j.Logger;
@@ -38,12 +39,13 @@ public abstract class AbsContractResource extends BaseResource {
     /**
      * 获取列表数据
      *
-     * @param request
+     * @param contractNo
+     * @param orgName
      * @return
      */
     @GetMapping(value = "/list")
-    public Result list(HttpServletRequest request) {
-        return success(null);
+    public Result list(String contractNo, String orgName) {
+        return success(contractService.list(getContractType(), contractNo, orgName));
     }
 
     /**
@@ -54,7 +56,7 @@ public abstract class AbsContractResource extends BaseResource {
      */
     @GetMapping(value = "/get")
     public Result get(Integer id) {
-        return success(null);
+        return success(contractService.get(id));
     }
 
     /**
@@ -70,8 +72,15 @@ public abstract class AbsContractResource extends BaseResource {
         if (userId == null) {
             return failure(SysRespCode.LOGIN_TIME_OUT, "登录超时");
         }
-        logger.info("用户[{}]保存合同成功", userId);
-        return success();
+        if (vo == null) {
+            return failure(SysRespCode.CONTRACT_SAVE_IS_NULL, "待保存的合同信息为空");
+        }
+        Contract contract = contractService.save(request, getContractType(), vo, userId);
+        if (contract == null) {
+            return failure(SysRespCode.CONTRACT_SAVE_FAIL, "保存失败");
+        }
+        logger.info("用户[{}]保存合同[{}]成功", userId, contract.getId());
+        return success(contract.getId());
     }
 
     /**
@@ -87,7 +96,32 @@ public abstract class AbsContractResource extends BaseResource {
         if (userId == null) {
             return failure(SysRespCode.LOGIN_TIME_OUT, "登录超时");
         }
-        logger.info("用户[{}]作废合同成功", userId);
-        return success(null);
+        Contract contract = contractService.invalid(id);
+        if (contract == null) {
+            return failure(SysRespCode.CONTRACT_INVALID_FAIL, "作废失败");
+        }
+        logger.info("用户[{}]作废合同[{}]成功", userId, contract.getId());
+        return success();
+    }
+
+    /**
+     * 转为正式合同
+     *
+     * @param request
+     * @param id      合同id
+     * @return
+     */
+    @DeleteMapping(value = "/approve")
+    public Result approve(HttpServletRequest request, Integer id) {
+        Integer userId = getLoginUserId(request);
+        if (userId == null) {
+            return failure(SysRespCode.LOGIN_TIME_OUT, "登录超时");
+        }
+        Contract contract = contractService.approve(id, userId);
+        if (contract == null) {
+            return failure(SysRespCode.CONTRACT_APPROVE_FAIL, "转为正式合同失败");
+        }
+        logger.info("用户[{}]将合同[{}]转为正式合同[{}]成功", userId, id, contract.getId());
+        return success(contract.getId());
     }
 }
