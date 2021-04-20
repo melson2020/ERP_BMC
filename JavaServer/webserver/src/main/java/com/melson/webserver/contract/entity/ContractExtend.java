@@ -29,6 +29,16 @@ public class ContractExtend {
      */
     private String value;
 
+    public ContractExtend() {
+
+    }
+
+    public ContractExtend(Integer contractId, String code, String value) {
+        this.contractId = contractId;
+        this.code = code;
+        this.value = value;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getId() {

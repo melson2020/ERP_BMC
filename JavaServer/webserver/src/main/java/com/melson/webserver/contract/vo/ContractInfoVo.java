@@ -5,6 +5,7 @@ import com.melson.webserver.contract.entity.ContractOrg;
 import com.melson.webserver.contract.entity.ContractStock;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 完整合同信息
@@ -38,6 +39,10 @@ public class ContractInfoVo {
      * 买方确认
      */
     private ContractOrg purchaserConfirm;
+    /**
+     * 额外属性
+     */
+    private Map<String, String> ext;
 
     public Contract getContract() {
         return contract;
@@ -85,5 +90,22 @@ public class ContractInfoVo {
 
     public void setPurchaserConfirm(ContractOrg purchaserConfirm) {
         this.purchaserConfirm = purchaserConfirm;
+    }
+
+    public Map<String, String> getExt() {
+        return ext;
+    }
+
+    public void setExt(Map<String, String> ext) {
+        this.ext = ext;
+    }
+
+    /**
+     * 保存参数校验
+     *
+     * @return
+     */
+    public boolean saveCheck() {
+        return contract != null && purchaser != null && goodReceiveInfo != null && productList != null && !productList.isEmpty() && vendorConfirm != null && purchaserConfirm != null;
     }
 }

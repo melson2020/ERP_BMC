@@ -1,5 +1,11 @@
 package com.melson.webserver.contract.service;
 
+import com.melson.webserver.contract.entity.Contract;
+import com.melson.webserver.contract.vo.ContractInfoVo;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+
 /**
  * 合同接口
  *
@@ -8,5 +14,49 @@ package com.melson.webserver.contract.service;
  */
 public interface IContractService {
 
+    /**
+     * 根据合同类型+合同号+客户名称查询合同集合
+     *
+     * @param type
+     * @param contractNo
+     * @param orgName
+     * @return
+     */
+    List<Contract> list(String type, String contractNo, String orgName);
 
+    /**
+     * 根据合同id查询合同对象
+     *
+     * @param id
+     * @return
+     */
+    ContractInfoVo get(Integer id);
+
+    /**
+     * 保存合同
+     *
+     * @param request
+     * @param contractType
+     * @param vo
+     * @param userId
+     * @return
+     */
+    Contract save(HttpServletRequest request, String contractType, ContractInfoVo vo, int userId);
+
+    /**
+     * 作废合同
+     *
+     * @param id
+     * @return
+     */
+    Contract invalid(Integer id);
+
+    /**
+     * 转为正式合同
+     *
+     * @param id
+     * @param userId
+     * @return
+     */
+    Contract approve(Integer id, int userId);
 }

@@ -13,6 +13,23 @@ import javax.persistence.*;
 public class ContractOrg {
 
     /**
+     * 类型:1=买方
+     */
+    public static final String TYPE_PURCHASER = "1";
+    /**
+     * 类型:2=收货单位
+     */
+    public static final String TYPE_GOOD_RECEIVE = "2";
+    /**
+     * 类型:3=卖方确认
+     */
+    public static final String TYPE_VENDOR_CONFIRM = "3";
+    /**
+     * 类型:4=买方确认
+     */
+    public static final String TYPE_PURCHASER_CONFIRM = "4";
+
+    /**
      * 合同公司唯一自增id
      */
     private Integer id;

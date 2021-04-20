@@ -31,6 +31,32 @@ create unique index idx1 on sys_dict (typeId, code);
 INSERT INTO erp_bmc_transfer.sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (1, 1, '0', '禁用', 2, '0=禁用', '2021-04-16 13:49:49', 1, '1');
 INSERT INTO erp_bmc_transfer.sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (2, 1, '1', '启用', 1, '1=启用', '2021-04-15 13:49:51', 1, '1');
 
+INSERT INTO erp_bmc_transfer.sys_dict_type (id, alias, name, comments, modify, modifyUser, state) VALUES (1, 'commonState', '通用状态', '启用/禁用', '2021-04-15 13:49:12', 1, '1');
+INSERT INTO erp_bmc_transfer.sys_dict_type (id, alias, name, comments, modify, modifyUser, state) VALUES (2, 'contractType', '合同类型', '意向/正式', '2021-04-20 00:27:02', 1, '1');
+INSERT INTO erp_bmc_transfer.sys_dict_type (id, alias, name, comments, modify, modifyUser, state) VALUES (3, 'contractState', '合同状态', '', '2021-04-20 00:27:02', 1, '1');
+INSERT INTO erp_bmc_transfer.sys_dict_type (id, alias, name, comments, modify, modifyUser, state) VALUES (4, 'deliverType', '运输方式', '', '2021-04-20 00:27:02', 1, '1');
+INSERT INTO erp_bmc_transfer.sys_dict_type (id, alias, name, comments, modify, modifyUser, state) VALUES (5, 'payWay', '付款方式', '', '2021-04-20 00:27:03', 1, '1');
+INSERT INTO erp_bmc_transfer.sys_dict_type (id, alias, name, comments, modify, modifyUser, state) VALUES (6, 'currency', '付款货币', '', '2021-04-20 00:27:03', 1, '1');
+INSERT INTO erp_bmc_transfer.sys_dict_type (id, alias, name, comments, modify, modifyUser, state) VALUES (7, 'contractTpl', '合同模版', '', '2021-04-20 00:27:03', 1, '1');
+INSERT INTO erp_bmc_transfer.sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (1, 1, '0', '禁用', 2, '0=禁用', '2021-04-16 13:49:49', 1, '1');
+INSERT INTO erp_bmc_transfer.sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (2, 1, '1', '启用', 1, '1=启用', '2021-04-15 13:49:51', 1, '1');
+INSERT INTO erp_bmc_transfer.sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (3, 2, '1', '意向合同', 1, '', '2021-04-20 00:31:28', 1, '1');
+INSERT INTO erp_bmc_transfer.sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (4, 2, '2', '正式合同', 2, '', '2021-04-20 00:31:28', 1, '1');
+INSERT INTO erp_bmc_transfer.sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (5, 3, '0', '已作废', 0, '', '2021-04-20 00:31:28', 1, '1');
+INSERT INTO erp_bmc_transfer.sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (6, 3, '1', '待处理', 1, '', '2021-04-20 00:31:29', 1, '1');
+INSERT INTO erp_bmc_transfer.sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (7, 3, '2', '进行中', 2, '', '2021-04-20 00:31:29', 1, '1');
+INSERT INTO erp_bmc_transfer.sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (8, 3, '3', '已完成', 3, '', '2021-04-20 00:31:29', 1, '1');
+INSERT INTO erp_bmc_transfer.sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (9, 4, '1', 'FCA CHINA', 1, '', '2021-04-20 00:31:29', 1, '1');
+INSERT INTO erp_bmc_transfer.sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (10, 5, '1', '日结', 1, '', '2021-04-20 00:31:29', 1, '1');
+INSERT INTO erp_bmc_transfer.sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (11, 5, '2', '月结', 2, '', '2021-04-20 00:31:29', 1, '1');
+INSERT INTO erp_bmc_transfer.sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (12, 5, '3', '季度结', 3, '', '2021-04-20 00:31:29', 1, '1');
+INSERT INTO erp_bmc_transfer.sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (13, 5, '4', '年结', 4, '', '2021-04-20 00:31:29', 1, '1');
+INSERT INTO erp_bmc_transfer.sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (14, 6, '1', '人民币', 1, '', '2021-04-20 00:31:29', 1, '1');
+INSERT INTO erp_bmc_transfer.sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (15, 6, '2', '美元', 2, '', '2021-04-20 00:31:29', 1, '1');
+INSERT INTO erp_bmc_transfer.sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (16, 7, 'desc', '这里是【合同描述】模版', 1, '', '2021-04-20 00:31:29', 1, '1');
+INSERT INTO erp_bmc_transfer.sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (17, 7, 'remarks', '这里是【合同备注】模版', 2, '', '2021-04-20 00:31:29', 1, '1');
+INSERT INTO erp_bmc_transfer.sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (18, 7, 'explain', '这里是【合同说明】模版', 3, '', '2021-04-20 00:31:29', 1, '1');
+
 -- 合同定义表
 drop table if exists contract;
 create table contract
