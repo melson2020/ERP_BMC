@@ -62,8 +62,8 @@ export default {
       productionTechList: [
         {
           code: "CX1",
-          name: "塑性",
-          team: "塑性01",
+          name: "塑型",
+          team: "塑型01（蒋师傅）",
           categroy: "网线",
           des: "",
         },
