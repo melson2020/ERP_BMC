@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="production-tech-header-div">
-      <span class="colorblue production-tech-fwb">工序字典</span
-      ><el-button type="primary" size="small">添加工序</el-button>
+      <span class="colorblue production-tech-fwb">工艺字典</span
+      ><el-button type="primary" size="small">添加工艺</el-button>
     </div>
     <el-table :data="productionTechList" border style="width: 100%" stripe>
       <el-table-column prop="code" label="编号" width="200"> </el-table-column>

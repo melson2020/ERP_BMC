@@ -77,7 +77,7 @@
               <template slot-scope="scope">
                 <el-select
                   v-model="scope.row.techNo"
-                  placeholder="填入工序"
+                  placeholder="填入工艺"
                   v-if="scope.row.seen"
                    @blur="loseFcous(scope.$index, scope.row)"
                   size="mini"
