@@ -35,5 +35,10 @@ export default {
   //注销登录
   SystemLogout(){
     return service.post('/login/logout')
+  },
+
+  //合同相关
+  GetContractTemplate(){
+    return service.get('/contract/formal/contractTemplate')
   }
 };
