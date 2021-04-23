@@ -5,3 +5,6 @@ export const COM_AREA_LIST = 'COM_AREA_LIST'
 
 //login
 export const LOGIN_USERINFO = 'LOGIN_USERINFO'
+
+//contract
+export const CONTRACT_TEMPLATE = 'CONTRACT_TEMPLATE'

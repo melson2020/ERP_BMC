@@ -9,7 +9,6 @@
           <el-input placeholder="合同号" size="small" class="mt40"></el-input>
           <el-input placeholder="订单号" size="small" class="mt40"></el-input>
           <el-select
-            v-model="customerId"
             placeholder="制单人"
             class="mt40"
             filterable

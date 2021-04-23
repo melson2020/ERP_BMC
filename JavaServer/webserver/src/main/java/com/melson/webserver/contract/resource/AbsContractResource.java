@@ -4,15 +4,14 @@ import com.melson.base.BaseResource;
 import com.melson.base.Result;
 import com.melson.base.constants.SysRespCode;
 import com.melson.webserver.contract.entity.Contract;
+import com.melson.webserver.contract.entity.ContractTemplate;
 import com.melson.webserver.contract.service.IContractService;
+import com.melson.webserver.contract.service.IContractTemplateService;
 import com.melson.webserver.contract.vo.ContractInfoVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -28,6 +27,8 @@ public abstract class AbsContractResource extends BaseResource {
 
     @Autowired
     private IContractService contractService;
+    @Autowired
+    private IContractTemplateService contractTemplateService;
 
     /**
      * 获取合同类型
@@ -123,5 +124,10 @@ public abstract class AbsContractResource extends BaseResource {
         }
         logger.info("用户[{}]将合同[{}]转为正式合同[{}]成功", userId, id, contract.getId());
         return success(contract.getId());
+    }
+
+    @RequestMapping(value = "/contractTemplate",method = RequestMethod.GET)
+    public Result contractTemplate() {
+        return success(contractTemplateService.findContractTemplateByType(ContractTemplate.TEMPLATE_NORMAL));
     }
 }

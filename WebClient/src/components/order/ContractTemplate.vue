@@ -70,7 +70,7 @@
               >交货日期：{{ contractInfo.diliveryDate }}</span
             >
             <span class="text-left-center"
-              >联系人：{{ contractInfo.contract }}</span
+              >联系人：{{ contractInfo.contact }}</span
             >
             <span class="text-left-center"
               >质量保证：{{ contractInfo.quality }}</span

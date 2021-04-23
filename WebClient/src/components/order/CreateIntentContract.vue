@@ -8,79 +8,141 @@
         <div class="constract-buyer-info-div">
           <div class="constract-buyer-info-div-left">
             <div class="constract-buyer-info-div-left-firstfloor">
-              <div class="title-div-gray">买方:(0000001)</div>
-              <span class="text-left-center">{{ vendeeInfo.name }}</span>
-              <span class="text-left-center">{{ vendeeInfo.location }}</span>
-              <span class="text-left-center"
-                >联系：{{ vendeeInfo.contact }}</span
-              >
-              <span class="text-left-center">电话：{{ vendeeInfo.phone }}</span>
-              <span class="text-left-center">税号：{{ vendeeInfo.taxNo }}</span>
-              <span class="text-left-center"
-                >账号：{{ vendeeInfo.account }}</span
-              >
+              <div class="title-div-gray flex justify-content">
+                <span>买方(000001)</span>
+                <el-select filterable size="mini" placeholder="选择买方">
+                  <el-option label="test1" value="test1"></el-option>
+                  <el-option label="test2" value="test2"></el-option>
+                </el-select>
+              </div>
+              <div class="cell-div mt40">
+                <span class="cell-div-title">名称：</span>
+                <el-input
+                  class="text-left-center"
+                  v-model="vendeeInfo.name"
+                  size="mini"
+                ></el-input>
+              </div>
+              <div class="cell-div">
+                <span class="cell-div-title">地址：</span>
+                <el-input
+                  class="text-left-center"
+                  v-model="vendeeInfo.location"
+                  size="mini"
+                ></el-input>
+              </div>
+              <div class="cell-div">
+                <span class="cell-div-title">联系：</span>
+                <el-input
+                  class="text-left-center"
+                  v-model="vendeeInfo.contact"
+                  size="mini"
+                ></el-input>
+              </div>
+              <div class="cell-div">
+                <span class="cell-div-title">电话：</span>
+                <el-input
+                  class="text-left-center"
+                  v-model="vendeeInfo.phone"
+                  size="mini"
+                ></el-input>
+              </div>
+              <div class="cell-div">
+                <span class="cell-div-title">税号：</span>
+                <el-input
+                  class="text-left-center"
+                  v-model="vendeeInfo.taxNo"
+                  size="mini"
+                ></el-input>
+              </div>
+              <div class="cell-div">
+                <span class="cell-div-title">账号：</span>
+                <el-input
+                  class="text-left-center"
+                  v-model="vendeeInfo.account"
+                  size="mini"
+                ></el-input>
+              </div>
             </div>
             <div class="constract-buyer-info-div-left-secfloor">
-              <div class="title-div-gray">收货单位:(0000001)</div>
-              <span class="text-left-center">{{ goodReceveInfo.name }}</span>
-              <span class="text-left-center">{{
-                goodReceveInfo.location
-              }}</span>
-              <span class="text-left-center"
-                >联系：{{ goodReceveInfo.contact }}</span
-              >
-              <span class="text-left-center"
-                >电话：{{ goodReceveInfo.phone }}</span
-              >
-              <span class="text-left-center"
-                >税号：{{ goodReceveInfo.taxNo }}</span
-              >
-              <span class="text-left-center"
-                >账号：{{ goodReceveInfo.account }}</span
-              >
+              <div class="title-div-gray flex justify-content">
+                <span>收货单位:(0000001)</span>
+                <el-select filterable size="mini" placeholder="选择收货">
+                  <el-option label="test1" value="test1"></el-option>
+                  <el-option label="test2" value="test2"></el-option>
+                </el-select>
+              </div>
+              <div class="cell-div mt40">
+                <span class="cell-div-title">名称：</span>
+                <el-input
+                  class="text-left-center"
+                  v-model="goodReceveInfo.name"
+                  size="mini"
+                ></el-input>
+              </div>
+              <div class="cell-div">
+                <span class="cell-div-title">地址：</span>
+                <el-input
+                  class="text-left-center"
+                  v-model="goodReceveInfo.location"
+                  size="mini"
+                ></el-input>
+              </div>
+              <div class="cell-div">
+                <span class="cell-div-title">联系：</span>
+                <el-input
+                  class="text-left-center"
+                  v-model="goodReceveInfo.contact"
+                  size="mini"
+                ></el-input>
+              </div>
+              <div class="cell-div">
+                <span class="cell-div-title">电话：</span>
+                <el-input
+                  class="text-left-center"
+                  v-model="goodReceveInfo.phone"
+                  size="mini"
+                ></el-input>
+              </div>
+              <div class="cell-div">
+                <span class="cell-div-title">税号：</span>
+                <el-input
+                  class="text-left-center"
+                  v-model="goodReceveInfo.taxNo"
+                  size="mini"
+                ></el-input>
+              </div>
+              <div class="cell-div">
+                <span class="cell-div-title">账号：</span>
+                <el-input
+                  class="text-left-center"
+                  v-model="goodReceveInfo.account"
+                  size="mini"
+                ></el-input>
+              </div>
             </div>
           </div>
           <div class="constract-buyer-info-div-right">
             <div class="title-div-gray">资料</div>
-            <span class="text-left-center"
-              >销售单编号：{{ contractInfo.contractNo }}</span
+            <div
+              class="cell-div"
+              v-for="detail in contractTemplate.detailList"
+              :key="detail.id"
             >
-            <span class="text-left-center"
-              >销售单日期：{{ contractInfo.contractDate }}</span
-            >
-            <span class="text-left-center"
-              >送货路线：{{ contractInfo.diliveryWay }}</span
-            >
-            <span class="text-left-center"
-              >客户订单号码：{{ contractInfo.orderTicketNo }}</span
-            >
-            <span class="text-left-center"
-              >运输方式：{{ contractInfo.diliveryType }}</span
-            >
-            <span class="text-left-center"
-              >付款时间：{{ contractInfo.payDate }}</span
-            >
-            <span class="text-left-center"
-              >付款方式：{{ contractInfo.payWay }}</span
-            >
-            <span class="text-left-center"
-              >货币：{{ contractInfo.currency }}</span
-            >
-            <span class="text-left-center"
-              >交货日期：{{ contractInfo.diliveryDate }}</span
-            >
-            <span class="text-left-center"
-              >联系人：{{ contractInfo.contract }}</span
-            >
-            <span class="text-left-center"
-              >质量保证：{{ contractInfo.quality }}</span
-            >
+              <span class="cell-div-title mb40">{{ detail.value }}：</span>
+              <el-input
+                class="text-left-center"
+                v-model="contractInfo[detail.bindingField]"
+                size="mini"
+              ></el-input>
+            </div>
           </div>
         </div>
 
         <div class="constract-product-detail-div">
           <el-table
             border
+            :data="contractProductList"
             style="width: 100%"
             size="mini"
             :header-cell-style="{
@@ -102,6 +164,9 @@
             <el-table-column prop="taxTotalPrice" label="含税总价">
             </el-table-column>
           </el-table>
+          <el-button icon="el-icon-plus" plain class="add-contract-deail"
+            >添加详细</el-button
+          >
           <div class="constract-product-detail-summary-div fz9">
             <div class="constract-product-detail-summary-item">
               <span style="width: 180px; text-align: left">总额(含税)</span>
@@ -116,16 +181,16 @@
           </div>
         </div>
         <div class="fz8">
-          <p class="constract-content">{{ contractContent }}</p>
+          <p class="constract-content">{{ contractTemplate.content.value }}</p>
           <div class="constract-remark-div">
             <div class="remark-title-div">备注</div>
             <div>
               <div
                 class="contract-remark-p"
-                v-for="remark in contractRemarks"
+                v-for="remark in contractTemplate.remarkList"
                 :key="remark.id"
               >
-                {{ remark.remark }}
+                {{ remark.value }}
               </div>
             </div>
           </div>
@@ -150,7 +215,7 @@
           </div>
         </div>
         <p class="contract-description">
-          合同说明，合同说明，合同说明，合同说明，合同说明，合同说明，合同说明，合同说明，合同说明，合同说明，合同说明，合同说明，合同说明，合同说明，合同说明，合同说明合同说明，合同说明，合同说明，合同说明
+          {{ contractTemplate.description.value }}
         </p>
       </div>
       <div class="contract-button-div">
@@ -162,22 +227,12 @@
   </div>
 </template>
 <script>
+import { mapGetters } from "vuex";
+import { mapActions } from "vuex";
 export default {
   name: "m-create-intent-constract",
   data() {
     return {
-      contractContent:
-        "这是测试数据这是测试数据这是测试数据这是测试数据这是测试数据这是测试数据这是测试数据这是测试数据，这是测试数据这是测试数据这是测试数据这是测试数据这是测试数据这是测试数据这是测试数据这是测试数据，这是测试数据这是测试数据这是测试数据这是测试数据这是测试数据这是测试数据这是测试数据这是测试数据，这是测试数据这是测试数据这是测试数据这是测试数据这是测试数据这是测试数据这是测试数据这是测试数据，这是测试数据这是测试数据这是测试数据这是测试数据这是测试数据这是测试数据这是测试数据这是测试数据，",
-      contractRemarks: [
-        {
-          remark:
-            "1.若无异议，这是测试数据这是测试数据这是测试数据这是测试数据这是测试数据这是测试数据这是测试数据这是测试数据，这是测试数据这是测试数据这是测试数据这是测试数据这是测试数这是测试数据这是测试数据这是测试数据这是测试数据这是测试数据这是测试数据这是测试数据这是测试数据，这是测试数据这是测试数据这是测试数据这是测试数据这是测试数据这是测试数据这是测试数据这是测试数据",
-        },
-        { remark: "2.若无异议，则2222222222" },
-        { remark: "3.若无异议，则2222222222" },
-        { remark: "4.若无异议，则2222222222" },
-        { remark: "5.若无异议，则2222222222" },
-      ],
       vendeeInfo: {
         name: "桑尼泰克精密零部件有限公司",
         location: "昆山市周市镇新镇路681号",
@@ -215,11 +270,23 @@ export default {
         account: "pp0956743",
         taxNo: "91384792U874K9",
       },
+      contractProductList:[]
     };
+  },
+  computed: {
+    ...mapGetters(["contractTemplate"]),
+  },
+  methods: {
+    ...mapActions({
+      GetContractTemplate: "GetContractTemplate",
+    }),
+  },
+  beforeMount() {
+    this.GetContractTemplate();
   },
 };
 </script>
-<style>
+<style lang="less">
 .constract-div {
   width: 1000px;
   padding: 1.2rem;
@@ -249,7 +316,7 @@ export default {
 .constract-buyer-info-div {
   display: flex;
   flex-direction: row;
-  height: 450px;
+  height: 480px;
   border: 1px solid rgb(129, 127, 127);
 }
 .constract-buyer-info-div-left {
@@ -282,10 +349,10 @@ export default {
   font-weight: bold;
 }
 .text-left-center {
-  float: left;
   font-size: 0.8rem;
-  padding: 0.3rem;
+  padding: 0.1rem 0;
   text-align: left;
+  width: 300px;
 }
 .constract-product-detail-div {
   margin-top: 15px;
@@ -334,5 +401,23 @@ export default {
 .contract-button-div {
   padding: 1rem 0;
   float: right;
+}
+.cell-div {
+  display: flex;
+  align-items: center;
+  font-size: 0.7rem;
+  padding: 0 10px;
+}
+.cell-div-title {
+  width: 90px;
+  text-align: left;
+}
+.justify-content {
+  justify-content: space-between;
+}
+.add-contract-deail {
+  margin-top: 2px;
+  width: 100%;
+  border: #dcdfe6 dashed 1px !important;
 }
 </style>
