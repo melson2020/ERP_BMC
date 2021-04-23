@@ -40,5 +40,8 @@ export default {
   //合同相关
   GetContractTemplate(){
     return service.get('/contract/formal/contractTemplate')
+  },
+  SaveIntentionContract(param){
+    return service.post('/contract/intention/save',param)
   }
 };

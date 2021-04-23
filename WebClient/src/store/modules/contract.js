@@ -14,10 +14,21 @@ const actions = {
             if (res.resultStatus == 1) {
                 commit(types.CONTRACT_TEMPLATE, res.data)
             } else {
-                Message.warning(res.messgae)
+                Message.warning(res.message)
             }
         }).catch(err => {
-            Message.error(err.messgae)
+            Message.error(err.message)
+        })
+    },
+    SaveIntentionContract({commit},param){
+        request.SaveIntentionContract(param).then(res=>{
+            if (res.resultStatus == 1) {
+                console.log('保存成功')
+            } else {
+                Message.warning(res.message)
+            }
+        }).catch(err => {
+            Message.error(err.message)
         })
     }
 };
