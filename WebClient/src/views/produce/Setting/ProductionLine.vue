@@ -167,7 +167,6 @@ export default {
         this.workStationList.push({ no: "默认", name: "", techNo: "填入工序", seen: false,employeeNo:'分配人员' })
     },
     loseFcous(index, row) {
-      console.log("失去焦点", row);
       row.seen = false;
     },
     cellClick(row) {

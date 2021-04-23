@@ -56,7 +56,7 @@ public class ContractOrg {
     /**
      * 联系人
      */
-    private Integer contactUser;
+    private String contactUser;
     /**
      * 联系电话
      */
@@ -120,11 +120,11 @@ public class ContractOrg {
         this.address = address;
     }
 
-    public Integer getContactUser() {
+    public String getContactUser() {
         return contactUser;
     }
 
-    public void setContactUser(Integer contactUser) {
+    public void setContactUser(String contactUser) {
         this.contactUser = contactUser;
     }
 

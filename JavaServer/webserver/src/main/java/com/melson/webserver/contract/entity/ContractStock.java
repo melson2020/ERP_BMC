@@ -35,7 +35,7 @@ public class ContractStock {
     /**
      * 属性名称
      */
-    private String propName;
+    private String specification;
     /**
      * 备注
      */
@@ -43,7 +43,7 @@ public class ContractStock {
     /**
      * 数量,不确定是否会有特殊需求要半件,直接使用字符串
      */
-    private String number;
+    private String count;
     /**
      * 含税单价,可能为小数,直接使用字符串
      */
@@ -111,12 +111,20 @@ public class ContractStock {
         this.propId = propId;
     }
 
-    public String getPropName() {
-        return propName;
+    public String getSpecification() {
+        return specification;
     }
 
-    public void setPropName(String propName) {
-        this.propName = propName;
+    public void setSpecification(String specification) {
+        this.specification = specification;
+    }
+
+    public String getCount() {
+        return count;
+    }
+
+    public void setCount(String count) {
+        this.count = count;
     }
 
     public String getRemark() {
@@ -127,13 +135,7 @@ public class ContractStock {
         this.remark = remark;
     }
 
-    public String getNumber() {
-        return number;
-    }
 
-    public void setNumber(String number) {
-        this.number = number;
-    }
 
     public String getTaxPrice() {
         return taxPrice;
