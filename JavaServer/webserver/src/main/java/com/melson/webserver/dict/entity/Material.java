@@ -17,7 +17,7 @@ public class Material {
     private String name;            // 物料名称
     private String unit;            // 物料单位
     private String storerageCode;   // 物料存储仓库， //TODO:进销存端要和这里的仓库编码对应起来
-    private String manuafcturer;    // 物料生产厂家
+    private String manufacturer;    // 物料生产厂家
     private String specification;   // 物料规格
     private BigDecimal weight;      // 物料重量
     private String weightUnit;      // 物料重量单位
@@ -71,12 +71,12 @@ public class Material {
         this.storerageCode = storerageCode;
     }
 
-    public String getManuafcturer() {
-        return manuafcturer;
+    public String getManufacturer() {
+        return manufacturer;
     }
 
-    public void setManuafcturer(String manuafcturer) {
-        this.manuafcturer = manuafcturer;
+    public void setManufacturer(String manufacturer) {
+        this.manufacturer = manufacturer;
     }
 
     public String getSpecification() {

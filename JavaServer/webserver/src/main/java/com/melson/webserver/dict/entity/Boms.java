@@ -20,7 +20,7 @@ public class Boms {
     private BigDecimal chQty;             // 子件数量
     private BigDecimal lossRate;          // 子件折损率
     private String processStation;        // 工位
-    private String manuafcturer;          // 生产商
+    private String manufacturer;          // 生产商
     private BigDecimal materialCost;      // 物料成本  选择半成品时成本为基础物料成本+对应工序人工成本
     private BigDecimal humanCost;         // 人工成本 对应produce_process表，不同工序的人工成本不同
     private String materialCostStatus;    // 物料成本状态，Y：计算物料成本 ； N ：不计算物料成本，多指来料代加工，只赚人工费
@@ -97,12 +97,12 @@ public class Boms {
         this.processStation = processStation;
     }
 
-    public String getManuafcturer() {
-        return manuafcturer;
+    public String getManufacturer() {
+        return manufacturer;
     }
 
-    public void setManuafcturer(String manuafcturer) {
-        this.manuafcturer = manuafcturer;
+    public void setManufacturer(String manufacturer) {
+        this.manufacturer = manufacturer;
     }
 
     public BigDecimal getMaterialCost() {
