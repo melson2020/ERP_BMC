@@ -6,8 +6,9 @@ import java.math.BigDecimal;
  * Created by Messi on 2021/4/26
  */
 public class ProductVo {
-    private Integer id;
+    private String productId;
     private String productName;
+    private String specification;
     private String value;
     private String remark;
     private BigDecimal salesPrice;
@@ -15,20 +16,21 @@ public class ProductVo {
     public ProductVo() {
     }
 
-    public ProductVo(Integer id, String productName, String value, String remark, BigDecimal salesPrice) {
-        this.id = id;
+    public ProductVo(String productId, String productName, String specification, String value, String remark, BigDecimal salesPrice) {
+        this.productId = productId;
         this.productName = productName;
+        this.specification = specification;
         this.value = value;
         this.remark = remark;
         this.salesPrice = salesPrice;
     }
 
-    public Integer getId() {
-        return id;
+    public String getProductId() {
+        return productId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setProductId(String productId) {
+        this.productId = productId;
     }
 
     public String getProductName() {
@@ -37,6 +39,14 @@ public class ProductVo {
 
     public void setProductName(String productName) {
         this.productName = productName;
+    }
+
+    public String getSpecification() {
+        return specification;
+    }
+
+    public void setSpecification(String specification) {
+        this.specification = specification;
     }
 
     public String getValue() {

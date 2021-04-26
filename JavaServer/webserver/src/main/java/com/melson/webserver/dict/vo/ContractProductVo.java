@@ -1,13 +1,14 @@
 package com.melson.webserver.dict.vo;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Messi on 2021/4/26
  */
 public class ContractProductVo {
     private String groupName;
-    private ArrayList<ProductVo> list;
+    private List<ProductVo> list;
 
     public String getGroupName() {
         return groupName;
@@ -17,11 +18,11 @@ public class ContractProductVo {
         this.groupName = groupName;
     }
 
-    public ArrayList<ProductVo> getList() {
+    public List<ProductVo> getList() {
         return list;
     }
 
-    public void setList(ArrayList<ProductVo> list) {
+    public void setList(List<ProductVo> list) {
         this.list = list;
     }
 }
