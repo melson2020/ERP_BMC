@@ -1,6 +1,7 @@
 package com.melson.webserver.dict.service.impl;
 
 import com.melson.base.AbstractService;
+import com.melson.webserver.dict.dao.IProductRepository;
 import com.melson.webserver.dict.entity.Product;
 import com.melson.webserver.dict.service.IProduct;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,8 +12,14 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class IProductImpl extends AbstractService<Product> implements IProduct {
+    private final IProductRepository productRepository;
+
+    public IProductImpl(IProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
+
     @Override
-    public JpaRepository<Product, String> getRepository() {
-        return null;
+    public JpaRepository getRepository() {
+        return productRepository;
     }
 }
