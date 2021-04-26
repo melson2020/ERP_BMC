@@ -12,9 +12,9 @@
   </el-tabs>
 </template>
 <script>
-import intentContract from "../../components/order/IntentContract";
-import createIntentConstract from "../../components/order/CreateIntentContract";
-import contractSearch from "../../components/order/ContractSearch";
+import intentContract from "./contract/IntentContract";
+import createIntentConstract from "./contract/CreateIntentContract";
+import contractSearch from "./contract/ContractSearch";
 export default {
   components: {
     "m-intent-constract": intentContract,
