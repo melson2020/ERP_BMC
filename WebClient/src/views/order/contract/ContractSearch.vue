@@ -60,7 +60,7 @@
   </div>
 </template>
 <script>
-import contractTemplate from "../order/ContractTemplate";
+import contractTemplate from "./ContractTemplate";
 export default {
   data() {
     return {

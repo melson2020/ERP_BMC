@@ -1,5 +1,4 @@
 <template>
-  <div class="create-constract-main-container">
     <div>
       <div id="outTicketPdf" ref="outTicketPdf" class="constract-div">
         <div class="constract-header">
@@ -319,13 +318,12 @@
           {{ contractTemplate.description.value }}
         </p>
       </div>
-      <div class="contract-button-div">
+      <div class="edit-contract-button-div">
         <el-button @click="saveContract" type="primary">保存合同</el-button>
         <el-button @click="printPdf" type="primary">打印合同</el-button>
-        <el-button type="warning">清空内容</el-button>
+        <el-button v-if="!edit" type="warning">清空内容</el-button>
       </div>
     </div>
-  </div>
 </template>
 <script>
 import { mapGetters } from "vuex";
@@ -531,7 +529,6 @@ export default {
         type: "html",
         maxWidth: "100%",
         targetStyles: ["*"],
-        ignoreElements: ["es1", "el2", "tbb"],
       });
     },
     saveContract() {
@@ -549,6 +546,7 @@ export default {
   beforeMount() {
     this.GetContractTemplate();
   },
+  props: ["edit"],
 };
 </script>
 <style lang="less">
@@ -665,7 +663,7 @@ export default {
   font-size: 0.3rem;
   margin-top: 2rem;
 }
-.contract-button-div {
+.edit-contract-button-div {
   padding: 1rem 0;
   text-align: right;
 }
