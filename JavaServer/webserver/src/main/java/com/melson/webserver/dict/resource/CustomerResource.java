@@ -23,7 +23,8 @@ public class CustomerResource extends BaseResource {
 
     @RequestMapping(value = "/list",method = RequestMethod.GET)
     public Result GetCustomerList(HttpServletRequest request){
-        return null;
+        Result result=new Result();
+        return result;
     }
 
 }
