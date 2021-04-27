@@ -27,7 +27,7 @@ public class Boms {
     private String startBatchNo;          // 物料起始批次号
     private String endBatchNo;            // 物料截止批次号
     private Date expireDate;              // BOM有效期
-    private String decription;            // BOM描述备注：工序，工艺，尺寸等等
+    private String description;           // BOM描述备注：工序，工艺，尺寸等等
     private String status;                // BOM状态值 Y：启用；N：停用
     private String vers;                  // BOM版本号
     private String createBy;              // BOM创建人
@@ -137,12 +137,12 @@ public class Boms {
         this.expireDate = expireDate;
     }
 
-    public String getDecription() {
-        return decription;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDecription(String decription) {
-        this.decription = decription;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getStatus() {
