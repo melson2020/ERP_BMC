@@ -43,5 +43,8 @@ export default {
   },
   SaveIntentionContract(param){
     return service.post('/contract/intention/save',param)
+  },
+  GetCustomerList(){
+    return service.get('/customer/list')
   }
 };

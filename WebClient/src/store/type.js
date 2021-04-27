@@ -8,3 +8,5 @@ export const LOGIN_USERINFO = 'LOGIN_USERINFO'
 
 //contract
 export const CONTRACT_TEMPLATE = 'CONTRACT_TEMPLATE'
+export const CUSTOMER_LIST = 'CUSTOMER_LIST'
+

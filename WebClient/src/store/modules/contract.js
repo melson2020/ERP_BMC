@@ -5,7 +5,8 @@ import * as types from '../type'
 import { Message } from "element-ui";
 
 const state = {
-    contractTemplate:{}
+    contractTemplate:{},
+    customerList:[]
 };
 
 const actions = {
@@ -30,16 +31,31 @@ const actions = {
         }).catch(err => {
             Message.error(err.message)
         })
+    },
+    GetCustomerList({commit}){
+        request.GetCustomerList().then(res=>{
+            if (res.resultStatus == 1) {
+                commit(types.CUSTOMER_LIST, res.data)
+            } else {
+                Message.warning(res.message)
+            }
+        }).catch(err => {
+            Message.error(err.message)
+        })
     }
 };
 
 const getters = {
     contractTemplate: state => state.contractTemplate,
+    customerList:state=>state.customerList
 };
 
 const mutations = {
     [types.CONTRACT_TEMPLATE](state, data) {
         state.contractTemplate = data;
+    },
+    [types.CUSTOMER_LIST](state, data) {
+        state.customerList = data;
     },
 };
 

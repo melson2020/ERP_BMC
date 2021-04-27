@@ -1,329 +1,329 @@
 <template>
-    <div>
-      <div id="outTicketPdf" ref="outTicketPdf" class="constract-div">
-        <div class="constract-header">
-          <span class="constract-header-title">销售合同确认书</span>
-        </div>
-        <div class="constract-buyer-info-div">
-          <div class="constract-buyer-info-div-left">
-            <div class="constract-buyer-info-div-left-firstfloor">
-              <div class="title-div-gray flex justify-content">
-                <span>买方(000001)</span>
-                <el-select
-                  id="es1"
-                  filterable
-                  size="mini"
-                  placeholder="选择买方"
-                >
-                  <el-option label="test1" value="test1"></el-option>
-                  <el-option label="test2" value="test2"></el-option>
-                </el-select>
-              </div>
-              <div class="cell-div mt40">
-                <span class="cell-div-title">名称：</span>
-                <el-input
-                  class="text-left-center"
-                  v-model="vendeeInfo.name"
-                  size="mini"
-                ></el-input>
-              </div>
-              <div class="cell-div">
-                <span class="cell-div-title">地址：</span>
-                <el-input
-                  class="text-left-center"
-                  v-model="vendeeInfo.address"
-                  size="mini"
-                ></el-input>
-              </div>
-              <div class="cell-div">
-                <span class="cell-div-title">联系：</span>
-                <el-input
-                  class="text-left-center"
-                  v-model="vendeeInfo.contactUser"
-                  size="mini"
-                ></el-input>
-              </div>
-              <div class="cell-div">
-                <span class="cell-div-title">电话：</span>
-                <el-input
-                  class="text-left-center"
-                  v-model="vendeeInfo.phone"
-                  size="mini"
-                ></el-input>
-              </div>
-              <div class="cell-div">
-                <span class="cell-div-title">税号：</span>
-                <el-input
-                  class="text-left-center"
-                  v-model="vendeeInfo.taxNo"
-                  size="mini"
-                ></el-input>
-              </div>
-              <div class="cell-div">
-                <span class="cell-div-title">账号：</span>
-                <el-input
-                  class="text-left-center"
-                  v-model="vendeeInfo.account"
-                  size="mini"
-                ></el-input>
-              </div>
+  <div>
+    <div id="outTicketPdf" ref="outTicketPdf" class="constract-div">
+      <div class="constract-header">
+        <span class="constract-header-title">销售合同确认书</span>
+      </div>
+      <div class="constract-buyer-info-div">
+        <div class="constract-buyer-info-div-left">
+          <div class="constract-buyer-info-div-left-firstfloor">
+            <div class="title-div-gray flex justify-content">
+              <span>买方({{vendeeInfo.customerNo}})</span>
+              <el-select
+                filterable
+                v-model="selectedCustomer"
+                size="mini"
+                placeholder="选择买方"
+                @change="vendeeInfoChanged"
+              >
+                <el-option
+                  v-for="customer in customerList"
+                  :label="customer.name"
+                  :value="customer"
+                  :key="customer.customerNo"
+                ></el-option>
+              </el-select>
             </div>
-            <div class="constract-buyer-info-div-left-secfloor">
-              <div class="title-div-gray flex justify-content">
-                <span>收货单位(0000001)</span>
-                <el-select
-                  id="es2"
-                  filterable
-                  size="mini"
-                  placeholder="选择收货"
-                >
-                  <el-option label="test1" value="test1"></el-option>
-                  <el-option label="test2" value="test2"></el-option>
-                </el-select>
-              </div>
-              <div class="cell-div mt40">
-                <span class="cell-div-title">名称：</span>
-                <el-input
-                  class="text-left-center"
-                  v-model="goodReceveInfo.name"
-                  size="mini"
-                ></el-input>
-              </div>
-              <div class="cell-div">
-                <span class="cell-div-title">地址：</span>
-                <el-input
-                  class="text-left-center"
-                  v-model="goodReceveInfo.address"
-                  size="mini"
-                ></el-input>
-              </div>
-              <div class="cell-div">
-                <span class="cell-div-title">联系：</span>
-                <el-input
-                  class="text-left-center"
-                  v-model="goodReceveInfo.contactUser"
-                  size="mini"
-                ></el-input>
-              </div>
-              <div class="cell-div">
-                <span class="cell-div-title">电话：</span>
-                <el-input
-                  class="text-left-center"
-                  v-model="goodReceveInfo.phone"
-                  size="mini"
-                ></el-input>
-              </div>
-              <div class="cell-div">
-                <span class="cell-div-title">税号：</span>
-                <el-input
-                  class="text-left-center"
-                  v-model="goodReceveInfo.taxNo"
-                  size="mini"
-                ></el-input>
-              </div>
-              <div class="cell-div">
-                <span class="cell-div-title">账号：</span>
-                <el-input
-                  class="text-left-center"
-                  v-model="goodReceveInfo.account"
-                  size="mini"
-                ></el-input>
-              </div>
-            </div>
-          </div>
-          <div class="constract-buyer-info-div-right">
-            <div class="title-div-gray">资料</div>
-            <div
-              class="cell-div"
-              v-for="detail in contractTemplate.detailList"
-              :key="detail.id"
-            >
-              <span class="cell-div-title mb40">{{ detail.value }}：</span>
+            <div class="cell-div mt40">
+              <span class="cell-div-title">名称：</span>
               <el-input
                 class="text-left-center"
-                v-model="contractInfo[detail.bindingField]"
+                v-model="vendeeInfo.name"
+                size="mini"
+              ></el-input>
+            </div>
+            <div class="cell-div">
+              <span class="cell-div-title">地址：</span>
+              <el-input
+                class="text-left-center"
+                v-model="vendeeInfo.address"
+                size="mini"
+              ></el-input>
+            </div>
+            <div class="cell-div">
+              <span class="cell-div-title">联系：</span>
+              <el-input
+                class="text-left-center"
+                v-model="vendeeInfo.contactUser"
+                size="mini"
+              ></el-input>
+            </div>
+            <div class="cell-div">
+              <span class="cell-div-title">电话：</span>
+              <el-input
+                class="text-left-center"
+                v-model="vendeeInfo.phone"
+                size="mini"
+              ></el-input>
+            </div>
+            <div class="cell-div">
+              <span class="cell-div-title">税号：</span>
+              <el-input
+                class="text-left-center"
+                v-model="vendeeInfo.taxNo"
+                size="mini"
+              ></el-input>
+            </div>
+            <div class="cell-div">
+              <span class="cell-div-title">账号：</span>
+              <el-input
+                class="text-left-center"
+                v-model="vendeeInfo.account"
+                size="mini"
+              ></el-input>
+            </div>
+          </div>
+          <div class="constract-buyer-info-div-left-secfloor">
+            <div class="title-div-gray flex justify-content">
+              <span>收货单位(0000001)</span>
+              <el-select id="es2" filterable size="mini" placeholder="选择收货">
+                <el-option label="test1" value="test1"></el-option>
+                <el-option label="test2" value="test2"></el-option>
+              </el-select>
+            </div>
+            <div class="cell-div mt40">
+              <span class="cell-div-title">名称：</span>
+              <el-input
+                class="text-left-center"
+                v-model="goodReceveInfo.name"
+                size="mini"
+              ></el-input>
+            </div>
+            <div class="cell-div">
+              <span class="cell-div-title">地址：</span>
+              <el-input
+                class="text-left-center"
+                v-model="goodReceveInfo.address"
+                size="mini"
+              ></el-input>
+            </div>
+            <div class="cell-div">
+              <span class="cell-div-title">联系：</span>
+              <el-input
+                class="text-left-center"
+                v-model="goodReceveInfo.contactUser"
+                size="mini"
+              ></el-input>
+            </div>
+            <div class="cell-div">
+              <span class="cell-div-title">电话：</span>
+              <el-input
+                class="text-left-center"
+                v-model="goodReceveInfo.phone"
+                size="mini"
+              ></el-input>
+            </div>
+            <div class="cell-div">
+              <span class="cell-div-title">税号：</span>
+              <el-input
+                class="text-left-center"
+                v-model="goodReceveInfo.taxNo"
+                size="mini"
+              ></el-input>
+            </div>
+            <div class="cell-div">
+              <span class="cell-div-title">账号：</span>
+              <el-input
+                class="text-left-center"
+                v-model="goodReceveInfo.account"
                 size="mini"
               ></el-input>
             </div>
           </div>
         </div>
-
-        <div class="constract-product-detail-div">
-          <el-table
-            border
-            :data="contractProductList"
-            style="width: 100%"
-            size="mini"
-            @cell-click="cellClick"
-            :header-cell-style="{
-              background: 'lightgray',
-              color: 'black',
-              weight: 'bold',
-            }"
+        <div class="constract-buyer-info-div-right">
+          <div class="title-div-gray">资料</div>
+          <div
+            class="cell-div"
+            v-for="detail in contractTemplate.detailList"
+            :key="detail.id"
           >
-            <el-table-column prop="productName" label="名称" width="210px">
-              <template slot-scope="scope">
-                <div
-                  v-if="scope.row.seen"
-                  class="contract-product-detail-select-div"
+            <span class="cell-div-title mb40">{{ detail.value }}：</span>
+            <el-input
+              class="text-left-center"
+              v-model="contractInfo[detail.bindingField]"
+              size="mini"
+            ></el-input>
+          </div>
+        </div>
+      </div>
+
+      <div class="constract-product-detail-div">
+        <el-table
+          border
+          :data="contractProductList"
+          style="width: 100%"
+          size="mini"
+          @cell-click="cellClick"
+          :header-cell-style="{
+            background: 'lightgray',
+            color: 'black',
+            weight: 'bold',
+          }"
+        >
+          <el-table-column prop="productName" label="名称" width="210px">
+            <template slot-scope="scope">
+              <div
+                v-if="scope.row.seen"
+                class="contract-product-detail-select-div"
+              >
+                <el-select
+                  v-model="scope.row.productName"
+                  size="mini"
+                  filterable
+                  remote
+                  reserve-keyword
+                  placeholder="请输入名称"
+                  :remote-method="remoteMethod"
+                  :loading="loading"
+                  @change="onSelect($event, scope.row)"
                 >
-                  <el-select
-                    v-model="scope.row.productName"
-                    size="mini"
-                    filterable
-                    remote
-                    reserve-keyword
-                    placeholder="请输入名称"
-                    :remote-method="remoteMethod"
-                    :loading="loading"
-                    @change="onSelect($event, scope.row)"
+                  <el-option-group
+                    v-for="group in options"
+                    :key="group.groupName"
+                    :label="group.groupName"
                   >
-                    <el-option-group
-                      v-for="group in options"
-                      :key="group.groupName"
-                      :label="group.groupName"
+                    <el-option
+                      v-for="item in group.list"
+                      :key="item.id"
+                      :label="item.value"
+                      :value="item"
                     >
-                      <el-option
-                        v-for="item in group.list"
-                        :key="item.id"
-                        :label="item.value"
-                        :value="item"
-                      >
-                      </el-option>
-                    </el-option-group>
-                  </el-select>
-                  <i
-                    class="el-icon-delete fz12"
-                    @click="removeContractProduct(scope.$index)"
-                  ></i>
-                </div>
-                <span v-else>{{ scope.row.productName }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column prop="specification" label="规格" width="180px">
-            </el-table-column>
-            <el-table-column prop="remark" label="备注" width="200px">
-              <template slot-scope="scope">
-                <el-input
-                  v-if="scope.row.seen"
-                  size="mini"
-                  v-model="scope.row.remark"
-                  @blur="loseFcous(scope.$index, scope.row)"
-                ></el-input>
-                <span v-else>{{ scope.row.remark }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column prop="count" label="数量" width="130px">
-              <template slot-scope="scope">
-                <el-input
-                  v-if="scope.row.seen"
-                  size="mini"
-                  v-model="scope.row.count"
-                  @blur="loseFcous(scope.$index, scope.row)"
-                ></el-input>
-                <span v-else>{{ scope.row.count }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column prop="taxPrice" label="含税单价" width="130px">
-              <template slot-scope="scope">
-                <el-input
-                  v-if="scope.row.seen"
-                  size="mini"
-                  v-model="scope.row.taxPrice"
-                  @blur="loseFcous(scope.$index, scope.row)"
-                ></el-input>
-                <span v-else>{{ scope.row.taxPrice }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column prop="taxTotalPrice" label="含税总价">
-              <!-- <template slot-scope="scope">
+                    </el-option>
+                  </el-option-group>
+                </el-select>
+                <i
+                  class="el-icon-delete fz12"
+                  @click="removeContractProduct(scope.$index)"
+                ></i>
+              </div>
+              <span v-else>{{ scope.row.productName }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="specification" label="规格" width="180px">
+          </el-table-column>
+          <el-table-column prop="remark" label="备注" width="200px">
+            <template slot-scope="scope">
+              <el-input
+                v-if="scope.row.seen"
+                size="mini"
+                v-model="scope.row.remark"
+                @blur="loseFcous(scope.$index, scope.row)"
+              ></el-input>
+              <span v-else>{{ scope.row.remark }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="count" label="数量" width="130px">
+            <template slot-scope="scope">
+              <el-input
+                v-if="scope.row.seen"
+                size="mini"
+                v-model="scope.row.count"
+                @blur="loseFcous(scope.$index, scope.row)"
+              ></el-input>
+              <span v-else>{{ scope.row.count }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="taxPrice" label="含税单价" width="130px">
+            <template slot-scope="scope">
+              <el-input
+                v-if="scope.row.seen"
+                size="mini"
+                v-model="scope.row.taxPrice"
+                @blur="loseFcous(scope.$index, scope.row)"
+              ></el-input>
+              <span v-else>{{ scope.row.taxPrice }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="taxTotalPrice" label="含税总价">
+            <!-- <template slot-scope="scope">
                 <span >{{$my.NumberMul(scope.row.count,scope.row.taxPrice)}}</span>
               </template> -->
-            </el-table-column>
-          </el-table>
-          <el-button
-            id="tbb"
-            icon="el-icon-plus"
-            plain
-            class="add-contract-deail"
-            @click="addContractDetail"
-            >添加详细</el-button
-          >
-          <div class="constract-product-detail-summary-div fz9">
-            <div class="constract-product-detail-summary-item">
-              <span style="width: 180px; text-align: left">总额(含税)</span>
-              <span style="width: 150px; text-align: right">{{
-                contractProductTotal.price
-              }}</span>
-            </div>
-            <div class="constract-product-detail-summary-item">
-              <div style="width: 180px; text-align: left">销项税</div>
-              <div style="width: 130px; margin-left: 510px">
-                <el-select
-                  v-model="contractInfo.taxRate"
-                  placeholder="税率"
-                  size="mini"
-                >
-                  <el-option
-                    v-for="item in taxRateList"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  >
-                  </el-option>
-                </el-select>
-              </div>
-
-              <span style="width: 150px; text-align: right">{{
-                contractProductTotal.tax
-              }}</span>
-            </div>
+          </el-table-column>
+        </el-table>
+        <el-button
+          id="tbb"
+          icon="el-icon-plus"
+          plain
+          class="add-contract-deail"
+          @click="addContractDetail"
+          >添加详细</el-button
+        >
+        <div class="constract-product-detail-summary-div fz9">
+          <div class="constract-product-detail-summary-item">
+            <span style="width: 180px; text-align: left">总额(含税)</span>
+            <span style="width: 150px; text-align: right">{{
+              contractProductTotal.price
+            }}</span>
           </div>
-        </div>
-        <div class="fz8">
-          <p class="constract-content">{{ contractTemplate.content.value }}</p>
-          <div class="constract-remark-div">
-            <div class="remark-title-div">备注</div>
-            <div>
-              <div
-                class="contract-remark-p"
-                v-for="remark in contractTemplate.remarkList"
-                :key="remark.id"
+          <div class="constract-product-detail-summary-item">
+            <div style="width: 180px; text-align: left">销项税</div>
+            <div style="width: 130px; margin-left: 510px">
+              <el-select
+                v-model="contractInfo.taxRate"
+                placeholder="税率"
+                size="mini"
               >
-                {{ remark.value }}
-              </div>
+                <el-option
+                  v-for="item in taxRateList"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+            </div>
+
+            <span style="width: 150px; text-align: right">{{
+              contractProductTotal.tax
+            }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="fz8">
+        <p class="constract-content">{{ contractTemplate.content.value }}</p>
+        <div class="constract-remark-div">
+          <div class="remark-title-div">备注</div>
+          <div>
+            <div
+              class="contract-remark-p"
+              v-for="remark in contractTemplate.remarkList"
+              :key="remark.id"
+            >
+              {{ remark.value }}
             </div>
           </div>
         </div>
-        <div class="contract-confirm-div fz9">
-          <div class="contract-confirm-box">
-            <span>卖方确认</span>
-            <span>{{ companyInfo.name }}</span>
-            <span>{{ companyInfo.address }}</span>
-            <span>开户行：{{ companyInfo.bank }}</span>
-            <span>账号：{{ companyInfo.account }}</span>
-            <span>税号：{{ companyInfo.taxNo }}</span>
-          </div>
-          <div class="contract-confirm-box">
-            <span>买方确认</span>
-            <span>{{ vendeeInfo.name }}</span>
-            <span>{{ vendeeInfo.address }}</span>
-            <span>日期：</span>
-            <span>开户行：{{ vendeeInfo.bank }}</span>
-            <span>账号：{{ vendeeInfo.account }}</span>
-            <span>税号：{{ vendeeInfo.taxNo }}</span>
-          </div>
+      </div>
+      <div class="contract-confirm-div fz9">
+        <div class="contract-confirm-box">
+          <span>卖方确认</span>
+          <span>{{ companyInfo.name }}</span>
+          <span>{{ companyInfo.address }}</span>
+          <span>开户行：{{ companyInfo.bank }}</span>
+          <span>账号：{{ companyInfo.account }}</span>
+          <span>税号：{{ companyInfo.taxNo }}</span>
         </div>
-        <p class="contract-description">
-          {{ contractTemplate.description.value }}
-        </p>
+        <div class="contract-confirm-box">
+          <span>买方确认</span>
+          <span>{{ vendeeInfo.name }}</span>
+          <span>{{ vendeeInfo.address }}</span>
+          <span>日期：</span>
+          <span>开户行：{{ vendeeInfo.bank }}</span>
+          <span>账号：{{ vendeeInfo.account }}</span>
+          <span>税号：{{ vendeeInfo.taxNo }}</span>
+        </div>
       </div>
-      <div class="edit-contract-button-div">
-        <el-button @click="saveContract" type="primary">保存合同</el-button>
-        <el-button @click="printPdf" type="primary">打印合同</el-button>
-        <el-button v-if="!edit" type="warning">清空内容</el-button>
-      </div>
+      <p class="contract-description">
+        {{ contractTemplate.description.value }}
+      </p>
     </div>
+    <div class="edit-contract-button-div">
+      <el-button @click="saveContract" type="primary">保存合同</el-button>
+      <el-button @click="printPdf" type="primary">打印合同</el-button>
+      <el-button v-if="!edit" type="warning">清空内容</el-button>
+    </div>
+  </div>
 </template>
 <script>
 import { mapGetters } from "vuex";
@@ -334,10 +334,12 @@ export default {
   data() {
     return {
       options: [],
+      selectedCustomer: {},
       loading: false,
       vendeeInfo: {
         name: "桑尼泰克精密零部件有限公司",
         address: "昆山市周市镇新镇路681号",
+        customerNo: "",
         contactUser: "潘先生",
         phone: "0512-57861208",
         taxNo: "9S78945612368U",
@@ -443,7 +445,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["contractTemplate"]),
+    ...mapGetters(["contractTemplate", "customerList"]),
     contractProductTotal: function () {
       var contractSummary = { price: 0, tax: 0 };
       var total = 0;
@@ -462,7 +464,8 @@ export default {
   methods: {
     ...mapActions({
       GetContractTemplate: "GetContractTemplate",
-      SaveIntentionContract:'SaveIntentionContract'
+      SaveIntentionContract: "SaveIntentionContract",
+      GetCustomerList: "GetCustomerList",
     }),
     addContractDetail() {
       if (
@@ -531,20 +534,37 @@ export default {
         targetStyles: ["*"],
       });
     },
+    vendeeInfoChanged(item) {
+      this.vendeeInfo.name = item.name;
+      this.vendeeInfo.address = item.address;
+      this.vendeeInfo.customerNo = item.customerNo;
+      this.vendeeInfo.contactUser = item.contactName;
+      this.vendeeInfo.taxNo = item.taxNo;
+      this.account = item.bankNo;
+      this.contractInfo.contractDate = new Date().format("yyyy-MM-dd");
+      this.contractInfo.diliveryWay = item.diliveryMethod;
+      this.contractInfo.type = "1";
+      this.contractInfo.orderDes = item.description;
+      this.contractInfo.payDate = item.payTerm;
+      this.contractInfo.payWay = item.payWay;
+      this.contractInfo.currencyitem.currency;
+      this.contractInfo.diliveryDate - item.deliverTerm;
+    },
     saveContract() {
       var saveObj = {
         contract: this.contractInfo,
         purchaser: this.vendeeInfo,
         goodReceiveInfo: this.goodReceveInfo,
         productList: this.contractProductList,
-        vendorConfirm:this.companyInfo,
-        purchaserConfirm:this.vendeeInfo
+        vendorConfirm: this.companyInfo,
+        purchaserConfirm: this.vendeeInfo,
       };
-      this.SaveIntentionContract(saveObj)
+      this.SaveIntentionContract(saveObj);
     },
   },
   beforeMount() {
     this.GetContractTemplate();
+    this.GetCustomerList();
   },
   props: ["edit"],
 };
