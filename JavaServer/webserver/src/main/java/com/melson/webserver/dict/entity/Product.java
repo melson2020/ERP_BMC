@@ -1,6 +1,7 @@
 package com.melson.webserver.dict.entity;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -17,6 +18,8 @@ public class Product {
     private String categoryId;      // 产品类别，8位编码规则 例：CAT00001
     private String specification;   // 产品规格
     private String unit;            // 产品单位
+    private BigDecimal salesPrice;  // 销售价格
+    private String remark;          // 备注信息
     private String storerageCode;   // 产品存储仓库编号 //TODO:进销存端要和这里的仓库编码对应起来
     private String status;          // 产品是否可售： N：不可售；Y（或空）表示可售
     private String description;     // 产品备注描述
@@ -69,6 +72,22 @@ public class Product {
 
     public void setUnit(String unit) {
         this.unit = unit;
+    }
+
+    public BigDecimal getSalesPrice() {
+        return salesPrice;
+    }
+
+    public void setSalesPrice(BigDecimal salesPrice) {
+        this.salesPrice = salesPrice;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 
     public String getStorerageCode() {

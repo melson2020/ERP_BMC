@@ -14,6 +14,7 @@ public class Customer {
     private Integer id;
     private String customerNo;     //客户编号：32位编码 ，此客户指的是具体购买单位（或个人）
     private String name;           //客户名称
+    private String contactName;    //联系人名字   ，  此字段为临时添加ID对应，将来会扩展
     private String address;        //客户地址
     private String taxNo;          //客户税号
     private String bankNo;         //客户账号
@@ -49,6 +50,14 @@ public class Customer {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getContactName() {
+        return contactName;
+    }
+
+    public void setContactName(String contactName) {
+        this.contactName = contactName;
     }
 
     public String getAddress() {

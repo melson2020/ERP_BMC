@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.MessageFormat;
+import java.util.UUID;
 
 /**
  * 父类合同controller
@@ -58,6 +60,17 @@ public abstract class AbsContractResource extends BaseResource {
     @GetMapping(value = "/get")
     public Result get(Integer id) {
         return success(contractService.get(id));
+    }
+
+    /**
+     * 创建合同编号
+     *
+     * @return
+     */
+    @GetMapping(value = "/createContractNo")
+    public Result createContractNo() {
+        String contractNo = MessageFormat.format("C{0}-{1}", getContractType(), UUID.randomUUID().toString());
+        return success(contractNo);
     }
 
     /**
@@ -126,7 +139,7 @@ public abstract class AbsContractResource extends BaseResource {
         return success(contract.getId());
     }
 
-    @RequestMapping(value = "/contractTemplate",method = RequestMethod.GET)
+    @RequestMapping(value = "/contractTemplate", method = RequestMethod.GET)
     public Result contractTemplate() {
         return success(contractTemplateService.findContractTemplateByType(ContractTemplate.TEMPLATE_NORMAL));
     }
