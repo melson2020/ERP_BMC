@@ -56,4 +56,17 @@ public class SysRespCode {
      * 转为正式合同失败
      */
     public static final int CONTRACT_APPROVE_FAIL = 204;
+
+    /**
+     * 待保存的合同信息为空
+     */
+    public static final int ORDER_FORM_SAVE_IS_NULL = 210;
+    /**
+     * 保存失败
+     */
+    public static final int ORDER_FORM_SAVE_FAIL = 211;
+    /**
+     * 作废失败
+     */
+    public static final int ORDER_FORM_INVALID_FAIL = 212;
 }

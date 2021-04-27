@@ -130,3 +130,20 @@ create table contract_extend
     value      text         null comment '属性值'
 ) comment '合同额外属性表';
 create unique index idx1 on contract_extend (contractId, code);
+
+-- 订单定义表
+drop table if exists order_form;
+create table order_form
+(
+    id         int auto_increment comment '订单唯一自增id,用于其他表关联' primary key,
+    formNo     varchar(50) not null comment '订单展示用编号,避免自增id暴露订单数量',
+    contractId int         not null comment '订单id',
+    type       varchar(2)  not null comment '订单类型:1=自产;2=贸易;3=代工;4=委外;',
+    state      varchar(2)  not null comment '订单状态:0=已作废;1=已下单;2=生产中;3=已出单;',
+    info       varchar(50) null comment '描述',
+    createDate datetime    not null comment '订单创建日期',
+    createUser int         not null comment '订单创建人,关联员工表'
+) comment '订单定义表';
+
+create index idx1 on order_form (createDate);
+create index idx2 on order_form (contractId);
