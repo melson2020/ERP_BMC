@@ -15,6 +15,7 @@ public class ProductBom {
     private Integer id;
     private String productId;       // 产品编码
     private String productName;     // 产品名称
+    private String specification;   // 产品规格
     private String bomNo;           // BOM编码
     private BigDecimal costPrice;   // 对应价格
     private Date expirationDate;    // 过期时间
@@ -45,6 +46,14 @@ public class ProductBom {
 
     public void setProductName(String productName) {
         this.productName = productName;
+    }
+
+    public String getSpecification() {
+        return specification;
+    }
+
+    public void setSpecification(String specification) {
+        this.specification = specification;
     }
 
     public String getBomNo() {

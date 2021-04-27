@@ -36,20 +36,21 @@ public class IProductImpl extends AbstractService<Product> implements IProduct {
     @Override
     public List<ContractProductVo> queryContractProducts(String customerNo, String searchValue) {
         List<ContractProductVo> contractProductList=new ArrayList<>();
-        String sql = "SELECT cb.productId,pd.`name` as productName,pd.specification,CONCAT(pd.`name`, '/', pd.specification)as vaule,cb.remark,cb.salesPrice from customer_bom cb\n" +
-                "left JOIN product pd on cb.productId=pd.productId";
+        String sql = "SELECT cb.productId,pd.`name` as productName,pd.specification,CONCAT(pd.`name`, '/', pd.specification, '/', cb.description) as vaule,cb.remark,cb.salesPrice from customer_bom cb\n" +
+                "left JOIN product pd on cb.productId=pd.productId\n" +
+                "left join product_bom pb on pb.bomNo=cb.bomNo";
         StringBuffer sBuffer = new StringBuffer(sql);
         sBuffer.append(" where cb.customerNo='" + customerNo + "'");
         if (!org.springframework.util.StringUtils.isEmpty(searchValue)) {
             String likeStr = "%" + searchValue + "%";
-            sBuffer.append("and pd.`name` like '" + likeStr + "' or pd.specification like '" + likeStr + "'");
+            sBuffer.append(" and (pd.`name` like '" + likeStr + "' or pd.specification like '" + likeStr + "')");
         }
         List<Object[]> list = entityManagerUtil.ExcuteSql(sBuffer.toString());
         List<ProductVo> productVos= EntityUtils.castEntity(list, ProductVo.class, new ProductVo());
         ContractProductVo contractProductVo1 = new ContractProductVo();
         contractProductVo1.setGroupName("常用产品");
         contractProductVo1.setList(productVos);
-        String sql2 = "SELECT productId,`name`,specification, CONCAT(`name`, '/', specification)as vaule,remark,salesPrice from product";
+        String sql2 = "SELECT productId,`name`,specification, CONCAT(`name`, '/', specification) as vaule,remark,salesPrice from product";
         StringBuffer sBuffer2 = new StringBuffer(sql2);
         if (!org.springframework.util.StringUtils.isEmpty(searchValue)) {
             String likeStr = "%" + searchValue + "%";

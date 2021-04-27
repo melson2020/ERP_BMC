@@ -16,7 +16,7 @@ public class Material {
     private String partNo;          // 物料编码，8位编码规则 例：M0000001
     private String name;            // 物料名称
     private String unit;            // 物料单位
-    private String storerageCode;   // 物料存储仓库， //TODO:进销存端要和这里的仓库编码对应起来
+    private String storageCode;     // 物料存储仓库， //TODO:进销存端要和这里的仓库编码对应起来
     private String manufacturer;    // 物料生产厂家
     private String specification;   // 物料规格
     private BigDecimal weight;      // 物料重量
@@ -63,12 +63,12 @@ public class Material {
         this.unit = unit;
     }
 
-    public String getStorerageCode() {
-        return storerageCode;
+    public String getStorageCode() {
+        return storageCode;
     }
 
-    public void setStorerageCode(String storerageCode) {
-        this.storerageCode = storerageCode;
+    public void setStorageCode(String storageCode) {
+        this.storageCode = storageCode;
     }
 
     public String getManufacturer() {
