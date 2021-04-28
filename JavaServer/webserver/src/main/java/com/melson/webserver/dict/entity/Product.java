@@ -20,7 +20,7 @@ public class Product {
     private String unit;            // 产品单位
     private BigDecimal salesPrice;  // 销售价格
     private String remark;          // 备注信息
-    private String storerageCode;   // 产品存储仓库编号 //TODO:进销存端要和这里的仓库编码对应起来
+    private String storageCode;     // 产品存储仓库编号 //TODO:进销存端要和这里的仓库编码对应起来
     private String status;          // 产品是否可售： N：不可售；Y（或空）表示可售
     private String description;     // 产品备注描述
     private String createBy;        // 产品创建人
@@ -90,12 +90,12 @@ public class Product {
         this.remark = remark;
     }
 
-    public String getStorerageCode() {
-        return storerageCode;
+    public String getStorageCode() {
+        return storageCode;
     }
 
-    public void setStorerageCode(String storerageCode) {
-        this.storerageCode = storerageCode;
+    public void setStorageCode(String storageCode) {
+        this.storageCode = storageCode;
     }
 
     public String getStatus() {

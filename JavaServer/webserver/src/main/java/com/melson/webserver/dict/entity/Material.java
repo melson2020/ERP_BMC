@@ -16,7 +16,7 @@ public class Material {
     private String partNo;          // 物料编码，8位编码规则 例：M0000001
     private String name;            // 物料名称
     private String unit;            // 物料单位
-    private String storerageCode;   // 物料存储仓库， //TODO:进销存端要和这里的仓库编码对应起来
+    private String storageCode;     // 物料存储仓库， //TODO:进销存端要和这里的仓库编码对应起来
     private String manufacturer;    // 物料生产厂家
     private String specification;   // 物料规格
     private BigDecimal weight;      // 物料重量
@@ -24,7 +24,7 @@ public class Material {
     private BigDecimal volume;      // 物料体积
     private String volumeUnit;      // 物料体积单位
     private String semiGoods;       // 物料是否半成品： Y：半成品；N（或空）表示非半成品
-    private BigDecimal cost;        // 物料价格
+//    private BigDecimal cost;        // 物料价格
     private String status;          // 物料状态：  N：不可用；Y（或空）表示可用
     private Date expireDate;        // 物料过期时间
     private String description;     // 物料备注描述
@@ -63,12 +63,12 @@ public class Material {
         this.unit = unit;
     }
 
-    public String getStorerageCode() {
-        return storerageCode;
+    public String getStorageCode() {
+        return storageCode;
     }
 
-    public void setStorerageCode(String storerageCode) {
-        this.storerageCode = storerageCode;
+    public void setStorageCode(String storageCode) {
+        this.storageCode = storageCode;
     }
 
     public String getManufacturer() {
@@ -125,14 +125,6 @@ public class Material {
 
     public void setSemiGoods(String semiGoods) {
         this.semiGoods = semiGoods;
-    }
-
-    public BigDecimal getCost() {
-        return cost;
-    }
-
-    public void setCost(BigDecimal cost) {
-        this.cost = cost;
     }
 
     public String getStatus() {

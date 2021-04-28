@@ -15,6 +15,7 @@ public class CustomerBom {
     private String customerNo;      // 客户编号
     private String productId;       // 产品编号
     private String bomNo;           // BOM编号
+    private String specification;   // 产品规格
     private BigDecimal salesPrice;  // 销售价格
     private String remark;          // 备注信息
     private String description;     // 描述信息 ， 信息来BOM表的描述备注，工序，工艺，尺寸等等
@@ -49,6 +50,14 @@ public class CustomerBom {
 
     public void setBomNo(String bomNo) {
         this.bomNo = bomNo;
+    }
+
+    public String getSpecification() {
+        return specification;
+    }
+
+    public void setSpecification(String specification) {
+        this.specification = specification;
     }
 
     public BigDecimal getSalesPrice() {

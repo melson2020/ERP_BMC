@@ -23,6 +23,7 @@ public class ProductBomResource extends BaseResource {
 
     @RequestMapping(value = "/list",method = RequestMethod.GET)
     public Result GetProductBomList(HttpServletRequest request){
+
         return null;
 
     }

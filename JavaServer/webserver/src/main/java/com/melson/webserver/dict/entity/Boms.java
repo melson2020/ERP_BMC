@@ -21,13 +21,13 @@ public class Boms {
     private BigDecimal lossRate;          // 子件折损率
     private String processStation;        // 工位
     private String manufacturer;          // 生产商
-    private BigDecimal materialCost;      // 物料成本  选择半成品时成本为基础物料成本+对应工序人工成本
-    private BigDecimal humanCost;         // 人工成本 对应produce_process表，不同工序的人工成本不同
+//    private BigDecimal materialCost;      // 物料成本  选择半成品时成本为基础物料成本+对应工序人工成本
+//    private BigDecimal humanCost;         // 人工成本 对应produce_process表，不同工序的人工成本不同
     private String materialCostStatus;    // 物料成本状态，Y：计算物料成本 ； N ：不计算物料成本，多指来料代加工，只赚人工费
     private String startBatchNo;          // 物料起始批次号
     private String endBatchNo;            // 物料截止批次号
     private Date expireDate;              // BOM有效期
-    private String decription;            // BOM描述备注：工序，工艺，尺寸等等
+    private String description;           // BOM描述备注：工序，工艺，尺寸等等
     private String status;                // BOM状态值 Y：启用；N：停用
     private String vers;                  // BOM版本号
     private String createBy;              // BOM创建人
@@ -105,22 +105,6 @@ public class Boms {
         this.manufacturer = manufacturer;
     }
 
-    public BigDecimal getMaterialCost() {
-        return materialCost;
-    }
-
-    public void setMaterialCost(BigDecimal materialCost) {
-        this.materialCost = materialCost;
-    }
-
-    public BigDecimal getHumanCost() {
-        return humanCost;
-    }
-
-    public void setHumanCost(BigDecimal humanCost) {
-        this.humanCost = humanCost;
-    }
-
     public String getMaterialCostStatus() {
         return materialCostStatus;
     }
@@ -153,12 +137,12 @@ public class Boms {
         this.expireDate = expireDate;
     }
 
-    public String getDecription() {
-        return decription;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDecription(String decription) {
-        this.decription = decription;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getStatus() {
