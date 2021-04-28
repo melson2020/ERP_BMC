@@ -14,7 +14,7 @@ axios.interceptors.request.use(
     var token =
       JSON.parse(localStorage.getItem("userInfo")) == null
         ? null
-        : JSON.parse(localStorage.getItem("userInfo")).userId;
+        : JSON.parse(localStorage.getItem("userInfo")).id;
     if (token) {
       config.headers.token = token;
     }

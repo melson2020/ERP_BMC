@@ -8,19 +8,19 @@
         <div class="constract-buyer-info-div-left">
           <div class="constract-buyer-info-div-left-firstfloor">
             <div class="title-div-gray flex justify-content">
-              <span>买方({{vendeeInfo.customerNo}})</span>
+              <span>买方({{ vendeeInfo.customerNo }})</span>
               <el-select
                 filterable
-                v-model="selectedCustomer"
+                v-model="vendeeInfo.customerNo"
                 size="mini"
                 placeholder="选择买方"
                 @change="vendeeInfoChanged"
               >
                 <el-option
-                  v-for="customer in customerList"
-                  :label="customer.name"
-                  :value="customer"
-                  :key="customer.customerNo"
+                  v-for="vo in customerVoList"
+                  :label="vo.name"
+                  :value="vo.customerNo"
+                  :key="vo.customerNo"
                 ></el-option>
               </el-select>
             </div>
@@ -76,9 +76,19 @@
           <div class="constract-buyer-info-div-left-secfloor">
             <div class="title-div-gray flex justify-content">
               <span>收货单位(0000001)</span>
-              <el-select id="es2" filterable size="mini" placeholder="选择收货">
-                <el-option label="test1" value="test1"></el-option>
-                <el-option label="test2" value="test2"></el-option>
+              <el-select
+                v-model="selectedAddress"
+                @change="diliveryAdrressChanged"
+                filterable
+                size="mini"
+                placeholder="选择收货"
+              >
+                <el-option
+                  v-for="address in diliveryAddressList"
+                  :key="address.id"
+                  :label="address.deliverAddress"
+                  :value="address.id"
+                ></el-option>
               </el-select>
             </div>
             <div class="cell-div mt40">
@@ -266,9 +276,9 @@
               >
                 <el-option
                   v-for="item in taxRateList"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+                  :key="item.id"
+                  :label="item.rate"
+                  :value="item.rate"
                 >
                 </el-option>
               </el-select>
@@ -334,38 +344,40 @@ export default {
   data() {
     return {
       options: [],
-      selectedCustomer: {},
+      selectedAddress: "",
+      diliveryAddressList: [],
       loading: false,
       vendeeInfo: {
-        name: "桑尼泰克精密零部件有限公司",
-        address: "昆山市周市镇新镇路681号",
+        name: "",
+        address: "",
         customerNo: "",
-        contactUser: "潘先生",
-        phone: "0512-57861208",
-        taxNo: "9S78945612368U",
-        account: "62001102368944789",
+        contactUser: "",
+        phone: "",
+        taxNo: "",
+        account: "",
       },
       goodReceveInfo: {
-        name: "桑尼泰克精密零部件有限公司",
-        address: "昆山市周市镇新镇路681号",
-        contactUser: "潘先生",
-        phone: "0512-57861208",
-        taxNo: "9S78945612368U",
-        account: "62001102368944789",
+        name: "",
+        addressId: "",
+        address: "",
+        contactUser: "",
+        phone: "",
+        taxNo: "",
+        account: "",
       },
       contractInfo: {
-        contractNo: "1610670360",
-        contractDate: "2020-04-06",
-        diliveryWay: "60-1",
+        contractNo: "",
+        contractDate: "",
+        diliveryWay: "",
         type: "",
-        orderTicketNo: "2021041405",
-        orderDes: "暂不开票",
-        diliveryType: "FCA CHINA",
-        payDate: "2014-04-23",
+        orderTicketNo: "",
+        orderDes: "",
+        deliverType: "",
+        payDate: "",
         payWay: "",
-        currency: "RMB",
-        diliveryDate: "订单下达后20天",
-        contact: " 张XX T：241699788",
+        currency: "",
+        deliverDate: "",
+        contactUser: "",
         quality: "",
         taxRate: "",
       },
@@ -377,75 +389,11 @@ export default {
         taxNo: "91384792U874K9",
       },
       contractProductList: [],
-      productList: [
-        {
-          groupName: "常用产品",
-          list: [
-            {
-              id: 1,
-              productName: "圆珠笔",
-              specification: "0.38mm*红",
-              value: "圆珠笔/0.38mm*红",
-              remark: "小包装",
-              taxPrice: "2.7",
-            },
-            {
-              id: 2,
-              productName: "网线",
-              specification: "3m*蓝色",
-              value: "网线/3m*蓝色",
-              remark: "10根一捆",
-              taxPrice: "3.1",
-            },
-            {
-              id: 3,
-              productName: "圆珠笔",
-              specification: "0.38mm*黑",
-              value: "圆珠笔/0.38mm*黑",
-              remark: "大包装",
-              taxPrice: "2.65",
-            },
-          ],
-        },
-        {
-          groupName: "产品列表",
-          list: [
-            {
-              id: 4,
-              productName: "公司产品笔04",
-              specification: "规格04",
-              value: "公司产品笔04/规格04",
-              taxPrice: "",
-              remark: "",
-            },
-            {
-              id: 5,
-              productName: "公司产品笔05",
-              specification: "规格05",
-              value: "公司产品笔05/规格05",
-              taxPrice: "",
-              remark: "",
-            },
-            {
-              id: 6,
-              productName: "公司产品网线06",
-              specification: "规格06",
-              value: "公司产品网线06/规格06",
-              taxPrice: "",
-              remark: "",
-            },
-          ],
-        },
-      ],
-      taxRateList: [
-        { label: "3%", value: "3" },
-        { label: "6%", value: "6" },
-        { label: "13%", value: "13" },
-      ],
+      taxRateList: [],
     };
   },
   computed: {
-    ...mapGetters(["contractTemplate", "customerList"]),
+    ...mapGetters(["contractTemplate", "customerVoList"]),
     contractProductTotal: function () {
       var contractSummary = { price: 0, tax: 0 };
       var total = 0;
@@ -465,7 +413,9 @@ export default {
     ...mapActions({
       GetContractTemplate: "GetContractTemplate",
       SaveIntentionContract: "SaveIntentionContract",
-      GetCustomerList: "GetCustomerList",
+      GetCustomerVoList: "GetCustomerVoList",
+      GetContractVoByCustomerNo: "GetContractVoByCustomerNo",
+      SearchContractIntentionProductList: "SearchContractIntentionProductList",
     }),
     addContractDetail() {
       if (
@@ -478,6 +428,7 @@ export default {
       }
       this.contractProductList.push({
         id: -1,
+        productId:-1,
         productName: "",
         specification: "",
         remark: "",
@@ -489,32 +440,50 @@ export default {
       this.selectPid = -1;
     },
     remoteMethod(query) {
+      if (this.vendeeInfo.customerNo == "") {
+        return;
+      }
       if (query !== "") {
         this.loading = true;
-        setTimeout(() => {
-          this.loading = false;
-          var options = [];
-          this.productList.map((group) => {
-            var subList = group.list.filter((item) => {
-              return item.value.toLowerCase().indexOf(query.toLowerCase()) > -1;
-            });
-            if (subList.length > 0) {
-              options.push({ groupName: group.groupName, list: subList });
+        this.SearchContractIntentionProductList({
+          searchValue: query,
+          customerNo: this.vendeeInfo.customerNo,
+        })
+          .then((res) => {
+            this.loading = false;
+            if (res.resultStatus == 1) {
+              var productList = res.data;
+              var options = [];
+              productList.map((group) => {
+                var subList = group.list.filter((item) => {
+                  return (
+                    item.value.toLowerCase().indexOf(query.toLowerCase()) > -1
+                  );
+                });
+                if (subList.length > 0) {
+                  options.push({ groupName: group.groupName, list: subList });
+                }
+              });
+              this.options = options;
             }
+          })
+          .catch(() => {
+            this.loading = false;
           });
-          this.options = options;
-        }, 200);
       } else {
         this.options = [];
       }
     },
     onSelect(item, row) {
+      console.log(item)
       row.id = item.id;
+      row.productId=item.id;
       row.productName = item.productName;
       row.specification = item.specification;
       row.seen = false;
       row.remark = item.remark;
-      row.taxPrice = item.taxPrice;
+      row.taxPrice = item.salesPrice==null?"":item.salesPrice;
+      console.log(this.contractProductList)
     },
     cellClick(row) {
       row.seen = true;
@@ -534,21 +503,51 @@ export default {
         targetStyles: ["*"],
       });
     },
-    vendeeInfoChanged(item) {
-      this.vendeeInfo.name = item.name;
-      this.vendeeInfo.address = item.address;
-      this.vendeeInfo.customerNo = item.customerNo;
-      this.vendeeInfo.contactUser = item.contactName;
-      this.vendeeInfo.taxNo = item.taxNo;
-      this.account = item.bankNo;
-      this.contractInfo.contractDate = new Date().format("yyyy-MM-dd");
-      this.contractInfo.diliveryWay = item.diliveryMethod;
-      this.contractInfo.type = "1";
-      this.contractInfo.orderDes = item.description;
-      this.contractInfo.payDate = item.payTerm;
-      this.contractInfo.payWay = item.payWay;
-      this.contractInfo.currencyitem.currency;
-      this.contractInfo.diliveryDate - item.deliverTerm;
+    vendeeInfoChanged(customerNo) {
+      this.GetContractVoByCustomerNo({ customerNo: customerNo })
+        .then((res) => {
+          if (res.resultStatus == 1) {
+            var customer = res.data.customer;
+            this.vendeeInfo.name = customer.name;
+            this.vendeeInfo.address = customer.address;
+            this.vendeeInfo.customerNo = customer.customerNo;
+            this.vendeeInfo.contactUser = customer.contactName;
+            this.vendeeInfo.taxNo = customer.taxNo;
+            this.vendeeInfo.account = customer.bankNo;
+            this.contractInfo.contractDate = new Date().format("yyyy-MM-dd");
+            this.contractInfo.diliveryWay = customer.diliveryMethod;
+            this.contractInfo.type = "1";
+            this.contractInfo.orderDes = customer.description;
+            this.contractInfo.payDate = customer.payTerm;
+            this.contractInfo.payWay = customer.payWay;
+            this.contractInfo.currency = customer.currency;
+            this.contractInfo.deliverDate = customer.deliverTerm;
+            this.taxRateList = res.data.taxRates;
+            this.diliveryAddressList = res.data.deliverAddresses;
+          } else {
+            this.$message.warning(res.message);
+          }
+        })
+        .catch((err) => {
+          this.$message.error(err.message);
+        });
+        if(this.contractInfo.contractNo==""){
+          var timeSpan=this.$my.ID2();
+          this.contractInfo.contractNo='C'+timeSpan
+          this.contractInfo.orderTicketNo='R'+timeSpan
+        }
+    },
+    diliveryAdrressChanged(addressId) {
+      var address = this.diliveryAddressList.find((item) => {
+        return item.id == addressId;
+      });
+      this.goodReceveInfo.name = this.vendeeInfo.name;
+      this.goodReceveInfo.address = address.deliverAddress;
+      this.goodReceveInfo.contactUser = address.contactName;
+      this.goodReceveInfo.phone = "";
+      this.goodReceveInfo.customerNo = this.vendeeInfo.customerNo;
+      this.goodReceveInfo.taxNo = this.vendeeInfo.taxNo;
+      this.goodReceveInfo.account = this.vendeeInfo.account;
     },
     saveContract() {
       var saveObj = {
@@ -564,8 +563,11 @@ export default {
   },
   beforeMount() {
     this.GetContractTemplate();
-    this.GetCustomerList();
+    this.GetCustomerVoList();
   },
+  activated() {
+      console.log('我这个页面显示就会执行');
+    },
   props: ["edit"],
 };
 </script>

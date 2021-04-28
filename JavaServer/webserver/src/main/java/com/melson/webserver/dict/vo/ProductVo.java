@@ -6,6 +6,7 @@ import java.math.BigDecimal;
  * Created by Messi on 2021/4/26
  */
 public class ProductVo {
+    private Integer id;
     private String productId;
     private String productName;
     private String specification;
@@ -16,13 +17,22 @@ public class ProductVo {
     public ProductVo() {
     }
 
-    public ProductVo(String productId, String productName, String specification, String value, String remark, BigDecimal salesPrice) {
+    public ProductVo(Integer id, String productId, String productName, String specification, String value, String remark, BigDecimal salesPrice) {
+        this.id = id;
         this.productId = productId;
         this.productName = productName;
         this.specification = specification;
         this.value = value;
         this.remark = remark;
         this.salesPrice = salesPrice;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getProductId() {

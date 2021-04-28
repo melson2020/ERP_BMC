@@ -44,7 +44,7 @@ public class CommonResource extends BaseResource {
         this.produceProcessService = produceProcessService;
     }
 
-    @RequestMapping(value = "/initialcontract",method = RequestMethod.GET)
+    @RequestMapping(value = "/initialContract",method = RequestMethod.GET)
     public Result GetContractLProdctVo(HttpServletRequest request){
         String searchValue=request.getParameter("searchValue");
         String customerNo=request.getParameter("customerNo");

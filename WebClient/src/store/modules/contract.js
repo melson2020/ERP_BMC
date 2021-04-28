@@ -6,7 +6,8 @@ import { Message } from "element-ui";
 
 const state = {
     contractTemplate:{},
-    customerList:[]
+    customerVoList:[],
+    intentionContractList:[]
 };
 
 const actions = {
@@ -24,7 +25,7 @@ const actions = {
     SaveIntentionContract({commit},param){
         request.SaveIntentionContract(param).then(res=>{
             if (res.resultStatus == 1) {
-                console.log('保存成功')
+                Message.success("保存成功")
             } else {
                 Message.warning(res.message)
             }
@@ -32,11 +33,28 @@ const actions = {
             Message.error(err.message)
         })
     },
-    GetCustomerList({commit}){
-        request.GetCustomerList().then(res=>{
+    GetCustomerVoList({commit}){
+        request.GetCustomerVoList().then(res=>{
             if (res.resultStatus == 1) {
-                commit(types.CUSTOMER_LIST, res.data)
+                commit(types.CUSTOMER_VO_LIST, res.data)
             } else {
+                Message.warning(res.message)
+            }
+        }).catch(err => {
+            Message.error(err.message)
+        })
+    },
+    GetContractVoByCustomerNo({},param){
+       return request.GetContractVoByCustomerNo(param)
+    },
+    SearchContractIntentionProductList({},param){
+        return request.GetContractIntentionProductin(param)
+    },
+    GetIntentionContractList({commit}){
+        request.GetIntentionContractList().then(res=>{
+            if(res.resultStatus==1){
+               commit(types.CONTRACT_INTENTION_LIST,res.data)
+            }else {
                 Message.warning(res.message)
             }
         }).catch(err => {
@@ -47,16 +65,20 @@ const actions = {
 
 const getters = {
     contractTemplate: state => state.contractTemplate,
-    customerList:state=>state.customerList
+    customerVoList:state=>state.customerVoList,
+    intentionContractList:state=>state.intentionContractList
 };
 
 const mutations = {
     [types.CONTRACT_TEMPLATE](state, data) {
         state.contractTemplate = data;
     },
-    [types.CUSTOMER_LIST](state, data) {
-        state.customerList = data;
+    [types.CUSTOMER_VO_LIST](state, data) {
+        state.customerVoList = data;
     },
+    [types.CONTRACT_INTENTION_LIST](state,data){
+        state.intentionContractList = data;
+    }
 };
 
 export default {

@@ -15,15 +15,15 @@ public enum ContractExtendEnum {
     /**
      * 合同描述
      */
-    DESC("desc", "合同描述", true),
+    DESC("desc", "合同描述", false),
     /**
      * 合同备注
      */
-    REMARKS("remarks", "合同备注", true),
+    REMARKS("remarks", "合同备注", false),
     /**
      * 合同说明
      */
-    EXPLAIN("explain", "合同说明", true);
+    EXPLAIN("explain", "合同说明", false);
 
     /**
      * 属性字段名

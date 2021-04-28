@@ -23,6 +23,13 @@ public class Contract {
     public static final String TYPE_FORMAL = "2";
 
     /**
+     * 合同状态:0=已作废;1=待处理;2=进行中;3=已完成;
+     */
+    public static final String STATE_NEW = "1";
+    public static final String STATE_PROCESSING = "2";
+
+
+    /**
      * 合同唯一自增id,用于其他表关联
      */
     private Integer id;
@@ -69,11 +76,11 @@ public class Contract {
     /**
      * 交货日期
      */
-    private Date deliverDate;
+    private String deliverDate;
     /**
      * 联系人,关联员工表
      */
-    private Integer contactUser;
+    private String contactUser;
     /**
      * 质量保证
      */
@@ -173,19 +180,19 @@ public class Contract {
         this.currency = currency;
     }
 
-    public Date getDeliverDate() {
+    public String getDeliverDate() {
         return deliverDate;
     }
 
-    public void setDeliverDate(Date deliverDate) {
+    public void setDeliverDate(String deliverDate) {
         this.deliverDate = deliverDate;
     }
 
-    public Integer getContactUser() {
+    public String getContactUser() {
         return contactUser;
     }
 
-    public void setContactUser(Integer contactUser) {
+    public void setContactUser(String contactUser) {
         this.contactUser = contactUser;
     }
 

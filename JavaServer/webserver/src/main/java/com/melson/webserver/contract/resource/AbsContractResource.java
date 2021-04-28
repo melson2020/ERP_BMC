@@ -82,7 +82,9 @@ public abstract class AbsContractResource extends BaseResource {
      */
     @PostMapping(value = "/save")
     public Result save(HttpServletRequest request, @RequestBody ContractInfoVo vo) {
-        Integer userId = getLoginUserId(request);
+//        Integer userId = getLoginUserId(request);
+        String token=request.getHeader("token");
+        Integer userId=Integer.parseInt(token);
         if (userId == null) {
             return failure(SysRespCode.LOGIN_TIME_OUT, "登录超时");
         }

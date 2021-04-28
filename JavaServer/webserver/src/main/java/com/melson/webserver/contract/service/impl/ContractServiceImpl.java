@@ -2,6 +2,7 @@ package com.melson.webserver.contract.service.impl;
 
 import com.melson.base.constants.SysConstants;
 import com.melson.base.utils.DateUtil;
+import com.melson.base.utils.EntityUtils;
 import com.melson.webserver.contract.dao.IContractExtendRepository;
 import com.melson.webserver.contract.dao.IContractOrgRepository;
 import com.melson.webserver.contract.dao.IContractRepository;
@@ -13,6 +14,8 @@ import com.melson.webserver.contract.entity.ContractStock;
 import com.melson.webserver.contract.enums.ContractExtendEnum;
 import com.melson.webserver.contract.service.IContractService;
 import com.melson.webserver.contract.vo.ContractInfoVo;
+import com.melson.webserver.contract.vo.ContractShowVo;
+import com.melson.webserver.dict.vo.ProductVo;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,8 +51,11 @@ public class ContractServiceImpl implements IContractService {
     private IContractExtendRepository contractExtendRepository;
 
     @Override
-    public List<Contract> list(String type, String contractNo, String orgName) {
-        return contractRepository.list(type, contractNo, orgName);
+    public List<ContractShowVo> list(String type, String contractNo, String orgName) {
+//        return contractRepository.list(type, contractNo, orgName);
+        List<Object[]> objects= contractRepository.findIntentionList(type);
+        List<ContractShowVo> vos= EntityUtils.castEntity(objects, ContractShowVo.class, new ContractShowVo());
+        return vos;
     }
 
     @Override
@@ -92,22 +98,32 @@ public class ContractServiceImpl implements IContractService {
         if (!saveCheck) {
             return null;
         }
+
         Date date = new Date();
         // 合同资料
         Contract contract = new Contract();
         BeanUtils.copyProperties(vo.getContract(), contract);
-        contract.setContractNo(DateUtil.timeFormat(date));
+        Contract existContract = contractRepository.findByContractNo(contract.getContractNo());
+        if (existContract != null) {
+            return null;
+        }
+//        contract.setContractNo(DateUtil.timeFormat(date));
         contract.setType(contractType);
         contract.setCreateDate(date);
         contract.setCreateUser(userId);
+        contract.setState(Contract.STATE_NEW);
         contractRepository.saveAndFlush(contract);
         // 买方
         ContractOrg purchaser = vo.getPurchaser();
         purchaser.setContractId(contract.getId());
+        purchaser.setContractNo(contract.getContractNo());
+        purchaser.setType(ContractOrg.TYPE_PURCHASER);
         contractOrgRepository.saveAndFlush(purchaser);
         // 收货单位
         ContractOrg goodReceiveInfo = vo.getGoodReceiveInfo();
         goodReceiveInfo.setContractId(contract.getId());
+        goodReceiveInfo.setContractNo(contract.getContractNo());
+        goodReceiveInfo.setType(ContractOrg.TYPE_GOOD_RECEIVE);
         contractOrgRepository.saveAndFlush(goodReceiveInfo);
         // 合同产品集合
         List<ContractStock> productList = vo.getProductList();
@@ -116,10 +132,14 @@ public class ContractServiceImpl implements IContractService {
         // 卖方确认
         ContractOrg vendorConfirm = vo.getVendorConfirm();
         vendorConfirm.setContractId(contract.getId());
+        vendorConfirm.setContractNo(contract.getContractNo());
+        vendorConfirm.setType(ContractOrg.TYPE_VENDOR_CONFIRM);
         contractOrgRepository.saveAndFlush(vendorConfirm);
         // 买方确认
         ContractOrg purchaserConfirm = vo.getPurchaserConfirm();
         purchaserConfirm.setContractId(contract.getId());
+        purchaserConfirm.setContractNo(contract.getContractNo());
+        purchaserConfirm.setType(ContractOrg.TYPE_PURCHASER_CONFIRM);
         contractOrgRepository.saveAndFlush(purchaserConfirm);
         // 额外属性
         List<ContractExtend> extendList = new ArrayList<>();

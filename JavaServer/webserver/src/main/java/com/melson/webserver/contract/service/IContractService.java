@@ -2,6 +2,7 @@ package com.melson.webserver.contract.service;
 
 import com.melson.webserver.contract.entity.Contract;
 import com.melson.webserver.contract.vo.ContractInfoVo;
+import com.melson.webserver.contract.vo.ContractShowVo;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -22,7 +23,7 @@ public interface IContractService {
      * @param orgName
      * @return
      */
-    List<Contract> list(String type, String contractNo, String orgName);
+    List<ContractShowVo> list(String type, String contractNo, String orgName);
 
     /**
      * 根据合同id查询合同对象

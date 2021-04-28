@@ -44,7 +44,16 @@ export default {
   SaveIntentionContract(param){
     return service.post('/contract/intention/save',param)
   },
-  GetCustomerList(){
-    return service.get('/customer/list')
+  GetCustomerVoList(){
+    return service.get('/customer/listVo')
+  },
+  GetContractVoByCustomerNo(param){
+    return service.get('/customer/queryCustomer',param)
+  },
+  GetContractIntentionProductin(param){
+    return service.get('/common/initialContract',param)
+  },
+  GetIntentionContractList(){
+    return service.get('/contract/intention/list')
   }
 };

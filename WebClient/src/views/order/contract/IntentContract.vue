@@ -8,13 +8,28 @@
         suffix-icon="el-icon-search"
       ></el-input>
     </div>
-    <el-table :data="intentContractList" border="" stripe style="width: 100%">
-      <el-table-column prop="contractNo" label="合同号"> </el-table-column>
-      <el-table-column prop="vendeeName" label="客户名称"> </el-table-column>
-      <el-table-column prop="createDate" label="创建日期"> </el-table-column>
-      <el-table-column prop="createEmpName" label="制单人员"> </el-table-column>
+    <el-table
+      :data="intentionContractList"
+      border=""
+      stripe
+      style="width: 100%"
+    >
+      <el-table-column prop="contractNo" label="合同号" width="180px">
+      </el-table-column>
+      <el-table-column prop="customerName" label="客户名称"> </el-table-column>
+      <el-table-column prop="createDate" label="创建日期">
+        <template slot-scope="scope">
+          <span>{{ getFullTime(scope.row.createDate) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="createEmployee" label="制单人员">
+      </el-table-column>
       <el-table-column prop="remarks" label="备注"> </el-table-column>
-      <el-table-column prop="status" label="状态"> </el-table-column>
+      <el-table-column prop="type" label="状态" width="80px">
+        <template slot-scope="scope">
+          <span class="coloryellow">{{ getType(scope.row.type) }}</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="" label="操作">
         <template>
           <el-button
@@ -48,62 +63,44 @@
 </template>
 <script>
 import editContract from "./EditContract";
+import { mapGetters } from "vuex";
+import { mapActions } from "vuex";
 export default {
   name: "m-intent-constract",
   data() {
     return {
       dialogVisible: false,
-      intentContractList: [
-        {
-          contractNo: "20210415023",
-          vendeeName: "桑尼泰克精密零部件有限公司",
-          createDate: "2021-04-14",
-          orderNo: "2021041405",
-          createEmpName: "测试账户",
-          status: "待确认",
-        },
-        {
-          contractNo: "20210415025",
-          vendeeName: "测试公司数据",
-          createDate: "2021-04-13",
-          orderNo: "2021041403",
-          createEmpName: "测试账户",
-          status: "待确认",
-        },
-        {
-          contractNo: "20210416001",
-          vendeeName: "测试公司数据",
-          createDate: "2021-04-13",
-          orderNo: "2021041402",
-          createEmpName: "测试账户",
-          status: "待确认",
-        },
-        {
-          contractNo: "20210416001",
-          vendeeName: "测试公司数据",
-          createDate: "2021-04-13",
-          orderNo: "2021041402",
-          createEmpName: "测试账户",
-          status: "待确认",
-        },
-        {
-          contractNo: "20210416001",
-          vendeeName: "测试公司数据",
-          createDate: "2021-04-13",
-          orderNo: "2021041402",
-          createEmpName: "测试账户",
-          status: "待确认",
-        },
-      ],
     };
+  },
+  computed: {
+    ...mapGetters(["intentionContractList"]),
+  },
+  methods: {
+    ...mapActions({
+      GetIntentionContractList: "GetIntentionContractList",
+    }),
+    getFullTime(time) {
+      return new Date(time).format("yyyy-MM-dd hh:mm:ss");
+    },
+    getType(type) {
+      switch (type) {
+        case "1":
+          return "待确认";
+        case "2":
+          return "已确认";
+        default:
+          return "未知";
+      }
+    },
+    detailOnClick() {
+      this.dialogVisible = !this.dialogVisible;
+    },
   },
   components: {
     "m-edit-contract": editContract,
   },
-  methods: {
-    detailOnClick() {
-      this.dialogVisible = !this.dialogVisible;
-    },
+  beforeMount() {
+    this.GetIntentionContractList();
   },
 };
 </script>
@@ -119,12 +116,12 @@ export default {
 .intent-contract-header {
   padding-bottom: 10px;
 }
-.intent-contract-submit-div{
+.intent-contract-submit-div {
   padding: 10px 0;
   text-align: right;
 }
-.intent-contract-dialog-div{
-   display: flex;
+.intent-contract-dialog-div {
+  display: flex;
   align-items: flex-start;
   justify-content: center;
 }

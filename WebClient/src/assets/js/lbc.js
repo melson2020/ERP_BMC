@@ -92,4 +92,7 @@ export default {   //导出
         var uuid = s.join("");
         return uuid;
     },
+    ID2() {
+        return new Date().valueOf();
+    }
 }
