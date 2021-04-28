@@ -1,5 +1,6 @@
 package com.melson.webserver.order.service;
 
+import com.melson.webserver.contract.entity.Contract;
 import com.melson.webserver.order.entity.OrderForm;
 import com.melson.webserver.order.vo.OrderFormVo;
 
@@ -37,6 +38,14 @@ public interface IOrderFormService {
      * @return
      */
     OrderForm save(OrderFormVo vo, int userId);
+
+    /**
+     * 根据合同创建订单
+     *
+     * @param contract
+     * @return
+     */
+    OrderForm create(Contract contract);
 
     /**
      * 作废订单

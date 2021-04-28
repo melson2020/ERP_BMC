@@ -1,6 +1,7 @@
 package com.melson.webserver.order.service.impl;
 
 import com.melson.base.constants.SysConstants;
+import com.melson.webserver.contract.entity.Contract;
 import com.melson.webserver.order.dao.IOrderFormRepository;
 import com.melson.webserver.order.entity.OrderForm;
 import com.melson.webserver.order.service.IOrderFormService;
@@ -12,8 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.MessageFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * 订单接口实现类
@@ -54,6 +57,20 @@ public class OrderFormServiceImpl implements IOrderFormService {
         BeanUtils.copyProperties(vo, orderForm);
         orderForm.setCreateDate(date);
         orderForm.setCreateUser(userId);
+        orderFormRepository.saveAndFlush(orderForm);
+        return orderForm;
+    }
+
+    @Override
+    public OrderForm create(Contract contract) {
+        OrderForm orderForm = new OrderForm();
+        String formNo = MessageFormat.format("O{0}-{1}", OrderForm.TYPE_SELF, UUID.randomUUID().toString());
+        orderForm.setFormNo(formNo);
+        orderForm.setContractId(contract.getId());
+        orderForm.setType(OrderForm.TYPE_SELF);
+        orderForm.setState(OrderForm.STATE_ORDER);
+        orderForm.setCreateDate(contract.getCreateDate());
+        orderForm.setCreateUser(contract.getCreateUser());
         orderFormRepository.saveAndFlush(orderForm);
         return orderForm;
     }

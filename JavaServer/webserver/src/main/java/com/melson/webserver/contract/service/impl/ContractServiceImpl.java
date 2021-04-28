@@ -16,6 +16,7 @@ import com.melson.webserver.contract.service.IContractService;
 import com.melson.webserver.contract.vo.ContractInfoVo;
 import com.melson.webserver.contract.vo.ContractShowVo;
 import com.melson.webserver.dict.vo.ProductVo;
+import com.melson.webserver.order.service.IOrderFormService;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,6 +50,8 @@ public class ContractServiceImpl implements IContractService {
     private IContractStockRepository contractStockRepository;
     @Autowired
     private IContractExtendRepository contractExtendRepository;
+    @Autowired
+    private IOrderFormService orderFormService;
 
     @Override
     public List<ContractShowVo> list(String type, String contractNo, String orgName) {
@@ -192,7 +195,7 @@ public class ContractServiceImpl implements IContractService {
         formalContract.setCreateUser(userId);
         formalContract.setSourceId(contract.getId());
         contractRepository.saveAndFlush(formalContract);
-        // todo : 转为正式合同后需要自动生成订单信息 add by wuhuan on 2021-04-20
+        orderFormService.create(contract);
         return formalContract;
     }
 }

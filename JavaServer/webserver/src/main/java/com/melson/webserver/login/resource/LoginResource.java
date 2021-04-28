@@ -6,6 +6,7 @@ import com.melson.base.constants.SysConstants;
 import com.melson.base.constants.SysRespCode;
 import com.melson.base.entity.User;
 import com.melson.base.service.IUser;
+import com.melson.base.utils.CookieUtil;
 import com.melson.base.utils.MD5Util;
 import com.melson.webserver.login.vo.LoginUserSession;
 import org.apache.commons.lang.StringUtils;
@@ -15,8 +16,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 登录controller
@@ -56,7 +60,7 @@ public class LoginResource extends BaseResource {
      * @return
      */
     @PostMapping(value = "/login")
-    public Result login(HttpServletRequest request, @RequestBody User loginInfo) {
+    public Result login(HttpServletRequest request, HttpServletResponse response, @RequestBody User loginInfo) {
         User user = userService.SystemLogin(loginInfo);
         if (user == null) {
             return failure(SysRespCode.LOGIN_FAIL, "登录失败");
@@ -65,6 +69,10 @@ public class LoginResource extends BaseResource {
         httpSession.setAttribute(SysConstants.LOGIN_SESSION_USER_ID, user.getId());
         LoginUserSession userSession = new LoginUserSession(user.getId(), user.getLoginName(), user.getUserName(), new Date(), httpSession.getId());
         httpSession.setAttribute(SysConstants.LOGIN_SESSION_USER_SESSION, userSession);
+        Map<String, String> cookieMap = new HashMap<>();
+        cookieMap.put(SysConstants.SYS_COOKIE_LOGIN_CODE, user.getLoginName());
+        cookieMap.put(SysConstants.SYS_COOKIE_USER_ID, user.getUserId());
+        CookieUtil.saveCookies(response, cookieMap);
         logger.info("用户[{}]登录成功", user.getId() + "-" + user.getLoginName() + "-" + user.getUserName());
         return success(user);
     }

@@ -14,6 +14,16 @@ import java.util.Date;
 public class OrderForm {
 
     /**
+     * 订单类型:1=自产;
+     */
+    public static final String TYPE_SELF = "1";
+
+    /**
+     * 订单状态:1=已下单;
+     */
+    public static final String STATE_ORDER = "1";
+
+    /**
      * 订单唯一自增id,用于其他表关联
      */
     private Integer id;

@@ -25,4 +25,17 @@ public class SysConstants {
      * 登录session键:用户session
      */
     public static final String LOGIN_SESSION_USER_SESSION = "LOGIN_SESSION_USER_SESSION";
+
+    /**
+     * cookie所属域名
+     */
+    public static final String SYS_COOKIE_DOMAIN = "erp.bmc.com";
+    /**
+     * cookie登录账号
+     */
+    public static final String SYS_COOKIE_LOGIN_CODE = "loginCode";
+    /**
+     * cookie用户id
+     */
+    public static final String SYS_COOKIE_USER_ID = "userId";
 }

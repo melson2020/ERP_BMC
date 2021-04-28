@@ -46,10 +46,10 @@ public class OrderFormResource extends BaseResource {
      *
      * @return
      */
-    @GetMapping(value = "/createContractNo")
-    public Result createContractNo(String type) {
-        String contractNo = MessageFormat.format("O{0}-{1}", type, UUID.randomUUID().toString());
-        return success(contractNo);
+    @GetMapping(value = "/createFormNo")
+    public Result createFormNo(String type) {
+        String formNo = MessageFormat.format("O{0}-{1}", type, UUID.randomUUID().toString());
+        return success(formNo);
     }
 
     /**
