@@ -33,7 +33,7 @@ public class OrderFormServiceImpl implements IOrderFormService {
     private IOrderFormRepository orderFormRepository;
 
     @Override
-    public List<OrderForm> list(Integer contractId) {
+    public OrderForm list(Integer contractId) {
         return orderFormRepository.findByContractId(contractId);
     }
 
@@ -63,6 +63,8 @@ public class OrderFormServiceImpl implements IOrderFormService {
 
     @Override
     public OrderForm create(Contract contract) {
+        OrderForm existOrder=orderFormRepository.findByContractId(contract.getId());
+        if(existOrder!=null)return null;
         OrderForm orderForm = new OrderForm();
         String formNo = MessageFormat.format("O{0}-{1}", OrderForm.TYPE_SELF, UUID.randomUUID().toString());
         orderForm.setFormNo(formNo);

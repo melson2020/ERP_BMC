@@ -15,12 +15,14 @@ public class ContractShowVo {
     private Date createDate;
     private String createEmployee;
     private String type;
+    private String state;
+    private Date formalDate;
 
-    public ContractShowVo(){
+    public ContractShowVo() {
 
     }
 
-    public ContractShowVo(Integer id, String orderTicketNo, String contractNo, String customerName, Date createDate, String createEmployee, String type) {
+    public ContractShowVo(Integer id, String orderTicketNo, String contractNo, String customerName, Date createDate, String createEmployee, String type, String state, Date formalDate) {
         this.id = id;
         this.orderTicketNo = orderTicketNo;
         this.contractNo = contractNo;
@@ -28,6 +30,8 @@ public class ContractShowVo {
         this.createDate = createDate;
         this.createEmployee = createEmployee;
         this.type = type;
+        this.state = state;
+        this.formalDate = formalDate;
     }
 
     public Integer getId() {
@@ -84,5 +88,21 @@ public class ContractShowVo {
 
     public void setOrderTicketNo(String orderTicketNo) {
         this.orderTicketNo = orderTicketNo;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public Date getFormalDate() {
+        return formalDate;
+    }
+
+    public void setFormalDate(Date formalDate) {
+        this.formalDate = formalDate;
     }
 }

@@ -2,6 +2,7 @@ package com.melson.webserver.contract.service.impl;
 
 import com.melson.base.constants.SysConstants;
 import com.melson.base.utils.DateUtil;
+import com.melson.base.utils.EntityManagerUtil;
 import com.melson.base.utils.EntityUtils;
 import com.melson.webserver.contract.dao.IContractExtendRepository;
 import com.melson.webserver.contract.dao.IContractOrgRepository;
@@ -26,10 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * 合同接口实现类
@@ -52,12 +50,14 @@ public class ContractServiceImpl implements IContractService {
     private IContractExtendRepository contractExtendRepository;
     @Autowired
     private IOrderFormService orderFormService;
+    @Autowired
+    private EntityManagerUtil entityManagerUtil;
 
     @Override
-    public List<ContractShowVo> list(String type, String contractNo, String orgName) {
+    public List<ContractShowVo> intentionList(String type) {
 //        return contractRepository.list(type, contractNo, orgName);
-        List<Object[]> objects= contractRepository.findIntentionList(type);
-        List<ContractShowVo> vos= EntityUtils.castEntity(objects, ContractShowVo.class, new ContractShowVo());
+        List<Object[]> objects = contractRepository.findIntentionList(type);
+        List<ContractShowVo> vos = EntityUtils.castEntity(objects, ContractShowVo.class, new ContractShowVo());
         return vos;
     }
 
@@ -65,7 +65,7 @@ public class ContractServiceImpl implements IContractService {
     public ContractInfoVo get(Integer id) {
         ContractInfoVo vo = new ContractInfoVo();
         // 合同资料
-        Contract contract = contractRepository.getOne(id);
+        Contract contract = contractRepository.findById(id).orElse(null);
         vo.setContract(contract);
         // 合同公司
         List<ContractOrg> orgList = contractOrgRepository.findByContractId(id);
@@ -106,15 +106,19 @@ public class ContractServiceImpl implements IContractService {
         // 合同资料
         Contract contract = new Contract();
         BeanUtils.copyProperties(vo.getContract(), contract);
-        Contract existContract = contractRepository.findByContractNo(contract.getContractNo());
-        if (existContract != null) {
-            return null;
+        //防止重复创建
+        if (contract.getId() == null) {
+            Contract existContract = contractRepository.findByContractNo(contract.getContractNo());
+            if (existContract != null) {
+                return null;
+            }
         }
 //        contract.setContractNo(DateUtil.timeFormat(date));
         contract.setType(contractType);
         contract.setCreateDate(date);
         contract.setCreateUser(userId);
         contract.setState(Contract.STATE_NEW);
+        contract.setFormalDate(date);
         contractRepository.saveAndFlush(contract);
         // 买方
         ContractOrg purchaser = vo.getPurchaser();
@@ -168,7 +172,7 @@ public class ContractServiceImpl implements IContractService {
             logger.error("作废id为空");
             return null;
         }
-        Contract contract = contractRepository.getOne(id);
+        Contract contract = contractRepository.findById(id).orElse(null);
         contract.setState(SysConstants.COMMON_DISABLE);
         contractRepository.saveAndFlush(contract);
         return contract;
@@ -177,25 +181,46 @@ public class ContractServiceImpl implements IContractService {
     @Override
     public Contract approve(Integer id, int userId) {
         if (id == null) {
-            logger.error("作废id为空");
+            logger.error("合同approve id为空");
             return null;
         }
-        Contract contract = contractRepository.getOne(id);
+        Contract contract = contractRepository.findById(id).orElse(null);
+        ;
         if (Contract.TYPE_FORMAL.equals(contract.getType())) {
             logger.error("合同id[{}]已经是正式合同", id);
             return null;
         }
-        Date date = new Date();
-        Contract formalContract = new Contract();
-        BeanUtils.copyProperties(contract, formalContract);
-        formalContract.setId(null);
-        formalContract.setContractNo(DateUtil.timeFormat(date));
-        formalContract.setType(Contract.TYPE_FORMAL);
-        formalContract.setCreateDate(date);
-        formalContract.setCreateUser(userId);
-        formalContract.setSourceId(contract.getId());
-        contractRepository.saveAndFlush(formalContract);
+//        Date date = new Date();
+//        Contract formalContract = new Contract();
+//        BeanUtils.copyProperties(contract, formalContract);
+//        formalContract.setId(null);
+//        formalContract.setContractNo(DateUtil.timeFormat(date));
+//        formalContract.setType(Contract.TYPE_FORMAL);
+//        formalContract.setCreateDate(date);
+//        formalContract.setCreateUser(userId);
+//        formalContract.setSourceId(contract.getId());
+        contract.setFormalDate(new Date());
+        contract.setType(Contract.TYPE_FORMAL);
+        contract.setState(Contract.STATE_PROCESSING);
+        contractRepository.saveAndFlush(contract);
         orderFormService.create(contract);
-        return formalContract;
+        return contract;
+    }
+
+    @Override
+    public List<ContractShowVo> findFormalList(Map<String, String[]> kvMap) {
+        StringBuffer baseSql = new StringBuffer("select c.id,c.orderTicketNo,c.contractNo,co.name ,c.createDate,u.userName,c.type,c.state,c.formalDate from contract c RIGHT JOIN contract_org co on c.id=co.contractId RIGHT JOIN `user` u on c.createUser =u.id where c.type='2' and co.type='1'");
+        for (String key : kvMap.keySet()) {
+            if (StringUtils.isEmpty(kvMap.get(key)[0])) continue;
+            if (key.contains("customerName")) {
+                baseSql.append(" and co.name like '%" + kvMap.get(key)[0] + "%'");
+            } else {
+                baseSql.append(" and c." + key + " like '%" + kvMap.get(key)[0] + "%'");
+            }
+
+        }
+        List<Object[]> list = entityManagerUtil.ExcuteSql(baseSql.toString());
+        List<ContractShowVo> vos = EntityUtils.castEntity(list, ContractShowVo.class, new ContractShowVo());
+        return vos;
     }
 }

@@ -6,6 +6,7 @@ import com.melson.webserver.contract.vo.ContractShowVo;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 合同接口
@@ -19,11 +20,9 @@ public interface IContractService {
      * 根据合同类型+合同号+客户名称查询合同集合
      *
      * @param type
-     * @param contractNo
-     * @param orgName
      * @return
      */
-    List<ContractShowVo> list(String type, String contractNo, String orgName);
+    List<ContractShowVo> intentionList(String type);
 
     /**
      * 根据合同id查询合同对象
@@ -60,4 +59,14 @@ public interface IContractService {
      * @return
      */
     Contract approve(Integer id, int userId);
+
+
+    /**
+     * 在正式合同中查找list
+     *
+     * @param kvMap
+     *
+     * @return
+     */
+    List<ContractShowVo> findFormalList(Map<String,String[]> kvMap);
 }

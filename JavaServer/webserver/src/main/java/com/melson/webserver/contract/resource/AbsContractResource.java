@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.MessageFormat;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -42,13 +43,17 @@ public abstract class AbsContractResource extends BaseResource {
     /**
      * 获取列表数据
      *
-     * @param contractNo
-     * @param orgName
      * @return
      */
+    @GetMapping(value = "/intentionList")
+    public Result intentionList() {
+        return success(contractService.intentionList(getContractType()));
+    }
+
     @GetMapping(value = "/list")
-    public Result list(String contractNo, String orgName) {
-        return success(contractService.list(getContractType(), contractNo, orgName));
+    public Result list(HttpServletRequest request) {
+        Map<String,String[]> kvMap=request.getParameterMap();
+        return success(contractService.findFormalList(kvMap));
     }
 
     /**
@@ -108,7 +113,9 @@ public abstract class AbsContractResource extends BaseResource {
      */
     @DeleteMapping(value = "/invalid")
     public Result invalid(HttpServletRequest request, Integer id) {
-        Integer userId = getLoginUserId(request);
+//        Integer userId = getLoginUserId(request);
+        String token=request.getHeader("token");
+        Integer userId=Integer.parseInt(token);
         if (userId == null) {
             return failure(SysRespCode.LOGIN_TIME_OUT, "登录超时");
         }
@@ -127,9 +134,11 @@ public abstract class AbsContractResource extends BaseResource {
      * @param id      合同id
      * @return
      */
-    @DeleteMapping(value = "/approve")
+    @RequestMapping(value = "/approve",method = RequestMethod.DELETE)
     public Result approve(HttpServletRequest request, Integer id) {
-        Integer userId = getLoginUserId(request);
+//        Integer userId = getLoginUserId(request);
+        String token=request.getHeader("token");
+        Integer userId=Integer.parseInt(token);
         if (userId == null) {
             return failure(SysRespCode.LOGIN_TIME_OUT, "登录超时");
         }

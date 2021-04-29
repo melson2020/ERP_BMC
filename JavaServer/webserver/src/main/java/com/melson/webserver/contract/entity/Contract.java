@@ -89,6 +89,11 @@ public class Contract {
      * 来源合同id,有值标识从意向合同转过来的,用于合同溯源
      */
     private Integer sourceId;
+    /**
+     * 转正时间
+     */
+    private Date formalDate;
+     private String taxRate;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -210,5 +215,21 @@ public class Contract {
 
     public void setSourceId(Integer sourceId) {
         this.sourceId = sourceId;
+    }
+
+    public Date getFormalDate() {
+        return formalDate;
+    }
+
+    public void setFormalDate(Date formalDate) {
+        this.formalDate = formalDate;
+    }
+
+    public String getTaxRate() {
+        return taxRate;
+    }
+
+    public void setTaxRate(String taxRate) {
+        this.taxRate = taxRate;
     }
 }

@@ -130,6 +130,28 @@ export function post(url, params) {
   });
 }
 
+/**
+ * delete
+ * @param {String} url [请求的url地址]
+ * @param {Object} params [请求时携带的参数]
+ */
+export function deleteOne(url, params, data) {
+  return new Promise((resolve, reject) => {
+    axios({
+      method: 'delete',
+      url: url,
+      params: params, // 请求参数拼接在url上
+      data: data  // 请求参数放在请求体
+    }).then(
+      response => {
+        resolve(response.data);
+      },
+      err => {
+        reject(err);
+      })
+  });
+}
+
 export function exportExcel(url, params) {
   return new Promise((resolve, reject) => {
     axios({

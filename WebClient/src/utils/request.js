@@ -54,6 +54,18 @@ export default {
     return service.get('/common/initialContract',param)
   },
   GetIntentionContractList(){
-    return service.get('/contract/intention/list')
+    return service.get('/contract/intention/intentionList')
+  },
+  ApproveContract(param){
+    return service.deleteOne('/contract/intention/approve',param)
+  },
+  InvalidContract(param){
+    return service.deleteOne('/contract/intention/invalid',param)
+  },
+  GetFormalContractList(param){
+    return service.get('/contract/formal/list',param)
+  },
+  GetContractOne(param){
+    return service.get('/contract/formal/get',param)
   }
 };

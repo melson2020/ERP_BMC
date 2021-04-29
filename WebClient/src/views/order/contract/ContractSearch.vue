@@ -1,32 +1,57 @@
 <template>
   <div class="contract-search-main-container">
     <div class="contract-search-div">
-      <el-button type="primary" size="small" class="ml24">查询</el-button>
+      <el-button type="primary" size="small" class="ml24" @click="searchOnClick"
+        >查询</el-button
+      >
       <el-popover placement="left" width="500" trigger="click">
         <div class="contract-search-popover-items-area">
-          <el-date-picker type="date" placeholder="选择日期" size="small">
+          <el-date-picker
+            v-model="searchValue.formalDate"
+            type="date"
+            format="yyyy 年 MM 月 dd 日"
+            placeholder="选择日期"
+            size="small"
+            value-format="yyyy-MM-dd"
+          >
           </el-date-picker>
-          <el-input placeholder="合同号" size="small" class="mt40"></el-input>
-          <el-input placeholder="订单号" size="small" class="mt40"></el-input>
+          <el-input
+            placeholder="合同号"
+            v-model="searchValue.contractNo"
+            size="small"
+            class="mt40"
+          ></el-input>
+          <el-input
+            placeholder="订单号"
+            v-model="searchValue.orderTicketNo"
+            size="small"
+            class="mt40"
+          ></el-input>
           <el-select
-            placeholder="制单人"
+            placeholder="客户名称"
             class="mt40"
             filterable
+            v-model="searchValue.customerName"
             size="small"
             :clearable="true"
           >
-            <el-option value="1" label="张某某"> </el-option>
-            <el-option value="2" label="李某某"> </el-option>
+            <el-option
+              v-for="vo in customerVoList"
+              :label="vo.name"
+              :value="vo.name"
+              :key="vo.customerNo"
+            ></el-option>
           </el-select>
           <el-select
             placeholder="状态"
             class="mt40"
             filterable
+            v-model="searchValue.state"
             size="small"
             :clearable="true"
           >
-            <el-option value="finished" label="已完成"> </el-option>
-            <el-option value="processing" label="进行中"> </el-option>
+            <el-option value="3" label="已完成"> </el-option>
+            <el-option value="2" label="进行中"> </el-option>
           </el-select>
         </div>
         <el-button slot="reference" type="primary" size="small"
@@ -34,95 +59,105 @@
         >
       </el-popover>
     </div>
-    <el-table :data="contractList" border stripe style="width: 100%">
+    <el-table :data="formalContractList" border stripe style="width: 100%">
       <el-table-column prop="contractNo" label="合同号"> </el-table-column>
       <el-table-column prop="orderTicketNo" label="订单号"> </el-table-column>
-      <el-table-column prop="vendeeName" label="客户名称"> </el-table-column>
-      <el-table-column prop="createDate" label="创建日期"> </el-table-column>
-      <el-table-column prop="createEmpName" label="制单人员"> </el-table-column>
+      <el-table-column prop="customerName" label="客户名称"> </el-table-column>
+      <el-table-column prop="formalDate" label="转正日期"> </el-table-column>
+      <el-table-column prop="createEmployee" label="制单人员">
+      </el-table-column>
       <el-table-column prop="remarks" label="备注"> </el-table-column>
-      <el-table-column prop="status" label="状态"> </el-table-column>
+      <el-table-column prop="state" label="状态">
+        <template slot-scope="scope">
+          <span class="coloryellow">{{ getState(scope.row.state) }}</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="" label="操作">
         <template slot-scope="scope">
           <el-button
             icon="el-icon-more"
             type="info"
             size="mini"
-            @click="detailOnClick(scope.row.contractNo)"
+            @click="detailOnClick(scope.row.id)"
             circle
           ></el-button>
         </template>
       </el-table-column>
     </el-table>
     <el-dialog title="合同详细" :visible.sync="dialogVisible" width="1100px">
-      <m-contractTemplate :contractId="selectedContractNo"></m-contractTemplate>
+      <m-contractTemplate :contract="selectContract"></m-contractTemplate>
     </el-dialog>
   </div>
 </template>
 <script>
 import contractTemplate from "./ContractTemplate";
+import { mapGetters } from "vuex";
+import { mapActions } from "vuex";
 export default {
   data() {
     return {
       dialogVisible: false,
-      selectedContractNo:'',
-      contractList: [
-        {
-          contractNo: "20210415023",
-          orderTicketNo: "订单号01",
-          vendeeName: "桑尼泰克精密零部件有限公司",
-          createDate: "2021-04-14",
-          orderNo: "2021041405",
-          createEmpName: "测试账户",
-          status: "进行中",
-        },
-        {
-          contractNo: "20210415025",
-          orderTicketNo: "订单号02",
-          vendeeName: "测试公司数据",
-          createDate: "2021-04-13",
-          orderNo: "2021041403",
-          createEmpName: "测试账户",
-          status: "进行中",
-        },
-        {
-          contractNo: "20210416001",
-          orderTicketNo: "订单号03",
-          vendeeName: "测试公司数据",
-          createDate: "2021-04-13",
-          orderNo: "2021041402",
-          createEmpName: "测试账户",
-          status: "已完成",
-        },
-        {
-          contractNo: "20210416001",
-          orderTicketNo: "订单号04",
-          vendeeName: "测试公司数据",
-          createDate: "2021-04-13",
-          orderNo: "2021041402",
-          createEmpName: "测试账户",
-          status: "已完成",
-        },
-        {
-          contractNo: "20210416001",
-          orderTicketNo: "订单号05",
-          vendeeName: "测试公司数据",
-          createDate: "2021-04-13",
-          orderNo: "2021041402",
-          createEmpName: "测试账户",
-          status: "进行中",
-        },
-      ],
+      selectContract: {},
+      searchValue: {
+        formalDate: "",
+        contractNo: "",
+        orderTicketNo: "",
+        customerName: "",
+        state: "",
+      },
     };
+  },
+  computed: {
+    ...mapGetters(["formalContractList", "customerVoList"]),
   },
   components: {
     "m-contractTemplate": contractTemplate,
   },
   methods: {
-    detailOnClick(selectedContractNo) {
-      this.selectedContractNo=selectedContractNo
-      this.dialogVisible = !this.dialogVisible;
+    ...mapActions({
+      GetFormalContractList: "GetFormalContractList",
+      GetCustomerVoList: "GetCustomerVoList",
+      GetContractOne: "GetContractOne",
+    }),
+    detailOnClick(id) {
+      this.GetContractOne({ id: id }).then((res) => {
+        if (res.resultStatus == 1) {
+          this.selectContract = res.data;
+          this.dialogVisible = !this.dialogVisible;
+        }
+      });
     },
+    searchOnClick() {
+      if (
+        this.searchValue.formalDate == "" &&
+        this.searchValue.contractNo == "" &&
+        this.searchValue.orderTicketNo == "" &&
+        this.searchValue.customerName == "" &&
+        this.searchValue.state == ""
+      )
+        return;
+      this.GetFormalContractList(this.searchValue);
+    },
+
+    getState(state) {
+      switch (state) {
+        case "0":
+          return "已作废";
+        case "1":
+          return "待处理";
+        case "2":
+          return "进行中";
+        case "3":
+          return "意完成";
+        default:
+          return "未知";
+      }
+    },
+  },
+  beforeMount() {
+    var param = { formalDate: new Date().format("yyyy-MM-dd") };
+    this.GetFormalContractList(param);
+    this.GetCustomerVoList();
   },
 };
 </script>

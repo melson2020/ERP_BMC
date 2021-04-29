@@ -31,24 +31,26 @@
         </template>
       </el-table-column>
       <el-table-column prop="" label="操作">
-        <template>
+        <template slot-scope="scope">
           <el-button
             icon="el-icon-more"
             type="info"
             size="mini"
             circle
-            @click="detailOnClick"
+            @click="detailOnClick(scope.row.id)"
           ></el-button>
           <el-button
             icon="el-icon-check"
             type="primary"
             size="mini"
             circle
+            @click="approveOnClick(scope.row.id)"
           ></el-button>
           <el-button
             icon="el-icon-delete"
             type="danger"
             size="mini"
+            @click="deleteOnClick(scope.row.id)"
             circle
           ></el-button>
         </template>
@@ -78,6 +80,8 @@ export default {
   methods: {
     ...mapActions({
       GetIntentionContractList: "GetIntentionContractList",
+      ApproveContract: "ApproveContract",
+      InvalidContract:'InvalidContract'
     }),
     getFullTime(time) {
       return new Date(time).format("yyyy-MM-dd hh:mm:ss");
@@ -94,6 +98,30 @@ export default {
     },
     detailOnClick() {
       this.dialogVisible = !this.dialogVisible;
+    },
+    approveOnClick(id) {
+      this.$messageBox
+        .confirm("确认转正？", "合同转正", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        })
+        .then(() => {
+          this.ApproveContract({ id: id });
+        })
+        .catch((e) => e);
+    },
+    deleteOnClick(id) {
+      this.$messageBox
+        .confirm("确认作废？", "合同作废", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "error",
+        })
+        .then(() => {
+          this.InvalidContract({id:id})
+        })
+        .catch((e) => e);
     },
   },
   components: {

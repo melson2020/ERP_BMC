@@ -316,8 +316,8 @@
         </div>
         <div class="contract-confirm-box">
           <span>买方确认</span>
-          <span>{{ vendeeInfo.name }}</span>
-          <span>{{ vendeeInfo.address }}</span>
+          <span>名称：{{ vendeeInfo.name }}</span>
+          <span>地址：{{ vendeeInfo.address }}</span>
           <span>日期：</span>
           <span>开户行：{{ vendeeInfo.bank }}</span>
           <span>账号：{{ vendeeInfo.account }}</span>

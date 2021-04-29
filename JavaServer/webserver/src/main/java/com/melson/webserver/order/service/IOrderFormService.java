@@ -20,7 +20,7 @@ public interface IOrderFormService {
      * @param contractId
      * @return
      */
-    List<OrderForm> list(Integer contractId);
+    OrderForm list(Integer contractId);
 
     /**
      * 根据订单id获取vo对象

@@ -23,5 +23,6 @@ public interface IOrderFormRepository extends JpaRepository<OrderForm, Integer> 
      * @return
      */
     @Query
-    List<OrderForm> findByContractId(Integer contractId);
+    OrderForm findByContractId(Integer contractId);
+
 }
