@@ -2,6 +2,7 @@ package com.melson.webserver.contract.entity;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 合同定义实体
@@ -93,7 +94,8 @@ public class Contract {
      * 转正时间
      */
     private Date formalDate;
-     private String taxRate;
+    private String taxRate;
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -232,4 +234,5 @@ public class Contract {
     public void setTaxRate(String taxRate) {
         this.taxRate = taxRate;
     }
+
 }

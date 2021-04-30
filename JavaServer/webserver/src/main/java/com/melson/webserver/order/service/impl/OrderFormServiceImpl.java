@@ -2,8 +2,12 @@ package com.melson.webserver.order.service.impl;
 
 import com.melson.base.constants.SysConstants;
 import com.melson.webserver.contract.entity.Contract;
+import com.melson.webserver.contract.entity.ContractOrg;
+import com.melson.webserver.contract.entity.ContractStock;
 import com.melson.webserver.order.dao.IOrderFormRepository;
 import com.melson.webserver.order.entity.OrderForm;
+import com.melson.webserver.order.entity.OrderFormDetail;
+import com.melson.webserver.order.service.IOrderFormDetailService;
 import com.melson.webserver.order.service.IOrderFormService;
 import com.melson.webserver.order.vo.OrderFormVo;
 import org.slf4j.Logger;
@@ -31,10 +35,17 @@ public class OrderFormServiceImpl implements IOrderFormService {
 
     @Autowired
     private IOrderFormRepository orderFormRepository;
+    @Autowired
+    private IOrderFormDetailService orderFormDetailService;
 
     @Override
     public OrderForm list(Integer contractId) {
         return orderFormRepository.findByContractId(contractId);
+    }
+
+    @Override
+    public List<OrderForm> createdList() {
+        return orderFormRepository.findByState(OrderForm.STATE_CREATE);
     }
 
     @Override
@@ -62,18 +73,20 @@ public class OrderFormServiceImpl implements IOrderFormService {
     }
 
     @Override
-    public OrderForm create(Contract contract) {
-        OrderForm existOrder=orderFormRepository.findByContractId(contract.getId());
-        if(existOrder!=null)return null;
-        OrderForm orderForm = new OrderForm();
-        String formNo = MessageFormat.format("O{0}-{1}", OrderForm.TYPE_SELF, UUID.randomUUID().toString());
+    public OrderForm create(Contract contract, ContractOrg vendeeInfo, List<ContractStock> stockList) {
+        OrderForm orderForm=orderFormRepository.findByContractId(contract.getId());
+        if(orderForm==null) orderForm = new OrderForm();
+        String formNo =contract.getOrderTicketNo();
         orderForm.setFormNo(formNo);
         orderForm.setContractId(contract.getId());
         orderForm.setType(OrderForm.TYPE_SELF);
-        orderForm.setState(OrderForm.STATE_ORDER);
+        orderForm.setState(OrderForm.STATE_CREATE);
+        orderForm.setContractNo(contract.getContractNo());
+        orderForm.setCustomerName(vendeeInfo.getName());
         orderForm.setCreateDate(contract.getCreateDate());
         orderForm.setCreateUser(contract.getCreateUser());
         orderFormRepository.saveAndFlush(orderForm);
+        orderFormDetailService.createDetailList(stockList,orderForm.getId());
         return orderForm;
     }
 

@@ -41,9 +41,11 @@ public class ContractStock {
      */
     private String remark;
     /**
-     * 数量,不确定是否会有特殊需求要半件,直接使用字符串
+     * 数量
      */
-    private String count;
+    private Integer count;
+
+    private String countUnit;
     /**
      * 含税单价,可能为小数,直接使用字符串
      */
@@ -68,6 +70,8 @@ public class ContractStock {
      * 账号
      */
     private String account;
+
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -119,11 +123,11 @@ public class ContractStock {
         this.specification = specification;
     }
 
-    public String getCount() {
+    public Integer getCount() {
         return count;
     }
 
-    public void setCount(String count) {
+    public void setCount(Integer count) {
         this.count = count;
     }
 
@@ -183,5 +187,13 @@ public class ContractStock {
 
     public void setAccount(String account) {
         this.account = account;
+    }
+
+    public String getCountUnit() {
+        return countUnit;
+    }
+
+    public void setCountUnit(String countUnit) {
+        this.countUnit = countUnit;
     }
 }

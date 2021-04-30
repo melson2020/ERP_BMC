@@ -19,9 +19,14 @@ public class OrderForm {
     public static final String TYPE_SELF = "1";
 
     /**
-     * 订单状态:1=已下单;
+     * 订单状态:1=刚创建;
      */
-    public static final String STATE_ORDER = "1";
+    public static final String STATE_CREATE = "1";
+
+    /**
+     * 订单状态:2 已下单
+     */
+    public static  final String STATE_ORDER="2";
 
     /**
      * 订单唯一自增id,用于其他表关联
@@ -40,7 +45,7 @@ public class OrderForm {
      */
     private String type;
     /**
-     * 订单状态:0=已作废;1=已下单;2=生产中;3=已出单;
+     * 订单状态:0=已作废;1=刚创建;2=已下单;3= processing 4 已完成;
      */
     private String state;
     /**
@@ -55,6 +60,12 @@ public class OrderForm {
      * 合同创建人,关联员工表
      */
     private Integer createUser;
+
+    private String customerNo;
+    private String customerName;
+
+    private String contractNo;
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -120,5 +131,29 @@ public class OrderForm {
 
     public void setCreateUser(Integer createUser) {
         this.createUser = createUser;
+    }
+
+    public String getCustomerNo() {
+        return customerNo;
+    }
+
+    public void setCustomerNo(String customerNo) {
+        this.customerNo = customerNo;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public String getContractNo() {
+        return contractNo;
+    }
+
+    public void setContractNo(String contractNo) {
+        this.contractNo = contractNo;
     }
 }

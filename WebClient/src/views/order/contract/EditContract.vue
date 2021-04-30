@@ -331,7 +331,7 @@
     <div class="edit-contract-button-div">
       <el-button @click="saveContract" type="primary">保存合同</el-button>
       <el-button @click="printPdf" type="primary">打印合同</el-button>
-      <el-button v-if="!edit" type="warning">清空内容</el-button>
+      <el-button  type="warning">清空内容</el-button>
     </div>
   </div>
 </template>
@@ -416,7 +416,33 @@ export default {
       GetCustomerVoList: "GetCustomerVoList",
       GetContractVoByCustomerNo: "GetContractVoByCustomerNo",
       SearchContractIntentionProductList: "SearchContractIntentionProductList",
+      GetContractOne: "GetContractOne",
     }),
+    loadContract(contractId){
+         const loading = this.$loading({
+        lock: true,
+        text: "Loading",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
+      this.GetContractOne({ id: contractId })
+        .then((res) => {
+          if (res.resultStatus == 1) {
+             let existContract=res.data
+             this.vendeeInfo=existContract.purchaser;
+             this.goodReceveInfo=existContract.goodReceiveInfo;
+             this.contractProductList=existContract.productList;
+             this.contractInfo=existContract.contract;
+             this.companyInfo==existContract.vendorConfirm;
+            loading.close();
+          } else {
+            loading.close();
+          }
+        })
+        .catch((e) => {
+          loading.close();
+        });
+    },
     addContractDetail() {
       if (
         this.contractProductList.filter((item) => {
@@ -475,7 +501,6 @@ export default {
       }
     },
     onSelect(item, row) {
-      console.log(item)
       row.id = item.id;
       row.productId=item.id;
       row.productName = item.productName;
@@ -483,7 +508,6 @@ export default {
       row.seen = false;
       row.remark = item.remark;
       row.taxPrice = item.salesPrice==null?"":item.salesPrice;
-      console.log(this.contractProductList)
     },
     cellClick(row) {
       row.seen = true;
@@ -565,10 +589,6 @@ export default {
     this.GetContractTemplate();
     this.GetCustomerVoList();
   },
-  activated() {
-      console.log('我这个页面显示就会执行');
-    },
-  props: ["edit"],
 };
 </script>
 <style lang="less">

@@ -112,7 +112,9 @@
             </div>
             <div class="contract-template-product-detail-summary-item">
               <div style="width: 180px; text-align: left">销项税</div>
-              <span style="width: 130px">{{ contractInfo.contract.taxRate }}%</span>
+              <span style="width: 130px"
+                >{{ contractInfo.contract.taxRate }}%</span
+              >
               <span style="width: 190px; text-align: left">{{
                 contractProductTotal.tax
               }}</span>
@@ -172,13 +174,41 @@ import print from "print-js";
 export default {
   data() {
     return {
-      contractInfo:{}
+      contractInfo: {
+        purchaser: {},
+        goodReceiveInfo: {},
+        contract: {},
+        vendorConfirm: {},
+        purchaserConfirm: {},
+        productList: [],
+      },
     };
   },
   methods: {
     ...mapActions({
       GetContractTemplate: "GetContractTemplate",
+      GetContractOne: "GetContractOne",
     }),
+    loadContract(contractId) {
+      const loading = this.$loading({
+        lock: true,
+        text: "Loading",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
+      this.GetContractOne({ id: contractId })
+        .then((res) => {
+          if (res.resultStatus == 1) {
+            this.contractInfo = res.data;
+            loading.close();
+          } else {
+            loading.close();
+          }
+        })
+        .catch((e) => {
+          loading.close();
+        });
+    },
     printPdf() {
       print({
         printable: "contractTeplateDiv",
@@ -192,8 +222,7 @@ export default {
     ...mapGetters(["contractTemplate"]),
     contractProductTotal: function () {
       var contractSummary = { price: 0, tax: 0 };
-      console.log(this.contract);
-      if (!this.contract) return contractSummary;
+      if (!this.contractInfo) return contractSummary;
       var total = 0;
       this.contractInfo.productList.map((item) => {
         item.taxTotalPrice = this.$my.NumberMul(item.count, item.taxPrice);
@@ -206,15 +235,6 @@ export default {
       );
       return contractSummary;
     },
-  },
-  watch: {
-    contract: function (newValue) {
-      this.contractInfo=newValue;
-    },
-  },
-  props: ["contract"],
-  beforeMount() {
-    this.GetContractTemplate();
   },
 };
 </script>

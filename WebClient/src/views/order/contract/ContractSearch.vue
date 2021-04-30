@@ -63,16 +63,20 @@
       <el-table-column prop="contractNo" label="合同号"> </el-table-column>
       <el-table-column prop="orderTicketNo" label="订单号"> </el-table-column>
       <el-table-column prop="customerName" label="客户名称"> </el-table-column>
-      <el-table-column prop="formalDate" label="转正日期"> </el-table-column>
+      <el-table-column prop="formalDate" label="合同确认日期">
+        <template slot-scope="scope">
+          <span>{{getFullTime(scope.row.formalDate)}}</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="createEmployee" label="制单人员">
       </el-table-column>
       <el-table-column prop="remarks" label="备注"> </el-table-column>
-      <el-table-column prop="state" label="状态">
+      <el-table-column prop="state" label="状态" width="80px">
         <template slot-scope="scope">
           <span class="coloryellow">{{ getState(scope.row.state) }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="" label="操作">
+      <el-table-column prop="" label="操作" width="100px">
         <template slot-scope="scope">
           <el-button
             icon="el-icon-more"
@@ -84,8 +88,8 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog title="合同详细" :visible.sync="dialogVisible" width="1100px">
-      <m-contractTemplate :contract="selectContract"></m-contractTemplate>
+    <el-dialog ref="dialog" title="合同详细" :visible.sync="dialogVisible" width="1100px">
+      <m-contractTemplate ref="child"></m-contractTemplate>
     </el-dialog>
   </div>
 </template>
@@ -97,7 +101,6 @@ export default {
   data() {
     return {
       dialogVisible: false,
-      selectContract: {},
       searchValue: {
         formalDate: "",
         contractNo: "",
@@ -117,15 +120,13 @@ export default {
     ...mapActions({
       GetFormalContractList: "GetFormalContractList",
       GetCustomerVoList: "GetCustomerVoList",
-      GetContractOne: "GetContractOne",
     }),
+    getFullTime(time) {
+      return new Date(time).format("yyyy-MM-dd hh:mm:ss");
+    },
     detailOnClick(id) {
-      this.GetContractOne({ id: id }).then((res) => {
-        if (res.resultStatus == 1) {
-          this.selectContract = res.data;
-          this.dialogVisible = !this.dialogVisible;
-        }
-      });
+      this.dialogVisible=!this.dialogVisible
+      setTimeout(()=>{ this.$refs['child'].loadContract(id)},200)
     },
     searchOnClick() {
       if (

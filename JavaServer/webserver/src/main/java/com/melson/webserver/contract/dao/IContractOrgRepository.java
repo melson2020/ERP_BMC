@@ -24,4 +24,6 @@ public interface IContractOrgRepository extends JpaRepository<ContractOrg, Integ
      */
     @Query
     List<ContractOrg> findByContractId(Integer contractId);
+
+    ContractOrg findByContractIdAndType(Integer id,String type);
 }

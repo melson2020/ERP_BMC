@@ -179,6 +179,7 @@ public class ContractServiceImpl implements IContractService {
     }
 
     @Override
+    @Transactional
     public Contract approve(Integer id, int userId) {
         if (id == null) {
             logger.error("合同approve id为空");
@@ -203,7 +204,10 @@ public class ContractServiceImpl implements IContractService {
         contract.setType(Contract.TYPE_FORMAL);
         contract.setState(Contract.STATE_PROCESSING);
         contractRepository.saveAndFlush(contract);
-        orderFormService.create(contract);
+        //合同转正成功 创建对应的订单
+        List<ContractStock> stockList=contractStockRepository.findByContractId(contract.getId());
+        ContractOrg vendeeInfo=contractOrgRepository.findByContractIdAndType(contract.getId(),ContractOrg.TYPE_PURCHASER);
+        orderFormService.create(contract,vendeeInfo,stockList);
         return contract;
     }
 

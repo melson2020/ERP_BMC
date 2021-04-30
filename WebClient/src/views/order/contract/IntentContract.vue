@@ -58,7 +58,7 @@
     </el-table>
     <el-dialog title="合同详细" :visible.sync="dialogVisible" width="1100px">
       <div class="intent-contract-dialog-div">
-        <m-edit-contract :edit="true"></m-edit-contract>
+        <m-edit-contract ref="child"></m-edit-contract>
       </div>
     </el-dialog>
   </div>
@@ -81,7 +81,7 @@ export default {
     ...mapActions({
       GetIntentionContractList: "GetIntentionContractList",
       ApproveContract: "ApproveContract",
-      InvalidContract:'InvalidContract'
+      InvalidContract: "InvalidContract",
     }),
     getFullTime(time) {
       return new Date(time).format("yyyy-MM-dd hh:mm:ss");
@@ -96,8 +96,11 @@ export default {
           return "未知";
       }
     },
-    detailOnClick() {
+    detailOnClick(id) {
       this.dialogVisible = !this.dialogVisible;
+      setTimeout(() => {
+        this.$refs["child"].loadContract(id);
+      }, 200);
     },
     approveOnClick(id) {
       this.$messageBox
@@ -119,7 +122,7 @@ export default {
           type: "error",
         })
         .then(() => {
-          this.InvalidContract({id:id})
+          this.InvalidContract({ id: id });
         })
         .catch((e) => e);
     },

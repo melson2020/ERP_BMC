@@ -41,6 +41,11 @@ public class OrderFormResource extends BaseResource {
         return success(orderFormService.list(contractId));
     }
 
+    @GetMapping(value = "/createdList")
+    public Result createdOrderList(){
+        return success(orderFormService.createdList());
+    }
+
     /**
      * 创建订单编号
      *

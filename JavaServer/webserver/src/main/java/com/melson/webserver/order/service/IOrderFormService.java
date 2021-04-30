@@ -1,6 +1,8 @@
 package com.melson.webserver.order.service;
 
 import com.melson.webserver.contract.entity.Contract;
+import com.melson.webserver.contract.entity.ContractOrg;
+import com.melson.webserver.contract.entity.ContractStock;
 import com.melson.webserver.order.entity.OrderForm;
 import com.melson.webserver.order.vo.OrderFormVo;
 
@@ -21,6 +23,9 @@ public interface IOrderFormService {
      * @return
      */
     OrderForm list(Integer contractId);
+
+
+    List<OrderForm> createdList();
 
     /**
      * 根据订单id获取vo对象
@@ -45,7 +50,7 @@ public interface IOrderFormService {
      * @param contract
      * @return
      */
-    OrderForm create(Contract contract);
+    OrderForm create(Contract contract, ContractOrg vendeeInfo, List<ContractStock> stockList);
 
     /**
      * 作废订单
