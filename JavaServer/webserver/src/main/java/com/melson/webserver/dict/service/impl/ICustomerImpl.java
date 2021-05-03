@@ -1,6 +1,7 @@
 package com.melson.webserver.dict.service.impl;
 
 import com.melson.base.AbstractService;
+import com.melson.base.Result;
 import com.melson.base.utils.EntityUtils;
 import com.melson.base.utils.EntityManagerUtil;
 import com.melson.webserver.dict.dao.ICustomerRepository;
@@ -14,8 +15,11 @@ import com.melson.webserver.dict.vo.ContractVo;
 import com.melson.webserver.dict.vo.CustomerVo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by Messi on 2021/4/26
@@ -55,6 +59,44 @@ public class ICustomerImpl extends AbstractService<Customer> implements ICustome
     }
 
     @Override
+    public List<Customer> findAllExclude() {
+        String sql = "SELECT id,customerNo,`name`,contactName,address,phone,taxNo,bankNo,payTerm,payWay,currency from customer where `status`='Y'";
+        StringBuffer buffer = new StringBuffer(sql);
+        String excuteSql = buffer.toString();
+        List<Object[]> list = entityManagerUtil.ExcuteSql(excuteSql);
+        List<Customer> customers=new ArrayList<>();
+        for(Object[] obj:list){
+            Customer cu=new Customer();
+            cu.setId(obj[0]==null?null:new Integer((Integer) obj[0]));
+            cu.setCustomerNo(obj[1]==null?null:obj[1].toString());
+            cu.setName(obj[2]==null?null:obj[2].toString());
+            cu.setContactName(obj[3]==null?null:obj[3].toString());
+            cu.setAddress(obj[4]==null?null:obj[4].toString());
+            cu.setPhone(obj[5]==null?null:obj[5].toString());
+            cu.setTaxNo(obj[6]==null?null:obj[6].toString());
+            cu.setBankNo(obj[7]==null?null:obj[7].toString());
+            cu.setPayTerm(obj[8]==null?null:obj[8].toString());
+            cu.setPayWay(obj[9]==null?null:obj[9].toString());
+            cu.setCurrency(obj[10]==null?null:obj[10].toString());
+            customers.add(cu);
+        }
+        return customers;
+    }
+
+    @Override
+    public Optional<Customer> Query(Customer customer) {
+        Optional<Customer> cus=customerRepository.findById(customer.getId());
+        return cus;
+    }
+
+    @Override
+    @Transactional
+    public Integer DisableCustomer(Customer customer) {
+        Integer count = customerRepository.disableCustomer(customer.getId());
+        return count;
+    }
+
+    @Override
     public Customer findCustomerByCustomerNo(String customerNo) {
         Customer customer=customerRepository.findByCustomerNo(customerNo);
         return null;
@@ -70,5 +112,46 @@ public class ICustomerImpl extends AbstractService<Customer> implements ICustome
         contractVo.setDeliverAddresses(deliverAddresses);
         contractVo.setTaxRates(taxRates);
         return contractVo;
+    }
+
+    @Override
+    public Result SaveAndUpdate(Customer customer) {
+        Result result = new Result();
+        //判断是否存在相同名称
+        Customer checkExist=CheckExisting(customer.getName());
+        if(checkExist!=null){
+            if(customer.getId()==checkExist.getId()){
+                Customer saved=customerRepository.save(customer);
+                if(saved==null){
+                    result.setResultStatus(-1);
+                    result.setMessage("保存失败！");
+                }else {
+                    result.setData(saved);
+                }
+            }
+            else
+            {
+                result.setResultStatus(-1);
+                result.setMessage("已经存在此客户名称！");
+            }
+        }
+        else
+        {
+            Customer saved=customerRepository.save(customer);
+            if(saved==null){
+                result.setResultStatus(-1);
+                result.setMessage("保存失败！");
+            }else {
+                result.setData(saved);
+            }
+        }
+        return result;
+    }
+
+
+
+    private Customer CheckExisting(String name) {
+        Customer customer=customerRepository.findByName(name);
+        return customer;
     }
 }

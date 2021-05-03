@@ -67,5 +67,20 @@ export default {
   },
   GetContractOne(param){
     return service.get('/contract/formal/get',param)
-  }
+  },
+
+
+  //基础数据相关
+  ReqCustomerList(param){
+    return service.get('/customer/list',param)
+  },
+  ReqSaveCustomer(param){
+    return service.post("/customer/save",param)
+  },
+  ReqQueryCustomerObj(params){
+    return service.post("/customer/query",params);
+  },
+  ReqDisableCustomer(params) {
+    return service.post("/customer/disable", params);
+  },
 };
