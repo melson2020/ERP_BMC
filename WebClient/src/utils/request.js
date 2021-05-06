@@ -67,5 +67,18 @@ export default {
   },
   GetContractOne(param){
     return service.get('/contract/formal/get',param)
+  },
+  //订单相关
+  GetCreatedOrderList(param){
+    return service.get('/orderForm/manage/createdList',param)
+  },
+  GetOrderFormDetailListById(param){
+    return service.get('/orderForm/manage/orderDetailList',param)
+  },
+  GetProductBomList(param){
+    return service.get('/productBom/pBomList',param)
+  },
+  GetProductBomInfo(param){
+    return service.get('/Boms/list',param)
   }
 };

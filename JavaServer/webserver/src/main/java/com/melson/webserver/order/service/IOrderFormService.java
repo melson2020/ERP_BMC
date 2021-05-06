@@ -4,6 +4,7 @@ import com.melson.webserver.contract.entity.Contract;
 import com.melson.webserver.contract.entity.ContractOrg;
 import com.melson.webserver.contract.entity.ContractStock;
 import com.melson.webserver.order.entity.OrderForm;
+import com.melson.webserver.order.entity.OrderFormDetail;
 import com.melson.webserver.order.vo.OrderFormVo;
 
 import java.util.List;
@@ -26,6 +27,8 @@ public interface IOrderFormService {
 
 
     List<OrderForm> createdList();
+
+    List<OrderFormDetail> detailList(Integer orderFormId);
 
     /**
      * 根据订单id获取vo对象

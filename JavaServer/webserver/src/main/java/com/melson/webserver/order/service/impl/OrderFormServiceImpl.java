@@ -49,6 +49,11 @@ public class OrderFormServiceImpl implements IOrderFormService {
     }
 
     @Override
+    public List<OrderFormDetail> detailList(Integer orderFormId) {
+           return  orderFormDetailService.findDetailListByFormId(orderFormId);
+    }
+
+    @Override
     public OrderFormVo get(Integer id) {
         OrderFormVo vo = new OrderFormVo();
         OrderForm orderForm = orderFormRepository.getOne(id);

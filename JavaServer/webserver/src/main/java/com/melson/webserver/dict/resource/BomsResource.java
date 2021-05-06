@@ -3,6 +3,7 @@ package com.melson.webserver.dict.resource;
 import com.melson.base.BaseResource;
 import com.melson.base.Result;
 import com.melson.webserver.dict.service.IBoms;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,8 +22,13 @@ public class BomsResource extends BaseResource {
         this.bomsSerivce = bomsSerivce;
     }
 
-    @RequestMapping(value = "/list",method = RequestMethod.GET)
-    public Result GetBomsList(HttpServletRequest request) {
-        return null;
+    /**
+     * 获取bom清单
+     * @param bomNo
+     * @return
+     */
+    @GetMapping("/list")
+    public Result FindBomListWithBomNo(String bomNo){
+       return success(bomsSerivce.findByBomNo(bomNo));
     }
 }

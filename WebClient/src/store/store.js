@@ -3,6 +3,7 @@ import Vuex from "vuex";
 import com from "./modules/com";
 import login from "./modules/login"
 import contract from "./modules/contract"
+import order from './modules/order'
 import {setAsyncRoutes} from "../router/async"
 Vue.use(Vuex);
 
@@ -27,6 +28,7 @@ export default new Vuex.Store({
   modules: {
     com,
     login,
-    contract
+    contract,
+    order
   }
 });
