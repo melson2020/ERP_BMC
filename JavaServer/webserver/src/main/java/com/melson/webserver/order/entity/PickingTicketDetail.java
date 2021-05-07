@@ -6,15 +6,12 @@ import java.util.Date;
 
 /**
  * @Author Nelson
- * @Description 采购明细
+ * @Description
  * @Date 2021/5/7
  */
 @Entity
-@Table(name = "purchase_detail")
-public class PurchaseDetail {
-    public static final String PURCHASE_TYPE_ORDER="ORDER";
-    public static final String PURCHASE_STATE_CREATE="CREATE";
-
+@Table(name = "picking_ticket_detail")
+public class PickingTicketDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

@@ -1,6 +1,6 @@
 package com.melson.webserver.order.dao;
 
-import com.melson.webserver.order.entity.ProducePickingTicket;
+import com.melson.webserver.order.entity.PickingTicket;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -10,5 +10,5 @@ import org.springframework.stereotype.Repository;
  * @Date 2021/5/7
  */
 @Repository
-public interface IProducePickingTicketRepository extends JpaRepository<ProducePickingTicket,Integer> {
+public interface IProducePickingTicketRepository extends JpaRepository<PickingTicket,Integer> {
 }

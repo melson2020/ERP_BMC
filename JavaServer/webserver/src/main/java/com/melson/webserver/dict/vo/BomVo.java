@@ -14,7 +14,6 @@ public class BomVo {
      * bom id
      */
     private Integer id;
-
     private String bomNo;
     private String partNo;
     private String name;
@@ -22,6 +21,7 @@ public class BomVo {
     private String unit;
     private BigDecimal chQty;
     private String manufacturer;
+    private String specification;
 
     @Transient
     private List<BomVo> childList;
@@ -30,7 +30,7 @@ public class BomVo {
 
     }
 
-    public BomVo(Integer id, String bomNo, String partNo, String name, String chPartNo, String unit, BigDecimal chQty, String manufacturer) {
+    public BomVo(Integer id, String bomNo, String partNo, String name, String chPartNo, String unit, BigDecimal chQty, String manufacturer, String specification) {
         this.id = id;
         this.bomNo = bomNo;
         this.partNo = partNo;
@@ -39,6 +39,7 @@ public class BomVo {
         this.unit = unit;
         this.chQty = chQty;
         this.manufacturer = manufacturer;
+        this.specification = specification;
     }
 
     public Integer getId() {
@@ -111,5 +112,13 @@ public class BomVo {
 
     public void setChildList(List<BomVo> childList) {
         this.childList = childList;
+    }
+
+    public String getSpecification() {
+        return specification;
+    }
+
+    public void setSpecification(String specification) {
+        this.specification = specification;
     }
 }
