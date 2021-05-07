@@ -37,6 +37,9 @@ const actions = {
     SaveCustomer({ },newCustomer){
         return request.ReqSaveCustomer(newCustomer);
     },
+    SaveContact({ },contact){
+        return request.ReqSaveContact(contact);
+    },
     PushCustomerList({commit}, newCustomer){
         commit("PushCustomerList",newCustomer);
     },
@@ -58,8 +61,24 @@ const actions = {
           let al = error.message ? error.message : error
           Message.error(al)
         })
-      }
-
+      },
+      DeleteContact({ commit }, contact) {
+        request
+            .ReqDeleteContact(contact)
+            .then(res=>{
+                if (res.resultStatus == 1) {
+                    commit("SpliceContactList", contact)
+                    Message.info("删除成功")
+                }
+                else {
+                    Message.info("删除失败:" + res.message);
+                }
+            })
+            .catch(error => {
+                let al = error.message ? error.message : error
+                Message.error(al)
+            })
+      },
 
 
 };
@@ -82,7 +101,10 @@ const mutations = {
     },
     DisableCustomer(state, data) {
         state.customerList.splice(data.index, 1)
-      }
+    },
+    SpliceContactList(state, data) {
+        state.contactList.splice(data.index, 1);
+    },
 };
 
 export default {

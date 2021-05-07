@@ -41,4 +41,17 @@ public class CustomerContactResource extends BaseResource {
         result.setData(cc);
         return result;
     }
+
+    @RequestMapping(value = "/save",method = RequestMethod.POST)
+    public Result SaveContact(@RequestBody CustomerContact contact){
+        return customerContactService.SaveAndUpdate(contact);
+    }
+
+    @RequestMapping(value = "/delete",method = RequestMethod.POST)
+    public Result DeleteContact(@RequestBody CustomerContact contact){
+        Result result=new Result();
+        Integer deleteCount=customerContactService.DeleteContact(contact.getId());
+        result.setResultStatus(deleteCount>0?1:-1);
+        return result;
+    }
 }

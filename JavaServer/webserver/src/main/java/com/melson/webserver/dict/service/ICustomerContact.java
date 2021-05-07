@@ -1,6 +1,7 @@
 package com.melson.webserver.dict.service;
 
 import com.melson.base.IService;
+import com.melson.base.Result;
 import com.melson.webserver.dict.entity.CustomerContact;
 import com.melson.webserver.dict.vo.CustomerContactVo;
 
@@ -15,4 +16,8 @@ public interface ICustomerContact extends IService<CustomerContact> {
     CustomerContact findById(Integer id);
 
     CustomerContact findContact(Integer id);
+
+    Result SaveAndUpdate(CustomerContact contact);
+
+    Integer DeleteContact(Integer id);
 }

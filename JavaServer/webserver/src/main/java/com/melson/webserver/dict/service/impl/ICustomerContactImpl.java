@@ -1,6 +1,7 @@
 package com.melson.webserver.dict.service.impl;
 
 import com.melson.base.AbstractService;
+import com.melson.base.Result;
 import com.melson.base.utils.EntityManagerUtil;
 import com.melson.base.utils.EntityUtils;
 import com.melson.webserver.dict.dao.ICustomerContactRepository;
@@ -12,7 +13,11 @@ import com.melson.webserver.dict.vo.CustomerContactVo;
 import com.melson.webserver.dict.vo.CustomerVo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -60,7 +65,42 @@ public class ICustomerContactImpl extends AbstractService<CustomerContact> imple
         buffer.append(" where cc.id='" + id + "'");
         String excuteSql = buffer.toString();
         List<Object[]> list = entityManagerUtil.ExcuteSql(excuteSql);
-        List<CustomerContact> cc = EntityUtils.castEntity(list, CustomerContact.class, new CustomerContact());
-        return cc.get(0);
+        List<CustomerContact> customerContacts = new ArrayList<>();
+        for(Object[] obj:list){
+            CustomerContact cc=new CustomerContact();
+            cc.setId(obj[0]==null?null:new Integer((Integer) obj[0]));
+            cc.setCustomerNo(obj[1]==null?null:obj[1].toString());
+            cc.setContactName(obj[2]==null?null:obj[2].toString());
+            cc.setDeliverAddress(obj[3]==null?null:obj[3].toString());
+            cc.setPhone(obj[4]==null?null:obj[4].toString());
+            cc.setTags(obj[5]==null?null:obj[5].toString());
+            cc.setDescription(obj[6]==null?null:obj[6].toString());
+            cc.setCreateBy(obj[7]==null?null:obj[7].toString());
+            cc.setCreateDate(obj[8]==null?null:(Timestamp) obj[8]);
+            cc.setStatus(obj[9]==null?null:obj[9].toString());
+            cc.setCustomerName(obj[10]==null?null:obj[10].toString());
+
+            customerContacts.add(cc);
+        }
+        return customerContacts.get(0);
+    }
+
+    @Override
+    public Result SaveAndUpdate(CustomerContact contact) {
+        Result result = new Result();
+        CustomerContact saved=customerContactRepository.save(contact);
+        if(saved==null){
+            result.setResultStatus(-1);
+            result.setMessage("保存失败！");
+        }else {
+            result.setData(saved);
+        }
+        return result;
+    }
+
+    @Override
+    @Transactional
+    public Integer DeleteContact(Integer id) {
+        return customerContactRepository.deleteContactById(id);
     }
 }

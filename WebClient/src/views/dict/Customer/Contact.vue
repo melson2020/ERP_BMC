@@ -58,7 +58,7 @@
         </el-row>
         <el-row>
           <el-form-item label="客户名称">
-            <el-input v-model="editContact.name" autocomplete="off" disabled></el-input>
+            <el-input v-model="editContact.customerName" autocomplete="off" disabled></el-input>
           </el-form-item>
         </el-row>
         <el-row>
@@ -96,6 +96,15 @@ import { mapGetters } from "vuex";
 import { mapActions } from "vuex";
 export default {
   data(){
+      // var validatePhone = (rule, value, callback) => {
+      // var myreg = /^[1][3,4,5,7,8][0-9]{9}$/;
+      // if (value === "") {
+      //   callback(new Error("请输入联系电话"));
+      // }  
+      // if (!myreg.test(value)) {
+      //   callback(new Error("请输入正确的手机号码"));
+      // } 
+      // };
     return{
       contactEditDialog: false,
       searchContent: "",
@@ -120,6 +129,12 @@ export default {
         phone: [
           { required: true, message: "请输入联系电话", trigger: "blur" }
         ],
+        // phone: [
+        //   {
+        //     validator: validatePhone,
+        //     trigger: "blur",
+        //   },
+        // ],
         deliverAddress: [
           { required: true, message: "请输入客户地址", trigger: "blur" }
         ],
@@ -145,10 +160,10 @@ export default {
         ...mapActions({
       GetContactList:"GetContactList",
       QueryContactObj:"QueryContactObj",
+      SaveContact:"SaveContact",
+      DeleteContact:"DeleteContact"
     }),
     handleEdit(index,row){
-      console.log(index)
-      console.log(row)
       let contact={id:row.id,index:index}
       this.QueryContactObj(contact)
           .then(res=>{
@@ -168,18 +183,49 @@ export default {
 
     },
     handleDelete(index, row) {
-      // let cus={id:row.id,index:index}
+      let contact={id:row.id,index:index}
        this.$messageBox.confirm('确认要删除？',"提示",{
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         })
           .then(() => {
-            // this.DisableCustomer(cus)
-            console.log(row)
+            this.DeleteContact(contact)
           })
           .catch(e=>e);
       },
+      onEditContact(formName){
+         this.$refs[formName].validate(valid=>{
+           if(valid){
+              this.SaveContact(this.editContact)
+              .then(res=>{
+                  if(res.resultStatus==1){ 
+                    this.GetContactList();
+                    this.contactEditDialog=false;
+                    this.$message({
+                      showClose:true,
+                      message:"操作成功",
+                      type:"success"
+                    });
+                  }
+                  else{
+                    this.$message.error(res.message);
+                  }
+              })
+              .catch(
+                err=>{
+                    let alert = err.message ? err.message : err;
+                    this.$message.error(alert);
+                });
+
+           }
+           else{
+              this.$message.warning("请填写准确信息");
+              return false;
+          }
+
+         })
+      }
   },
   beforeMount() {
     this.GetContactList();

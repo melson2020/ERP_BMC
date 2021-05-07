@@ -26,8 +26,6 @@ public class CustomerContact {
     @Transient
     private String customerName;
 
-    public CustomerContact() {
-    }
 
     public Integer getId() {
         return id;

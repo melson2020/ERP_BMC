@@ -68,7 +68,6 @@ export default {
   GetContractOne(param){
     return service.get('/contract/formal/get',param)
   },
-<<<<<<< HEAD
 
 
   //基础数据相关
@@ -90,7 +89,13 @@ export default {
   ReqDisableCustomer(params) {
     return service.post("/customer/disable", params);
   },
-=======
+  ReqSaveContact(param){
+    return service.post("/customerContact/save",param)
+  },
+  ReqDeleteContact(params){
+    return service.post("/customerContact/delete",params)
+  },
+
   //订单相关
   GetCreatedOrderList(param){
     return service.get('/orderForm/manage/createdList',param)
@@ -106,6 +111,7 @@ export default {
   },
   OrderFormConfirm(param){
     return service.post('/orderForm/manage/confirm',param)
-  }
->>>>>>> b5b24c3fef02469a741d410ab5f1b5f3ab6ce12a
+  },
+
+
 };
