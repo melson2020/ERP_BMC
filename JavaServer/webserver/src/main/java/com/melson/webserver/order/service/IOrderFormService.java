@@ -4,7 +4,10 @@ import com.melson.webserver.contract.entity.Contract;
 import com.melson.webserver.contract.entity.ContractOrg;
 import com.melson.webserver.contract.entity.ContractStock;
 import com.melson.webserver.order.entity.OrderForm;
+import com.melson.webserver.order.entity.OrderFormDetail;
+import com.melson.webserver.order.vo.OrderFormConfirmVo;
 import com.melson.webserver.order.vo.OrderFormVo;
+import org.springframework.core.annotation.Order;
 
 import java.util.List;
 
@@ -26,6 +29,15 @@ public interface IOrderFormService {
 
 
     List<OrderForm> createdList();
+
+    List<OrderFormDetail> detailList(Integer orderFormId);
+
+    /**
+     * 订单下达
+     * @param vo
+     * @return
+     */
+    OrderForm confirm(OrderFormConfirmVo vo);
 
     /**
      * 根据订单id获取vo对象

@@ -22,6 +22,7 @@ public class CustomerContact {
     private Date createDate;      // 创建日期
     private String status;         //状态定义    Y: 可用状态； N：不可用
 
+
     @Transient
     private String customerName;
 

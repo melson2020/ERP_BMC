@@ -7,6 +7,8 @@ import com.melson.webserver.dict.service.IProductBom;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Created by Messi on 2021/4/26
  */
@@ -21,5 +23,10 @@ public class IProductBomImpl extends AbstractService<ProductBom> implements IPro
     @Override
     public JpaRepository getRepository() {
         return productBomRepository;
+    }
+
+    @Override
+    public List<ProductBom> findProductBoms(Integer productId) {
+        return productBomRepository.findByProductId(productId.toString());
     }
 }

@@ -14,4 +14,6 @@ public interface IOrderFormDetailService {
 
     List<OrderFormDetail> createDetailList(List<ContractStock> stockList,Integer orderFormId);
 
+    List<OrderFormDetail> findDetailListByFormId(Integer formId);
+
 }

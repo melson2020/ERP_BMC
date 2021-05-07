@@ -5,6 +5,7 @@ import com.melson.base.Result;
 import com.melson.base.constants.SysRespCode;
 import com.melson.webserver.order.entity.OrderForm;
 import com.melson.webserver.order.service.IOrderFormService;
+import com.melson.webserver.order.vo.OrderFormConfirmVo;
 import com.melson.webserver.order.vo.OrderFormVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,8 +43,19 @@ public class OrderFormResource extends BaseResource {
     }
 
     @GetMapping(value = "/createdList")
-    public Result createdOrderList(){
+    public Result createdOrderList() {
         return success(orderFormService.createdList());
+    }
+
+    /**
+     * 获取订单详细
+     *
+     * @param orderFormId
+     * @return
+     */
+    @GetMapping(value = "/orderDetailList")
+    public Result OrderDetailList(Integer orderFormId) {
+        return success(orderFormService.detailList(orderFormId));
     }
 
     /**
@@ -57,6 +69,10 @@ public class OrderFormResource extends BaseResource {
         return success(formNo);
     }
 
+    @PostMapping(value = "/confirm")
+    public  Result orderFormConfirm(@RequestBody OrderFormConfirmVo orderFormVo){
+        return null;
+    }
     /**
      * 保存订单
      *

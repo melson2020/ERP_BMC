@@ -3,6 +3,7 @@ package com.melson.base.utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.persistence.Transient;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -86,14 +87,20 @@ public class EntityUtils {
      * @return list集合
      */
     private static List<Map> getFiledsInfo(Object model) {
-        Field[] fields = model.getClass().getDeclaredFields();
-        List<Map> list = new ArrayList(fields.length);
+        Field[] fieldsOrgin = model.getClass().getDeclaredFields();
+        List<Field> fields=new ArrayList<>();
+        for(Field field:fieldsOrgin){
+            if(!field.isAnnotationPresent(Transient.class)){
+                fields.add(field);
+            }
+        }
+        List<Map> list = new ArrayList(fields.size());
         Map infoMap = null;
-        for (int i = 0; i < fields.length; i++) {
+        for (int i = 0; i < fields.size(); i++) {
             infoMap = new HashMap(3);
-            infoMap.put("type", fields[i].getType());
-            infoMap.put("name", fields[i].getName());
-            infoMap.put("value", getFieldValueByName(fields[i].getName(), model));
+            infoMap.put("type", fields.get(i).getType());
+            infoMap.put("name", fields.get(i).getName());
+            infoMap.put("value", getFieldValueByName(fields.get(i).getName(), model));
             list.add(infoMap);
         }
         return list;

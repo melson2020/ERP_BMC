@@ -8,169 +8,193 @@
         size="small"
         style="width: 100%"
       >
-        <el-table-column prop="orderTicketNo" label="订单号" width="100">
-        </el-table-column>
-        <el-table-column prop="customerName" label="客户名称" width="100">
+        <el-table-column prop="formNo" label="订单号"> </el-table-column>
+        <el-table-column prop="customerName" label="客户名称">
         </el-table-column>
         <el-table-column prop="createDate" label="日期"> </el-table-column>
         <el-table-column label="操作">
-          <template>
-            <el-button type="success" size="mini">决策</el-button>
+          <template slot-scope="scope">
+            <el-button
+              type="success"
+              size="mini"
+              @click="orderDecideOnclick(scope.row)"
+              >决策</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
     </div>
-    <div class="order-decide-detail-div">
-      <div class="order-selected-header">
-        <span>测试客户01(00001)</span>
-        <span>合同号：1234567890</span>
-        <el-button type="primary">订单下达</el-button>
-      </div>
-      <div
-        class="order-detail-component"
-        v-for="product in orderDetailList"
-        :key="product.id"
-      >
-        <div class="order-product-info-bar">
-          <span class="coloryellow">{{ product.productName }}</span>
-          <span>100只</span>
-          <span>P40</span>
-          <span>带原子贴膜</span>
-          <i class="el-icon-check color-dark-green fz12"></i>
+    <el-drawer
+      :visible.sync="tableShow"
+      direction="rtl"
+      :with-header="false"
+      size="800px"
+    >
+      <div class="order-decide-detail-div" v-show="tableShow">
+        <div class="order-selected-header">
+          <span
+            >{{ selectedOrderForm.customerName }}({{
+              selectedOrderForm.formNo
+            }})</span
+          >
+          <span>合同号：{{ selectedOrderForm.contractNo }}</span>
         </div>
-        <div class="order-product-checklist">
-          <span>类型：</span>
-          <el-radio-group v-model="product.produceType" size="mini">
-            <el-radio-button label="生产" value="p"></el-radio-button>
-            <el-radio-button label="采购" value="b"></el-radio-button>
-            <el-radio-button label="代工" value="d"></el-radio-button>
-            <el-radio-button label="委外" value="w"></el-radio-button>
-          </el-radio-group>
-        </div>
-        <div class="order-product-detail-bom-analysis-div">
-          <div>
-            BOM
-            <el-radio-group v-model="radio">
-              <el-radio :label="1">优先半成品</el-radio>
-              <el-radio :label="2">使用底层物料</el-radio>
-            </el-radio-group>
-            <el-checkbox>自动生成采购单</el-checkbox>
+        <div
+          class="order-detail-component"
+          v-for="product in orderFormDetaiList"
+          :key="product.id"
+        >
+          <div class="order-product-info-bar">
+            <span class="coloryellow">{{ product.productName }}</span>
+            <span>{{ product.count }}{{ product.countUnit }}</span>
+            <span>{{ product.specification }}</span>
+            <span>{{ product.remark }}</span>
+            <i class="el-icon-check color-dark-green fz12"></i>
           </div>
-          <el-tree :data="bomList" :props="defaultProps">
-            <!--自定义tree node -->
-            <div class="tree-node-bom-div" slot-scope="{ node, data }">
-              <div>
-                <span>{{ node.label }}</span>
-                <span>
-                  {{ data.name }}
-                </span>
-                <span class="color-yellow">
-                  x {{ data.number }}
-                </span>
-              </div>
-              <!-- <div style="width:200px">
-                <span style="width:50px;text-align:left;">库存：</span>
-                <span style="width:50px;text-align:left;"> {{ data.storage }} </span>
-                <span style="width:50px;text-align:left;">缺货：</span>
-                <span style="width:50px;text-align:left;">10</span>
-              </div> -->
+          <div class="order-product-checklist">
+            <span>类型：</span>
+            <el-radio-group v-model="product.produceType" size="mini">
+              <el-radio-button label="P" @click.native="choicePOnclick(product)"
+                >生产</el-radio-button
+              >
+              <el-radio-button label="C">采购</el-radio-button>
+              <el-radio-button label="D" @click.native="choicePOnclick(product)"
+                >代工</el-radio-button
+              >
+              <el-radio-button label="W" @click.native="choicePOnclick(product)"
+                >委外</el-radio-button
+              >
+            </el-radio-group>
+          </div>
+          <div
+            class="order-product-detail-bom-analysis-div"
+            v-show="product.produceType !== 'C'"
+          >
+            <div class="product-bom-choice-div">
+              <span>BOM 选择</span>
+              <el-select
+                size="mini"
+                placeholder="选择BOM"
+                v-model="product.bomNo"
+                @change="productBomChanged(product)"
+              >
+                <el-option
+                  v-for="pbom in product.pboms"
+                  :key="pbom.id"
+                  :label="pbom.productName + '/' + pbom.description"
+                  :value="pbom.bomNo"
+                ></el-option>
+              </el-select>
+              <!-- <el-radio-group v-model="product.bomChoice">
+                <el-radio :label="1">优先半成品</el-radio>
+                <el-radio :label="2">使用底层物料</el-radio>
+              </el-radio-group> -->
+              <!-- <el-checkbox>自动生成采购单</el-checkbox> -->
             </div>
-          </el-tree>
+            <el-tree
+              class="product-bom-tree"
+              :data="product.boms"
+              :props="defaultProps"
+              @node-expand="nodeExpand"
+              @node-collapse="nodeCollapse"
+            >
+              <!--自定义tree node -->
+              <div class="tree-node-bom-div" slot-scope="{ node, data }">
+                <div>
+                  <span>{{ node.label }}</span>
+                  <span> x {{ data.chQty }} </span>
+                </div>
+                <div style="width: 200px">
+                  <!-- <span style="width:50px;text-align:left;">库存：</span>
+                <span style="width:50px;text-align:left;"> {{ data.storage }} </span> -->
+                  <span style="width: 30px; text-align: left" v-if="data.seen"
+                    >总数：</span
+                  >
+                  <span
+                    style="width: 30px; text-align: left"
+                    v-if="data.seen"
+                    >{{ $my.NumberMul(data.chQty, product.count) }}</span
+                  >
+                </div>
+              </div>
+            </el-tree>
+          </div>
+          <div v-show="product.produceType == 'C'">
+            <span class="colorred"
+              >对外采购{{ product.count }}{{ product.countUnit }}</span
+            >
+          </div>
         </div>
+        <el-button class="order-confirm-button" type="primary" @click="orderConfirm">订单下达</el-button>
       </div>
-    </div>
+    </el-drawer>
   </div>
 </template>
 <script>
+import { mapGetters } from "vuex";
+import { mapActions } from "vuex";
 export default {
   data() {
     return {
-      prodcutTypeRadio: "",
-      radio: 1,
-      orderReadyToReleaseList: [
-        {
-          orderTicketNo: "0001",
-          customerName: "测试客户01",
-          createDate: "2021-04-16",
-        },
-        {
-          orderTicketNo: "0002",
-          customerName: "测试客户02",
-          createDate: "2021-04-15",
-        },
-        {
-          orderTicketNo: "0003",
-          customerName: "测试客户03",
-          createDate: "2021-04-17",
-        },
-      ],
-      orderDetailList: [
-        {
-          id: 1,
-          productName: "华为手机",
-          remark: "不要贴膜",
-          number: "100",
-          spec: "P30",
-          produceType: "",
-          bom: [{ code: "", name: "", number: "" }],
-        },
-        {
-          id: 2,
-          productName: "华为手机",
-          remark: "不要贴膜",
-          produceType: "",
-          number: "100",
-          spec: "P30",
-          bom: [{ code: "", name: "", number: "" }],
-        },
-      ],
-      bomList: [
-        {
-          code: "01",
-          name: "CPU",
-          number: "2",
-          storage: "10",
-        },
-        {
-          code: "02",
-          name: "OLED显示屏",
-          number: "1",
-          storage: "11",
-          children: [
-            {
-              code: "03",
-              name: "显示屏原料1",
-              number: "3",
-              storage: "2",
-              children: [
-                {
-                  code: "04",
-                  name: "显示屏原料1子料",
-                  number: "1",
-                  storage: "55",
-                },
-              ],
-            },
-            {
-              code: "06",
-              name: "显示屏原料2",
-              number: "3",
-              storage: "11",
-            },
-          ],
-        },
-        {
-          code: "09",
-          name: "电池",
-          number: "1",
-          storage: "11",
-        },
-      ],
+      tableShow: false,
+      selectedOrderForm: {},
       defaultProps: {
-        children: "children",
-        label: "code",
+        children: "childList",
+        label: "name",
       },
     };
+  },
+  computed: {
+    ...mapGetters(["orderReadyToReleaseList", "orderFormDetaiList"]),
+  },
+  methods: {
+    ...mapActions({
+      GetCreatedOrderList: "GetCreatedOrderList",
+      GetOrderFormDetailList: "GetOrderFormDetailList",
+      GetProductBomList: "GetProductBomList",
+      GetProductBomInfo: "GetProductBomInfo",
+      OrderFormConfirm:'OrderFormConfirm'
+    }),
+    orderDecideOnclick(form) {
+      this.GetOrderFormDetailList({ orderFormId: form.id });
+      this.selectedOrderForm = form;
+      this.tableShow = !this.tableShow;
+    },
+    orderConfirm() {
+      console.log('订单下达',this.selectedOrderForm,this.orderFormDetaiList)
+      this.OrderFormConfirm({orderForm:this.selectedOrderForm,orderFormDetails:this.orderFormDetaiList})
+    },
+    choicePOnclick(product) {
+      this.GetProductBomList({ productId: product.productId }).then((res) => {
+        if (res.resultStatus == 1) {
+          product.pboms = res.data;
+        }
+      });
+    },
+    productBomChanged(p) {
+      this.GetProductBomInfo({ bomNo: p.bomNo }).then((res) => {
+        if (res.resultStatus == 1) {
+          res.data.map((item) => {
+            item.seen = true;
+          });
+          p.boms = res.data;
+        }
+      });
+    },
+    nodeExpand(item) {
+      item.seen = false;
+      if (item.childList) {
+        item.childList.map((child) => {
+          child.seen = true;
+        });
+      }
+    },
+    nodeCollapse(item) {
+      item.seen = true;
+    },
+  },
+  beforeMount() {
+    this.GetCreatedOrderList();
   },
 };
 </script>
@@ -183,17 +207,18 @@ export default {
   flex-direction: row;
 }
 .order-release-table-div {
-  width: 600px;
-  padding: 2px;
+  width: 100%;
+  padding: 5px;
 }
 .order-decide-detail-div {
   display: flex;
   flex-direction: column;
   width: 100%;
-  border: 1px solid lightgray;
+  font-size: 0.9rem;
+  /* border: 1px solid lightgray;
   border-radius: 5px;
   margin: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04); */
 }
 .order-product-info-bar {
   display: flex;
@@ -230,15 +255,26 @@ export default {
   align-items: center;
   flex-direction: row;
   justify-content: space-between;
-  padding-right: 10px;
 }
-.tree-node-bom-div:hover {
-  border: 1px solid #ff4040(83, 72, 236);
-  border-radius: 5px;
+.product-bom-tree {
+  margin-top: 10px;
 }
-.width-100-text-left{
+.width-100-text-left {
   width: 50px;
   text-align: left;
   background: red;
+}
+.order-product-detail-bom-analysis-div {
+  text-align: left;
+  padding: 10px;
+}
+.product-bom-choice-div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.order-confirm-button{
+  height: 40px;
+  margin: 10px;
 }
 </style>

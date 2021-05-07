@@ -3,6 +3,7 @@ package com.melson.webserver.dict.resource;
 import com.melson.base.BaseResource;
 import com.melson.base.Result;
 import com.melson.webserver.dict.service.IProductBom;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,10 +22,15 @@ public class ProductBomResource extends BaseResource {
         this.productBomService = productBomService;
     }
 
-    @RequestMapping(value = "/list",method = RequestMethod.GET)
-    public Result GetProductBomList(HttpServletRequest request){
-
-        return null;
-
+    /**
+     * 获取产品bom列表
+     * @param productId
+     * @return
+     */
+    @GetMapping("/pBomList")
+    public Result FindProductBomList(Integer productId){
+        return  success(productBomService.findProductBoms(productId));
     }
+
+
 }

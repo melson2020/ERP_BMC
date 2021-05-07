@@ -42,4 +42,9 @@ public class OrderFormDetailServiceImpl implements IOrderFormDetailService {
          return orderFormDetailRepository.saveAll(detailList);
     }
 
+    @Override
+    public List<OrderFormDetail> findDetailListByFormId(Integer formId) {
+        return orderFormDetailRepository.findByOrderFormId(formId);
+    }
+
 }
