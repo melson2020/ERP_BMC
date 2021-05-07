@@ -54,21 +54,21 @@
           <div class="order-product-checklist">
             <span>类型：</span>
             <el-radio-group v-model="product.produceType" size="mini">
-              <el-radio-button label="p" @click.native="choicePOnclick(product)"
+              <el-radio-button label="P" @click.native="choicePOnclick(product)"
                 >生产</el-radio-button
               >
-              <el-radio-button label="c">采购</el-radio-button>
-              <el-radio-button label="d" @click.native="choicePOnclick(product)"
+              <el-radio-button label="C">采购</el-radio-button>
+              <el-radio-button label="D" @click.native="choicePOnclick(product)"
                 >代工</el-radio-button
               >
-              <el-radio-button label="w" @click.native="choicePOnclick(product)"
+              <el-radio-button label="W" @click.native="choicePOnclick(product)"
                 >委外</el-radio-button
               >
             </el-radio-group>
           </div>
           <div
             class="order-product-detail-bom-analysis-div"
-            v-show="product.produceType !== 'c'"
+            v-show="product.produceType !== 'C'"
           >
             <div class="product-bom-choice-div">
               <span>BOM 选择</span>
@@ -119,7 +119,7 @@
               </div>
             </el-tree>
           </div>
-          <div v-show="product.produceType == 'c'">
+          <div v-show="product.produceType == 'C'">
             <span class="colorred"
               >对外采购{{ product.count }}{{ product.countUnit }}</span
             >
@@ -153,6 +153,7 @@ export default {
       GetOrderFormDetailList: "GetOrderFormDetailList",
       GetProductBomList: "GetProductBomList",
       GetProductBomInfo: "GetProductBomInfo",
+      OrderFormConfirm:'OrderFormConfirm'
     }),
     orderDecideOnclick(form) {
       this.GetOrderFormDetailList({ orderFormId: form.id });
@@ -161,6 +162,7 @@ export default {
     },
     orderConfirm() {
       console.log('订单下达',this.selectedOrderForm,this.orderFormDetaiList)
+      this.OrderFormConfirm({orderForm:this.selectedOrderForm,orderFormDetails:this.orderFormDetaiList})
     },
     choicePOnclick(product) {
       this.GetProductBomList({ productId: product.productId }).then((res) => {

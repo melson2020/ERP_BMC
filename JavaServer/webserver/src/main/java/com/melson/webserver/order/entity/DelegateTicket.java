@@ -8,8 +8,8 @@ import javax.persistence.*;
  * @Date 2021/5/6
  */
 @Entity
-@Table(name = "delegate_plan")
-public class DelegatePlan {
+@Table(name = "delegate_ticket")
+public class DelegateTicket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -18,7 +18,7 @@ public class DelegatePlan {
     private String customerNo;
     private String customerName;
     private String contractNo;
-    private String planNo;
+    private String ticketNo;
 
     public Integer getId() {
         return id;
@@ -68,11 +68,11 @@ public class DelegatePlan {
         this.contractNo = contractNo;
     }
 
-    public String getPlanNo() {
-        return planNo;
+    public String getTicketNo() {
+        return ticketNo;
     }
 
-    public void setPlanNo(String planNo) {
-        this.planNo = planNo;
+    public void setTicketNo(String ticketNo) {
+        this.ticketNo = ticketNo;
     }
 }

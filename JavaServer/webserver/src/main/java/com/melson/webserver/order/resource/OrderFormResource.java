@@ -69,7 +69,7 @@ public class OrderFormResource extends BaseResource {
         return success(formNo);
     }
 
-    @PostMapping(value = "/orderFormConfirm")
+    @PostMapping(value = "/confirm")
     public  Result orderFormConfirm(@RequestBody OrderFormConfirmVo orderFormVo){
         return null;
     }

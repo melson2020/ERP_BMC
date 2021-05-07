@@ -10,6 +10,18 @@ import javax.persistence.*;
 @Entity
 @Table(name = "order_form_detail")
 public class OrderFormDetail {
+
+    //生产类型
+    public  static final String PRODUCE_TYPE_P="P";
+
+    //采购
+    public  static final String PRODUCE_TYPE_C="C";
+
+    //代工
+    public  static final String PRODUCE_TYPE_D="D";
+
+    //委外
+    public  static final String PRODUCE_TYPE_W="W";
     /**
      * 订单唯一自增id,用于其他表关联
      */
@@ -53,6 +65,11 @@ public class OrderFormDetail {
      * BOM 选择  优先半成品/ 优先底层物料
      */
     private String bomChoice;
+
+    /**
+     * BOM NO  选择的BOM 编号
+     */
+    private String bomNo;
 
     public Integer getId() {
         return id;
@@ -132,5 +149,13 @@ public class OrderFormDetail {
 
     public void setBomChoice(String bomChoice) {
         this.bomChoice = bomChoice;
+    }
+
+    public String getBomNo() {
+        return bomNo;
+    }
+
+    public void setBomNo(String bomNo) {
+        this.bomNo = bomNo;
     }
 }

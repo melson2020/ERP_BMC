@@ -6,7 +6,7 @@ import { Message } from "element-ui";
 
 const state = {
     orderReadyToReleaseList: [],
-    orderFormDetaiList:[]
+    orderFormDetaiList: []
 };
 
 const actions = {
@@ -21,7 +21,7 @@ const actions = {
             Message.error(err.message)
         })
     },
-    GetOrderFormDetailList({commit},param){
+    GetOrderFormDetailList({ commit }, param) {
         request.GetOrderFormDetailListById(param).then(res => {
             if (res.resultStatus == 1) {
                 console.log(res.data)
@@ -34,12 +34,23 @@ const actions = {
         })
     },
     //获取产品bom 列表
-    GetProductBomList({},param){
+    GetProductBomList({ }, param) {
         return request.GetProductBomList(param);
     },
     //获取产品bom 详细信息
-    GetProductBomInfo({},param){
+    GetProductBomInfo({ }, param) {
         return request.GetProductBomInfo(param);
+    },
+    OrderFormConfirm({ }, param) {
+        request.OrderFormConfirm(param).then(res => {
+            if (res.resultStatus == 1) {
+                console.log('conifrm success', res.data)
+            } else {
+                Message.warning(res.message)
+            }
+        }).catch(err => {
+            Message.error(err.message)
+        })
     }
 
 };
@@ -54,9 +65,9 @@ const mutations = {
         state.orderReadyToReleaseList = data;
     },
     [types.ORDER_DETAIL_LIST](state, data) {
-        data.map(item=>{
-            item.pboms=[],
-            item.boms=[]
+        data.map(item => {
+            item.pboms = [],
+                item.boms = []
         })
         state.orderFormDetaiList = data;
     }

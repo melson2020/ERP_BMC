@@ -11,6 +11,9 @@ import java.util.Date;
 @Entity
 @Table(name = "produce_plan")
 public class ProducePlan {
+    public static  final  String CREATED="1";
+    public static  final  String PROCESSING="2";
+    public static  final  String COMPLETED="3";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -22,6 +25,7 @@ public class ProducePlan {
     private String type;
     private String planNo;
     private Date createDate;
+    // 创建 执行 完成
     private String state;
 
     public Integer getId() {

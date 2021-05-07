@@ -80,5 +80,8 @@ export default {
   },
   GetProductBomInfo(param){
     return service.get('/Boms/list',param)
+  },
+  OrderFormConfirm(param){
+    return service.post('/orderForm/manage/confirm',param)
   }
 };
