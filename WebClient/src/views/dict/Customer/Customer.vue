@@ -3,14 +3,15 @@
     <div class="customer-header">
       <el-input
         class="customer-fliter-input"
-        size="mini"
+        size="small"
         placeholder="搜索客户"
+        v-model="searchContent"
         suffix-icon="el-icon-search"
       ></el-input>
-      <el-button type="primary" @click="resetForm('customerAddForm')">新建客户</el-button>
+      <el-button type="primary" size="small" @click="resetForm('customerAddForm')">新建客户</el-button>
     </div>
     <div class="customer-content">
-      <el-table :data="customerList" 
+      <el-table :data="customerListPageShow" 
           border="" stripe           
           :header-row-style="{height:'40px' ,'align':'center'}"
           :row-style="{height:'40px'}"
@@ -18,8 +19,8 @@
         <el-table-column prop="customerNo" label="客户代码" width="150px"></el-table-column>
         <el-table-column prop="name" label="客户名称"> </el-table-column>
                 <el-table-column prop="address" label="地址"> </el-table-column>
-        <el-table-column prop="contactName" label="联系人" width="100px"> </el-table-column>
-        <el-table-column prop="phone" label="电话" width="160px"> </el-table-column>
+        <!-- <el-table-column prop="contactName" label="联系人" width="100px"> </el-table-column> -->
+        <el-table-column prop="phone" label="传真电话" width="160px"> </el-table-column>
         <el-table-column prop="taxNo" label="税号" width="160px"> </el-table-column>
         <el-table-column prop="bankNo" label="账号" width="160px"> </el-table-column>
         <el-table-column prop="payTerm" label="账期" width="60px">
@@ -44,19 +45,19 @@
     <div class="customer-content-footer"></div>
 
     
-    <el-dialog title="添加新客户" :visible.sync="customerAddDialog" :close-on-click-modal="false" width="60%">
+    <el-dialog title="添加新客户" :visible.sync="customerAddDialog" :close-on-click-modal="false" width="1024px">
       <el-form status-icon :model="newCustomer" :rules="rules" ref="customerAddForm" label-width="100px">
         <el-row>
-          <el-col :span="16">
+          <!-- <el-col :span="16"> -->
             <el-form-item label="客户名称" prop="name">
               <el-input v-model="newCustomer.name" autocomplete="off" ></el-input>
             </el-form-item>
-          </el-col>
-          <el-col :span="8">
+          <!-- </el-col> -->
+          <!-- <el-col :span="8">
             <el-form-item label="联系人" prop="contactName">
               <el-input v-model="newCustomer.contactName" autocomplete="off" ></el-input>
             </el-form-item>
-          </el-col>
+          </el-col> -->
         </el-row>
         <el-row>
           <el-form-item label="客户地址" prop="address">
@@ -65,7 +66,7 @@
         </el-row>
         <el-row>
           <el-col :span="8">
-            <el-form-item label="联系电话" prop="phone">
+            <el-form-item label="传真电话" prop="phone">
               <el-input autocomplete="off" v-model="newCustomer.phone"></el-input>
             </el-form-item>
           </el-col>
@@ -111,6 +112,85 @@
           </el-form-item>
         </el-row>
         <el-row>
+          <el-form-item label="联系人信息">
+          <el-table
+            :data="newCustomer.contactList"
+            border
+            style="width: 100%"
+            size="mini"
+            @cell-click="newCellClick"
+            :show-header="false"
+          >
+            <el-table-column prop="contactName" label="名称:" width="170px" >
+              <template slot-scope="scope" >
+                <div class="contactInformation" >
+                  <el-form-item label="名称:" prop="contactName" label-width="45px" >
+                    <el-input
+                      v-model="scope.row.contactName"
+                      v-if="scope.row.seen"
+                      size="mini"
+                    ></el-input>
+                    <span v-else>{{ scope.row.contactName }}</span>
+                  </el-form-item>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column prop="cellPhone" label="电话:"  width="240px" >
+              <template slot-scope="scope">
+                <div class="contactInformation">
+                  <el-form-item label="电话:" prop="cellPhone" label-width="45px" >
+                    <el-input
+                      v-model="scope.row.phone"
+                      v-if="scope.row.seen"
+                     
+                      size="mini"
+                    ></el-input>
+                    <span v-else>{{ scope.row.phone }}</span>
+                  </el-form-item>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column prop="deliverAddress" label="地址:" >
+              <template slot-scope="scope" >
+                <div class="contactInformation">
+                  <el-form-item label="地址:" prop="deliverAddress" label-width="45px" >
+                    <el-input  
+                      v-model="scope.row.deliverAddress"
+                      v-if="scope.row.seen"
+                     
+                      size="mini"
+                      style="width:324px"
+                    ></el-input>
+                    <span v-else>{{ scope.row.deliverAddress }}</span>
+                  </el-form-item>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column width="80px" >>
+              <template slot-scope="scope">
+                <div class="contactOperation">
+
+                  <el-tooltip effect="light" content="确定" placement="top">
+                    <el-button size="mini" :disabled="!scope.row.isEditable" circle @click.prevent.stop="newSaveContact(scope.$index, scope.row)" icon="el-icon-check" type="primary" ></el-button>
+                  </el-tooltip>
+                  <el-tooltip effect="light" content="删除" placement="top">
+                    <el-button size="mini" @click.prevent.stop="newDeleteContact(scope.$index, scope.row)" plain circle type="danger" icon="el-icon-delete"/>
+                  </el-tooltip>
+                </div>
+              </template>
+            </el-table-column>
+
+          </el-table>
+          <el-button
+            icon="el-icon-plus"
+            plain
+            class="add-contact"
+            @click="addContact"
+            >添加联系人</el-button
+          >
+          </el-form-item>
+        </el-row>
+        <el-row>
           <el-form-item>
             <el-button type="primary" @click="addCustomer('customerAddForm')" :loading="loading">保存</el-button>
             <el-button @click="customerAddDialog = false" v-if="!loading">取 消</el-button>
@@ -119,19 +199,19 @@
       </el-form>
     </el-dialog>
     
-    <el-dialog title="编辑客户资料" :visible.sync="customerEditDialog" :close-on-click-modal="false" width="60%">
+    <el-dialog title="编辑客户资料" :visible.sync="customerEditDialog" :close-on-click-modal="false" width="1024px">
       <el-form status-icon :model="editCustomer" :rules="rules" ref="customerEditForm" label-width="100px">
         <el-row>
-          <el-col :span="16">
+          <!-- <el-col :span="16"> -->
             <el-form-item label="客户名称" prop="name">
               <el-input v-model="editCustomer.name" autocomplete="off" ></el-input>
             </el-form-item>
-          </el-col>
-          <el-col :span="8">
+          <!-- </el-col> -->
+          <!-- <el-col :span="8">
             <el-form-item label="联系人" prop="contactName">
               <el-input v-model="editCustomer.contactName" autocomplete="off" ></el-input>
             </el-form-item>
-          </el-col>
+          </el-col> -->
         </el-row>
         <el-row>
           <el-form-item label="客户地址" prop="address">
@@ -140,7 +220,7 @@
         </el-row>
         <el-row>
           <el-col :span="8">
-            <el-form-item label="联系电话" prop="phone">
+            <el-form-item label="传真电话" prop="phone">
               <el-input autocomplete="off" v-model="editCustomer.phone"></el-input>
             </el-form-item>
           </el-col>
@@ -185,6 +265,86 @@
             ></el-input>
           </el-form-item>
         </el-row>
+                <el-row>
+          <el-form-item label="联系人信息">
+          <el-table
+            :data="editCustomer.contactList"
+            border
+            style="width: 100%"
+            size="mini"
+            @cell-click="editCellClick"
+            :show-header="false"
+          >
+            <el-table-column prop="contactName" label="名称:" width="170px" >
+              <template slot-scope="scope" >
+                <div class="contactInformation" >
+                  <el-form-item label="名称:" prop="contactName" label-width="45px" >
+                    <el-input
+                      v-model="scope.row.contactName"
+                      v-if="scope.row.seen"
+                      :disabled="scope.row.isDisable"
+                      size="mini"
+                    ></el-input>
+                    <span v-else>{{ scope.row.contactName }}</span>
+                  </el-form-item>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column prop="cellPhone" label="电话:"  width="240px" >
+              <template slot-scope="scope">
+                <div class="contactInformation">
+                  <el-form-item label="电话:" prop="cellPhone" label-width="45px" >
+                    <el-input
+                      v-model="scope.row.phone"
+                      v-if="scope.row.seen"
+                      :disabled="scope.row.isDisable"
+                      size="mini"
+                    ></el-input>
+                    <span v-else>{{ scope.row.phone }}</span>
+                  </el-form-item>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column prop="deliverAddress" label="地址:" >
+              <template slot-scope="scope" >
+                <div class="contactInformation">
+                  <el-form-item label="地址:" prop="deliverAddress" label-width="45px" >
+                    <el-input  
+                      v-model="scope.row.deliverAddress"
+                      v-if="scope.row.seen"
+                      :disabled="scope.row.isDisable"
+                      size="mini"
+                      style="width:324px"
+                    ></el-input>
+                    <span v-else>{{ scope.row.deliverAddress }}</span>
+                  </el-form-item>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column width="80px" >>
+              <template slot-scope="scope">
+                <div class="contactOperation">
+
+                  <el-tooltip effect="light" content="确定" placement="top">
+                    <el-button size="mini" circle @click.prevent.stop="editSaveContact(scope.$index, scope.row)" icon="el-icon-check" type="primary" ></el-button>
+                  </el-tooltip>
+                  <el-tooltip effect="light" content="删除" placement="top">
+                    <el-button size="mini" :disabled="scope.row.isDisable" @click.prevent.stop="editDeleteContact(scope.$index, scope.row)" plain circle type="danger" icon="el-icon-delete"/>
+                  </el-tooltip>
+                </div>
+              </template>
+            </el-table-column>
+
+          </el-table>
+          <el-button
+            icon="el-icon-plus"
+            plain
+            class="add-contact"
+            @click="editAddContact"
+            >添加联系人</el-button
+          >
+          </el-form-item>
+        </el-row>
         <el-row>
           <el-form-item>
             <el-button type="primary" @click="onEditcustomer('customerEditForm')" :loading="loading">保存</el-button>
@@ -204,7 +364,21 @@ export default {
     return {
       customerEditDialog: false,
       customerAddDialog: false,
+      searchContent: "",
       loading: false,
+      // contactList: [{ id: "1", customerNo:"C10001", contactName: "何永", phone: "18013579965", deliverAddress:"苏州工业园区展业大厦",tags:"",description:"",createBy:"",createDate:"",seen: false}],
+      contactList: [],
+      // newContact:{
+      //   id:'',
+      //   customerNo:'',
+      //   contactName:'',
+      //   phone:'',
+      //   deliverAddress:'',
+      //   tags:'',
+      //   description:'',
+      //   createBy:'',
+      //   createDate:''
+      // },
       newCustomer: {
           id: '',
           customerNo: '',
@@ -220,7 +394,8 @@ export default {
           status: '',
           description: '',
           createDate:'',
-          createdBy: ''
+          createBy: '',
+          contactList: [],
       },
       editCustomer: {
           id: '',
@@ -237,26 +412,49 @@ export default {
           status: '',
           description: '',
           createDate:'',
-          createdBy: ''
+          createBy: '',
+          contactList: [],
       },
       rules: {
         name: [
           { required: true, message: "请输入客户名称", trigger: "blur" }
         ],
-        contactName: [
-          { required: true, message: "请输入联系人信息", trigger: "blur" }
-        ],
+        // contactName: [
+        //   { required: true, message: "请输入联系人信息", trigger: "blur" }
+        // ],
         address: [
           { required: true, message: "请输入客户地址", trigger: "blur" }
         ],
         phone: [
           { required: true, message: "请输入联系电话", trigger: "blur" }
-        ]
+        ],
+        // deliverAddress: [
+        //   { required: true, message: "请输入客户地址", trigger: "blur" }
+        // ],
+        // cellPhone: [
+        //   { required: true, message: "请输入联系电话", trigger: "blur" }
+        // ]
       },
     };
   },
   computed: {
     ...mapGetters(["customerList"]),
+    customerListPageShow(){
+      return this.customerList.filter((item)=>{
+        let key=
+        item.customerNo +
+        item.name +
+        item.address +
+        item.phone +
+        item.taxNo +
+        item.bankNo +
+        item.payTerm +
+        item.payWay +
+        item.currency;
+        let index = key.toUpperCase().indexOf(this.searchContent.toUpperCase());
+        return index != -1;
+      });
+    }
   },
   methods: {
     ...mapActions({
@@ -265,6 +463,9 @@ export default {
       PushCustomerList: "PushCustomerList",
       QueryCustomerObj:"QueryCustomerObj",
       DisableCustomer:"DisableCustomer",
+      SaveContact:"SaveContact",
+      GetContactList:"GetContactList",
+
     }),
     resetForm(formName) {
       if (this.$refs[formName]) {
@@ -273,44 +474,173 @@ export default {
       this.customerAddDialog = true;
     },
     addCustomer(formName){
-        this.$refs[formName].validate(valid => {
-        if (valid) {
-          let customer=this.newCustomer
-          customer.customerNo="cu" + new Date().valueOf();
-          customer.createDate=new Date();
-          customer.status="Y";
-          customer.createdBy="";     //TODO： 待添加创建人
-          this.SaveCustomer(customer)
-            .then(res => {
-              if (res.resultStatus == 1) {
-                this.customerAddDialog = false;
-                this.PushCustomerList(res.data);
-                this.$message({
-                  showClose: true,
-                  message: "创建成功",
-                  type: "success"
-                });
-              } else {
-                this.$messgae.error(res.message);
-              }
-            })
-            .catch(err => {
-              let alert = err.message ? err.message : err;
-              this.$messgae.error(alert);
-            });
+      if(!this.newCheckSavedFlag())
+      {
+        if(!this.newCheckEidtable())
+        {
+          this.$refs[formName].validate(valid => {
+          if (valid) {
+            let customer=this.newCustomer
+            customer.customerNo="cu" + new Date().valueOf();
+            customer.createDate=new Date();
+            customer.status="Y";
+            customer.createBy="";     //TODO： 待添加创建人
+            // customer.contactList=this.contactList;
+
+            this.SaveCustomer(customer)
+              .then(res => {
+                if (res.resultStatus == 1) {
+                  this.customerAddDialog = false;
+                  this.newCustomer.contactList=[];
+                  this.PushCustomerList(res.data);
+                  this.$message({
+                    showClose: true,
+                    message: "创建成功",
+                    type: "success"
+                  });
+                } else {
+                  this.$messgae.error(res.message);
+                }
+              })
+              .catch(err => {
+                let alert = err.message ? err.message : err;
+                this.$messgae.error(alert);
+              });
+          }
+          else{
+            this.$message.warning("请填写必要信息");
+            return false;
+          }
+          });
         }
-        else{
-          this.$message.warning("请填写必要信息");
-          return false;
-        }
-        });
+      }
+    },
+    editSaveContact(index,row){
+      if(row.contactName.trim()==="")
+      {
+        this.$message.warning("名称不能为空");
+        return false;
+      }
+      else
+      {
+        row.seen=false;
+        row.notSavedFlag=false;
+      }
+    },
+    editDeleteContact(index, row) {
+      row.seen=false;
+      row.notSavedFlag=false;
+       this.$messageBox.confirm('确认要删除？',"提示",{
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
+        .then(() => {
+
+          if(row.id=="")
+          {
+            this.editCustomer.contactList.splice(index,1)
+          }
+          else
+          {
+            row.isDisable=true;
+            row.status="N";
+          }
+
+        })
+        .catch(e=>e);
+    },
+    newSaveContact(index,row){
+      if(row.contactName.trim()==="")
+      {
+        this.$message.warning("名称不能为空");
+        return false;
+      }
+      else
+      {
+        row.seen=false;
+        row.notSavedFlag=false;
+
+        // let customerContact=this.newContact
+        // customerContact.contactName=row.contactName;
+        // customerContact.phone=row.phone;
+        // customerContact.deliverAddress=row.deliverAddress;
+        // customerContact.createDate=row.createDate? row.createDate:new Date();
+        // customerContact.createBy=row.createdBy? row.createdBy:"Admin";
+        // customerContact.customerNo=row.customerNo?row.customerNo:"";
+        // customerContact.tags=row.tags?row.tags:"";
+        // customerContact.id=row.id?row.id:"";
+        // customerContact.description=row.description?row.description:"";
+
+
+
+        // this.SaveContact(customerContact)
+        //   .then(res=>{
+        //     if(res.resultStatus==1){
+        //       row.seen=false;
+        //       row.notSavedFlag=false;
+        //       // this.GetContactList(customerContact.customerNo);
+        //       this.$message({
+        //         showClose:true,
+        //         message:"操作成功",
+        //         type:"success"
+        //       });
+        //     }
+        //     else{
+        //       this.$message.error(res.message);
+        //     }
+        //   })
+        //   .catch(err=>{
+        //       let alert = err.message ? err.message : err;
+        //       this.$message.error(alert);
+        //   });
+      }
+    },
+    newDeleteContact(index, row) {
+      row.seen=false;
+      row.notSavedFlag=false;
+       this.$messageBox.confirm('确认要删除？',"提示",{
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
+        .then(() => {
+          this.newCustomer.contactList.splice(index,1)
+        })
+        .catch(e=>e);
     },
     handleEdit(index,row){
-      let cus={id:row.id,index:index}
+      let cus={id:row.id,customerNo:row.customerNo,index:index}
       this.QueryCustomerObj(cus)
         .then(res=>{
           if (res.resultStatus == 1) {
-            this.editCustomer=res.data;
+            // let queryCustomer=this.newCustomer;
+            this.editCustomer.name=res.data.name;
+            this.editCustomer.address=res.data.address;
+            this.editCustomer.bankNo=res.data.bankNo;
+            this.editCustomer.contactName=res.data.contactName;
+            this.editCustomer.createBy=res.data.createBy;
+            this.editCustomer.createDate=res.data.createDate;
+            this.editCustomer.currency=res.data.currency;
+            this.editCustomer.customerNo=res.data.customerNo;
+            this.editCustomer.description=res.data.description;
+            this.editCustomer.id=res.data.id;
+            this.editCustomer.payTerm=res.data.payTerm;
+            this.editCustomer.payWay=res.data.payWay;
+            this.editCustomer.phone=res.data.phone;
+            this.editCustomer.status=res.data.status;
+            this.editCustomer.taxNo=res.data.taxNo;
+
+            let contacts = [];
+            for (let index = 0; index < res.data.contactList.length; index++) {
+                const element = res.data.contactList[index];
+                let contact = { id: element.id, customerNo:element.customerNo, contactName: element.contactName, phone: element.phone, deliverAddress:element.deliverAddress,tags:element.tags,description:element.description,createBy:element.createBy,createDate:element.createDate,status:element.status,seen: false, isEditable:false ,notSavedFlag:false,isDisable:false };
+                contacts.push(contact);
+            }
+            this.editCustomer.contactList=contacts;
+            // this.editCustomer=res.data;
+            // this.editCustomer=queryCustomer;
+            // console.log(this.editCustomer);
             this.customerEditDialog = true;
           }
           else{
@@ -323,34 +653,40 @@ export default {
       });
     },
     onEditcustomer(formName){
-      this.$refs[formName].validate(valid=>{
-        if(valid){
-          console.log(this.editCustomer);
-          this.SaveCustomer(this.editCustomer)
-          .then(res=>{
-            if(res.resultStatus==1){
-              this.GetCustomerList();
-              this.customerEditDialog=false;
-              this.$message({
-                showClose:true,
-                message:"操作成功",
-                type:"success"
-              });
-            }
-            else{
-              this.$message.error(res.message);
-            }
-          })
-          .catch(err=>{
-              let alert = err.message ? err.message : err;
-              this.$message.error(alert);
-          });
+      if(!this.editCheckSavedFlag())
+      {
+        if(!this.editCheckEidtable())
+        {
+            this.$refs[formName].validate(valid=>{
+              if(valid){
+                this.SaveCustomer(this.editCustomer)
+                .then(res=>{
+                  if(res.resultStatus==1){
+                    this.GetCustomerList();
+                    this.customerEditDialog=false;
+                    this.editCustomer.contactList=[];
+                    this.$message({
+                      showClose:true,
+                      message:"操作成功",
+                      type:"success"
+                    });
+                  }
+                  else{
+                    this.$message.error(res.message);
+                  }
+                })
+                .catch(err=>{
+                    let alert = err.message ? err.message : err;
+                    this.$message.error(alert);
+                });
+              }
+              else{
+                this.$message.warning("请填写准确信息");
+                return false;
+              }
+            })
         }
-        else{
-          this.$message.warning("请填写准确信息");
-          return false;
-        }
-      })
+      }
     },
     handleDelete(index, row) {
       let cus={id:row.id,index:index}
@@ -364,6 +700,73 @@ export default {
           })
           .catch(e=>e);
       },
+    addContact() {
+      if(!this.newCheckSavedFlag())
+      {
+        if(!this.newCheckEidtable())
+        {
+          this.newCustomer.contactList.push({ id: "", customerNo:"", contactName: "", phone: "", deliverAddress:"",tags:"",description:"",createBy:"",createDate:"",status:"Y",seen: false, isEditable:true ,notSavedFlag:true})
+        }
+      }
+    },
+    editAddContact() {
+      if(!this.editCheckSavedFlag())
+      {
+        if(!this.editCheckEidtable())
+        {
+          this.editCustomer.contactList.push({ id: "", customerNo:"", contactName: "", phone: "", deliverAddress:"",tags:"",description:"",createBy:"",createDate:"",status:"Y",seen: false, isEditable:true ,notSavedFlag:true,isDisable:false})
+        }
+      }
+    },
+    newCellClick(row) {
+       row.seen=true;
+
+    },
+    editCellClick(row){
+      if(!row.seen)
+      {
+       if(!this.editCheckEidtable())
+        {
+          row.seen=true;
+        }
+      }
+    },
+    newCheckEidtable(){
+      var list= this.newCustomer.contactList.filter((item)=>{return item.seen
+      })
+      if(list.length>0){
+        this.$message.warning('请先完成联系人编辑')
+        return true;
+      }
+    },
+    newCheckSavedFlag(){
+      var list= this.newCustomer.contactList.filter((item)=>{return item.notSavedFlag
+      })
+      if(list.length>0){
+        this.$message.warning('请先保存联系人数据')
+        return true;
+      }
+    },
+    editCheckEidtable(){
+      var list= this.editCustomer.contactList.filter((item)=>{return item.seen
+      })
+      if(list.length>0){
+        this.$message.warning('请先完成联系人编辑')
+        return true;
+      }
+    },
+    editCheckSavedFlag(){
+      var list= this.editCustomer.contactList.filter((item)=>{return item.notSavedFlag
+      })
+      if(list.length>0){
+        this.$message.warning('请先保存联系人数据')
+        return true;
+      }
+    },
+    // loseFcous(index, row) {
+    //   row.seen = false;
+    // },
+
 
   },
   beforeMount() {
@@ -376,6 +779,18 @@ export default {
   display: flex;
   flex-direction: column;
 }
+.contactInformation{
+  display: flex;
+  flex-direction: row;
+  width: auto;
+  justify-content: space-between;
+}
+.contactOperation{
+  display: flex;
+  flex-direction: row;
+  width: auto;
+  justify-content: space-around;
+}
 .customer-header {
   padding-bottom: 10px;
   display: flex;
@@ -386,5 +801,10 @@ export default {
 .customer-fliter-input {
   width: 400px;
   float: left;
+}
+.add-contact {
+  margin-top: 5px;
+  width: 100%;
+  border: #dcdfe6 dashed 1px !important;
 }
 </style>

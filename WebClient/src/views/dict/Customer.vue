@@ -6,21 +6,21 @@
     <el-tab-pane label="联系人列表" class="customer-tab-pane"
       ><customer-contact></customer-contact
     ></el-tab-pane>
-    <el-tab-pane label="送货地址" class="customer-tab-pane"
+    <!-- <el-tab-pane label="送货地址" class="customer-tab-pane"
       ><customer-deliverAddress></customer-deliverAddress
-    ></el-tab-pane>
+    ></el-tab-pane> -->
   </el-tabs>
 </template>
 <script>
 import Customer from "./Customer/Customer";
 import Contact from "./Customer/Contact";
-import DeliverAddress from "./Customer/DeliverAddress";
+// import DeliverAddress from "./Customer/DeliverAddress";
 
 export default {
   components: {
     "customer-customer": Customer,
     "customer-contact": Contact,
-    "customer-deliverAddress": DeliverAddress,
+    // "customer-deliverAddress": DeliverAddress,
   },
 };
 </script>

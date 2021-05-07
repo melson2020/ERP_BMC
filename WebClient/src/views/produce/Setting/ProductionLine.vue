@@ -67,6 +67,7 @@
                 <el-input
                   v-model="scope.row.name"
                   v-if="scope.row.seen"
+                  placeholder="输入名称"
                  @blur="loseFcous(scope.$index, scope.row)"
                   size="mini"
                 ></el-input>

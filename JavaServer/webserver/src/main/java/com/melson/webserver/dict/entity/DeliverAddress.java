@@ -13,7 +13,6 @@ public class DeliverAddress {
     private Integer id;
     private String customerNo;      // 客户编号
     private String contactId;       // 联系人编号
-    private String contactName;     //联系人名字   ，  此字段为临时添加ID对应，将来会扩展
     private String deliverAddress;  // 送货地址
     private String phone;           // 联系电话
     private String tags;            // 标签信息：  例如，默认收货地址等
@@ -41,14 +40,6 @@ public class DeliverAddress {
 
     public void setContactId(String contactId) {
         this.contactId = contactId;
-    }
-
-    public String getContactName() {
-        return contactName;
-    }
-
-    public void setContactName(String contactName) {
-        this.contactName = contactName;
     }
 
     public String getDeliverAddress() {

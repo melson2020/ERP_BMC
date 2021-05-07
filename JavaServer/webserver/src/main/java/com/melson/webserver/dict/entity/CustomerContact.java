@@ -13,10 +13,20 @@ public class CustomerContact {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String customerNo;    // 客户编号
-    private String contactId;     // 联系人编号
+    private String contactName;   //联系人名字   ，  此字段为临时添加ID对应，将来会扩展
+    private String deliverAddress;  // 送货地址
+    private String phone;           // 联系电话
+    private String tags;            // 标签信息：  例如，默认收货地址等
     private String description;   // 备注描述
     private String createBy;      // 创建人
     private Date createDate;      // 创建日期
+    private String status;         //状态定义    Y: 可用状态； N：不可用
+
+    @Transient
+    private String customerName;
+
+    public CustomerContact() {
+    }
 
     public Integer getId() {
         return id;
@@ -34,12 +44,36 @@ public class CustomerContact {
         this.customerNo = customerNo;
     }
 
-    public String getContactId() {
-        return contactId;
+    public String getContactName() {
+        return contactName;
     }
 
-    public void setContactId(String contactId) {
-        this.contactId = contactId;
+    public void setContactName(String contactName) {
+        this.contactName = contactName;
+    }
+
+    public String getDeliverAddress() {
+        return deliverAddress;
+    }
+
+    public void setDeliverAddress(String deliverAddress) {
+        this.deliverAddress = deliverAddress;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getTags() {
+        return tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
     }
 
     public String getDescription() {
@@ -64,5 +98,21 @@ public class CustomerContact {
 
     public void setCreateDate(Date createDate) {
         this.createDate = createDate;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
     }
 }

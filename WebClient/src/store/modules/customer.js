@@ -1,12 +1,12 @@
 /* eslint-disable no-empty-pattern */
 import request from "../../utils/request";
-import * as types from '../type'
+// import * as types from '../type'
 import { Message } from "element-ui";
 
 const state = {
-    contactyList: [],
     deliverAddressList: [],
-    customerList: []
+    customerList: [],
+    contactList:[]
 };
 
 const actions = {
@@ -21,6 +21,19 @@ const actions = {
             Message.error(err.message)
         })
     },
+    GetContactList({ commit }){
+        request.ReqContactList()
+        .then(res=>{
+            if (res.resultStatus == 1) {
+                commit("SetContactList", res.data)
+            } else {
+                Message.warning(res.message)
+            }
+        })
+        .catch(err => {
+            Message.error(err.message)
+        })
+    },
     SaveCustomer({ },newCustomer){
         return request.ReqSaveCustomer(newCustomer);
     },
@@ -29,6 +42,9 @@ const actions = {
     },
     QueryCustomerObj({},Customer){
         return request.ReqQueryCustomerObj(Customer);
+    },
+    QueryContactObj({},Contact){
+        return request.ReqQueryContactObj(Contact);
     },
     DisableCustomer({ commit }, Customer) {
         request.ReqDisableCustomer(Customer).then(res => {
@@ -49,14 +65,17 @@ const actions = {
 };
 
 const getters = {
-    contactyList: state => state.contactyList,
     deliverAddressList: state => state.deliverAddressList,
-    customerList: state => state.customerList
+    customerList: state => state.customerList,
+    contactList:state=>state.contactList
 };
 
 const mutations = {
     SetCustomerList(state, data) {
-        state.customerList = data
+        state.customerList = data;
+    },
+    SetContactList(state,data){
+        state.contactList=data;
     },
     PushCustomerList(state,data){
         state.customerList.push(data);

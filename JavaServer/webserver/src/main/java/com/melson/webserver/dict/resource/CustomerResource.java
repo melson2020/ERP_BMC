@@ -43,7 +43,7 @@ public class CustomerResource extends BaseResource {
     @RequestMapping(value = "/query",method = RequestMethod.POST)
     @RequiredPermission(SecurityLevel.Employee)
     public Result QueryCustomer(@RequestBody Customer customer){
-        Optional<Customer> cus=customerService.Query(customer);
+        Customer cus=customerService.Query(customer.getId(),customer.getCustomerNo());
         Result result=new Result();
         result.setData(cus);
         return result;

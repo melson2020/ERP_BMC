@@ -7,7 +7,6 @@ import com.melson.webserver.dict.vo.ContractVo;
 import com.melson.webserver.dict.vo.CustomerVo;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Created by Messi on 2021/4/26
@@ -25,7 +24,9 @@ public interface ICustomer extends IService<Customer> {
 
     List<Customer> findAllExclude();
 
-    Optional<Customer> Query(Customer customer);
+//    Customer Query(Customer customer);
 
     Integer DisableCustomer(Customer customer);
+
+    Customer Query(Integer id, String customerNo);
 }

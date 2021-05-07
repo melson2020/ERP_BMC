@@ -2,6 +2,7 @@ package com.melson.webserver.dict.entity;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Messi on 2021/4/23
@@ -22,12 +23,14 @@ public class Customer {
     private String payTerm;        //客户付款账期
     private String payWay;         //客户付款方式
     private String currency;       //客户付款币种
-    private String deliverTerm;    //客户交期要求
-    private String deliveryMethod; // 客户交货方式
+
     private String status;         //状态定义    Y: 可用状态； N：不可用
     private String description;    //客户相关描述
     private Date createDate;       //客户创建日期
     private String createBy;       //创建人
+
+    @Transient
+    private List<CustomerContact> contactList;
 
     public Integer getId() {
         return id;
@@ -117,21 +120,6 @@ public class Customer {
         this.currency = currency;
     }
 
-    public String getDeliverTerm() {
-        return deliverTerm;
-    }
-
-    public void setDeliverTerm(String deliverTerm) {
-        this.deliverTerm = deliverTerm;
-    }
-
-    public String getDeliveryMethod() {
-        return deliveryMethod;
-    }
-
-    public void setDeliveryMethod(String deliveryMethod) {
-        this.deliveryMethod = deliveryMethod;
-    }
 
     public String getStatus() {
         return status;
@@ -163,5 +151,13 @@ public class Customer {
 
     public void setCreateBy(String createBy) {
         this.createBy = createBy;
+    }
+
+    public List<CustomerContact> getContactList() {
+        return contactList;
+    }
+
+    public void setContactList(List<CustomerContact> contactList) {
+        this.contactList = contactList;
     }
 }

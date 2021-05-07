@@ -74,11 +74,17 @@ export default {
   ReqCustomerList(param){
     return service.get('/customer/list',param)
   },
+  ReqContactList(param){
+    return service.get('/customerContact/list',param)
+  },
   ReqSaveCustomer(param){
     return service.post("/customer/save",param)
   },
   ReqQueryCustomerObj(params){
     return service.post("/customer/query",params);
+  },
+  ReqQueryContactObj(params){
+    return service.post("/customerContact/query",params);
   },
   ReqDisableCustomer(params) {
     return service.post("/customer/disable", params);

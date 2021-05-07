@@ -4,10 +4,12 @@ import com.melson.base.AbstractService;
 import com.melson.base.Result;
 import com.melson.base.utils.EntityUtils;
 import com.melson.base.utils.EntityManagerUtil;
+import com.melson.webserver.dict.dao.ICustomerContactRepository;
 import com.melson.webserver.dict.dao.ICustomerRepository;
 import com.melson.webserver.dict.dao.IDeliveryAddressRepository;
 import com.melson.webserver.dict.dao.ITaxRateRepository;
 import com.melson.webserver.dict.entity.Customer;
+import com.melson.webserver.dict.entity.CustomerContact;
 import com.melson.webserver.dict.entity.DeliverAddress;
 import com.melson.webserver.dict.entity.TaxRate;
 import com.melson.webserver.dict.service.ICustomer;
@@ -19,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Created by Messi on 2021/4/26
@@ -30,12 +31,14 @@ public class ICustomerImpl extends AbstractService<Customer> implements ICustome
    private final EntityManagerUtil entityManagerUtil;
    private final ITaxRateRepository taxRateRepository;
    private final IDeliveryAddressRepository deliveryAddressRepository;
+   private final ICustomerContactRepository customerContactRepository;
 
-    public ICustomerImpl(ICustomerRepository customerRepository, EntityManagerUtil entityManagerUtil, ITaxRateRepository taxRateRepository, IDeliveryAddressRepository deliveryAddressRepository) {
+    public ICustomerImpl(ICustomerRepository customerRepository, EntityManagerUtil entityManagerUtil, ITaxRateRepository taxRateRepository, IDeliveryAddressRepository deliveryAddressRepository, ICustomerContactRepository customerContactRepository) {
         this.customerRepository = customerRepository;
         this.entityManagerUtil = entityManagerUtil;
         this.taxRateRepository = taxRateRepository;
         this.deliveryAddressRepository = deliveryAddressRepository;
+        this.customerContactRepository = customerContactRepository;
     }
 
     @Override
@@ -83,10 +86,27 @@ public class ICustomerImpl extends AbstractService<Customer> implements ICustome
         return customers;
     }
 
+//    @Override
+//    public Customer Query(Customer customer) {
+//        Customer customer1;
+//        customer1 = customerRepository.findById(customer.getId());
+//        return null;
+//    }
+//
+//    @Override
+//    public Customer Query(Customer customer) {
+//        Customer customer1=customerRepository.findById(customer.getId());
+//        List<CustomerContact> cc=customerContactRepository.findByCustomerNo(customer.getCustomerNo());
+//
+//        return cus;
+//    }
+
     @Override
-    public Optional<Customer> Query(Customer customer) {
-        Optional<Customer> cus=customerRepository.findById(customer.getId());
-        return cus;
+    public Customer Query(Integer id, String customerNo) {
+        Customer customer1=customerRepository.findByCustomerNo(customerNo);
+        List<CustomerContact> cc=customerContactRepository.findByCustomerNoByStatus(customerNo);
+        customer1.setContactList(cc);
+        return customer1;
     }
 
     @Override
@@ -95,6 +115,8 @@ public class ICustomerImpl extends AbstractService<Customer> implements ICustome
         Integer count = customerRepository.disableCustomer(customer.getId());
         return count;
     }
+
+
 
     @Override
     public Customer findCustomerByCustomerNo(String customerNo) {
@@ -118,10 +140,14 @@ public class ICustomerImpl extends AbstractService<Customer> implements ICustome
     public Result SaveAndUpdate(Customer customer) {
         Result result = new Result();
         //判断是否存在相同名称
+        customer.getContactList().forEach(
+                contact -> {contact.setCustomerNo(customer.getCustomerNo());contact.setCreateBy(customer.getCreateBy());contact.setCreateDate(customer.getCreateDate());}
+                );
         Customer checkExist=CheckExisting(customer.getName());
         if(checkExist!=null){
             if(customer.getId()==checkExist.getId()){
                 Customer saved=customerRepository.save(customer);
+                customerContactRepository.saveAll(customer.getContactList());
                 if(saved==null){
                     result.setResultStatus(-1);
                     result.setMessage("保存失败！");
@@ -138,6 +164,7 @@ public class ICustomerImpl extends AbstractService<Customer> implements ICustome
         else
         {
             Customer saved=customerRepository.save(customer);
+            customerContactRepository.saveAll(customer.getContactList());
             if(saved==null){
                 result.setResultStatus(-1);
                 result.setMessage("保存失败！");
