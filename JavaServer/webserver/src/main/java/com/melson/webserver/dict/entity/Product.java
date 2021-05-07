@@ -13,7 +13,7 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String productId;       // 产品编码，8位编码规则 例：P0000001
+    private String productNo;       // 产品编码，8位编码规则 例：P0000001
     private String name;            // 产品名称
     private String categoryId;      // 产品类别，8位编码规则 例：CAT00001
     private String specification;   // 产品规格
@@ -34,12 +34,12 @@ public class Product {
         this.id = id;
     }
 
-    public String getProductId() {
-        return productId;
+    public String getProductNo() {
+        return productNo;
     }
 
-    public void setProductId(String productId) {
-        this.productId = productId;
+    public void setProductNo(String productNo) {
+        this.productNo = productNo;
     }
 
     public String getName() {

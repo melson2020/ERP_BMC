@@ -26,7 +26,7 @@ public class IProductBomImpl extends AbstractService<ProductBom> implements IPro
     }
 
     @Override
-    public List<ProductBom> findProductBoms(Integer productId) {
-        return productBomRepository.findByProductId(productId.toString());
+    public List<ProductBom> findProductBoms(String productNo) {
+        return productBomRepository.findByProductNo(productNo);
     }
 }

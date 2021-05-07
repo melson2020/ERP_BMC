@@ -7,7 +7,7 @@ import java.math.BigDecimal;
  */
 public class ProductVo {
     private Integer id;
-    private String productId;
+    private String productNo;
     private String productName;
     private String specification;
     private String value;
@@ -17,9 +17,9 @@ public class ProductVo {
     public ProductVo() {
     }
 
-    public ProductVo(Integer id, String productId, String productName, String specification, String value, String remark, BigDecimal salesPrice) {
+    public ProductVo(Integer id, String productNo, String productName, String specification, String value, String remark, BigDecimal salesPrice) {
         this.id = id;
-        this.productId = productId;
+        this.productNo = productNo;
         this.productName = productName;
         this.specification = specification;
         this.value = value;
@@ -35,12 +35,12 @@ public class ProductVo {
         this.id = id;
     }
 
-    public String getProductId() {
-        return productId;
+    public String getProductNo() {
+        return productNo;
     }
 
-    public void setProductId(String productId) {
-        this.productId = productId;
+    public void setProductNo(String productNo) {
+        this.productNo = productNo;
     }
 
     public String getProductName() {

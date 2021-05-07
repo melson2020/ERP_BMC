@@ -10,6 +10,6 @@ import java.util.List;
  * Created by Messi on 2021/4/23
  */
 @Repository
-public interface IProductBomRepository extends JpaRepository<ProductBom,Integer> {
-    List<ProductBom> findByProductId(String productId);
+public interface IProductBomRepository extends JpaRepository<ProductBom,String> {
+    List<ProductBom> findByProductNo(String productNo);
 }

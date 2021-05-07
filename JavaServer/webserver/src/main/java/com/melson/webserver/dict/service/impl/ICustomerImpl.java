@@ -6,11 +6,10 @@ import com.melson.base.utils.EntityUtils;
 import com.melson.base.utils.EntityManagerUtil;
 import com.melson.webserver.dict.dao.ICustomerContactRepository;
 import com.melson.webserver.dict.dao.ICustomerRepository;
-import com.melson.webserver.dict.dao.IDeliveryAddressRepository;
 import com.melson.webserver.dict.dao.ITaxRateRepository;
 import com.melson.webserver.dict.entity.Customer;
 import com.melson.webserver.dict.entity.CustomerContact;
-import com.melson.webserver.dict.entity.DeliverAddress;
+import com.melson.webserver.dict.vo.DeliverAddress;
 import com.melson.webserver.dict.entity.TaxRate;
 import com.melson.webserver.dict.service.ICustomer;
 import com.melson.webserver.dict.vo.ContractVo;
@@ -30,14 +29,12 @@ public class ICustomerImpl extends AbstractService<Customer> implements ICustome
    private final ICustomerRepository customerRepository;
    private final EntityManagerUtil entityManagerUtil;
    private final ITaxRateRepository taxRateRepository;
-   private final IDeliveryAddressRepository deliveryAddressRepository;
    private final ICustomerContactRepository customerContactRepository;
 
-    public ICustomerImpl(ICustomerRepository customerRepository, EntityManagerUtil entityManagerUtil, ITaxRateRepository taxRateRepository, IDeliveryAddressRepository deliveryAddressRepository, ICustomerContactRepository customerContactRepository) {
+    public ICustomerImpl(ICustomerRepository customerRepository, EntityManagerUtil entityManagerUtil, ITaxRateRepository taxRateRepository,  ICustomerContactRepository customerContactRepository) {
         this.customerRepository = customerRepository;
         this.entityManagerUtil = entityManagerUtil;
         this.taxRateRepository = taxRateRepository;
-        this.deliveryAddressRepository = deliveryAddressRepository;
         this.customerContactRepository = customerContactRepository;
     }
 
@@ -129,7 +126,13 @@ public class ICustomerImpl extends AbstractService<Customer> implements ICustome
         ContractVo contractVo=new ContractVo();
         Customer customer=customerRepository.findByCustomerNo(customerNo);
         List<TaxRate> taxRates=taxRateRepository.findAll();
-        List<DeliverAddress> deliverAddresses=deliveryAddressRepository.findByCustomerNo(customerNo);
+
+        String sql = "SELECT id,customerNo,contactName,deliverAddress,phone,tags,description from customer_contact";
+        StringBuffer buffer = new StringBuffer(sql);
+        buffer.append(" where customerNo='" + customerNo + "'");
+        String excuteSql = buffer.toString();
+        List<Object[]> list = entityManagerUtil.ExcuteSql(excuteSql);
+        List<DeliverAddress> deliverAddresses = EntityUtils.castEntity(list, DeliverAddress.class, new DeliverAddress());
         contractVo.setCustomer(customer);
         contractVo.setDeliverAddresses(deliverAddresses);
         contractVo.setTaxRates(taxRates);
