@@ -1,6 +1,7 @@
 package com.melson.webserver.dict.service;
 
 import com.melson.base.IService;
+import com.melson.base.Result;
 import com.melson.webserver.dict.entity.Customer;
 import com.melson.webserver.dict.vo.ContractVo;
 import com.melson.webserver.dict.vo.CustomerVo;
@@ -18,4 +19,14 @@ public interface ICustomer extends IService<Customer> {
     Customer findCustomerByCustomerNo(String customerNo);
 
     ContractVo findCustomerVoByCustomerNo(String customerNo);
+
+    Result SaveAndUpdate(Customer customer);
+
+    List<Customer> findAllExclude();
+
+//    Customer Query(Customer customer);
+
+    Integer DisableCustomer(Customer customer);
+
+    Customer Query(Integer id, String customerNo);
 }

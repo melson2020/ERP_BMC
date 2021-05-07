@@ -13,7 +13,7 @@ public class CustomerBom {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String customerNo;      // 客户编号
-    private String productId;       // 产品编号
+    private String productNo;       // 产品编号
     private String bomNo;           // BOM编号
     private String specification;   // 产品规格
     private BigDecimal salesPrice;  // 销售价格
@@ -36,12 +36,12 @@ public class CustomerBom {
         this.customerNo = customerNo;
     }
 
-    public String getProductId() {
-        return productId;
+    public String getProductNo() {
+        return productNo;
     }
 
-    public void setProductId(String productId) {
-        this.productId = productId;
+    public void setProductNo(String productNo) {
+        this.productNo = productNo;
     }
 
     public String getBomNo() {

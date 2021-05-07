@@ -2,6 +2,7 @@ package com.melson.webserver.dict.entity;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Messi on 2021/4/23
@@ -16,17 +17,20 @@ public class Customer {
     private String name;           //客户名称
     private String contactName;    //联系人名字   ，  此字段为临时添加ID对应，将来会扩展
     private String address;        //客户地址
+    private String phone;          //客户电话
     private String taxNo;          //客户税号
     private String bankNo;         //客户账号
     private String payTerm;        //客户付款账期
     private String payWay;         //客户付款方式
     private String currency;       //客户付款币种
-    private String deliverTerm;    //客户交期要求
-    private String deliveryMethod; // 客户交货方式
-    private String status;         //状态定义
+
+    private String status;         //状态定义    Y: 可用状态； N：不可用
     private String description;    //客户相关描述
     private Date createDate;       //客户创建日期
     private String createBy;       //创建人
+
+    @Transient
+    private List<CustomerContact> contactList;
 
     public Integer getId() {
         return id;
@@ -66,6 +70,14 @@ public class Customer {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String getTaxNo() {
@@ -108,21 +120,6 @@ public class Customer {
         this.currency = currency;
     }
 
-    public String getDeliverTerm() {
-        return deliverTerm;
-    }
-
-    public void setDeliverTerm(String deliverTerm) {
-        this.deliverTerm = deliverTerm;
-    }
-
-    public String getDeliveryMethod() {
-        return deliveryMethod;
-    }
-
-    public void setDeliveryMethod(String deliveryMethod) {
-        this.deliveryMethod = deliveryMethod;
-    }
 
     public String getStatus() {
         return status;
@@ -154,5 +151,13 @@ public class Customer {
 
     public void setCreateBy(String createBy) {
         this.createBy = createBy;
+    }
+
+    public List<CustomerContact> getContactList() {
+        return contactList;
+    }
+
+    public void setContactList(List<CustomerContact> contactList) {
+        this.contactList = contactList;
     }
 }

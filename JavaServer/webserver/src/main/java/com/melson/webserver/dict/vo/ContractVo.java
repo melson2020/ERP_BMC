@@ -1,8 +1,6 @@
 package com.melson.webserver.dict.vo;
 
 import com.melson.webserver.dict.entity.Customer;
-import com.melson.webserver.dict.entity.DeliverAddress;
-import com.melson.webserver.dict.entity.Product;
 import com.melson.webserver.dict.entity.TaxRate;
 
 import java.util.List;

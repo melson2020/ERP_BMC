@@ -1,5 +1,5 @@
 <template>
-  <div>this is contact</div>
+  <div>this is DeliverAddress</div>
 </template>
 <script>
 export default {};

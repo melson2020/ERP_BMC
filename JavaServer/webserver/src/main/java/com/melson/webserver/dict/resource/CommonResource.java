@@ -21,7 +21,6 @@ import java.util.List;
 public class CommonResource extends BaseResource {
     private final ICustomer customerService;
     private final IProduct productService;
-    private final IDeliverAddress deliverAddressService;
     private final IBoms bomsSerivce;
     private final IContact contactService;
     private final ICustomerContact customerContactService;
@@ -31,10 +30,9 @@ public class CommonResource extends BaseResource {
     private final IProduceProcess produceProcessService;
 
 
-    public CommonResource(ICustomer customerService, IProduct productService, IDeliverAddress deliverAddressService, IBoms bomsSerivce, IContact contactService, ICustomerContact customerContactService, IMaterial materialService, IProductBom productBomService, IProductCategory productCategoryService, IProduceProcess produceProcessService) {
+    public CommonResource(ICustomer customerService, IProduct productService,  IBoms bomsSerivce, IContact contactService, ICustomerContact customerContactService, IMaterial materialService, IProductBom productBomService, IProductCategory productCategoryService, IProduceProcess produceProcessService) {
         this.customerService = customerService;
         this.productService = productService;
-        this.deliverAddressService = deliverAddressService;
         this.bomsSerivce = bomsSerivce;
         this.contactService = contactService;
         this.customerContactService = customerContactService;

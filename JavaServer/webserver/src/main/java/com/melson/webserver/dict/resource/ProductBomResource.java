@@ -24,12 +24,12 @@ public class ProductBomResource extends BaseResource {
 
     /**
      * 获取产品bom列表
-     * @param productId
+     * @param productNo
      * @return
      */
     @GetMapping("/pBomList")
-    public Result FindProductBomList(Integer productId){
-        return  success(productBomService.findProductBoms(productId));
+    public Result FindProductBomList(String productNo){
+        return  success(productBomService.findProductBoms(productNo));
     }
 
 

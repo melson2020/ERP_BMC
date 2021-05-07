@@ -1,22 +1,32 @@
-package com.melson.webserver.dict.entity;
+package com.melson.webserver.dict.vo;
 
 import javax.persistence.*;
 
 /**
  * Created by Messi on 2021/4/23
  */
-@Entity
-@Table(name = "deliver_address")      //客户送货地址表
 public class DeliverAddress {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String customerNo;      // 客户编号
-    private String contactId;       // 联系人编号
-    private String contactName;     //联系人名字   ，  此字段为临时添加ID对应，将来会扩展
+    private String contactName;     // 联系人名字   ，  此字段为临时添加ID对应，将来会扩展
     private String deliverAddress;  // 送货地址
+    private String phone;           // 联系电话
     private String tags;            // 标签信息：  例如，默认收货地址等
     private String description;     // 备注描述
+
+
+    public DeliverAddress() {
+    }
+
+    public DeliverAddress(Integer id, String customerNo, String contactName, String deliverAddress, String phone, String tags, String description) {
+        this.id = id;
+        this.customerNo = customerNo;
+        this.contactName = contactName;
+        this.deliverAddress = deliverAddress;
+        this.phone = phone;
+        this.tags = tags;
+        this.description = description;
+    }
 
     public Integer getId() {
         return id;
@@ -32,14 +42,6 @@ public class DeliverAddress {
 
     public void setCustomerNo(String customerNo) {
         this.customerNo = customerNo;
-    }
-
-    public String getContactId() {
-        return contactId;
-    }
-
-    public void setContactId(String contactId) {
-        this.contactId = contactId;
     }
 
     public String getContactName() {
@@ -58,6 +60,14 @@ public class DeliverAddress {
         this.deliverAddress = deliverAddress;
     }
 
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
     public String getTags() {
         return tags;
     }
@@ -73,4 +83,5 @@ public class DeliverAddress {
     public void setDescription(String description) {
         this.description = description;
     }
+
 }

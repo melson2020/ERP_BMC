@@ -534,6 +534,7 @@ export default {
             var customer = res.data.customer;
             this.vendeeInfo.name = customer.name;
             this.vendeeInfo.address = customer.address;
+            this.vendeeInfo.phone = customer.phone;
             this.vendeeInfo.customerNo = customer.customerNo;
             this.vendeeInfo.contactUser = customer.contactName;
             this.vendeeInfo.taxNo = customer.taxNo;
@@ -568,7 +569,7 @@ export default {
       this.goodReceveInfo.name = this.vendeeInfo.name;
       this.goodReceveInfo.address = address.deliverAddress;
       this.goodReceveInfo.contactUser = address.contactName;
-      this.goodReceveInfo.phone = "";
+      this.goodReceveInfo.phone = address.phone;
       this.goodReceveInfo.customerNo = this.vendeeInfo.customerNo;
       this.goodReceveInfo.taxNo = this.vendeeInfo.taxNo;
       this.goodReceveInfo.account = this.vendeeInfo.account;
