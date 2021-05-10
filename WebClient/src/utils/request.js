@@ -95,6 +95,42 @@ export default {
   ReqDeleteContact(params){
     return service.post("/customerContact/delete",params)
   },
+  ReqProductList(params){
+    return service.get('/product/list',params)
+  },
+  ReqDeleteProduct(params){
+    return service.post("/product/delete",params)
+  },
+  ReqCategoryList(params){
+    return service.get('/productCategory/list',params)    //  //
+  },
+  ReqDisableCategory(params) {
+    return service.post("/productCategory/disable", params);
+  },
+  ReqSaveCategory(param){
+    return service.post("/productCategory/save",param)
+  },
+  ReqDeleteCategory(params){
+    return service.post("/productCategory/delete",params)
+  },
+  ReqQueryCategoryObj(params){
+    return service.post("/productCategory/query",params);
+  },
+
+  ReqStorageList(params){
+    return service.get('/productCategory/list',params)    //  //
+  },
+  ReqDeleteStorage(params){
+    return service.post("/productCategory/delete",params)
+  },
+  ReqSaveStorage(param){
+    return service.post("/productCategory/save",param)
+  },
+  ReqQueryStorageObj(params){
+    return service.post("/productCategory/query",params);
+  },
+
+  
 
   //订单相关
   GetCreatedOrderList(param){

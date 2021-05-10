@@ -13,4 +13,5 @@ import java.util.List;
 public interface IProduct extends IService<Product> {
     List<ContractProductVo> queryContractProducts(String customerNo, String searchValue);
 
+    List<Product> findAllProduct();
 }

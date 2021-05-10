@@ -12,6 +12,7 @@ import com.melson.webserver.dict.vo.ProductVo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,5 +65,26 @@ public class IProductImpl extends AbstractService<Product> implements IProduct {
         contractProductList.add(contractProductVo1);
         contractProductList.add(contractProductVo2);
         return contractProductList;
+    }
+
+    @Override
+    public List<Product> findAllProduct() {
+        List<Product> products= new ArrayList<>();
+        String sql = "SELECT pr.id,pr.productNo,pr.`name`,pr.specification,pr.salesPrice,pc.`name` as category,sr.`name` as storageName,pr.unit from product pr left JOIN product_category pc on pc.categoryId=pr.categoryId left JOIN storage_relation sr on sr.storageCode=pr.storageCode";
+        StringBuffer sBuffer = new StringBuffer(sql);
+        List<Object[]> list = entityManagerUtil.ExcuteSql(sBuffer.toString());
+        for(Object[] obj:list){
+            Product pr=new Product();
+            pr.setId(obj[0]==null?null:new Integer((Integer) obj[0]));
+            pr.setProductNo(obj[1]==null?null:obj[1].toString());
+            pr.setName(obj[2]==null?null:obj[2].toString());
+            pr.setSpecification(obj[3]==null?null:obj[3].toString());
+            pr.setSalesPrice(obj[4]==null?null:new BigDecimal(obj[4].toString()));
+            pr.setCategory(obj[5]==null?null:obj[5].toString());
+            pr.setStorageName(obj[6]==null?null:obj[6].toString());
+            pr.setUnit(obj[7]==null?null:obj[7].toString());
+            products.add(pr);
+        }
+        return products;
     }
 }
