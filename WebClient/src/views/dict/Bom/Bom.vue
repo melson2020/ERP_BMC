@@ -1,5 +1,5 @@
 <template>
-  <div>this is DeliverAddress</div>
+  <div>this is BoM</div>
 </template>
 <script>
 export default {};

@@ -3,7 +3,13 @@ import Vuex from "vuex";
 import com from "./modules/com";
 import login from "./modules/login"
 import contract from "./modules/contract"
+<<<<<<< HEAD
 import customer from "./modules/customer"
+=======
+import product from "./modules/product"
+import customer from "./modules/customer"
+import storage from "./modules/storage"
+>>>>>>> ee32f514dc45818e92d9172beac7da4bfe932822
 import order from './modules/order'
 import produceSetting from './modules/produceSetting'
 import {setAsyncRoutes} from "../router/async"
@@ -31,8 +37,13 @@ export default new Vuex.Store({
     com,
     login,
     contract,
+<<<<<<< HEAD
     produceSetting,
+=======
+    product,
+>>>>>>> ee32f514dc45818e92d9172beac7da4bfe932822
     customer,
-    order
+    order,
+    storage
   }
 });

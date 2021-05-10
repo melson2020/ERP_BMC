@@ -95,6 +95,7 @@ export default {
   ReqDeleteContact(params){
     return service.post("/customerContact/delete",params)
   },
+<<<<<<< HEAD
   SaveProduceTechOne(param){
     return service.post("/produceSetting/saveProduceTech",param)
   },
@@ -107,6 +108,44 @@ export default {
   SaveProduceLine(param){
     return service.post("/produceSetting/saveProduceLine",param)
   },
+=======
+  ReqProductList(params){
+    return service.get('/product/list',params)
+  },
+  ReqDeleteProduct(params){
+    return service.post("/product/delete",params)
+  },
+  ReqCategoryList(params){
+    return service.get('/productCategory/list',params)    //  //
+  },
+  ReqDisableCategory(params) {
+    return service.post("/productCategory/disable", params);
+  },
+  ReqSaveCategory(param){
+    return service.post("/productCategory/save",param)
+  },
+  ReqDeleteCategory(params){
+    return service.post("/productCategory/delete",params)
+  },
+  ReqQueryCategoryObj(params){
+    return service.post("/productCategory/query",params);
+  },
+
+  ReqStorageList(params){
+    return service.get('/storage/storageAreaLocationList',params)    //  //
+  },
+  ReqDeleteStorage(params){
+    return service.post("/storage/deleteStorageAreaLocation",params)
+  },
+  ReqSaveStorage(param){
+    return service.post("/storage/storageAreaLocationSave",param)
+  },
+  ReqQueryStorageObj(params){
+    return service.post("/storage/queryStorageAreaLocation",params);
+  },
+
+
+>>>>>>> ee32f514dc45818e92d9172beac7da4bfe932822
 
   //订单相关
   GetCreatedOrderList(param){

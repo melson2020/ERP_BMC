@@ -14,6 +14,7 @@ public class ProductVo {
     private String remark;
     private BigDecimal salesPrice;
 
+
     public ProductVo() {
     }
 

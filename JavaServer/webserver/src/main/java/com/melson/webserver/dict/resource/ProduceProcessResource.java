@@ -16,11 +16,11 @@ import java.util.List;
  */
 
 @RestController
-@RequestMapping("/productProcess")
-public class ProductProcessResource extends BaseResource {
+@RequestMapping("/produceProcess")
+public class ProduceProcessResource extends BaseResource {
     private final IProduceProcess produceProcessService;
 
-    public ProductProcessResource(IProduceProcess produceProcessService) {
+    public ProduceProcessResource(IProduceProcess produceProcessService) {
         this.produceProcessService = produceProcessService;
     }
 

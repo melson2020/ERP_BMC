@@ -3,6 +3,7 @@ package com.melson.webserver.dict.resource;
 import com.melson.base.BaseResource;
 import com.melson.base.Result;
 import com.melson.base.ResultType;
+import com.melson.webserver.dict.entity.ProduceProcess;
 import com.melson.webserver.dict.service.*;
 import com.melson.webserver.dict.vo.ContractProductVo;
 import org.springframework.util.StringUtils;
@@ -19,31 +20,16 @@ import java.util.List;
 @RestController
 @RequestMapping("/common")
 public class CommonResource extends BaseResource {
-    private final ICustomer customerService;
     private final IProduct productService;
-    private final IBoms bomsSerivce;
-    private final IContact contactService;
-    private final ICustomerContact customerContactService;
-    private final IMaterial materialService;
-    private final IProductBom productBomService;
-    private final IProductCategory productCategoryService;
     private final IProduceProcess produceProcessService;
 
-
-    public CommonResource(ICustomer customerService, IProduct productService,  IBoms bomsSerivce, IContact contactService, ICustomerContact customerContactService, IMaterial materialService, IProductBom productBomService, IProductCategory productCategoryService, IProduceProcess produceProcessService) {
-        this.customerService = customerService;
+    public CommonResource(IProduct productService, IProduceProcess produceProcessService) {
         this.productService = productService;
-        this.bomsSerivce = bomsSerivce;
-        this.contactService = contactService;
-        this.customerContactService = customerContactService;
-        this.materialService = materialService;
-        this.productBomService = productBomService;
-        this.productCategoryService = productCategoryService;
         this.produceProcessService = produceProcessService;
     }
 
     @RequestMapping(value = "/initialContract",method = RequestMethod.GET)
-    public Result GetContractLProdctVo(HttpServletRequest request){
+    public Result GetContractProductVo(HttpServletRequest request){
         String searchValue=request.getParameter("searchValue");
         String customerNo=request.getParameter("customerNo");
         if (StringUtils.isEmpty(customerNo)) return this.GenerateResult(ResultType.ParameterNeeded);
@@ -52,5 +38,6 @@ public class CommonResource extends BaseResource {
         result.setData(contractProductVos);
         return result;
     }
+
 
 }

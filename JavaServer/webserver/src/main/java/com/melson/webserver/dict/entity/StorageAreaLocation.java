@@ -4,20 +4,21 @@ import javax.persistence.*;
 import java.util.Date;
 
 /**
- * Created by Messi on 2021/4/23
+ * Created by Messi on 2021/5/10
  */
+
 @Entity
-@Table(name = "product_category")      //产品类别表
-public class ProductCategory {
+@Table(name="storage_area_location")
+public class StorageAreaLocation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String categoryId;      // 产品类别，8位编码规则 例：CAT00001
-    private String name;            // 类别名称
-    private String description;     // 备注信息
-    private String createBy;        // 创建人
-    private Date createDate;        // 创建时间
-    private String status;          // 状态， Y：可用； N：不可用
+    private String storageCode;
+    private String name;
+    private String location;
+    private String description;
+    private String createBy;
+    private Date createDate;
 
     public Integer getId() {
         return id;
@@ -27,12 +28,12 @@ public class ProductCategory {
         this.id = id;
     }
 
-    public String getCategoryId() {
-        return categoryId;
+    public String getStorageCode() {
+        return storageCode;
     }
 
-    public void setCategoryId(String categoryId) {
-        this.categoryId = categoryId;
+    public void setStorageCode(String storageCode) {
+        this.storageCode = storageCode;
     }
 
     public String getName() {
@@ -41,6 +42,14 @@ public class ProductCategory {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public String getDescription() {
@@ -65,13 +74,5 @@ public class ProductCategory {
 
     public void setCreateDate(Date createDate) {
         this.createDate = createDate;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 }

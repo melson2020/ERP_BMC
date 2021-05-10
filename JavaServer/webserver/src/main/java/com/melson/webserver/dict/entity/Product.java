@@ -26,6 +26,13 @@ public class Product {
     private String createBy;        // 产品创建人
     private Date createDate;        // 产品创建时间
 
+
+    @Transient
+    private String category;
+    @Transient
+    private String storageName;
+
+
     public Integer getId() {
         return id;
     }
@@ -128,5 +135,21 @@ public class Product {
 
     public void setCreateDate(Date createDate) {
         this.createDate = createDate;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getStorageName() {
+        return storageName;
+    }
+
+    public void setStorageName(String storageName) {
+        this.storageName = storageName;
     }
 }
