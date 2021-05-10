@@ -95,7 +95,7 @@ export default {
   ReqDeleteContact(params){
     return service.post("/customerContact/delete",params)
   },
-<<<<<<< HEAD
+
   SaveProduceTechOne(param){
     return service.post("/produceSetting/saveProduceTech",param)
   },
@@ -108,7 +108,7 @@ export default {
   SaveProduceLine(param){
     return service.post("/produceSetting/saveProduceLine",param)
   },
-=======
+
   ReqProductList(params){
     return service.get('/product/list',params)
   },
@@ -143,9 +143,6 @@ export default {
   ReqQueryStorageObj(params){
     return service.post("/storage/queryStorageAreaLocation",params);
   },
-
-
->>>>>>> ee32f514dc45818e92d9172beac7da4bfe932822
 
   //订单相关
   GetCreatedOrderList(param){
