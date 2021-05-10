@@ -5,7 +5,6 @@ import { Message } from "element-ui";
 
 const state = {
     storageList:[],
-    StorageList:[]
 };
 
 const actions = {
@@ -55,14 +54,14 @@ const getters = {
 
 const mutations = {
     SetStorageList(state, data) {
-        state.StorageList = data;
+        state.storageList = data;
     },
 
     SpliceStorageList(state, data) {
-        state.StorageList.splice(data.index, 1);
+        state.storageList.splice(data.index, 1);
     },
     PushStorageList(state,data){
-        state.StorageList.push(data);
+        state.storageList.push(data);
     },
 };
 

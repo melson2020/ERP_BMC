@@ -70,7 +70,7 @@ public class IProductImpl extends AbstractService<Product> implements IProduct {
     @Override
     public List<Product> findAllProduct() {
         List<Product> products= new ArrayList<>();
-        String sql = "SELECT pr.id,pr.productNo,pr.`name`,pr.specification,pr.salesPrice,pc.`name` as category,sr.`name` as storageName,pr.unit from product pr left JOIN product_category pc on pc.categoryId=pr.categoryId left JOIN storage_relation sr on sr.storageCode=pr.storageCode";
+        String sql = "SELECT pr.id,pr.productNo,pr.`name`,pr.specification,pr.salesPrice,pc.`name` as category,sr.`name` as storageName,pr.unit from product pr left JOIN product_category pc on pc.categoryId=pr.categoryId left JOIN storage_area_location sr on sr.storageCode=pr.storageCode";
         StringBuffer sBuffer = new StringBuffer(sql);
         List<Object[]> list = entityManagerUtil.ExcuteSql(sBuffer.toString());
         for(Object[] obj:list){

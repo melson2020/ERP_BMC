@@ -118,19 +118,19 @@ export default {
   },
 
   ReqStorageList(params){
-    return service.get('/productCategory/list',params)    //  //
+    return service.get('/storage/storageAreaLocationList',params)    //  //
   },
   ReqDeleteStorage(params){
-    return service.post("/productCategory/delete",params)
+    return service.post("/storage/deleteStorageAreaLocation",params)
   },
   ReqSaveStorage(param){
-    return service.post("/productCategory/save",param)
+    return service.post("/storage/storageAreaLocationSave",param)
   },
   ReqQueryStorageObj(params){
-    return service.post("/productCategory/query",params);
+    return service.post("/storage/queryStorageAreaLocation",params);
   },
 
-  
+
 
   //订单相关
   GetCreatedOrderList(param){

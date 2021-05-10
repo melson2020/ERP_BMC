@@ -17,7 +17,7 @@
           :header-row-style="{height:'40px' ,'align':'center'}"
           :row-style="{height:'40px'}"
           style="width: 100%">
-        <el-table-column prop="StorageCode" label="仓库代码" width="180px"></el-table-column>
+        <el-table-column prop="storageCode" label="仓库代码" width="180px"></el-table-column>
         <el-table-column prop="name" label="仓库名称" width="220px"> </el-table-column>
         <el-table-column prop="location" label="仓库位置" width="220px"> </el-table-column>
         <el-table-column prop="description" label="备注信息"> </el-table-column>
@@ -146,12 +146,13 @@ export default {
 
     },
     computed: {
-      ...mapGetters(["StorageList"]),
+      ...mapGetters(["storageList"]),
       StorageListPageShow(){
-        return this.StorageList.filter((item)=>{
+        return this.storageList.filter((item)=>{
           let key=
-          item.StorageId +
+          item.StorageCode +
           item.name +
+          item.location +
           item.description ;
           let index = key.toUpperCase().indexOf(this.searchContent.toUpperCase());
           return index != -1;
@@ -170,7 +171,7 @@ export default {
         this.$refs[formName].validate(valid => {
           if (valid) {
             let Storage=this.newStorage;
-            Storage.StorageCode="sc" + new Date().valueOf();
+            Storage.storageCode="sc" + new Date().valueOf();
             Storage.createDate=new Date();
             Storage.createBy=""; 
             this.SaveStorage(Storage)
@@ -206,7 +207,7 @@ export default {
       },
 
     handleEdit(index,row){
-      let cat={StorageCode:row.StorageCode,index:index}
+      let cat={storageCode:row.storageCode,index:index}
       this.QueryStorageObj(cat)
         .then(res=>{
           if (res.resultStatus == 1) {
@@ -268,6 +269,7 @@ export default {
     },
     beforeMount() {
       this.GetStorageList();
+      console.log(this.storageList);
     },
 };
 </script>

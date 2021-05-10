@@ -4,10 +4,12 @@ import com.melson.webserver.dict.entity.ProductCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 /**
  * Created by Messi on 2021/4/23
  */
+@Repository
 public interface IProductCategoryRepository extends JpaRepository<ProductCategory,Integer> {
     ProductCategory findByName(String name);
 
