@@ -71,6 +71,11 @@ public class OrderFormDetail {
      */
     private String bomNo;
 
+    /**
+     * 产品编号
+     */
+    private String productNo;
+
     public Integer getId() {
         return id;
     }
@@ -157,5 +162,13 @@ public class OrderFormDetail {
 
     public void setBomNo(String bomNo) {
         this.bomNo = bomNo;
+    }
+
+    public String getProductNo() {
+        return productNo;
+    }
+
+    public void setProductNo(String productNo) {
+        this.productNo = productNo;
     }
 }

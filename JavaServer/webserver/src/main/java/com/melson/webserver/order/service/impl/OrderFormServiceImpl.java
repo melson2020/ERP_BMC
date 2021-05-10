@@ -18,10 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * 订单接口实现类
@@ -68,18 +65,53 @@ public class OrderFormServiceImpl implements IOrderFormService {
      */
     public OrderForm confirm(OrderFormConfirmVo vo) {
         List<OrderFormDetail> detailList = vo.getOrderFormDetails();
+        OrderForm formVo = vo.getOrderForm();
         //数据不全 直接返回
         if (detailList == null || detailList.size() <= 0) return null;
+        //订单分类
+        Map<String,Integer> typeMap=new HashMap<>(4);
+        typeMap.put("P",1);
+        typeMap.put("C",2);
+        typeMap.put("D",3);
+        typeMap.put("W",4);
+        //按照P C D W 排序
+        detailList.sort(new Comparator<OrderFormDetail>() {
+            @Override
+            public int compare(OrderFormDetail o1, OrderFormDetail o2) {
+                boolean res=typeMap.get(o1.getProduceType())>typeMap.get(o2.getProduceType());
+                return res?-1:0;
+            }
+        });
         //生产清单
         List<OrderFormDetail> produceList = new ArrayList<>();
         //采购清单
         List<OrderFormDetail> purchaseList = new ArrayList<>();
         //委外清单
         List<OrderFormDetail> delegateList = new ArrayList<>();
-        producePlanService.GeneratePlan(produceList, vo.getOrderForm());
-        purchaseDetailService.GeneratePurchaseDetail(purchaseList, vo.getOrderForm());
-        delegateTicketService.GenerateTicket(delegateList, vo.getOrderForm());
-        OrderForm form = orderFormRepository.save(vo.getOrderForm());
+        String orderType="";
+        for (OrderFormDetail detail : detailList) {
+            if(!orderType.contains(detail.getProduceType())){
+                orderType+=detail.getProduceType();
+            }
+            String type = detail.getProduceType();
+            switch (type) {
+                case OrderFormDetail.PRODUCE_TYPE_C:
+                    purchaseList.add(detail);
+                    break;
+                case OrderFormDetail.PRODUCE_TYPE_W:
+                    delegateList.add(detail);
+                    break;
+                default:
+                    produceList.add(detail);
+                    break;
+            }
+        }
+        producePlanService.GeneratePlan(produceList, formVo);
+        purchaseDetailService.GenerateOrderPurchase(purchaseList);
+        delegateTicketService.GenerateTicket(delegateList, formVo);
+        formVo.setState(OrderForm.STATE_ORDER);
+        formVo.setProduceType(orderType);
+        OrderForm form = orderFormRepository.save(formVo);
         return form;
     }
 

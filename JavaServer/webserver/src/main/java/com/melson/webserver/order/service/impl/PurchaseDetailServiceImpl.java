@@ -99,4 +99,31 @@ public class PurchaseDetailServiceImpl implements IPurchaseDetailService {
     }
 
 
+    /**
+     * 生产订单采购明细
+     * @param detailList
+     * @return
+     */
+    public List<PurchaseDetail> GenerateOrderPurchase(List<OrderFormDetail> detailList){
+         if(detailList==null||detailList.size()<=0)return null;
+         List<PurchaseDetail> orderPurchaseList=new ArrayList<>();
+         for(OrderFormDetail detail:detailList){
+             orderPurchaseList.add(CreatePurchase(detail));
+         }
+         return   purchaseDetailRepository.saveAll(orderPurchaseList);
+    }
+
+    private PurchaseDetail CreatePurchase(OrderFormDetail formDetail){
+        PurchaseDetail purchaseDetail=new PurchaseDetail();
+        purchaseDetail.setType(PurchaseDetail.PURCHASE_TYPE_ORDER);
+        purchaseDetail.setMaterialNo(formDetail.getProductNo());
+        purchaseDetail.setMaterialName(formDetail.getProductName());
+        purchaseDetail.setSpecification(formDetail.getSpecification());
+        purchaseDetail.setRemark(formDetail.getRemark());
+        purchaseDetail.setCount(new BigDecimal(formDetail.getCount()));
+        purchaseDetail.setCountUnit(formDetail.getCountUnit());
+        purchaseDetail.setCreateDate(new Date());
+        purchaseDetail.setState(PurchaseDetail.PURCHASE_STATE_CREATE);
+        return purchaseDetail;
+    }
 }

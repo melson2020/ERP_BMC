@@ -6,7 +6,8 @@ import { Message } from "element-ui";
 
 const state = {
     orderReadyToReleaseList: [],
-    orderFormDetaiList: []
+    orderFormDetaiList: [],
+    closeDrawer:false
 };
 
 const actions = {
@@ -24,7 +25,6 @@ const actions = {
     GetOrderFormDetailList({ commit }, param) {
         request.GetOrderFormDetailListById(param).then(res => {
             if (res.resultStatus == 1) {
-                console.log(res.data)
                 commit(types.ORDER_DETAIL_LIST, res.data)
             } else {
                 Message.warning(res.message)
@@ -41,16 +41,21 @@ const actions = {
     GetProductBomInfo({ }, param) {
         return request.GetProductBomInfo(param);
     },
-    OrderFormConfirm({ }, param) {
+    OrderFormConfirm({ commit }, param) {
         request.OrderFormConfirm(param).then(res => {
             if (res.resultStatus == 1) {
-                console.log('conifrm success', res.data)
+                commit("RemoveOrderFormReadyRleaseList", res.data)
+                commit("TriggerDrawer",true)
+                Message.success('订单成功下达')
             } else {
                 Message.warning(res.message)
             }
         }).catch(err => {
             Message.error(err.message)
         })
+    },
+    TriggerDrawer({commit},data){
+        commit("TriggerDrawer",data)
     }
 
 };
@@ -58,6 +63,7 @@ const actions = {
 const getters = {
     orderReadyToReleaseList: state => state.orderReadyToReleaseList,
     orderFormDetaiList: state => state.orderFormDetaiList,
+    closeDrawer:state=>state.closeDrawer
 };
 
 const mutations = {
@@ -70,6 +76,14 @@ const mutations = {
                 item.boms = []
         })
         state.orderFormDetaiList = data;
+    },
+    RemoveOrderFormReadyRleaseList(state, data) {
+        state.orderReadyToReleaseList.splice(state.orderReadyToReleaseList.indexOf(item => {
+            return item.id = data.id
+        }))
+    },
+    TriggerDrawer(state,data){
+        state.closeDrawer=data; 
     }
 };
 

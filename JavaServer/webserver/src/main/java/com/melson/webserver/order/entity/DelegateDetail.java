@@ -20,6 +20,7 @@ public class DelegateDetail {
     private String specification;
     private BigDecimal count;
     private String countUnit;
+    private String objectNo;
 
     public Integer getId() {
         return id;
@@ -75,5 +76,13 @@ public class DelegateDetail {
 
     public void setCountUnit(String countUnit) {
         this.countUnit = countUnit;
+    }
+
+    public String getObjectNo() {
+        return objectNo;
+    }
+
+    public void setObjectNo(String objectNo) {
+        this.objectNo = objectNo;
     }
 }

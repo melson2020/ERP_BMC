@@ -504,6 +504,7 @@ export default {
       row.id = item.id;
       row.productId=item.id;
       row.productName = item.productName;
+      row.productNo=item.productNo;
       row.specification = item.specification;
       row.seen = false;
       row.remark = item.remark;

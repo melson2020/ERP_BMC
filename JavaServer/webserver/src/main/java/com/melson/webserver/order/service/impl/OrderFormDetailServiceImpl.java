@@ -34,6 +34,7 @@ public class OrderFormDetailServiceImpl implements IOrderFormDetailService {
              detail.setProductName(stock.getProductName());
              detail.setProductId(stock.getProductId());
              detail.setCount(stock.getCount());
+             detail.setProductNo(stock.getProductNo());
              detail.setCountUnit(stock.getCountUnit());
              detail.setSpecification(stock.getSpecification());
              detail.setRemark(stock.getRemark());

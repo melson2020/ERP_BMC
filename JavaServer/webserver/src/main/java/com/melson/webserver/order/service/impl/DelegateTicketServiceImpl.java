@@ -56,6 +56,7 @@ public class DelegateTicketServiceImpl implements IDelegateTicketService {
         delegateDetail.setSpecification(orderFormDetail.getSpecification());
         delegateDetail.setCount(new BigDecimal(orderFormDetail.getCount()));
         delegateDetail.setCountUnit(orderFormDetail.getCountUnit());
+        delegateDetail.setObjectNo(orderFormDetail.getProductNo());
         return delegateDetail;
     }
 }

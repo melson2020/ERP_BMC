@@ -71,7 +71,7 @@ public class OrderFormResource extends BaseResource {
 
     @PostMapping(value = "/confirm")
     public  Result orderFormConfirm(@RequestBody OrderFormConfirmVo orderFormVo){
-        return null;
+        return success(orderFormService.confirm(orderFormVo));
     }
     /**
      * 保存订单
