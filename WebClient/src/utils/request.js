@@ -95,6 +95,20 @@ export default {
   ReqDeleteContact(params){
     return service.post("/customerContact/delete",params)
   },
+
+  SaveProduceTechOne(param){
+    return service.post("/produceSetting/saveProduceTech",param)
+  },
+  FindAllProduceTechList(){
+    return service.get("/produceSetting/produceTechList")
+  },
+  DeleteProduceTech(param){
+    return service.deleteOne('/produceSetting/deleteProduceTech',param)
+  },
+  SaveProduceLine(param){
+    return service.post("/produceSetting/saveProduceLine",param)
+  },
+
   ReqProductList(params){
     return service.get('/product/list',params)
   },
@@ -129,8 +143,6 @@ export default {
   ReqQueryStorageObj(params){
     return service.post("/storage/queryStorageAreaLocation",params);
   },
-
-
 
   //订单相关
   GetCreatedOrderList(param){

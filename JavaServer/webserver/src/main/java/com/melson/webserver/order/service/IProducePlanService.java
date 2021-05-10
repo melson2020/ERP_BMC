@@ -14,6 +14,7 @@ import java.util.List;
 public interface IProducePlanService {
     /**
      *  根据订单 生成对应的生产计划 包括生产类型 代工和生产
+     *  同时生成 取料单  to do
      */
     ProducePlan GeneratePlan(List<OrderFormDetail> details, OrderForm form);
 }

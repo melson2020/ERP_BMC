@@ -1,5 +1,15 @@
 <template>
   <div>
+    <div class="product-line-header-div">
+      <span class="colorblue production-tech-fwb">产线列表</span
+      ><el-button
+        type="primary"
+        size="small"
+        icon="el-icon-plus"
+        @click="addProductionLine"
+        >添加产线</el-button
+      >
+    </div>
     <el-table :data="productionLineList" border style="width: 100%">
       <el-table-column prop="indexNo" label="编号" width="200">
       </el-table-column>
@@ -17,34 +27,33 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-button
-      icon="el-icon-plus"
-      plain
-      class="add-detail"
-      @click="addProductionLine"
-      >添加产线</el-button
-    >
+
     <el-dialog
       title="添加产线"
       :visible.sync="productionLineAddDialog"
-      width="60%"
+      width="70%"
     >
-      <el-form status-icon ref="productionLineAddForm" label-width="100px">
-        <el-form-item label="编号" prop="pass">
-          <el-input autocomplete="off"></el-input>
+      <el-form
+        :model="editProductLine"
+        status-icon
+        ref="productionLineAddForm"
+        label-width="100px"
+      >
+        <el-form-item label="编号" prop="code">
+          <el-input v-model="editProductLine.code"></el-input>
         </el-form-item>
-        <el-form-item label="名称" prop="checkPass">
-          <el-input autocomplete="off"></el-input>
+        <el-form-item label="名称" prop="name">
+          <el-input v-model="editProductLine.name"></el-input>
         </el-form-item>
-        <el-form-item label="位置" prop="pass">
-          <el-input autocomplete="off"></el-input>
+        <el-form-item label="位置" prop="location">
+          <el-input v-model="editProductLine.location"></el-input>
         </el-form-item>
-        <el-form-item label="描述" prop="checkPass">
-          <el-input autocomplete="off"></el-input>
+        <el-form-item label="描述" prop="description">
+          <el-input v-model="editProductLine.description"></el-input>
         </el-form-item>
         <el-form-item label="工位设置">
           <el-table
-            :data="workStationList"
+            :data="editProductLine.workStationList"
             border
             style="width: 100%"
             size="mini"
@@ -68,7 +77,7 @@
                   v-model="scope.row.name"
                   v-if="scope.row.seen"
                   placeholder="输入名称"
-                 @blur="loseFcous(scope.$index, scope.row)"
+                  @blur="loseFcous(scope.$index, scope.row)"
                   size="mini"
                 ></el-input>
                 <span v-else>{{ scope.row.name }}</span>
@@ -77,35 +86,41 @@
             <el-table-column prop="">
               <template slot-scope="scope">
                 <el-select
-                  v-model="scope.row.techNo"
+                  v-model="scope.row.techId"
                   placeholder="填入工艺"
                   v-if="scope.row.seen"
-                   @blur="loseFcous(scope.$index, scope.row)"
+                  @change="techChang($event, scope.row)"
+                  @blur="loseFcous(scope.$index, scope.row)"
                   size="mini"
                 >
-                  <el-option label="工序1" value="1"> </el-option>
-                  <el-option label="工序2" value="2"> </el-option>
-                  <el-option label="工序3" value="3"> </el-option>
-                  <el-option label="工序4" value="4"> </el-option>
+                  <el-option
+                    v-for="tech in produceTechList"
+                    :label="tech.name"
+                    :value="tech.id"
+                    :key="tech.id"
+                  >
+                  </el-option>
                 </el-select>
-                <span v-else>{{ scope.row.techNo }}</span>
+                <span v-else>{{ scope.row.techId }}</span>
               </template>
             </el-table-column>
-             <el-table-column prop="">
+            <el-table-column prop="">
               <template slot-scope="scope">
                 <el-select
-                  v-model="scope.row.employeeNo"
+                  v-model="scope.row.employeeGroupNo"
                   placeholder="分配人员"
                   v-if="scope.row.seen"
-                   @blur="loseFcous(scope.$index, scope.row)"
+                  @blur="loseFcous(scope.$index, scope.row)"
                   size="mini"
                 >
-                  <el-option label="组别1" value="1"> </el-option>
-                  <el-option label="组别2" value="2"> </el-option>
-                  <el-option label="组别3" value="3"> </el-option>
-                  <el-option label="组别4" value="4"> </el-option>
+                  <el-option
+                    v-for="employeeGroup in employeeGroupList"
+                    :label="employeeGroup.groupName"
+                    :value="employeeGroup.groupNo"
+                    :key="employeeGroup.groupNo"
+                  ></el-option>
                 </el-select>
-                <span v-else>{{ scope.row.employeeNo }}</span>
+                <span v-else>{{ scope.row.employeeGroupNo }}</span>
               </template>
             </el-table-column>
           </el-table>
@@ -118,7 +133,7 @@
           >
         </el-form-item>
         <el-form-item>
-          <el-button type="primary">保存</el-button>
+          <el-button type="primary" @click="submit">保存</el-button>
           <el-button>重置</el-button>
         </el-form-item>
       </el-form>
@@ -126,12 +141,28 @@
   </div>
 </template>
 <script>
+import { mapGetters } from "vuex";
+import { mapActions } from "vuex";
 export default {
   data() {
     return {
-      svalue: "",
-      workStationList: [{ no: "1", name: "工位1", techNo: "", seen: false,employeeNo:''}],
+      workStationList: [
+        { no: "1", name: "工位1", techNo: "", seen: false, employeeNo: "" },
+      ],
       productionLineAddDialog: false,
+      employeeGroupList: [
+        { groupName: "team1", groupNo: "01" },
+        { groupName: "team2", groupNo: "02" },
+        { groupName: "team3", groupNo: "03" },
+        { groupName: "team4", groupNo: "04" },
+      ],
+      editProductLine: {
+        code: "",
+        name: "",
+        location: "",
+        description: "",
+        workStationList: [],
+      },
       productionLineList: [
         {
           indexNo: "C01",
@@ -160,12 +191,34 @@ export default {
       ],
     };
   },
+  computed: {
+    ...mapGetters(["produceTechList"]),
+  },
   methods: {
+    ...mapActions({
+      FindAllProduceTechList: "FindAllProduceTechList",
+      SaveProduceLine:'SaveProduceLine'
+    }),
     addProductionLine() {
       this.productionLineAddDialog = !this.productionLineAddDialog;
+      this.editProductLine = {
+        code: "",
+        name: "",
+        location: "",
+        description: "",
+        workStationList: [],
+      };
     },
     addWorkStation() {
-        this.workStationList.push({ no: "默认", name: "", techNo: "填入工序", seen: false,employeeNo:'分配人员' })
+      this.editProductLine.workStationList.push({
+        index: this.editProductLine.workStationList.length + 1,
+        name: "请填写名称",
+        techId: "",
+        techName:'',
+        seen: false,
+        employeeGroupNo: "分配组别",
+        employeeGroupName:''
+      });
     },
     loseFcous(index, row) {
       row.seen = false;
@@ -173,10 +226,30 @@ export default {
     cellClick(row) {
       row.seen = true;
     },
+    techChang(techId,row){
+       console.log('111')
+       var tech=this.produceTechList.find(t=>{return t.id==techId})
+       console.log(tech,row)
+        row.techName=tech.name
+    },
+    submit(){
+      this.SaveProduceLine(this.editProductLine)
+    }
+  },
+
+  beforeMount() {
+    this.FindAllProduceTechList();
   },
 };
 </script>
 <style>
+.product-line-header-div {
+  height: 50px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
 .add-detail {
   margin-top: 5px;
   width: 100%;

@@ -71,6 +71,11 @@ public class ContractStock {
      */
     private String account;
 
+    /**
+     * 产品编号
+     */
+    private String productNo;
+
 
 
     @Id
@@ -195,5 +200,13 @@ public class ContractStock {
 
     public void setCountUnit(String countUnit) {
         this.countUnit = countUnit;
+    }
+
+    public String getProductNo() {
+        return productNo;
+    }
+
+    public void setProductNo(String productNo) {
+        this.productNo = productNo;
     }
 }

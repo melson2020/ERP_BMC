@@ -125,7 +125,12 @@
             >
           </div>
         </div>
-        <el-button class="order-confirm-button" type="primary" @click="orderConfirm">订单下达</el-button>
+        <el-button
+          class="order-confirm-button"
+          type="primary"
+          @click="orderConfirm"
+          >订单下达</el-button
+        >
       </div>
     </el-drawer>
   </div>
@@ -144,8 +149,20 @@ export default {
       },
     };
   },
+  watch: {
+    closeDrawer() {
+      if(this.closeDrawer){
+        this.tableShow=false;
+        this.TriggerDrawer(false)
+      }
+    },
+  },
   computed: {
-    ...mapGetters(["orderReadyToReleaseList", "orderFormDetaiList"]),
+    ...mapGetters([
+      "orderReadyToReleaseList",
+      "orderFormDetaiList",
+      "closeDrawer",
+    ]),
   },
   methods: {
     ...mapActions({
@@ -153,7 +170,8 @@ export default {
       GetOrderFormDetailList: "GetOrderFormDetailList",
       GetProductBomList: "GetProductBomList",
       GetProductBomInfo: "GetProductBomInfo",
-      OrderFormConfirm:'OrderFormConfirm'
+      OrderFormConfirm: "OrderFormConfirm",
+      TriggerDrawer:'TriggerDrawer'
     }),
     orderDecideOnclick(form) {
       this.GetOrderFormDetailList({ orderFormId: form.id });
@@ -161,11 +179,13 @@ export default {
       this.tableShow = !this.tableShow;
     },
     orderConfirm() {
-      console.log('订单下达',this.selectedOrderForm,this.orderFormDetaiList)
-      this.OrderFormConfirm({orderForm:this.selectedOrderForm,orderFormDetails:this.orderFormDetaiList})
+      this.OrderFormConfirm({
+        orderForm: this.selectedOrderForm,
+        orderFormDetails: this.orderFormDetaiList,
+      });
     },
     choicePOnclick(product) {
-      this.GetProductBomList({ productId: product.productId }).then((res) => {
+      this.GetProductBomList({ productNo: product.productNo }).then((res) => {
         if (res.resultStatus == 1) {
           product.pboms = res.data;
         }
@@ -273,7 +293,7 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
-.order-confirm-button{
+.order-confirm-button {
   height: 40px;
   margin: 10px;
 }

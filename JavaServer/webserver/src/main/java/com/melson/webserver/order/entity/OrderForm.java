@@ -66,6 +66,11 @@ public class OrderForm {
 
     private String contractNo;
 
+    /**
+     * 订单类型
+     */
+    private String produceType;
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -155,5 +160,13 @@ public class OrderForm {
 
     public void setContractNo(String contractNo) {
         this.contractNo = contractNo;
+    }
+
+    public String getProduceType() {
+        return produceType;
+    }
+
+    public void setProduceType(String produceType) {
+        this.produceType = produceType;
     }
 }

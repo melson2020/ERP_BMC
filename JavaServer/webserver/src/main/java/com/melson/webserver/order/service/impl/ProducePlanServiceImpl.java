@@ -31,11 +31,6 @@ public class ProducePlanServiceImpl implements IProducePlanService {
 
     @Override
     public ProducePlan GeneratePlan(List<OrderFormDetail> details, OrderForm form) {
-        Map<String,Integer> typeMap=new HashMap<>(4);
-        typeMap.put("P",1);
-        typeMap.put("C",2);
-        typeMap.put("D",3);
-        typeMap.put("W",4);
         if(details==null||details.size()<=0)return null;
         ProducePlan producePlan=new ProducePlan();
         producePlan.setOrderFormId(form.getId());
@@ -46,19 +41,13 @@ public class ProducePlanServiceImpl implements IProducePlanService {
         producePlan.setPlanNo("PP"+System.currentTimeMillis());
         producePlan.setCreateDate(new Date());
         producePlan.setState(ProducePlan.CREATED);
-        details.sort(new Comparator<OrderFormDetail>() {
-            @Override
-            public int compare(OrderFormDetail o1, OrderFormDetail o2) {
-                boolean res=typeMap.get(o1.getProduceType())>typeMap.get(o2.getProduceType());
-                return res?-1:0;
-            }
-        });
+
         List<ProducePlanDetail> producePlanDetails=new ArrayList<>();
         String producePlanType="";
         for(OrderFormDetail detail:details){
             producePlanDetails.add(CreateProducePlanDetail(detail));
             if(!producePlanType.contains(detail.getProduceType())){
-                producePlanType+=("/"+detail.getProduceType());
+                producePlanType+=(detail.getProduceType());
             }
         }
         producePlan.setType(producePlanType);

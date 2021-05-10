@@ -19,4 +19,11 @@ public interface IPurchaseDetailService {
      * @return
      */
     List<PurchaseDetail> GeneratePurchaseDetail(List<OrderFormDetail> detailList, OrderForm form);
+
+    /**
+     * 生成采购明细
+     * @param detailList
+     * @return
+     */
+    List<PurchaseDetail> GenerateOrderPurchase(List<OrderFormDetail> detailList);
 }
