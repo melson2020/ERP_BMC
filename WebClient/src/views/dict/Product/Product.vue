@@ -59,9 +59,9 @@
               >
                 <el-option
                   v-for="vo in categoryList"
-                  :label="vo.id"
-                  :value="vo.name"
-                  :key="vo.id"
+                  :label="vo.name"
+                  :value="vo.categoryId"
+                  :key="vo.name"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -96,9 +96,9 @@
               >
                 <el-option
                   v-for="vo in storageList"
-                  :label="vo.storageCode"
-                  :value="vo.name"
-                  :key="vo.storageCode"
+                  :label="vo.name"
+                  :value="vo.storageCode"
+                  :key="vo.name"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -144,8 +144,6 @@ export default {
         productAddDialog: false,
         searchContent: "",
         loading: false,
-        storageList:[],
-        categoryList:[],
         newProduct:{
           id:'',
           productNo:'',
@@ -164,19 +162,13 @@ export default {
         rules: {
         name: [
           { required: true, message: "请输入产品名称", trigger: "blur" }
-        ],
-        categoryId: [
-          { required: true, message: "请选择类别", trigger: "blur" }
-        ],
-        storageCode: [
-          { required: true, message: "请选择仓库", trigger: "blur" }
-        ],
+        ]
         },
       }
 
     },
     computed: {
-      ...mapGetters(["productList"]),
+      ...mapGetters(["productList","storageList","categoryList"]),
       productListPageShow(){
         return this.productList.filter((item)=>{
           let key=
@@ -194,8 +186,11 @@ export default {
     methods:{
       ...mapActions({
       GetProductList:"GetProductList",
+      GetCategoryList:"GetCategoryList",
+      GetStorageList:"GetStorageList",
       }),
       selectCategoryChanged(){
+        
 
       },
       selectStorageChanged(){
@@ -205,7 +200,44 @@ export default {
       if (this.$refs[formName]) {
         this.$refs[formName].resetFields();
       }
+      this.GetStorageList();
+      this.GetCategoryList();
       this.productAddDialog = true;
+      console.log(this.categoryList);
+      },
+
+
+      onAddStorage(formName){
+        this.$refs[formName].validate(valid => {
+          if (valid) {
+            let Storage=this.newStorage;
+            Storage.storageCode="sc" + new Date().valueOf();
+            Storage.createDate=new Date();
+            Storage.createBy=""; 
+            this.SaveStorage(Storage)
+              .then(res => {
+                if (res.resultStatus == 1) {
+                  this.StorageAddDialog = false;
+                  this.PushStorageList(res.data);
+                  this.$message({
+                    showClose: true,
+                    message: "创建成功",
+                    type: "success"
+                  });
+                } else {
+                  this.$messgae.error(res.message);
+                }
+              })
+              .catch(err => {
+                let alert = err.message ? err.message : err;
+                this.$messgae.error(alert);
+              });
+          }
+          else{
+            this.$message.warning("请填写必要信息");
+            return false;
+          }
+        });
       },
 
 

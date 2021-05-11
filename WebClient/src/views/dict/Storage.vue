@@ -269,7 +269,6 @@ export default {
     },
     beforeMount() {
       this.GetStorageList();
-      console.log(this.storageList);
     },
 };
 </script>
