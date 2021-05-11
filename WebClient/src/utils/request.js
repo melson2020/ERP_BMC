@@ -109,6 +109,21 @@ export default {
     return service.post("/produceSetting/saveProduceLine",param)
   },
 
+  FindAllProduceLine(){
+    return service.get("/produceSetting/produceLineList")
+  },
+
+  FindWorkStationListByLineId(param){
+    return service.get("/produceSetting/lineWorkStationList",param)
+  },
+
+  DeleteOneWorkStation(param){
+    return service.deleteOne('/produceSetting/deleteWorkStation',param)
+  },
+  DeleteOneProduceLine(param){
+    return service.deleteOne('/produceSetting/deleteProduceLine',param)
+  },
+
   ReqProductList(params){
     return service.get('/product/list',params)
   },
@@ -161,5 +176,13 @@ export default {
     return service.post('/orderForm/manage/confirm',param)
   },
 
+  //生产计划相关
+  /**
+   * 根据produce state 获取plan list
+   * @param {*} param produce plan state
+   */
+  FindProducePlanList(param){
+    return service.get('/produce/producePlanList',param)
+  }
 
 };

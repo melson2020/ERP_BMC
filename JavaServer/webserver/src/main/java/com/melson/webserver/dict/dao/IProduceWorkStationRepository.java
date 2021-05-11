@@ -4,6 +4,8 @@ import com.melson.webserver.dict.entity.ProduceWorkStation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * @Author Nelson
  * @Description
@@ -11,4 +13,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface IProduceWorkStationRepository extends JpaRepository<ProduceWorkStation,Integer> {
+    List<ProduceWorkStation> findByProduceLineId(Integer lineId);
+    void  deleteByProduceLineId(Integer id);
 }

@@ -10,18 +10,25 @@
         >添加产线</el-button
       >
     </div>
-    <el-table :data="productionLineList" border style="width: 100%">
-      <el-table-column prop="indexNo" label="编号" width="200">
-      </el-table-column>
+    <el-table :data="produceLineList" border style="width: 100%">
+      <el-table-column prop="code" label="编号" width="200"> </el-table-column>
       <el-table-column prop="name" label="名称" width="200"> </el-table-column>
       <el-table-column prop="location" label="位置"> </el-table-column>
-      <el-table-column prop="des" label="描述"> </el-table-column>
+      <el-table-column prop="description" label="描述"> </el-table-column>
       <el-table-column prop="">
-        <template>
+        <template slot-scope="scope">
           <el-button
             icon="el-icon-edit"
             type="primary"
             size="mini"
+            @click="produceLineEdit(scope.row)"
+            circle
+          ></el-button>
+           <el-button
+            icon="el-icon-delete"
+            type="danger"
+            size="mini"
+            @click="produceLineDelete(scope.row)"
             circle
           ></el-button>
         </template>
@@ -60,15 +67,15 @@
             @cell-click="cellClick"
             :show-header="false"
           >
-            <el-table-column prop="no" label="序号">
+            <el-table-column prop="indexNo" label="序号">
               <template slot-scope="scope">
                 <el-input
-                  v-model="scope.row.no"
+                  v-model="scope.row.indexNo"
                   v-if="scope.row.seen"
                   @blur="loseFcous(scope.$index, scope.row)"
                   size="mini"
                 ></el-input>
-                <span v-else>{{ scope.row.no }}</span>
+                <span v-else>{{ scope.row.indexNo }}</span>
               </template>
             </el-table-column>
             <el-table-column prop="name" label="名称">
@@ -88,9 +95,7 @@
                 <el-select
                   v-model="scope.row.techId"
                   placeholder="填入工艺"
-                  v-if="scope.row.seen"
-                  @change="techChang($event, scope.row)"
-                  @blur="loseFcous(scope.$index, scope.row)"
+                  @change="techChange($event, scope.row)"
                   size="mini"
                 >
                   <el-option
@@ -101,7 +106,7 @@
                   >
                   </el-option>
                 </el-select>
-                <span v-else>{{ scope.row.techId }}</span>
+                <!-- <span v-else>{{ scope.row.techId }}</span> -->
               </template>
             </el-table-column>
             <el-table-column prop="">
@@ -109,8 +114,6 @@
                 <el-select
                   v-model="scope.row.employeeGroupNo"
                   placeholder="分配人员"
-                  v-if="scope.row.seen"
-                  @blur="loseFcous(scope.$index, scope.row)"
                   size="mini"
                 >
                   <el-option
@@ -120,7 +123,23 @@
                     :key="employeeGroup.groupNo"
                   ></el-option>
                 </el-select>
-                <span v-else>{{ scope.row.employeeGroupNo }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="">
+              <template slot-scope="scope">
+                <el-button
+                  type="danger"
+                  icon="el-icon-delete"
+                  size="mini"
+                  circle
+                  @click="
+                    deleteWorkStation(
+                      scope.$index,
+                      scope.row.id,
+                      editProductLine.workStationList
+                    )
+                  "
+                ></el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -163,41 +182,20 @@ export default {
         description: "",
         workStationList: [],
       },
-      productionLineList: [
-        {
-          indexNo: "C01",
-          name: "产线1号",
-          location: "厂房1楼区域A",
-          des: "生产网线,未完全启用",
-        },
-        {
-          indexNo: "X02",
-          name: "产线2号",
-          location: "厂房2楼区域B",
-          des: "生产USB,全线运行中",
-        },
-        {
-          indexNo: "S01",
-          name: "产线3号",
-          location: "厂房1楼区域A",
-          des: "生产路由器,未完全启用",
-        },
-        {
-          indexNo: "S02",
-          name: "产线4号",
-          location: "厂房1楼区域A",
-          des: "生产路由器,未完全启用",
-        },
-      ],
     };
   },
   computed: {
-    ...mapGetters(["produceTechList"]),
+    ...mapGetters(["produceTechList", "produceLineList"]),
   },
   methods: {
     ...mapActions({
       FindAllProduceTechList: "FindAllProduceTechList",
-      SaveProduceLine:'SaveProduceLine'
+      FindAllProduceLineList: "FindAllProduceLineList",
+      SaveProduceLine: "SaveProduceLine",
+      AddNewLineToList: "AddNewLineToList",
+      FindWorkStationList: "FindWorkStationList",
+      DeleteOneWorkStation: "DeleteOneWorkStation",
+      DeleteOneProduceLine:'DeleteOneProduceLine'
     }),
     addProductionLine() {
       this.productionLineAddDialog = !this.productionLineAddDialog;
@@ -211,13 +209,13 @@ export default {
     },
     addWorkStation() {
       this.editProductLine.workStationList.push({
-        index: this.editProductLine.workStationList.length + 1,
+        indexNo: this.editProductLine.workStationList.length + 1,
         name: "请填写名称",
         techId: "",
-        techName:'',
+        techName: "",
         seen: false,
         employeeGroupNo: "分配组别",
-        employeeGroupName:''
+        employeeGroupName: "",
       });
     },
     loseFcous(index, row) {
@@ -226,19 +224,75 @@ export default {
     cellClick(row) {
       row.seen = true;
     },
-    techChang(techId,row){
-       console.log('111')
-       var tech=this.produceTechList.find(t=>{return t.id==techId})
-       console.log(tech,row)
-        row.techName=tech.name
+    techChange(techId, row) {
+      var tech = this.produceTechList.find((t) => {
+        return t.id == techId;
+      });
+      row.techName = tech.name;
     },
-    submit(){
+    submit() {
       this.SaveProduceLine(this.editProductLine)
-    }
+        .then((res) => {
+          if (res.resultStatus == 1) {
+            this.$message.success("保存成功");
+            this.productionLineAddDialog = !this.productionLineAddDialog;
+            if (!this.editProductLine.id) {
+              this.AddNewLineToList(res.data);
+            }
+          } else {
+            this.$message.warning(res.message);
+          }
+        })
+        .catch((err) => {
+          this.$message.error(err.message);
+        });
+    },
+
+    produceLineEdit(row) {
+      this.FindWorkStationList({ lineId: row.id })
+        .then((res) => {
+          if (res.resultStatus == 1) {
+            res.data.map((item) => {
+              item.seen = false;
+            });
+            row.workStationList = res.data;
+            this.editProductLine = row;
+            this.productionLineAddDialog = !this.productionLineAddDialog;
+          } else {
+            this.$message.warning(res.message);
+          }
+        })
+        .catch((err) => {
+          this.$message.error(err.message);
+        });
+    },
+
+    produceLineDelete(row){
+       this.DeleteOneProduceLine({id:row.id})
+    },
+
+    deleteWorkStation(index, id, list) {
+      if (id) {
+        this.DeleteOneWorkStation({ id: id })
+          .then((res) => {
+            if (res.resultStatus == 1) {
+              list.splice(index, 1);
+            } else {
+              this.$message.warning(res.message);
+            }
+          })
+          .catch((err) => {
+            this.$message.error(err.message);
+          });
+      } else {
+        list.splice(index, 1);
+      }
+    },
   },
 
   beforeMount() {
     this.FindAllProduceTechList();
+    this.FindAllProduceLineList();
   },
 };
 </script>

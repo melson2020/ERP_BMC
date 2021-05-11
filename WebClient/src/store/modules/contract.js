@@ -126,7 +126,7 @@ const mutations = {
         var index = state.intentionContractList.indexOf(item => {
             return item.id = data.id
         })
-        state.intentionContractList.splice(index)
+        state.intentionContractList.splice(index,1)
     }
 };
 

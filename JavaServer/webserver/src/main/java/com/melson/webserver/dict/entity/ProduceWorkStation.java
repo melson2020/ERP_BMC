@@ -13,11 +13,13 @@ public class ProduceWorkStation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String index;
+    private String indexNo;
     private String name;
     private Integer techId;
     private String techName;
     private String employeeGroupNo;
+    private Integer produceLineId;
+    private String produceLineName;
     private String employeeGroupName;
 
     public Integer getId() {
@@ -28,12 +30,12 @@ public class ProduceWorkStation {
         this.id = id;
     }
 
-    public String getIndex() {
-        return index;
+    public String getIndexNo() {
+        return indexNo;
     }
 
-    public void setIndex(String index) {
-        this.index = index;
+    public void setIndexNo(String indexNo) {
+        this.indexNo = indexNo;
     }
 
     public String getName() {
@@ -74,5 +76,21 @@ public class ProduceWorkStation {
 
     public void setEmployeeGroupName(String employeeGroupName) {
         this.employeeGroupName = employeeGroupName;
+    }
+
+    public Integer getProduceLineId() {
+        return produceLineId;
+    }
+
+    public void setProduceLineId(Integer produceLineId) {
+        this.produceLineId = produceLineId;
+    }
+
+    public String getProduceLineName() {
+        return produceLineName;
+    }
+
+    public void setProduceLineName(String produceLineName) {
+        this.produceLineName = produceLineName;
     }
 }

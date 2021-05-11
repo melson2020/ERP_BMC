@@ -62,7 +62,7 @@
                     }}</el-tag
                   >
                   <el-popover placement="right" width="200" trigger="click">
-                    <el-select placeholder="请选择">
+                    <el-select  placeholder="请选择">
                       <el-option label="产线1 工位3 组别1" value="1234">
                       </el-option>
                     </el-select>
@@ -97,6 +97,8 @@
 export default {
   data() {
     return {
+      producePlan:{},
+      planDetails:[],
       selectedPlan: {
         orderNo: "订单号01",
         planNo: "计划内部编码01",
@@ -180,6 +182,12 @@ export default {
       },
     };
   },
+
+  methods:{
+    loadPlanDetails(plan){
+      console.log(plan)
+    }
+  }
 };
 </script>
 <style>

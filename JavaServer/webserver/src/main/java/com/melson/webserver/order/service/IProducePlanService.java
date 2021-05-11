@@ -17,4 +17,8 @@ public interface IProducePlanService {
      *  同时生成 取料单  to do
      */
     ProducePlan GeneratePlan(List<OrderFormDetail> details, OrderForm form);
+    /**
+     * find list with state
+     */
+    List<ProducePlan> FindPlanList(String state);
 }

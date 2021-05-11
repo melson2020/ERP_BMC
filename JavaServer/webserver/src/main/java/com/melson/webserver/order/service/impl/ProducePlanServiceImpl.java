@@ -57,6 +57,11 @@ public class ProducePlanServiceImpl implements IProducePlanService {
         return producePlan;
     }
 
+    @Override
+    public List<ProducePlan> FindPlanList(String state) {
+        return producePlanRepository.findByState(state);
+    }
+
     private ProducePlanDetail CreateProducePlanDetail(OrderFormDetail detail){
         ProducePlanDetail producePlanDetail=new ProducePlanDetail();
         producePlanDetail.setProductId(detail.getProductId());
