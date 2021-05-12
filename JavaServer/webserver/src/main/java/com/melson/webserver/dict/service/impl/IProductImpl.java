@@ -1,16 +1,19 @@
 package com.melson.webserver.dict.service.impl;
 
 import com.melson.base.AbstractService;
+import com.melson.base.Result;
 import com.melson.base.utils.EntityManagerUtil;
 import com.melson.base.utils.EntityUtils;
 import com.melson.webserver.dict.dao.IProductRepository;
+import com.melson.webserver.dict.dao.IStorageDetailRepository;
 import com.melson.webserver.dict.entity.Product;
+import com.melson.webserver.dict.entity.StorageDetail;
 import com.melson.webserver.dict.service.IProduct;
 import com.melson.webserver.dict.vo.ContractProductVo;
-import com.melson.webserver.dict.vo.CustomerVo;
 import com.melson.webserver.dict.vo.ProductVo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -23,10 +26,12 @@ import java.util.List;
 public class IProductImpl extends AbstractService<Product> implements IProduct {
     private final IProductRepository productRepository;
     private final EntityManagerUtil entityManagerUtil;
+    private final IStorageDetailRepository storageDetailRepository;
 
-    public IProductImpl(IProductRepository productRepository, EntityManagerUtil entityManagerUtil) {
+    public IProductImpl(IProductRepository productRepository, EntityManagerUtil entityManagerUtil, IStorageDetailRepository storageDetailRepository) {
         this.productRepository = productRepository;
         this.entityManagerUtil = entityManagerUtil;
+        this.storageDetailRepository = storageDetailRepository;
     }
 
     @Override
@@ -87,4 +92,74 @@ public class IProductImpl extends AbstractService<Product> implements IProduct {
         }
         return products;
     }
+
+    @Override
+    public Result SaveAndUpdate(Product product) {
+        Result result = new Result();
+        Product checkExist=productRepository.findByName(product.getName());
+        if(checkExist!=null){
+            if(product.getId()==checkExist.getId()){
+                Product saved=productRepository.save(product);
+                if(saved==null){
+                    result.setResultStatus(-1);
+                    result.setMessage("保存失败！");
+                }else {
+                    StorageDetail checkStorageDetail=storageDetailRepository.findByMaterialNo(saved.getProductNo());
+                    UpdateStorageTable(checkStorageDetail,saved);
+                    result.setData(saved);
+                }
+            }
+            else
+            {
+                result.setResultStatus(-1);
+                result.setMessage("已经存在此产品名称或联系管理员！");
+            }
+        }
+        else
+        {
+            Product saved=productRepository.save(product);
+            if(saved==null){
+                result.setResultStatus(-1);
+                result.setMessage("保存失败！");
+            }else {
+                StorageDetail checkStorageDetail=storageDetailRepository.findByMaterialNo(saved.getProductNo());
+                UpdateStorageTable(checkStorageDetail,saved);
+                result.setData(saved);
+            }
+        }
+        return result;
+    }
+
+    private void UpdateStorageTable(StorageDetail checkStorageDetail, Product saved) {
+        StorageDetail ne=new StorageDetail();   //同时保存或更新Storage表
+        ne.setMaterialNo(saved.getProductNo());
+        ne.setName(saved.getName());
+        ne.setSpecification(saved.getSpecification());
+        ne.setLastestPrice(saved.getSalesPrice());
+        ne.setUnit(saved.getUnit());
+        ne.setCount(0);
+        ne.setStorageCode(saved.getStorageCode());
+        ne.setManufacturer("");
+        if(checkStorageDetail!=null)
+        {
+            ne.setId(checkStorageDetail.getId());
+            ne.setManufacturer(checkStorageDetail.getManufacturer());
+            ne.setCount(checkStorageDetail.getCount());
+            ne.setFeature(checkStorageDetail.getFeature());
+        }
+        storageDetailRepository.save(ne);
+    }
+
+    @Override
+    @Transactional
+    public Integer DeleteProduct(Integer id) {
+        return productRepository.deleteProductById(id);
+    }
+
+    @Override
+    public Product Query(String productNo) {
+        return productRepository.findByProductNo(productNo);
+    }
+
+
 }

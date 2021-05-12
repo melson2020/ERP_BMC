@@ -173,7 +173,10 @@ export default {
                     type: "success"
                   });
                 } else {
-                  this.$messgae.error(res.message);
+                  this.$message({
+                    message: res.message,
+                    type: "warning"
+                  });
                 }
               })
               .catch(err => {

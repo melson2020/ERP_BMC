@@ -2,6 +2,8 @@ package com.melson.webserver.dict.dao;
 
 import com.melson.webserver.dict.entity.StorageDetail;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -9,4 +11,10 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface IStorageDetailRepository extends JpaRepository<StorageDetail,String> {
+
+    StorageDetail findByMaterialNo(String productNo);
+
+    @Modifying
+    @Query(value = "delete from storage_detail where materialNo=?1",nativeQuery = true)
+    Integer deleteByMaterialNo(String materialNo);
 }

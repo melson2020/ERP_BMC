@@ -24,12 +24,16 @@ public class Material {
     private BigDecimal volume;      // 物料体积
     private String volumeUnit;      // 物料体积单位
     private String semiGoods;       // 物料是否半成品： Y：半成品；N（或空）表示非半成品
-//    private BigDecimal cost;        // 物料价格
+    private BigDecimal cost;        // 物料价格
     private String status;          // 物料状态：  N：不可用；Y（或空）表示可用
     private Date expireDate;        // 物料过期时间
     private String description;     // 物料备注描述
     private String createBy;        // 物料创建人
     private Date createDate;        // 物料创建时间
+
+    @Transient
+    private String storageName;
+
 
     public Integer getId() {
         return id;
@@ -165,5 +169,21 @@ public class Material {
 
     public void setCreateDate(Date createDate) {
         this.createDate = createDate;
+    }
+
+    public BigDecimal getCost() {
+        return cost;
+    }
+
+    public void setCost(BigDecimal cost) {
+        this.cost = cost;
+    }
+
+    public String getStorageName() {
+        return storageName;
+    }
+
+    public void setStorageName(String storageName) {
+        this.storageName = storageName;
     }
 }

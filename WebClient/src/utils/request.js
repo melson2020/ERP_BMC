@@ -115,6 +115,14 @@ export default {
   ReqDeleteProduct(params){
     return service.post("/product/delete",params)
   },
+  ReqSaveProduct(param){
+    return service.post("/product/save",param)
+  },
+  ReqQueryProductObj(params){
+    return service.post("/product/query",params);
+  },
+
+
   ReqCategoryList(params){
     return service.get('/productCategory/list',params)    //  //
   },
@@ -142,6 +150,19 @@ export default {
   },
   ReqQueryStorageObj(params){
     return service.post("/storage/queryStorageAreaLocation",params);
+  },
+
+  ReqMaterialList(params){
+    return service.get('/material/list',params)    //  //
+  },
+  ReqDeleteMaterial(params){
+    return service.post("/material/delete",params)
+  },
+  ReqSaveMaterial(param){
+    return service.post("/material/save",param)
+  },
+  ReqQueryMaterialObj(params){
+    return service.post("/material/query",params);
   },
 
   //订单相关

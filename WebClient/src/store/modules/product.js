@@ -9,6 +9,9 @@ const state = {
 };
 
 const actions = {
+    SaveProduct({ },Storage){
+        return request.ReqSaveProduct(Storage);
+    },
     GetProductList({ commit }) {
         request.ReqProductList().then(res => {
             if (res.resultStatus == 1) {
@@ -36,6 +39,12 @@ const actions = {
               let al = error.message ? error.message : error
               Message.error(al)
           })
+    },
+    PushProductList({commit}, product){
+        commit("PushProductList",product);
+    },
+    QueryProductObj({},product){
+        return request.ReqQueryProductObj(product);
     },
     GetCategoryList({ commit }) {
         request.ReqCategoryList().then(res => {
@@ -84,6 +93,7 @@ const actions = {
         return request.ReqQueryCategoryObj(Category);
     },
 
+
 };
 
 const getters = {
@@ -106,6 +116,9 @@ const mutations = {
     },
     PushCategoryList(state,data){
         state.categoryList.push(data);
+    },
+    PushProductList(state,data){
+        state.productList.push(data);
     },
 };
 

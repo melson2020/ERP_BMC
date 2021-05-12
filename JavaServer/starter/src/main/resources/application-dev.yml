@@ -1,9 +1,9 @@
 spring:
   datasource:
      driver-class-name: com.mysql.jdbc.Driver
-     url: jdbc:mysql://www.melson.top:3306/wechat?Unicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+     url: jdbc:mysql://121.4.112.204:3306/bmc_erp?Unicode=true&characterEncoding=UTF-8&serverTimezone=UTC
      username: root
-     password: liang3363
+     password: 123!@#jklJKL
   jpa:
     hibernate:
       naming:
