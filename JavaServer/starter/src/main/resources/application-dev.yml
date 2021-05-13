@@ -1,5 +1,6 @@
 spring:
   datasource:
+<<<<<<< HEAD
     name: springboot
     type: com.alibaba.druid.pool.DruidDataSource
     #druid相关配置

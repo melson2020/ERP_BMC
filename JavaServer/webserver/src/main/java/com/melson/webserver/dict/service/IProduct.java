@@ -1,6 +1,7 @@
 package com.melson.webserver.dict.service;
 
 import com.melson.base.IService;
+import com.melson.base.Result;
 import com.melson.webserver.dict.entity.Product;
 import com.melson.webserver.dict.vo.ContractProductVo;
 import org.springframework.stereotype.Service;
@@ -14,4 +15,11 @@ public interface IProduct extends IService<Product> {
     List<ContractProductVo> queryContractProducts(String customerNo, String searchValue);
 
     List<Product> findAllProduct();
+
+    Result SaveAndUpdate(Product product);
+
+    Integer DeleteProduct(Integer id);
+
+
+    Product Query(String productNo);
 }

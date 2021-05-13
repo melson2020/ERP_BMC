@@ -67,7 +67,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="产品规格">
+            <el-form-item label="产品规格" prop="specification">
               <el-input v-model="newProduct.specification" autocomplete="off" ></el-input>
             </el-form-item>
           </el-col>
@@ -75,13 +75,13 @@
 
         <el-row>
           <el-col :span="6">
-          <el-form-item label="产品单位">
+          <el-form-item label="产品单位" prop="unit">
             <el-input autocomplete="off"  v-model="newProduct.unit"></el-input>
           </el-form-item>
           </el-col>
           <el-col :span="6">
-          <el-form-item label="产品价格">
-            <el-input v-model="newProduct.salePrice" autocomplete="off" ></el-input>
+          <el-form-item label="产品价格" prop="salesPrice">
+            <el-input v-model="newProduct.salesPrice" autocomplete="off" ></el-input>
           </el-form-item>
 
           </el-col>
@@ -104,7 +104,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="产品标识">
+            <el-form-item label="产品标识" prop="remark">
               <el-input autocomplete="off"  v-model="newProduct.remark"></el-input>
             </el-form-item>
           </el-col>
@@ -132,6 +132,98 @@
     </el-dialog>
 
 
+    <el-dialog title="编辑产品" :visible.sync="productEditDialog" :close-on-click-modal="false" width="1024px">
+      <el-form status-icon :model="editProduct" :rules="rules" ref="productEditForm" label-width="100px">
+          <el-row>
+          <el-col :span="12">
+            <el-form-item label="产品名称" prop="name">
+              <el-input v-model="editProduct.name" autocomplete="off" ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="产品类别" prop="categoryId">
+              <el-select
+                filterable
+                v-model="editProduct.categoryId"
+                size="mini"
+                placeholder="选择类别"
+                @change="selectCategoryChanged"
+              >
+                <el-option
+                  v-for="vo in categoryList"
+                  :label="vo.name"
+                  :value="vo.categoryId"
+                  :key="vo.name"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="产品规格" prop="specification">
+              <el-input v-model="editProduct.specification" autocomplete="off" ></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col :span="6">
+          <el-form-item label="产品单位" prop="unit">
+            <el-input autocomplete="off"  v-model="editProduct.unit"></el-input>
+          </el-form-item>
+          </el-col>
+          <el-col :span="6">
+          <el-form-item label="产品价格" prop="salesPrice">
+            <el-input v-model="editProduct.salesPrice" autocomplete="off" ></el-input>
+          </el-form-item>
+
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="存储仓库" prop="storageCode">
+              <el-select
+                filterable
+                v-model="editProduct.storageCode"
+                size="mini"
+                placeholder="选择仓库"
+                @change="selectStorageChanged"
+              >
+                <el-option
+                  v-for="vo in storageList"
+                  :label="vo.name"
+                  :value="vo.storageCode"
+                  :key="vo.name"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="产品标识" prop="remark">
+              <el-input autocomplete="off"  v-model="editProduct.remark"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-form-item label="备注信息" prop="description">
+            <el-input
+              v-model="editProduct.description"
+              autocomplete="off"
+              style="width: 100%;"
+              rows="3"
+              type="textarea"
+              maxlength="200"
+              show-word-limit
+            ></el-input>
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item>
+            <el-button type="primary" @click="onEditProduct('productEditForm')" :loading="loading">保存</el-button>
+            <el-button @click="productEditDialog = false" v-if="!loading">取 消</el-button>
+          </el-form-item>
+        </el-row>
+      </el-form>
+    </el-dialog>
+
+
     </div>
 </template>
 <script>
@@ -151,7 +243,22 @@ export default {
           categoryId:'',
           specification:'',
           unit:'',
-          salePrice:'',
+          salesPrice:'',
+          remark:'',
+          storageCode:'',
+          status:'',
+          description:'',
+          createBy:'',
+          createDate:''
+        },
+        editProduct:{
+          id:'',
+          productNo:'',
+          name:'',
+          categoryId:'',
+          specification:'',
+          unit:'',
+          salesPrice:'',
           remark:'',
           storageCode:'',
           status:'',
@@ -162,7 +269,13 @@ export default {
         rules: {
         name: [
           { required: true, message: "请输入产品名称", trigger: "blur" }
-        ]
+        ],
+        categoryId: [
+          { required: true, message: "请选择产品类别", trigger: "blur" }
+        ],
+        storageCode: [
+          { required: true, message: "请选择存储仓库", trigger: "blur" }
+        ],
         },
       }
 
@@ -188,9 +301,13 @@ export default {
       GetProductList:"GetProductList",
       GetCategoryList:"GetCategoryList",
       GetStorageList:"GetStorageList",
+      SaveProduct:"SaveProduct",
+      PushProductList:"PushProductList",
+      QueryProductObj:"QueryProductObj",
+      DeleteProduct:"DeleteProduct"
       }),
       selectCategoryChanged(){
-        
+
 
       },
       selectStorageChanged(){
@@ -203,29 +320,33 @@ export default {
       this.GetStorageList();
       this.GetCategoryList();
       this.productAddDialog = true;
-      console.log(this.categoryList);
       },
 
 
-      onAddStorage(formName){
+      onAddProduct(formName){
         this.$refs[formName].validate(valid => {
           if (valid) {
-            let Storage=this.newStorage;
-            Storage.storageCode="sc" + new Date().valueOf();
-            Storage.createDate=new Date();
-            Storage.createBy=""; 
-            this.SaveStorage(Storage)
+            let product=this.newProduct;
+            product.productNo="p" + new Date().valueOf();
+            product.createDate=new Date();
+            product.createBy=""; 
+            product.status="Y";
+            this.SaveProduct(product)
               .then(res => {
                 if (res.resultStatus == 1) {
-                  this.StorageAddDialog = false;
-                  this.PushStorageList(res.data);
+                  this.productAddDialog = false;
+                  // this.PushProductList(res.data);
+                  this.GetProductList();
                   this.$message({
                     showClose: true,
                     message: "创建成功",
                     type: "success"
                   });
                 } else {
-                  this.$messgae.error(res.message);
+                  this.$message({
+                    message: res.message,
+                    type: "warning"
+                  });
                 }
               })
               .catch(err => {
@@ -239,7 +360,66 @@ export default {
           }
         });
       },
-
+      handleDelete(index, row) {
+      let prod={id:row.id,productNo:row.productNo,index:index}
+       this.$messageBox.confirm('确认要删除？',"提示",{
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
+          .then(() => {
+            this.DeleteProduct(prod)
+          })
+          .catch(e=>e);
+      },
+      onEditProduct(formName){
+        this.$refs[formName].validate(valid=>{
+          if(valid){
+            this.SaveProduct(this.editProduct)
+            .then(res=>{
+              if(res.resultStatus==1){
+                this.GetProductList();
+                this.productEditDialog=false;
+                this.$message({
+                  showClose:true,
+                  message:"操作成功",
+                  type:"success"
+                });
+              }
+              else{
+                this.$message.error(res.message);
+              }
+            })
+            .catch(err=>{
+                let alert = err.message ? err.message : err;
+                this.$message.error(alert);
+            });
+          }
+          else{
+            this.$message.warning("请填写准确信息");
+            return false;
+          }
+        })
+      },
+      handleEdit(index,row){
+      this.GetStorageList();
+      this.GetCategoryList();
+      let prod={productNo:row.productNo,index:index}
+      this.QueryProductObj(prod)
+        .then(res=>{
+          if (res.resultStatus == 1) {
+            this.editProduct=res.data;
+            this.productEditDialog = true;
+          }
+          else{
+            this.$message.error(res.message);
+          }
+      })
+      .catch(err=>{
+            let alert = err.message ? err.message : err;
+            this.$message.error(alert);
+      });
+    },
 
     },
     beforeMount() {

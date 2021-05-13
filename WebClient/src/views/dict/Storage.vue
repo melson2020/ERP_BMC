@@ -107,7 +107,7 @@
 
 
 
-    </div>
+  </div>
 </template>
 <script>
 import { mapGetters } from "vuex";
@@ -185,7 +185,10 @@ export default {
                     type: "success"
                   });
                 } else {
-                  this.$messgae.error(res.message);
+                  this.$message({
+                    message: res.message,
+                    type: "warning"
+                  });
                 }
               })
               .catch(err => {
