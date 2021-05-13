@@ -57,21 +57,27 @@
     <el-dialog title="新建基础物料" :visible.sync="MaterialAddDialog" :close-on-click-modal="false" width="1024px">
       <el-form status-icon :model="newMaterial" :rules="rules" ref="MaterialAddForm" label-width="100px">
         <el-row>
-          <el-col :span="8">
+          <el-col :span="6">
             <el-form-item label="物料名称" prop="name">
               <el-input v-model="newMaterial.name" autocomplete="off" ></el-input>
             </el-form-item>
             </el-col>
-          <el-col :span="8">
+            <el-col :span="6">
+            <el-form-item label="物料单价" prop="cost">
+              <el-input v-model="newMaterial.cost" autocomplete="off" ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
             <el-form-item label="制造商" prop="manufacturer">
               <el-input v-model="newMaterial.manufacturer" autocomplete="off" ></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="6">
             <el-form-item label="失效日期" prop="expireDate">
               <el-date-picker
                 v-model="newMaterial.expireDate"
                 type="date"
+                style="width:147px"
                 placeholder="选择日期">
               </el-date-picker>
             </el-form-item>
@@ -166,21 +172,27 @@
     <el-dialog title="编辑基础物料" :visible.sync="MaterialEditDialog" :close-on-click-modal="false" width="1024px">
       <el-form status-icon :model="editMaterial" :rules="rules" ref="MaterialEditForm" label-width="100px">
         <el-row>
-          <el-col :span="8">
+          <el-col :span="6">
             <el-form-item label="物料名称" prop="name">
               <el-input v-model="editMaterial.name" autocomplete="off" ></el-input>
             </el-form-item>
             </el-col>
-          <el-col :span="8">
+          <el-col :span="6">
+            <el-form-item label="物料单价" prop="manufacturer">
+              <el-input v-model="editMaterial.cost" autocomplete="off" ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
             <el-form-item label="制造商" prop="manufacturer">
               <el-input v-model="editMaterial.manufacturer" autocomplete="off" ></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="6">
             <el-form-item label="失效日期" prop="expireDate">
               <el-date-picker
                 v-model="editMaterial.expireDate"
                 type="date"
+                style="width:147px"
                 placeholder="选择日期">
               </el-date-picker>
             </el-form-item>
@@ -206,7 +218,7 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="重量单位" prop="weightUnit">
-              <el-input v-model="editMaterial.weightUnit" autocomplete="off" ></el-input>
+              <el-input v-model="editMaterial.weightUnit" autocomplete="off"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -303,6 +315,7 @@ export default {
           description:'',
           createBy:'',
           createDate:'',
+          cost:'',
         },
         editMaterial:{
           id:'',
@@ -322,6 +335,7 @@ export default {
           description:'',
           createBy:'',
           createDate:'',
+          cost:'',
         },
         rules: {
         name: [
