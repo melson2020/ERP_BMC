@@ -466,7 +466,7 @@ export default {
     getFullTime(time) {
       return new Date(time).format("yyyy-MM-dd");
     },
-    selectStorageChanged(storageCode){
+    selectStorageChanged(){
       // console.log(storageCode)
     }
 

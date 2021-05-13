@@ -8,11 +8,11 @@ import product from "./modules/product"
 import storage from "./modules/storage"
 import order from './modules/order'
 import produceSetting from './modules/produceSetting'
-<<<<<<< HEAD
+
 import material from './modules/material'
-=======
+
 import producePlan from './modules/producePlan'
->>>>>>> fb462506b45c50194353b5ac72b07827566a4573
+
 import {setAsyncRoutes} from "../router/async"
 Vue.use(Vuex);
 
@@ -43,10 +43,10 @@ export default new Vuex.Store({
     customer,
     order,
     storage,
-<<<<<<< HEAD
-    material
-=======
+
+    material,
+
     producePlan
->>>>>>> fb462506b45c50194353b5ac72b07827566a4573
+
   }
 });
