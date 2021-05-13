@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "produce_process")      //生产工序表
 public class ProduceProcess {
+    public static final String NO_START_WITH="PP";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -17,6 +18,7 @@ public class ProduceProcess {
     private BigDecimal cost;       // 工序费用，将来用于计算工序计件费用
     private String description;    // 描述备注
     private String createBy;       // 工序创建人
+    private String delegateFlag;   //是否委外表示 Y 是 N 否
 
     public Integer getId() {
         return id;
@@ -64,5 +66,13 @@ public class ProduceProcess {
 
     public void setCreateBy(String createBy) {
         this.createBy = createBy;
+    }
+
+    public String getDelegateFlag() {
+        return delegateFlag;
+    }
+
+    public void setDelegateFlag(String delegateFlag) {
+        this.delegateFlag = delegateFlag;
     }
 }

@@ -13,10 +13,14 @@ import java.util.Set;
  * Created by Messi on 2021/4/23
  */
 @Repository
-public interface IBomsRepository extends JpaRepository <Boms,Integer>{
-    @Query(value = "SELECT b.id, b.bomNo,b.PartNo,m.name,b.chPartNo,m.unit,b.chQty,b.manufacturer,m.specification FROM boms b RIGHT JOIN material m on b.chPartNo=m.partNo WHERE b.bomNo=?1 ORDER BY b.`index`",nativeQuery = true)
+public interface IBomsRepository extends JpaRepository<Boms, Integer> {
+    @Query(value = "SELECT b.id, b.bomNo,b.PartNo,m.name,b.chPartNo,m.unit,b.chQty,b.manufacturer,m.specification FROM boms b RIGHT JOIN material m on b.chPartNo=m.partNo WHERE b.bomNo=?1 ORDER BY b.`index`", nativeQuery = true)
     List<Object[]> findBomInfoByNo(String bomNo);
 
-    @Query(value = "SELECT b.id, b.bomNo,b.PartNo,m.name,b.chPartNo,m.unit,b.chQty,b.manufacturer,m.specification FROM boms b RIGHT JOIN material m on b.chPartNo=m.partNo WHERE b.bomNo in ?1 ORDER BY b.`index`",nativeQuery = true)
+    //暂时不在使用
+    @Query(value = "SELECT b.id, b.bomNo,b.PartNo,m.name,b.chPartNo,m.unit,b.chQty,b.manufacturer,m.specification FROM boms b RIGHT JOIN material m on b.chPartNo=m.partNo WHERE b.bomNo in ?1 ORDER BY b.`index`", nativeQuery = true)
     List<Object[]> findBomInfoByNos(Set<String> bomNos);
+
+    @Query(nativeQuery = true, value = "SELECT b.id, b.bomNo,pp.id as processId,b.processNo,pp.`name` as processName,b.PartNo,b.chPartNo,m.`name` as materialName,b.chQty as materialCount,m.specification, b.`index`,pp.delegateFlag FROM `boms` b RIGHT JOIN material m on b.chPartNo=m.partNo RIGHT JOIN  produce_process pp on b.processNo=pp.processNo WHERE b.bomNo in ?1 ORDER BY b.`index`;")
+    List<Object[]> findBomProcessInfoByNo(Set<String> bomNos);
 }

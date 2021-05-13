@@ -14,5 +14,6 @@ import java.util.List;
 @Repository
 public interface IProduceWorkStationRepository extends JpaRepository<ProduceWorkStation,Integer> {
     List<ProduceWorkStation> findByProduceLineId(Integer lineId);
+    List<ProduceWorkStation> findByProduceProcessId(Integer processId);
     void  deleteByProduceLineId(Integer id);
 }

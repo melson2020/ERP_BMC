@@ -15,8 +15,8 @@ public class ProduceWorkStation {
     private Integer id;
     private String indexNo;
     private String name;
-    private Integer techId;
-    private String techName;
+    private Integer produceProcessId;
+    private String produceProcessName;
     private String employeeGroupNo;
     private Integer produceLineId;
     private String produceLineName;
@@ -46,20 +46,20 @@ public class ProduceWorkStation {
         this.name = name;
     }
 
-    public Integer getTechId() {
-        return techId;
+    public Integer getProduceProcessId() {
+        return produceProcessId;
     }
 
-    public void setTechId(Integer techId) {
-        this.techId = techId;
+    public void setProduceProcessId(Integer produceProcessId) {
+        this.produceProcessId = produceProcessId;
     }
 
-    public String getTechName() {
-        return techName;
+    public String getProduceProcessName() {
+        return produceProcessName;
     }
 
-    public void setTechName(String techName) {
-        this.techName = techName;
+    public void setProduceProcessName(String produceProcessName) {
+        this.produceProcessName = produceProcessName;
     }
 
     public String getEmployeeGroupNo() {

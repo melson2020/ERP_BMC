@@ -18,17 +18,17 @@ public class ISysSequenceImpl implements ISysSequence {
 
 
     @Override
-    public String GenerateCode(String key) {
-        SysSequence sysSequence=sysSequenceDao.findByKey(key);
+    public String GenerateCode(String type) {
+        SysSequence sysSequence=sysSequenceDao.findByType(type);
         if(sysSequence==null){
             sysSequence=new SysSequence();
-            sysSequence.setKey(key);
+            sysSequence.setType(type);
             sysSequence.setValue(0);
             sysSequence.setValueLength(8);
-            sysSequence.setMaxValue(10*sysSequence.getValueLength());
         }
         Integer newValue=sysSequence.getValue()+1;
-        String code=key+String.format("%08d",newValue);
+        String code=type+String.format("%08d",newValue);
+        sysSequence.setValue(newValue);
         sysSequenceDao.save(sysSequence);
         return code;
     }

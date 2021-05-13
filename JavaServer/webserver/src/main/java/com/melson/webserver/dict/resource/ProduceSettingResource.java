@@ -4,8 +4,10 @@ import com.melson.base.BaseResource;
 import com.melson.base.Result;
 import com.melson.webserver.contract.resource.AbsContractResource;
 import com.melson.webserver.dict.entity.ProduceLine;
+import com.melson.webserver.dict.entity.ProduceProcess;
 import com.melson.webserver.dict.entity.ProduceTech;
 import com.melson.webserver.dict.service.IProduceLineService;
+import com.melson.webserver.dict.service.IProduceProcess;
 import com.melson.webserver.dict.service.IProduceTechService;
 import com.melson.webserver.dict.service.IProduceWorkStationService;
 import org.slf4j.Logger;
@@ -26,24 +28,25 @@ import java.util.List;
 public class ProduceSettingResource extends BaseResource {
     private static final Logger logger = LoggerFactory.getLogger(ProduceSettingResource.class);
     @Autowired
-    private IProduceTechService produceTechService;
-    @Autowired
     private IProduceLineService produceLineService;
     @Autowired
     private IProduceWorkStationService workStationService;
+    @Autowired
+    private IProduceProcess produceProcessService;
 
-    @PostMapping("/saveProduceTech")
-    public Result SaveProduceTech(@RequestBody ProduceTech tech) {
-        ProduceTech saved = produceTechService.SaveOne(tech);
+    @PostMapping("/saveProduceProcess")
+    public Result SaveProduceProcess(HttpServletRequest request,@RequestBody ProduceProcess produceProcess) {
+        String token = request.getHeader("token");
+        ProduceProcess saved = produceProcessService.SaveOne(produceProcess,token);
         if (saved == null) {
             return failure(-1, "保存失败");
         }
         return success(saved);
     }
 
-    @GetMapping("/produceTechList")
-    public Result ProduceTechList() {
-        List<ProduceTech> list = produceTechService.findAll();
+    @GetMapping("/produceProcessList")
+    public Result ProduceProcessList() {
+        List<ProduceProcess> list = produceProcessService.findAll();
         if (list != null) {
             return success(list);
         } else {
@@ -52,12 +55,12 @@ public class ProduceSettingResource extends BaseResource {
 
     }
 
-    @DeleteMapping("/deleteProduceTech")
-    public Result DeleteProduceTech(HttpServletRequest request, Integer id) {
+    @DeleteMapping("/deleteProduceProcess")
+    public Result DeleteProduceProcess(HttpServletRequest request, Integer id) {
         String token = request.getHeader("token");
         Integer userId = Integer.parseInt(token);
-        produceTechService.DeleteOne(id);
-        logger.info("用户[{}]删除工艺[{}]成功", userId, id);
+        produceProcessService.DeleteOne(id);
+        logger.info("用户[{}]删除工序[{}]成功", userId, id);
         return success(id);
     }
 

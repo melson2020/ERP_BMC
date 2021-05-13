@@ -96,14 +96,14 @@ export default {
     return service.post("/customerContact/delete",params)
   },
 
-  SaveProduceTechOne(param){
-    return service.post("/produceSetting/saveProduceTech",param)
+  SaveProduceProcessOne(param){
+    return service.post("/produceSetting/saveProduceProcess",param)
   },
-  FindAllProduceTechList(){
-    return service.get("/produceSetting/produceTechList")
+  FindAllProduceProcessList(){
+    return service.get("/produceSetting/produceProcessList")
   },
-  DeleteProduceTech(param){
-    return service.deleteOne('/produceSetting/deleteProduceTech',param)
+  DeleteProduceProcess(param){
+    return service.deleteOne('/produceSetting/deleteProduceProcess',param)
   },
   SaveProduceLine(param){
     return service.post("/produceSetting/saveProduceLine",param)
@@ -183,6 +183,21 @@ export default {
    */
   FindProducePlanList(param){
     return service.get('/produce/producePlanList',param)
+  },
+  FindProducePlanDetailList(param){
+    return service.get('/produce/planDetailList',param)
+  },
+  FindProducePlanDetaiProcessList(param){
+    return service.get('/produce/planDetailProcessList',param)
+  },
+  FindWorkStationListByProcessId(param){
+    return service.get('/produce/workStationList',param)
+  },
+  SaveProducePlanInfo(param){
+    return service.post('/produce/saveProducePlanInfo',param)
+  },
+  DeletePlanWorkStation(param){
+    return service.deleteOne('/produce/deletePlanWorkStation',param)
   }
 
 };

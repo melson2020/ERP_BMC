@@ -6,12 +6,14 @@ import com.melson.webserver.dict.dao.IBomsRepository;
 import com.melson.webserver.dict.dao.IProductBomRepository;
 import com.melson.webserver.dict.entity.Boms;
 import com.melson.webserver.dict.service.IBoms;
+import com.melson.webserver.dict.vo.BomProcessVo;
 import com.melson.webserver.dict.vo.BomVo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Messi on 2021/4/26
@@ -35,6 +37,13 @@ public class IBomsImpl extends AbstractService<Boms> implements IBoms {
        List<BomVo> voList= EntityUtils.castEntity(objects,BomVo.class,new BomVo());
        List<BomVo> treeList=GenerateBomTree(voList);
        return  treeList;
+    }
+
+    @Override
+    public List<BomProcessVo> findBomProcessVoByNo(Set<String> bomNos) {
+        List<Object[]> list=bomsRepository.findBomProcessInfoByNo(bomNos);
+        List<BomProcessVo> voList= EntityUtils.castEntity(list,BomProcessVo.class,new BomProcessVo());
+        return voList;
     }
 
     private List<BomVo> GenerateBomTree(List<BomVo> bomVos){
