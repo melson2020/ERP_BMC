@@ -4,9 +4,10 @@ import com.melson.base.AbstractService;
 import com.melson.base.Result;
 import com.melson.base.utils.EntityManagerUtil;
 import com.melson.webserver.dict.dao.IMaterialRepository;
+import com.melson.webserver.dict.dao.IStorageAreaLocationRepository;
 import com.melson.webserver.dict.dao.IStorageDetailRepository;
 import com.melson.webserver.dict.entity.Material;
-import com.melson.webserver.dict.entity.Product;
+import com.melson.webserver.dict.entity.StorageAreaLocation;
 import com.melson.webserver.dict.entity.StorageDetail;
 import com.melson.webserver.dict.service.IMaterial;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -27,11 +27,13 @@ public class IMaterialImpl extends AbstractService<Material> implements IMateria
     private final IMaterialRepository materialRepository;
     private final IStorageDetailRepository storageDetailRepository;
     private final EntityManagerUtil entityManagerUtil;
+    private final IStorageAreaLocationRepository storageAreaLocationRepository;
 
-    public IMaterialImpl(IMaterialRepository materialRepository, IStorageDetailRepository storageDetailRepository, EntityManagerUtil entityManagerUtil) {
+    public IMaterialImpl(IMaterialRepository materialRepository, IStorageDetailRepository storageDetailRepository, EntityManagerUtil entityManagerUtil, IStorageAreaLocationRepository storageAreaLocationRepository) {
         this.materialRepository = materialRepository;
         this.storageDetailRepository = storageDetailRepository;
         this.entityManagerUtil = entityManagerUtil;
+        this.storageAreaLocationRepository = storageAreaLocationRepository;
     }
 
     @Override
@@ -57,6 +59,8 @@ public class IMaterialImpl extends AbstractService<Material> implements IMateria
                 }else {
                     StorageDetail checkStorageDetail=storageDetailRepository.findByMaterialNo(saved.getPartNo());
                     UpdateStorageTable(checkStorageDetail,saved);
+                    StorageAreaLocation storage=storageAreaLocationRepository.findByStorageCode(saved.getStorageCode());
+                    saved.setStorageName(storage.getName());
                     result.setData(saved);
                 }
             }
@@ -75,6 +79,8 @@ public class IMaterialImpl extends AbstractService<Material> implements IMateria
             }else {
                 StorageDetail checkStorageDetail=storageDetailRepository.findByMaterialNo(saved.getPartNo());
                 UpdateStorageTable(checkStorageDetail,saved);
+                StorageAreaLocation storage=storageAreaLocationRepository.findByStorageCode(saved.getStorageCode());
+                saved.setStorageName(storage.getName());
                 result.setData(saved);
             }
         }

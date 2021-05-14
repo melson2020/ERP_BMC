@@ -5,7 +5,8 @@ import { Message } from "element-ui";
 
 const state = {
     productList:[],
-    categoryList:[]
+    categoryList:[],
+
 };
 
 const actions = {
@@ -46,6 +47,12 @@ const actions = {
     QueryProductObj({},product){
         return request.ReqQueryProductObj(product);
     },
+    QueryProductAndBomObj({},product){
+        return request.ReqQueryProductAndBomObj(product);
+    },
+
+
+    
     GetCategoryList({ commit }) {
         request.ReqCategoryList().then(res => {
             if (res.resultStatus == 1) {

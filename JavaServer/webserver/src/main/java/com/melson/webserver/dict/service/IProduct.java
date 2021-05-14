@@ -3,6 +3,7 @@ package com.melson.webserver.dict.service;
 import com.melson.base.IService;
 import com.melson.base.Result;
 import com.melson.webserver.dict.entity.Product;
+import com.melson.webserver.dict.entity.ProductBom;
 import com.melson.webserver.dict.vo.ContractProductVo;
 import org.springframework.stereotype.Service;
 
@@ -22,4 +23,7 @@ public interface IProduct extends IService<Product> {
 
 
     Product Query(String productNo);
+
+    Product QueryProductAndBomList(String productNo);
+
 }

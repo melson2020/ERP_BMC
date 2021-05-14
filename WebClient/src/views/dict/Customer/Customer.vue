@@ -16,7 +16,7 @@
           :header-row-style="{height:'40px' ,'align':'center'}"
           :row-style="{height:'40px'}"
           style="width: 100%">
-        <el-table-column prop="customerNo" label="客户代码" width="150px"></el-table-column>
+        <el-table-column prop="customerNo" label="客户代码" width="140px"></el-table-column>
         <el-table-column prop="name" label="客户名称"> </el-table-column>
                 <el-table-column prop="address" label="地址"> </el-table-column>
         <!-- <el-table-column prop="contactName" label="联系人" width="100px"> </el-table-column> -->
@@ -366,6 +366,7 @@ export default {
       customerAddDialog: false,
       searchContent: "",
       loading: false,
+      editIndex:'',
       // contactList: [{ id: "1", customerNo:"C10001", contactName: "何永", phone: "18013579965", deliverAddress:"苏州工业园区展业大厦",tags:"",description:"",createBy:"",createDate:"",seen: false}],
       contactList: [],
       // newContact:{
@@ -613,6 +614,7 @@ export default {
         .catch(e=>e);
     },
     handleEdit(index,row){
+      this.editIndex=index;
       let cus={id:row.id,customerNo:row.customerNo,index:index}
       this.QueryCustomerObj(cus)
         .then(res=>{
@@ -665,7 +667,9 @@ export default {
                 this.SaveCustomer(this.editCustomer)
                 .then(res=>{
                   if(res.resultStatus==1){
-                    this.GetCustomerList();
+                    this.customerList.splice(this.editIndex,1,res.data);
+                  this.editIndex="";
+                    // this.GetCustomerList();
                     this.customerEditDialog=false;
                     this.editCustomer.contactList=[];
                     this.$message({

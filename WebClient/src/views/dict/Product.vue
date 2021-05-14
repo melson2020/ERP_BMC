@@ -3,7 +3,7 @@
     <el-tab-pane label="产品列表" class="customer-tab-pane"
       ><product-product></product-product
     ></el-tab-pane>
-    <el-tab-pane label="产品BOM表" class="customer-tab-pane"
+    <el-tab-pane label="产品Bom表" class="customer-tab-pane"
       ><product-productBom></product-productBom
     ></el-tab-pane>
     <!-- <el-tab-pane label="送货地址" class="customer-tab-pane"

@@ -17,7 +17,7 @@
           :header-row-style="{height:'40px' ,'align':'center'}"
           :row-style="{height:'40px'}"
           style="width: 100%">
-        <el-table-column prop="categoryId" label="类别代码" width="180px"></el-table-column>
+        <el-table-column prop="categoryId" label="类别代码" width="140px"></el-table-column>
         <el-table-column prop="name" label="类别名称" width="220px"> </el-table-column>
         <el-table-column prop="description" label="备注信息"> </el-table-column>
         <el-table-column prop="" label="操作" width="100px">
@@ -108,6 +108,7 @@ export default {
         categoryAddDialog: false,
         searchContent: "",
         loading: false,
+        editIndex:'',
         newcategory:{
           id:'',
           categoryId:'',
@@ -198,6 +199,7 @@ export default {
       },
 
     handleEdit(index,row){
+      this.editIndex=index;
       let cat={categoryId:row.categoryId,index:index}
       this.QueryCategoryObj(cat)
         .then(res=>{
@@ -233,7 +235,9 @@ export default {
             this.SaveCategory(this.editcategory)
             .then(res=>{
               if(res.resultStatus==1){
-                this.GetCategoryList();
+                this.categoryList.splice(this.editIndex,1,res.data);
+                  this.editIndex="";
+                // this.GetCategoryList();
                 this.categoryEditDialog=false;
                 this.$message({
                   showClose:true,
