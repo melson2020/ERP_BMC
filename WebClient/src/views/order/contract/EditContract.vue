@@ -8,7 +8,7 @@
         <div class="constract-buyer-info-div-left">
           <div class="constract-buyer-info-div-left-firstfloor">
             <div class="title-div-gray flex justify-content">
-              <span>买方({{ vendeeInfo.customerNo }})</span>
+              <span>买方</span>
               <el-select
                 filterable
                 v-model="vendeeInfo.customerNo"
@@ -75,7 +75,7 @@
           </div>
           <div class="constract-buyer-info-div-left-secfloor">
             <div class="title-div-gray flex justify-content">
-              <span>收货单位(0000001)</span>
+              <span>收货单位</span>
               <el-select
                 v-model="selectedAddress"
                 @change="diliveryAdrressChanged"
@@ -225,13 +225,15 @@
           </el-table-column>
           <el-table-column prop="count" label="数量" width="130px">
             <template slot-scope="scope">
-              <el-input
-                v-if="scope.row.seen"
-                size="mini"
-                v-model="scope.row.count"
-                @blur="loseFcous(scope.$index, scope.row)"
-              ></el-input>
-              <span v-else>{{ scope.row.count }}</span>
+              <div class="contract-product-seen-div" v-if="scope.row.seen">
+                <el-input
+                  size="mini"
+                  v-model="scope.row.count"
+                  @blur="loseFcous(scope.$index, scope.row)"
+                ></el-input>
+                {{ scope.row.countUnit }}
+              </div>
+              <span v-else>{{ scope.row.count }}{{ scope.row.countUnit }}</span>
             </template>
           </el-table-column>
           <el-table-column prop="taxPrice" label="含税单价" width="130px">
@@ -331,7 +333,7 @@
     <div class="edit-contract-button-div">
       <el-button @click="saveContract" type="primary">保存合同</el-button>
       <el-button @click="printPdf" type="primary">打印合同</el-button>
-      <el-button  type="warning">清空内容</el-button>
+      <el-button type="warning">清空内容</el-button>
     </div>
   </div>
 </template>
@@ -418,8 +420,8 @@ export default {
       SearchContractIntentionProductList: "SearchContractIntentionProductList",
       GetContractOne: "GetContractOne",
     }),
-    loadContract(contractId){
-         const loading = this.$loading({
+    loadContract(contractId) {
+      const loading = this.$loading({
         lock: true,
         text: "Loading",
         spinner: "el-icon-loading",
@@ -428,12 +430,12 @@ export default {
       this.GetContractOne({ id: contractId })
         .then((res) => {
           if (res.resultStatus == 1) {
-             let existContract=res.data
-             this.vendeeInfo=existContract.purchaser;
-             this.goodReceveInfo=existContract.goodReceiveInfo;
-             this.contractProductList=existContract.productList;
-             this.contractInfo=existContract.contract;
-             this.companyInfo==existContract.vendorConfirm;
+            let existContract = res.data;
+            this.vendeeInfo = existContract.purchaser;
+            this.goodReceveInfo = existContract.goodReceiveInfo;
+            this.contractProductList = existContract.productList;
+            this.contractInfo = existContract.contract;
+            this.companyInfo == existContract.vendorConfirm;
             loading.close();
           } else {
             loading.close();
@@ -454,7 +456,7 @@ export default {
       }
       this.contractProductList.push({
         id: -1,
-        productId:-1,
+        productId: -1,
         productName: "",
         specification: "",
         remark: "",
@@ -502,13 +504,14 @@ export default {
     },
     onSelect(item, row) {
       row.id = item.id;
-      row.productId=item.id;
+      row.productId = item.id;
       row.productName = item.productName;
-      row.productNo=item.productNo;
+      row.productNo = item.productNo;
       row.specification = item.specification;
+      row.countUnit = item.unit;
       row.seen = false;
       row.remark = item.remark;
-      row.taxPrice = item.salesPrice==null?"":item.salesPrice;
+      row.taxPrice = item.salesPrice == null ? "" : item.salesPrice;
     },
     cellClick(row) {
       row.seen = true;
@@ -557,11 +560,11 @@ export default {
         .catch((err) => {
           this.$message.error(err.message);
         });
-        if(this.contractInfo.contractNo==""){
-          var timeSpan=this.$my.ID2();
-          this.contractInfo.contractNo='C'+timeSpan
-          this.contractInfo.orderTicketNo='R'+timeSpan
-        }
+      if (this.contractInfo.contractNo == "") {
+        var timeSpan = this.$my.ID2();
+        this.contractInfo.contractNo = "C" + timeSpan;
+        this.contractInfo.orderTicketNo = "R" + timeSpan;
+      }
     },
     diliveryAdrressChanged(addressId) {
       var address = this.diliveryAddressList.find((item) => {
@@ -733,5 +736,9 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+.contract-product-seen-div{
+  display: flex;
+  align-items: center;
 }
 </style>

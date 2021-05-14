@@ -7,7 +7,7 @@ import { Message } from "element-ui";
 const state = {
     orderReadyToReleaseList: [],
     orderFormDetaiList: [],
-    closeDrawer:false
+    closeDrawer: false
 };
 
 const actions = {
@@ -34,8 +34,8 @@ const actions = {
         })
     },
     //获取产品bom 列表
-    GetProductBomList({ }, param) {
-        return request.GetProductBomList(param);
+    GetProductBomListByBomNo({ }, param) {
+      return   request.GetProductBomListByBomNo(param);
     },
     //获取产品bom 详细信息
     GetProductBomInfo({ }, param) {
@@ -45,7 +45,7 @@ const actions = {
         request.OrderFormConfirm(param).then(res => {
             if (res.resultStatus == 1) {
                 commit("RemoveOrderFormReadyRleaseList", res.data)
-                commit("TriggerDrawer",true)
+                commit("TriggerDrawer", true)
                 Message.success('订单成功下达')
             } else {
                 Message.warning(res.message)
@@ -54,8 +54,8 @@ const actions = {
             Message.error(err.message)
         })
     },
-    TriggerDrawer({commit},data){
-        commit("TriggerDrawer",data)
+    TriggerDrawer({ commit }, data) {
+        commit("TriggerDrawer", data)
     }
 
 };
@@ -63,7 +63,7 @@ const actions = {
 const getters = {
     orderReadyToReleaseList: state => state.orderReadyToReleaseList,
     orderFormDetaiList: state => state.orderFormDetaiList,
-    closeDrawer:state=>state.closeDrawer
+    closeDrawer: state => state.closeDrawer
 };
 
 const mutations = {
@@ -82,8 +82,8 @@ const mutations = {
             return item.id = data.id
         }))
     },
-    TriggerDrawer(state,data){
-        state.closeDrawer=data; 
+    TriggerDrawer(state, data) {
+        state.closeDrawer = data;
     }
 };
 

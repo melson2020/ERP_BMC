@@ -1,5 +1,8 @@
 <template>
   <div class="order-release-main-container">
+    <div class="order-release-header">
+      <span class="colorblue fzb">订单下达</span>
+    </div>
     <div class="order-release-table-div">
       <el-table
         :data="orderReadyToReleaseList"
@@ -9,9 +12,14 @@
         style="width: 100%"
       >
         <el-table-column prop="formNo" label="订单号"> </el-table-column>
+        <el-table-column prop="contractNo" label="合同号"> </el-table-column>
         <el-table-column prop="customerName" label="客户名称">
         </el-table-column>
-        <el-table-column prop="createDate" label="日期"> </el-table-column>
+        <el-table-column prop="createDate" label="创建日期">
+          <template slot-scope="scope">
+            <span>{{ getFullTime(scope.row.createDate) }}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button
@@ -85,11 +93,6 @@
                   :value="pbom.bomNo"
                 ></el-option>
               </el-select>
-              <!-- <el-radio-group v-model="product.bomChoice">
-                <el-radio :label="1">优先半成品</el-radio>
-                <el-radio :label="2">使用底层物料</el-radio>
-              </el-radio-group> -->
-              <!-- <el-checkbox>自动生成采购单</el-checkbox> -->
             </div>
             <el-tree
               class="product-bom-tree"
@@ -151,9 +154,9 @@ export default {
   },
   watch: {
     closeDrawer() {
-      if(this.closeDrawer){
-        this.tableShow=false;
-        this.TriggerDrawer(false)
+      if (this.closeDrawer) {
+        this.tableShow = false;
+        this.TriggerDrawer(false);
       }
     },
   },
@@ -168,10 +171,10 @@ export default {
     ...mapActions({
       GetCreatedOrderList: "GetCreatedOrderList",
       GetOrderFormDetailList: "GetOrderFormDetailList",
-      GetProductBomList: "GetProductBomList",
+      GetProductBomListByBomNo: "GetProductBomListByBomNo",
       GetProductBomInfo: "GetProductBomInfo",
       OrderFormConfirm: "OrderFormConfirm",
-      TriggerDrawer:'TriggerDrawer'
+      TriggerDrawer: "TriggerDrawer",
     }),
     orderDecideOnclick(form) {
       this.GetOrderFormDetailList({ orderFormId: form.id });
@@ -184,22 +187,37 @@ export default {
         orderFormDetails: this.orderFormDetaiList,
       });
     },
+    getFullTime(time) {
+      return new Date(time).format("yyyy-MM-dd hh:mm:ss");
+    },
     choicePOnclick(product) {
-      this.GetProductBomList({ productNo: product.productNo }).then((res) => {
-        if (res.resultStatus == 1) {
-          product.pboms = res.data;
-        }
-      });
+      this.GetProductBomListByBomNo({ productNo: product.productNo })
+        .then((res) => {
+          if (res.resultStatus == 1) {
+            product.pboms = res.data;
+          } else {
+            this.$message.warning(res.message);
+          }
+        })
+        .catch((err) => {
+          this.$message.error(err.message);
+        });
     },
     productBomChanged(p) {
-      this.GetProductBomInfo({ bomNo: p.bomNo }).then((res) => {
-        if (res.resultStatus == 1) {
-          res.data.map((item) => {
-            item.seen = true;
-          });
-          p.boms = res.data;
-        }
-      });
+      this.GetProductBomInfo({ bomNo: p.bomNo })
+        .then((res) => {
+          if (res.resultStatus == 1) {
+            res.data.map((item) => {
+              item.seen = true;
+            });
+            p.boms = res.data;
+          } else {
+            this.$message.warning(res.message);
+          }
+        })
+        .catch((err) => {
+          this.$message.error(err.message);
+        });
     },
     nodeExpand(item) {
       item.seen = false;
@@ -224,10 +242,15 @@ export default {
 }
 .order-release-main-container {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+}
+.order-release-header {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  padding: 0px 10px;
 }
 .order-release-table-div {
-  width: 100%;
   padding: 5px;
 }
 .order-decide-detail-div {
@@ -235,10 +258,6 @@ export default {
   flex-direction: column;
   width: 100%;
   font-size: 0.9rem;
-  /* border: 1px solid lightgray;
-  border-radius: 5px;
-  margin: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04); */
 }
 .order-product-info-bar {
   display: flex;
@@ -296,5 +315,8 @@ export default {
 .order-confirm-button {
   height: 40px;
   margin: 10px;
+}
+.fzb {
+  font-weight: bold;
 }
 </style>

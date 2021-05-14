@@ -1,6 +1,7 @@
 package com.melson.webserver.order.entity;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * @Author Nelson
@@ -23,6 +24,7 @@ public class DelegateTicket {
     private String customerName;
     private String contractNo;
     private String ticketNo;
+    private Date createDate;
     /**
      * 委外单类型 ORDER 订单委外 PLAN 生产计划工序委外
      */
@@ -90,5 +92,13 @@ public class DelegateTicket {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
     }
 }

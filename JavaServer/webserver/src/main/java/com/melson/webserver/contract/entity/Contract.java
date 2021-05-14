@@ -96,6 +96,11 @@ public class Contract {
     private Date formalDate;
     private String taxRate;
 
+    /**
+     * 送货路线
+     */
+    private String diliveryWay;
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -235,4 +240,12 @@ public class Contract {
         this.taxRate = taxRate;
     }
 
+
+    public String getDiliveryWay() {
+        return diliveryWay;
+    }
+
+    public void setDiliveryWay(String diliveryWay) {
+        this.diliveryWay = diliveryWay;
+    }
 }

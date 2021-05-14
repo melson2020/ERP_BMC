@@ -12,10 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @Author Nelson
@@ -46,6 +43,7 @@ public class DelegateTicketServiceImpl implements IDelegateTicketService {
         ticket.setContractNo(form.getContractNo());
         ticket.setType(DelegateTicket.TYPE_ORDER);
         ticket.setTicketNo("W" + System.currentTimeMillis());
+        ticket.setCreateDate(new Date());
         delegateTicketRepository.saveAndFlush(ticket);
         List<DelegateDetail> delegateDetails = new ArrayList<>();
         for (OrderFormDetail detail : detailList) {
@@ -71,6 +69,7 @@ public class DelegateTicketServiceImpl implements IDelegateTicketService {
         ticket.setCustomerName(plan.getCustomerName());
         ticket.setContractNo(plan.getContractNo());
         ticket.setTicketNo("W" + System.currentTimeMillis());
+        ticket.setCreateDate(new Date());
         ticket.setType(DelegateTicket.TYPE_PLAN);
         delegateTicketRepository.saveAndFlush(ticket);
         List<DelegateDetail> delegateDetails = new ArrayList<>();

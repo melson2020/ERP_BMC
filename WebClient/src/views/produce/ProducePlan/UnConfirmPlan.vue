@@ -60,7 +60,7 @@ export default {
       return new Date(time).format("yyyy-MM-dd hh:mm:ss");
     },
     convertPlanType(type) {
-      return type.replace("P", "生产").replace("D", "打工");
+      return type.replace("P", "生产").replace("D", "代工");
     },
     converPlanState(state) {
       switch (state) {

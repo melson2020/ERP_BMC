@@ -12,19 +12,21 @@ public class ProductVo {
     private String specification;
     private String value;
     private String remark;
+    private String unit;
     private BigDecimal salesPrice;
 
 
     public ProductVo() {
     }
 
-    public ProductVo(Integer id, String productNo, String productName, String specification, String value, String remark, BigDecimal salesPrice) {
+    public ProductVo(Integer id, String productNo, String productName, String specification, String value, String remark, String unit, BigDecimal salesPrice) {
         this.id = id;
         this.productNo = productNo;
         this.productName = productName;
         this.specification = specification;
         this.value = value;
         this.remark = remark;
+        this.unit = unit;
         this.salesPrice = salesPrice;
     }
 
@@ -82,5 +84,13 @@ public class ProductVo {
 
     public void setSalesPrice(BigDecimal salesPrice) {
         this.salesPrice = salesPrice;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
     }
 }

@@ -2,6 +2,7 @@ package com.melson.webserver.dict.service.impl;
 
 import com.melson.base.AbstractService;
 import com.melson.base.Result;
+import com.melson.base.service.ISysSequence;
 import com.melson.base.utils.EntityManagerUtil;
 import com.melson.webserver.dict.dao.IMaterialRepository;
 import com.melson.webserver.dict.dao.IStorageAreaLocationRepository;
@@ -28,12 +29,14 @@ public class IMaterialImpl extends AbstractService<Material> implements IMateria
     private final IStorageDetailRepository storageDetailRepository;
     private final EntityManagerUtil entityManagerUtil;
     private final IStorageAreaLocationRepository storageAreaLocationRepository;
+    private final ISysSequence sysSequenceService;
 
-    public IMaterialImpl(IMaterialRepository materialRepository, IStorageDetailRepository storageDetailRepository, EntityManagerUtil entityManagerUtil, IStorageAreaLocationRepository storageAreaLocationRepository) {
+    public IMaterialImpl(IMaterialRepository materialRepository, IStorageDetailRepository storageDetailRepository, EntityManagerUtil entityManagerUtil, IStorageAreaLocationRepository storageAreaLocationRepository, ISysSequence sysSequenceService) {
         this.materialRepository = materialRepository;
         this.storageDetailRepository = storageDetailRepository;
         this.entityManagerUtil = entityManagerUtil;
         this.storageAreaLocationRepository = storageAreaLocationRepository;
+        this.sysSequenceService = sysSequenceService;
     }
 
     @Override
@@ -72,6 +75,7 @@ public class IMaterialImpl extends AbstractService<Material> implements IMateria
         }
         else
         {
+            material.setPartNo(sysSequenceService.GenerateCode(Material.MATERIAL_NO_CHAR));
             Material saved=materialRepository.save(material);
             if(saved==null){
                 result.setResultStatus(-1);

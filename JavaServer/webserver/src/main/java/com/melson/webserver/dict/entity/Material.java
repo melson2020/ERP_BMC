@@ -10,6 +10,7 @@ import java.util.Date;
 @Entity
 @Table(name = "material")      //基础物料表
 public class Material {
+    public static  final String MATERIAL_NO_CHAR="M";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

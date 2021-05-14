@@ -209,7 +209,7 @@ export default {
   GetOrderFormDetailListById(param){
     return service.get('/orderForm/manage/orderDetailList',param)
   },
-  GetProductBomList(param){
+  GetProductBomListByBomNo(param){
     return service.get('/productBom/pBomList',param)
   },
   GetProductBomInfo(param){
