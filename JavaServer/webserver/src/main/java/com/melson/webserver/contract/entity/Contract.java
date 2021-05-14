@@ -65,7 +65,7 @@ public class Contract {
     /**
      * 付款时间
      */
-    private Date payDate;
+    private String payDate;
     /**
      * 付款方式,关联字典表
      */
@@ -163,11 +163,11 @@ public class Contract {
         this.deliverType = deliverType;
     }
 
-    public Date getPayDate() {
+    public String getPayDate() {
         return payDate;
     }
 
-    public void setPayDate(Date payDate) {
+    public void setPayDate(String payDate) {
         this.payDate = payDate;
     }
 

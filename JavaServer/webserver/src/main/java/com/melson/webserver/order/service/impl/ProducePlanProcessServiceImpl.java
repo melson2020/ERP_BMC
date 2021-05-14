@@ -2,7 +2,6 @@ package com.melson.webserver.order.service.impl;
 
 import com.melson.webserver.dict.service.IBoms;
 import com.melson.webserver.dict.vo.BomProcessVo;
-import com.melson.webserver.dict.vo.BomVo;
 import com.melson.webserver.order.dao.IProducePlanProcessRepository;
 import com.melson.webserver.order.entity.ProducePlan;
 import com.melson.webserver.order.entity.ProducePlanDetail;
@@ -52,6 +51,11 @@ public class ProducePlanProcessServiceImpl implements IProducePlanProcessService
             planProcessList.add(p);
         }
         return producePlanProcessRepository.saveAll(planProcessList);
+    }
+
+    @Override
+    public List<ProducePlanProcess> FindByPlanId(Integer planId) {
+        return producePlanProcessRepository.findByPlanId(planId);
     }
 
     @Override

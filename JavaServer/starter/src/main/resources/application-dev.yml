@@ -8,6 +8,7 @@ spring:
       filter: stat,wall
       #mysql驱动
       driver-class-name: com.mysql.jdbc.Driver
+      #基本属性
       url: jdbc:mysql://121.4.112.204:3306/bmc_erp?Unicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
       username: root
       password: 123!@#jklJKL

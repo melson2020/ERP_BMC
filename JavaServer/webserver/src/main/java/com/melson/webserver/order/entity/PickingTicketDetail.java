@@ -12,13 +12,16 @@ import java.util.Date;
 @Entity
 @Table(name = "picking_ticket_detail")
 public class PickingTicketDetail {
+    public static final String STATE_CREATE="CREATE";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     /**
-     * 类型 标明 生产源头 如:订单生成,生产生成等
+     * 类型 标明领料类型 P 生产 D 代工 W委外
      */
     private String type;
+
+    private Integer ticketId;
 
     private String materialNo;
 
@@ -40,6 +43,10 @@ public class PickingTicketDetail {
 
     //状态值  如;创建， 已下单，采购中，已入库，完成
     private String state;
+    /**
+     * 是否委外取料 Y/N
+     */
+    private String delegateFlag;
 
     public Integer getId() {
         return id;
@@ -135,5 +142,21 @@ public class PickingTicketDetail {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public String getDelegateFlag() {
+        return delegateFlag;
+    }
+
+    public void setDelegateFlag(String delegateFlag) {
+        this.delegateFlag = delegateFlag;
+    }
+
+    public Integer getTicketId() {
+        return ticketId;
+    }
+
+    public void setTicketId(Integer ticketId) {
+        this.ticketId = ticketId;
     }
 }

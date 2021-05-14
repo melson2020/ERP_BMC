@@ -15,4 +15,5 @@ import java.util.List;
 @Repository
 public interface IProducePlanProcessRepository extends JpaRepository<ProducePlanProcess,Integer> {
     List<ProducePlanProcess> findByPlanIdAndProductIdOrderByProcessIndex(Integer planId,Integer productId);
+    List<ProducePlanProcess> findByPlanId(Integer planId);
 }

@@ -11,13 +11,19 @@ import java.util.Date;
 @Entity
 @Table(name = "picking_ticket")
 public class PickingTicket {
+    public static final String TICKET_NO_CHAR="L";
+    public static final String TYPE_ORDER="ORDER";
+    public static final String TYPE_PLAN="PLAN";
+
+    public static final String STATE_CREATE="CREATE";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String ticketNo;
     //源头ID 如 生产计划 则为生产计划ID
     private Integer sourceId;
-    //类型 如：代工需要委托方供料 P 为自己生产 D 为代工 W 委外
+    private String sourceNo;
+    //类型 如 订单生成则为 ORDER 生产计划生成 则为PLAN
     private String type;
     private Date createDate;
     private String state;
@@ -68,5 +74,13 @@ public class PickingTicket {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getSourceNo() {
+        return sourceNo;
+    }
+
+    public void setSourceNo(String sourceNo) {
+        this.sourceNo = sourceNo;
     }
 }

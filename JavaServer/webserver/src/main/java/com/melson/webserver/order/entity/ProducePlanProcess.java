@@ -11,6 +11,8 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "produce_plan_process")
 public class ProducePlanProcess {
+    public static  final  String DELEGATE_Y="Y";
+    public static  final  String DELEGATE_N="N";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

@@ -10,15 +10,23 @@ import javax.persistence.*;
 @Entity
 @Table(name = "delegate_ticket")
 public class DelegateTicket {
+    public static  final  String TYPE_ORDER="ORDER";
+    public static  final String TYPE_PLAN="PLAN";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private Integer orderFormId;
-    private String orderFormNo;
+    //生成 委外的 id 如 订单则为 orderFormId
+    private Integer sourceId;
+    //生成 委外的 no 如 订单则为 orderFormNo
+    private String sourceNo;
     private String customerNo;
     private String customerName;
     private String contractNo;
     private String ticketNo;
+    /**
+     * 委外单类型 ORDER 订单委外 PLAN 生产计划工序委外
+     */
+    private String type;
 
     public Integer getId() {
         return id;
@@ -28,20 +36,20 @@ public class DelegateTicket {
         this.id = id;
     }
 
-    public Integer getOrderFormId() {
-        return orderFormId;
+    public Integer getSourceId() {
+        return sourceId;
     }
 
-    public void setOrderFormId(Integer orderFormId) {
-        this.orderFormId = orderFormId;
+    public void setSourceId(Integer sourceId) {
+        this.sourceId = sourceId;
     }
 
-    public String getOrderFormNo() {
-        return orderFormNo;
+    public String getSourceNo() {
+        return sourceNo;
     }
 
-    public void setOrderFormNo(String orderFormNo) {
-        this.orderFormNo = orderFormNo;
+    public void setSourceNo(String sourceNo) {
+        this.sourceNo = sourceNo;
     }
 
     public String getCustomerNo() {
@@ -74,5 +82,13 @@ public class DelegateTicket {
 
     public void setTicketNo(String ticketNo) {
         this.ticketNo = ticketNo;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

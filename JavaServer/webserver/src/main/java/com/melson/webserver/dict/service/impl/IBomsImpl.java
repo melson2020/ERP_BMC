@@ -40,6 +40,13 @@ public class IBomsImpl extends AbstractService<Boms> implements IBoms {
     }
 
     @Override
+    public List<BomVo> findBomVoInBomNos(Set<String> bomNos) {
+        List<Object[]> objects=bomsRepository.findBomInfoByNos(bomNos);
+        List<BomVo> voList= EntityUtils.castEntity(objects,BomVo.class,new BomVo());
+        return voList;
+    }
+
+    @Override
     public List<BomProcessVo> findBomProcessVoByNo(Set<String> bomNos) {
         List<Object[]> list=bomsRepository.findBomProcessInfoByNo(bomNos);
         List<BomProcessVo> voList= EntityUtils.castEntity(list,BomProcessVo.class,new BomProcessVo());

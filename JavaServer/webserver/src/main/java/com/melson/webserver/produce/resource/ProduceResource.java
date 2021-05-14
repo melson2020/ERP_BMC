@@ -82,7 +82,7 @@ public class ProduceResource extends BaseResource {
         List<ProducePlanWorkStation> workStationList=vo.getWorkStationList();
         if(plan==null)return this.GenerateResult(ResultType.ParameterNeeded);
         planWorkStationService.SaveList(workStationList);
-        ProducePlan savePlan=producePlanService.UpdatePlan(plan);
+        ProducePlan savePlan=producePlanService.UpdatePlan(plan,vo.getConfirm());
         return success(savePlan);
     }
 

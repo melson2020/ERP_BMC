@@ -21,6 +21,14 @@ public class DelegateDetail {
     private BigDecimal count;
     private String countUnit;
     private String objectNo;
+    /**
+     * 订单委外时 需要生成取料单 故需要选择BOM 指定物料
+     */
+    private String bomNo;
+    /**
+     * 委外工序物料信息
+     */
+    private String materialInfo;
 
     public Integer getId() {
         return id;
@@ -84,5 +92,21 @@ public class DelegateDetail {
 
     public void setObjectNo(String objectNo) {
         this.objectNo = objectNo;
+    }
+
+    public String getBomNo() {
+        return bomNo;
+    }
+
+    public void setBomNo(String bomNo) {
+        this.bomNo = bomNo;
+    }
+
+    public String getMaterialInfo() {
+        return materialInfo;
+    }
+
+    public void setMaterialInfo(String materialInfo) {
+        this.materialInfo = materialInfo;
     }
 }

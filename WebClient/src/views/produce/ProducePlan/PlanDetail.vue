@@ -56,6 +56,10 @@
               <el-table-column label="序号" prop="index" width="50px">
               </el-table-column>
               <el-table-column label="名称" prop="processName" width="200px">
+                <template slot-scope="scope">
+                  <span>{{scope.row.processName}}</span>
+                  <el-tag  v-if="scope.row.delegateFlag=='Y'" type="danger" size="mini" class="ml10">委外</el-tag>
+                </template>
               </el-table-column>
               <el-table-column label="料号">
                 <template slot-scope="scope">
@@ -143,7 +147,7 @@
         @click="SavePlanWorkStations(false)"
         >保存</el-button
       >
-      <el-button type="primary">保存并下达</el-button>
+      <el-button type="primary"  @click="SavePlanWorkStations(true)">保存并下达</el-button>
     </div>
   </div>
 </template>
@@ -263,7 +267,7 @@ export default {
           });
         });
       });
-      var obj = { plan: this.producePlan, workStationList: wsList };
+      var obj = { plan: this.producePlan, workStationList: wsList,confirm:confirm };
       this.SaveProducePlanWorkStation(obj);
     },
 
