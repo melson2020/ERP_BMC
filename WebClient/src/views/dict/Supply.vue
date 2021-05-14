@@ -18,16 +18,16 @@
           :row-style="{height:'40px'}"
           style="width: 100%">
         <el-table-column prop="name" label="供应商"></el-table-column>
-        <el-table-column prop="contact" label="联系人" width="220px"> </el-table-column>
-                <el-table-column prop="phone" label="电话" width="220px"> </el-table-column>
+        <el-table-column prop="contact" label="联系人" width="120px"> </el-table-column>
+                <el-table-column prop="phone" label="电话" width="160px"> </el-table-column>
         <el-table-column prop="address" label="地址"> </el-table-column>
         <el-table-column prop="status" label="是否可用" width="120px"> </el-table-column>
         <el-table-column prop="" label="操作" width="100px">
           <template slot-scope="scope">
-            <el-tooltip effect="light" content="修改供应商信息" placement="top">
+            <el-tooltip effect="light" content="修改" placement="top">
               <el-button size="mini" @click="handleEdit(scope.$index,scope.row)" plain circle type="primary" icon="el-icon-edit"/>
             </el-tooltip>
-            <el-tooltip effect="light" content="删除供应商信息" placement="top">
+            <el-tooltip effect="light" content="删除" placement="top">
               <el-button size="mini" @click="handleDelete(scope.$index, scope.row)" plain circle type="danger" icon="el-icon-delete"/>
             </el-tooltip>
           </template>
@@ -41,9 +41,29 @@
     <el-dialog title="新建供应商" :visible.sync="supplyAddDialog" :close-on-click-modal="false" width="1024px">
       <el-form status-icon :model="newsupply" :rules="rules" ref="supplyAddForm" label-width="100px">
           <el-row>
-            <el-form-item label="供应商名称" prop="name">
-              <el-input v-model="newsupply.name" autocomplete="off" ></el-input>
-            </el-form-item>
+            <el-col :span="16">
+              <el-form-item label="供应商名称" prop="name">
+                <el-input v-model="newsupply.name" autocomplete="off" ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="联系人" prop="contact">
+                <el-input v-model="newsupply.contact" autocomplete="off" ></el-input>
+              </el-form-item>
+            </el-col>
+        </el-row>
+
+          <el-row>
+            <el-col :span="16">
+              <el-form-item label="联系地址" prop="address">
+                <el-input v-model="newsupply.address" autocomplete="off" ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="电话" prop="phone">
+                <el-input v-model="newsupply.phone" autocomplete="off" ></el-input>
+              </el-form-item>
+            </el-col>
         </el-row>
         <el-row>
           <el-form-item label="备注信息" prop="description">
@@ -67,12 +87,32 @@
       </el-form>
     </el-dialog>
 
-    <!-- <el-dialog title="编辑供应商" :visible.sync="supplyEditDialog" :close-on-click-modal="false" width="1024px">
+    <el-dialog title="编辑供应商" :visible.sync="supplyEditDialog" :close-on-click-modal="false" width="1024px">
       <el-form status-icon :model="editsupply" :rules="rules" ref="supplyEditForm" label-width="100px">
           <el-row>
-            <el-form-item label="供应商名称" prop="name">
-              <el-input v-model="editsupply.name" autocomplete="off" ></el-input>
-            </el-form-item>
+            <el-col :span="16">
+              <el-form-item label="供应商名称" prop="name">
+                <el-input v-model="editsupply.name" autocomplete="off" ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="联系人" prop="contact">
+                <el-input v-model="editsupply.contact" autocomplete="off" ></el-input>
+              </el-form-item>
+            </el-col>
+        </el-row>
+
+          <el-row>
+            <el-col :span="16">
+              <el-form-item label="联系地址" prop="address">
+                <el-input v-model="editsupply.address" autocomplete="off" ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="电话" prop="phone">
+                <el-input v-model="editsupply.phone" autocomplete="off" ></el-input>
+              </el-form-item>
+            </el-col>
         </el-row>
         <el-row>
           <el-form-item label="备注信息" prop="description">
@@ -94,7 +134,7 @@
           </el-form-item>
         </el-row>
       </el-form>
-    </el-dialog> -->
+    </el-dialog>
 
 
 
@@ -137,6 +177,12 @@ export default {
         name: [
           { required: true, message: "请输入供应商名称", trigger: "blur" }
         ],
+        phone: [
+          { required: true, message: "请输入联系电话", trigger: "blur" }
+        ],
+        contact: [
+          { required: true, message: "请输入联系人", trigger: "blur" }
+        ],
         },
       }
 
@@ -159,11 +205,11 @@ export default {
     methods:{
       ...mapActions({
       GetSupplyList:"GetSupplyList",
-      Savesupply:"Savesupply",
-      PushsupplyList:"PushsupplyList",
-      QuerysupplyObj:"QuerysupplyObj",
-      Disablesupply:"Disablesupply",
-      Deletesupply:"Deletesupply"
+      SaveSupply:"SaveSupply",
+      PushSupplyList:"PushSupplyList",
+      QuerySupplyObj:"QuerySupplyObj",
+      DisableSupply:"DisableSupply",
+      DeleteSupply:"DeleteSupply"
       }),
       onAddsupply(formName){
         this.$refs[formName].validate(valid => {
@@ -173,11 +219,11 @@ export default {
             supply.createDate=new Date();
             supply.status="Y";
             supply.createBy=""; 
-            this.Savesupply(supply)
+            this.SaveSupply(supply)
               .then(res => {
                 if (res.resultStatus == 1) {
                   this.supplyAddDialog = false;
-                  this.PushsupplyList(res.data);
+                  this.PushSupplyList(res.data);
                   this.$message({
                     showClose: true,
                     message: "创建成功",
@@ -209,8 +255,9 @@ export default {
       },
 
     handleEdit(index,row){
-      let cat={supplyId:row.supplyId,index:index}
-      this.QuerysupplyObj(cat)
+            this.editIndex=index;
+      let cat={id:row.id,index:index}
+      this.QuerySupplyObj(cat)
         .then(res=>{
           if (res.resultStatus == 1) {
             this.editsupply=res.data;
@@ -233,18 +280,19 @@ export default {
           type: 'warning'
         })
           .then(() => {
-            // this.Disablesupply(cat)//
-            this.Deletesupply(cat)
+            this.DeleteSupply(cat)
           })
           .catch(e=>e);
       },
       onEditsupply(formName){
         this.$refs[formName].validate(valid=>{
           if(valid){
-            this.Savesupply(this.editsupply)
+            this.SaveSupply(this.editsupply)
             .then(res=>{
               if(res.resultStatus==1){
-                this.GetsupplyList();
+                // this.GetSupplyList();
+                this.supplyList.splice(this.editIndex,1,res.data);
+                this.editIndex="";
                 this.supplyEditDialog=false;
                 this.$message({
                   showClose:true,
