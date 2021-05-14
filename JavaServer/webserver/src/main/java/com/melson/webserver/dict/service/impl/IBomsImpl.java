@@ -69,6 +69,7 @@ public class IBomsImpl extends AbstractService<Boms> implements IBoms {
         return res;
     }
 
+
     private List<BomVo> FindChildList(String childNo,List<BomVo> remindList){
           List<BomVo> childList=new ArrayList<>();
           List<BomVo> reList=new ArrayList<>();
