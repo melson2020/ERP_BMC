@@ -11,5 +11,6 @@ import java.util.List;
  */
 public interface IProduceWorkStationService {
     List<ProduceWorkStation> FindListByLineId(Integer lineId);
+    List<ProduceWorkStation> FindListByProcessId(Integer processId);
     void DeleteOne(Integer id);
 }

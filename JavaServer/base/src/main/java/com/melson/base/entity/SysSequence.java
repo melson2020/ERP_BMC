@@ -13,9 +13,8 @@ public class SysSequence {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String key;
+    private String type;
     private Integer value;
-    private Integer maxValue;
     private Integer valueLength;
 
     public Integer getId() {
@@ -26,12 +25,12 @@ public class SysSequence {
         this.id = id;
     }
 
-    public String getKey() {
-        return key;
+    public String getType() {
+        return type;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public Integer getValue() {
@@ -42,13 +41,6 @@ public class SysSequence {
         this.value = value;
     }
 
-    public Integer getMaxValue() {
-        return maxValue;
-    }
-
-    public void setMaxValue(Integer maxValue) {
-        this.maxValue = maxValue;
-    }
 
     public Integer getValueLength() {
         return valueLength;

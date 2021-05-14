@@ -16,6 +16,8 @@ public class ProducePlanDetail {
     private Integer id;
     private Integer producePlanId;
     private Integer productId;
+    private String productName;
+    private String specification;
     private BigDecimal costPrice;
     private BigDecimal salePrice;
     private String bomNo;
@@ -102,5 +104,21 @@ public class ProducePlanDetail {
 
     public void setSalePrice(BigDecimal salePrice) {
         this.salePrice = salePrice;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public String getSpecification() {
+        return specification;
+    }
+
+    public void setSpecification(String specification) {
+        this.specification = specification;
     }
 }

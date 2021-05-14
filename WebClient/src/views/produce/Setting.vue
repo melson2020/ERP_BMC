@@ -4,17 +4,17 @@
       ><m-production-line-setting></m-production-line-setting
     ></el-tab-pane>
     <el-tab-pane label="工序配置" class="produce-setting-tab-pane"
-      ><m-produce-techniques></m-produce-techniques
+      ><m-produce-process></m-produce-process
     ></el-tab-pane>
   </el-tabs>
 </template>
 <script>
 import productionLine from "./Setting/ProductionLine";
-import produceTech from "./Setting/ProduceTech";
+import produceProcess from "./Setting/ProduceProcess";
 export default {
   components: {
     "m-production-line-setting": productionLine,
-    "m-produce-techniques": produceTech,
+    "m-produce-process": produceProcess,
   },
 };
 </script>

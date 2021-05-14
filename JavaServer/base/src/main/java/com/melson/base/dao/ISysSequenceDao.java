@@ -11,5 +11,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface ISysSequenceDao extends JpaRepository<SysSequence,Integer> {
-    SysSequence findByKey(String key);
+    SysSequence findByType(String type);
 }

@@ -124,7 +124,7 @@ const mutations = {
     },
     RemoveIntentionContract(state, data) {
         var index = state.intentionContractList.indexOf(item => {
-            return item.id = data.id
+            return item.id ===data.id
         })
         state.intentionContractList.splice(index,1)
     }

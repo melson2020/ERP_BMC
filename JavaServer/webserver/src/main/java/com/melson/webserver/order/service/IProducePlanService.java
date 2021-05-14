@@ -3,6 +3,7 @@ package com.melson.webserver.order.service;
 import com.melson.webserver.order.entity.OrderForm;
 import com.melson.webserver.order.entity.OrderFormDetail;
 import com.melson.webserver.order.entity.ProducePlan;
+import com.melson.webserver.order.entity.ProducePlanDetail;
 
 import java.util.List;
 
@@ -21,4 +22,8 @@ public interface IProducePlanService {
      * find list with state
      */
     List<ProducePlan> FindPlanList(String state);
+
+    List<ProducePlanDetail> FindPlanDetailList(Integer planId);
+
+    ProducePlan UpdatePlan(ProducePlan plan);
 }

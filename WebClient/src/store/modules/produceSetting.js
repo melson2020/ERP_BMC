@@ -4,18 +4,18 @@ import { Message } from "element-ui";
 import * as types from '../type'
 
 const state = {
-    produceTechList: [],
+    produceProcessList: [],
     produceLineList: []
 };
 
 const actions = {
-    SaveProduceTechOne({ }, parma) {
-        return request.SaveProduceTechOne(parma)
+    SaveProduceProcessOne({ }, parma) {
+        return request.SaveProduceProcessOne(parma)
     },
-    FindAllProduceTechList({ commit }) {
-        request.FindAllProduceTechList().then(res => {
+    FindAllProduceProcessList({ commit }) {
+        request.FindAllProduceProcessList().then(res => {
             if (res.resultStatus == 1) {
-                commit(types.PRODUCE_TECH_LIST, res.data)
+                commit(types.PRODUCE_PROCESS_LIST, res.data)
             } else {
                 Message.warning(res.message)
             }
@@ -23,10 +23,10 @@ const actions = {
             Message.error(err.message)
         })
     },
-    DeleteProduceTech({ commit }, param) {
-        request.DeleteProduceTech(param).then(res => {
+    DeleteProduceProcess({ commit }, param) {
+        request.DeleteProduceProcess(param).then(res => {
             if (res.resultStatus == 1) {
-                commit(types.DELETE_PRODUCE_TECH, res.data)
+                commit(types.DELETE_PRODUCE_PROCESS, res.data)
             } else {
                 Message.warning(res.message)
             }
@@ -72,26 +72,26 @@ const actions = {
 };
 
 const getters = {
-    produceTechList: state => state.produceTechList,
+    produceProcessList: state => state.produceProcessList,
     produceLineList: state => state.produceLineList
 };
 
 const mutations = {
-    [types.PRODUCE_TECH_LIST](state, data) {
-        state.produceTechList = data
+    [types.PRODUCE_PROCESS_LIST](state, data) {
+        state.produceProcessList = data
     },
     [types.PRODUCE_LINE_LIST](state, data) {
         state.produceLineList = data
     },
-    [types.DELETE_PRODUCE_TECH](state, data) {
-        var index = state.produceTechList.indexOf(item => {
-            return item.id = data
+    [types.DELETE_PRODUCE_PROCESS](state, data) {
+        var index = state.produceProcessList.indexOf(item => {
+            return item.id === data
         })
-        state.produceTechList.splice(index, 1)
+        state.produceProcessList.splice(index, 1)
     },
     [types.DELETE_PRODUCE_LINE](state, data) {
         var index = state.produceLineList.indexOf(item => {
-            return item.id = data
+            return item.id === data
         })
         state.produceLineList.splice(index, 1)
     },

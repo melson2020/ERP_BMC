@@ -18,6 +18,21 @@ const actions = {
         }).catch(err => {
             Message.error(err.message)
         })
+    },
+    FindPlanDetailList({},param){
+        return request.FindProducePlanDetailList(param)
+    },
+    FindPlanDetailProcessList({},param){
+        return request.FindProducePlanDetaiProcessList(param)
+    },
+    FindWorkStationListByProcessId({},param){
+        return request.FindWorkStationListByProcessId(param)
+    },
+    SaveProducePlanWorkStation({},param){
+        return request.SaveProducePlanInfo(param)
+    },
+    DeletePlanWorkStation({},param){
+        return request.DeletePlanWorkStation(param)
     }
 
 };

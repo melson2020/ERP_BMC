@@ -93,16 +93,16 @@
             <el-table-column prop="">
               <template slot-scope="scope">
                 <el-select
-                  v-model="scope.row.techId"
-                  placeholder="填入工艺"
-                  @change="techChange($event, scope.row)"
+                  v-model="scope.row.produceProcessId"
+                  placeholder="填入工序"
+                  @change="processChange($event, scope.row)"
                   size="mini"
                 >
                   <el-option
-                    v-for="tech in produceTechList"
-                    :label="tech.name"
-                    :value="tech.id"
-                    :key="tech.id"
+                    v-for="process in produceProcessList"
+                    :label="process.name"
+                    :value="process.id"
+                    :key="process.id"
                   >
                   </el-option>
                 </el-select>
@@ -165,9 +165,6 @@ import { mapActions } from "vuex";
 export default {
   data() {
     return {
-      workStationList: [
-        { no: "1", name: "工位1", techNo: "", seen: false, employeeNo: "" },
-      ],
       productionLineAddDialog: false,
       employeeGroupList: [
         { groupName: "team1", groupNo: "01" },
@@ -185,11 +182,11 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["produceTechList", "produceLineList"]),
+    ...mapGetters(["produceProcessList", "produceLineList"]),
   },
   methods: {
     ...mapActions({
-      FindAllProduceTechList: "FindAllProduceTechList",
+      FindAllProduceProcessList: "FindAllProduceProcessList",
       FindAllProduceLineList: "FindAllProduceLineList",
       SaveProduceLine: "SaveProduceLine",
       AddNewLineToList: "AddNewLineToList",
@@ -224,11 +221,11 @@ export default {
     cellClick(row) {
       row.seen = true;
     },
-    techChange(techId, row) {
-      var tech = this.produceTechList.find((t) => {
-        return t.id == techId;
+    processChange(processId, row) {
+      var process = this.produceProcessList.find((t) => {
+        return t.id == processId;
       });
-      row.techName = tech.name;
+      row.produceProcessName = process.name;
     },
     submit() {
       this.SaveProduceLine(this.editProductLine)
@@ -291,7 +288,7 @@ export default {
   },
 
   beforeMount() {
-    this.FindAllProduceTechList();
+    this.FindAllProduceProcessList();
     this.FindAllProduceLineList();
   },
 };

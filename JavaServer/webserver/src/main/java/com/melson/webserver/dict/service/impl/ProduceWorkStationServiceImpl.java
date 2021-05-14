@@ -24,6 +24,13 @@ public class ProduceWorkStationServiceImpl implements IProduceWorkStationService
     }
 
     @Override
+    public List<ProduceWorkStation> FindListByProcessId(Integer processId) {
+        return workStationRepository.findByProduceProcessId(processId);
+    }
+
+
+
+    @Override
     public void DeleteOne(Integer id) {
         workStationRepository.deleteById(id);
     }

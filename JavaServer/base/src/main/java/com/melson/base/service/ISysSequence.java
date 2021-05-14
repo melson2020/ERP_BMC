@@ -8,8 +8,8 @@ package com.melson.base.service;
 public interface ISysSequence {
     /**
      * 生成有序编码 如需生成PP0001 key=PP
-     * @param key 编码key值
+     * @param type 编码key值
      * @return
      */
-    String GenerateCode(String key);
+    String GenerateCode(String type);
 }
