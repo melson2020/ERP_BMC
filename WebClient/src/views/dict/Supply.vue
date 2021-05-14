@@ -24,10 +24,10 @@
         <el-table-column prop="status" label="是否可用" width="120px"> </el-table-column>
         <el-table-column prop="" label="操作" width="100px">
           <template slot-scope="scope">
-            <el-tooltip effect="light" content="修改类别信息" placement="top">
+            <el-tooltip effect="light" content="修改供应商信息" placement="top">
               <el-button size="mini" @click="handleEdit(scope.$index,scope.row)" plain circle type="primary" icon="el-icon-edit"/>
             </el-tooltip>
-            <el-tooltip effect="light" content="删除类别信息" placement="top">
+            <el-tooltip effect="light" content="删除供应商信息" placement="top">
               <el-button size="mini" @click="handleDelete(scope.$index, scope.row)" plain circle type="danger" icon="el-icon-delete"/>
             </el-tooltip>
           </template>
@@ -38,10 +38,10 @@
 
     <div class="supply-content-footer"></div>
 
-    <el-dialog title="新建类别" :visible.sync="supplyAddDialog" :close-on-click-modal="false" width="1024px">
+    <el-dialog title="新建供应商" :visible.sync="supplyAddDialog" :close-on-click-modal="false" width="1024px">
       <el-form status-icon :model="newsupply" :rules="rules" ref="supplyAddForm" label-width="100px">
           <el-row>
-            <el-form-item label="类别名称" prop="name">
+            <el-form-item label="供应商名称" prop="name">
               <el-input v-model="newsupply.name" autocomplete="off" ></el-input>
             </el-form-item>
         </el-row>
@@ -67,10 +67,10 @@
       </el-form>
     </el-dialog>
 
-    <el-dialog title="编辑类别" :visible.sync="supplyEditDialog" :close-on-click-modal="false" width="1024px">
+    <!-- <el-dialog title="编辑供应商" :visible.sync="supplyEditDialog" :close-on-click-modal="false" width="1024px">
       <el-form status-icon :model="editsupply" :rules="rules" ref="supplyEditForm" label-width="100px">
           <el-row>
-            <el-form-item label="类别名称" prop="name">
+            <el-form-item label="供应商名称" prop="name">
               <el-input v-model="editsupply.name" autocomplete="off" ></el-input>
             </el-form-item>
         </el-row>
@@ -94,7 +94,7 @@
           </el-form-item>
         </el-row>
       </el-form>
-    </el-dialog>
+    </el-dialog> -->
 
 
 
@@ -135,7 +135,7 @@ export default {
         },
         rules: {
         name: [
-          { required: true, message: "请输入类别名称", trigger: "blur" }
+          { required: true, message: "请输入供应商名称", trigger: "blur" }
         ],
         },
       }
