@@ -2,9 +2,14 @@ package com.melson.webserver.dict.resource;
 
 import com.melson.base.BaseResource;
 import com.melson.base.Result;
+import com.melson.base.interceptor.RequiredPermission;
+import com.melson.base.interceptor.SecurityLevel;
 import com.melson.webserver.dict.entity.Customer;
+import com.melson.webserver.dict.entity.Material;
+import com.melson.webserver.dict.entity.StorageDetail;
 import com.melson.webserver.dict.entity.Supply;
 import com.melson.webserver.dict.service.ISupply;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,4 +36,29 @@ public class SupplyResource extends BaseResource {
         result.setData(supplies);
         return result;
     }
+
+    @RequestMapping(value = "/save",method = RequestMethod.POST)
+    public Result SaveSupply(@RequestBody Supply supply){
+        return supplyService.SaveAndUpdate(supply);
+    }
+
+    @RequestMapping(value = "/query",method = RequestMethod.POST)
+    public Result QuerySupply(@RequestBody Supply supply){
+        Supply sup=supplyService.Query(supply.getId());
+        Result result=new Result();
+        result.setData(sup);
+        return result;
+    }
+
+    @RequestMapping(value = "/delete",method = RequestMethod.POST)
+    public Result DeleteSupply(@RequestBody Supply supply){
+        Result result=new Result();
+        Integer deleteCount=supplyService.DeleteSupply(supply.getId());
+        result.setResultStatus(deleteCount>0?1:-1);
+        result.setData(deleteCount);
+        return result;
+    }
+
+
+
 }

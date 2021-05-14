@@ -200,6 +200,15 @@ export default {
   ReqSupplyList(params){
     return service.get('/supply/list',params)    //  //
   },
+  ReqSaveSupply(param){
+    return service.post("/supply/save",param)
+  },
+  ReqQuerySupplyObj(params){
+    return service.post("/supply/query",params);
+  },
+  ReqDeleteSupply(params){
+    return service.post("/supply/delete",params)
+  },
 
 
   //订单相关
