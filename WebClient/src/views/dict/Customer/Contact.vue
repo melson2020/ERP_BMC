@@ -18,7 +18,7 @@
           style="width: 100%">
         <el-table-column prop="contactName" label="联系人" width="120px"> </el-table-column>
         <el-table-column prop="phone" label="联系电话" width="220px"> </el-table-column>
-        <el-table-column prop="customerNo" label="客户代码" width="180px"></el-table-column>
+        <el-table-column prop="customerNo" label="客户代码" width="140px"></el-table-column>
         <el-table-column prop="name" label="客户名称"> </el-table-column>
         <el-table-column prop="deliverAddress" label="送货地址"> </el-table-column>
 
@@ -109,6 +109,7 @@ export default {
       contactEditDialog: false,
       searchContent: "",
       loading: false,
+      editIndex:'',
       editContact:{
           id: '',
           customerNo: '',
@@ -164,6 +165,7 @@ export default {
       DeleteContact:"DeleteContact"
     }),
     handleEdit(index,row){
+      this.editIndex=index;
       let contact={id:row.id,index:index}
       this.QueryContactObj(contact)
           .then(res=>{
@@ -200,7 +202,9 @@ export default {
               this.SaveContact(this.editContact)
               .then(res=>{
                   if(res.resultStatus==1){ 
-                    this.GetContactList();
+                    this.contactList.splice(this.editIndex,1,res.data);
+                  this.editIndex="";
+                    // this.GetContactList();
                     this.contactEditDialog=false;
                     this.$message({
                       showClose:true,

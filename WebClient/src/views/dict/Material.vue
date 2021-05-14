@@ -17,11 +17,11 @@
           :header-row-style="{height:'40px' ,'align':'center'}"
           :row-style="{height:'40px'}"
           style="width: 100%">
-        <el-table-column prop="partNo" label="物料代码" width="180px"></el-table-column>
+        <el-table-column prop="partNo" label="物料代码" width="140px"></el-table-column>
         <el-table-column prop="name" label="物料名称"> </el-table-column>
         <el-table-column prop="unit" label="单位" width="80px"> </el-table-column>
         <el-table-column prop="storageName" label="存储仓库" width="200px"> </el-table-column>
-        <el-table-column prop="manufacturer" label="制造商"> </el-table-column>
+        <el-table-column prop="manufacturer" label="供应商"> </el-table-column>
         <el-table-column prop="specification" label="规格" width="120px"> </el-table-column>
         <el-table-column label="重量" width="90px">
           <template slot-scope="scope"><span>{{scope.row.weight}}{{scope.row.weightUnit}}</span>
@@ -33,7 +33,7 @@
           </template>
         </el-table-column>
         <el-table-column prop="semiGoods" label="半成品" width="80px"> </el-table-column>
-        <el-table-column prop="expireDate" label="失效日期" width="140px"> 
+        <el-table-column prop="expireDate" label="失效日期" width="120px"> 
           <template slot-scope="scope">
             <span>{{getFullTime(scope.row.expireDate) }}</span>
           </template>
@@ -68,9 +68,23 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="制造商" prop="manufacturer">
-              <el-input v-model="newMaterial.manufacturer" autocomplete="off" ></el-input>
+            <el-form-item label="供应商" prop="manufacturer">
+              <el-select
+                filterable
+                v-model="newMaterial.manufacturer"
+                size="small"
+                placeholder="选择供应商">
+                <el-option
+                  v-for="vo in supplyList"
+                  :label="vo.name"
+                  :value="vo.name"
+                  :key="vo.id"
+                ></el-option>
+              </el-select>
             </el-form-item>
+            <!-- <el-form-item label="供应商" prop="manufacturer">
+              <el-input v-model="newMaterial.manufacturer" autocomplete="off" ></el-input>
+            </el-form-item> -->
           </el-col>
           <el-col :span="6">
             <el-form-item label="失效日期" prop="expireDate">
@@ -82,7 +96,7 @@
               </el-date-picker>
             </el-form-item>
 
-            </el-col>
+          </el-col>
         </el-row>
         <el-row>
           <el-col :span="6">              
@@ -118,7 +132,7 @@
               <el-select
                 filterable
                 v-model="newMaterial.storageCode"
-                size="mini"
+                size="small"
                 placeholder="选择仓库"
                 @change="selectStorageChanged">
                 <el-option
@@ -183,9 +197,23 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="制造商" prop="manufacturer">
-              <el-input v-model="editMaterial.manufacturer" autocomplete="off" ></el-input>
+            <el-form-item label="供应商" prop="manufacturer">
+              <el-select
+                filterable
+                v-model="editMaterial.manufacturer"
+                size="small"
+                placeholder="选择供应商">
+                <el-option
+                  v-for="vo in supplyList"
+                  :label="vo.name"
+                  :value="vo.name"
+                  :key="vo.id"
+                ></el-option>
+              </el-select>
             </el-form-item>
+            <!-- <el-form-item label="制造商" prop="manufacturer">
+              <el-input v-model="editMaterial.manufacturer" autocomplete="off" ></el-input>
+            </el-form-item> -->
           </el-col>
           <el-col :span="6">
             <el-form-item label="失效日期" prop="expireDate">
@@ -233,7 +261,7 @@
               <el-select
                 filterable
                 v-model="editMaterial.storageCode"
-                size="mini"
+                size="small"
                 placeholder="选择仓库">
                 <el-option
                   v-for="vo in storageList"
@@ -297,6 +325,7 @@ export default {
         MaterialAddDialog: false,
         searchContent: "",
         loading: false,
+        editIndex:'',
         newMaterial:{
           id:'',
           partNo:'',
@@ -358,7 +387,8 @@ export default {
     PushMaterialList:"PushMaterialList",
     QueryMaterialObj:"QueryMaterialObj",
     DeleteMaterial:"DeleteMaterial",
-          GetStorageList:"GetStorageList",
+    GetStorageList:"GetStorageList",
+    GetSupplyList:"GetSupplyList"
     }),
     onAddMaterial(formName){
       this.$refs[formName].validate(valid => {
@@ -402,9 +432,14 @@ export default {
       this.$refs[formName].resetFields();
     }
           this.GetStorageList();
+          this.GetSupplyList();
+          this.newMaterial.expireDate=new Date().setMonth(new Date().getMonth()+1);
     this.MaterialAddDialog = true;
     },
     handleEdit(index,row){
+                this.GetStorageList();
+          this.GetSupplyList();
+      this.editIndex=index;
       let cat={id:row.id,partNo:row.partNo,index:index}
       this.QueryMaterialObj(cat)
         .then(res=>{
@@ -440,7 +475,9 @@ export default {
           this.SaveMaterial(this.editMaterial)
           .then(res=>{
             if(res.resultStatus==1){
-              this.GetMaterialList();
+              // this.GetMaterialList();
+              this.materialList.splice(this.editIndex,1,res.data);
+                  this.editIndex="";
               this.MaterialEditDialog=false;
               this.$message({
                 showClose:true,
@@ -472,7 +509,7 @@ export default {
 
   },
   computed:{
-    ...mapGetters(["materialList","storageList"]),
+    ...mapGetters(["materialList","storageList","supplyList"]),
     MaterialListPageShow(){
       return this.materialList.filter((item)=>{
         let key=

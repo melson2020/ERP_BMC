@@ -3,6 +3,7 @@ package com.melson.webserver.dict.entity;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Messi on 2021/4/23
@@ -31,6 +32,8 @@ public class Product {
     private String category;
     @Transient
     private String storageName;
+    @Transient
+    private List<ProductBom> productBomList;
 
 
     public Integer getId() {
@@ -151,5 +154,13 @@ public class Product {
 
     public void setStorageName(String storageName) {
         this.storageName = storageName;
+    }
+
+    public List<ProductBom> getProductBomList() {
+        return productBomList;
+    }
+
+    public void setProductBomList(List<ProductBom> productBomList) {
+        this.productBomList = productBomList;
     }
 }

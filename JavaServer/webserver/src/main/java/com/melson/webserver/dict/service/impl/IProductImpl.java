@@ -4,10 +4,8 @@ import com.melson.base.AbstractService;
 import com.melson.base.Result;
 import com.melson.base.utils.EntityManagerUtil;
 import com.melson.base.utils.EntityUtils;
-import com.melson.webserver.dict.dao.IProductRepository;
-import com.melson.webserver.dict.dao.IStorageDetailRepository;
-import com.melson.webserver.dict.entity.Product;
-import com.melson.webserver.dict.entity.StorageDetail;
+import com.melson.webserver.dict.dao.*;
+import com.melson.webserver.dict.entity.*;
 import com.melson.webserver.dict.service.IProduct;
 import com.melson.webserver.dict.vo.ContractProductVo;
 import com.melson.webserver.dict.vo.ProductVo;
@@ -27,11 +25,17 @@ public class IProductImpl extends AbstractService<Product> implements IProduct {
     private final IProductRepository productRepository;
     private final EntityManagerUtil entityManagerUtil;
     private final IStorageDetailRepository storageDetailRepository;
+    private final IProductBomRepository productBomRepository;
+    private final IStorageAreaLocationRepository storageAreaLocationRepository;
+    private final IProductCategoryRepository iProductCategoryRepository;
 
-    public IProductImpl(IProductRepository productRepository, EntityManagerUtil entityManagerUtil, IStorageDetailRepository storageDetailRepository) {
+    public IProductImpl(IProductRepository productRepository, EntityManagerUtil entityManagerUtil, IStorageDetailRepository storageDetailRepository, IProductBomRepository productBomRepository, IStorageAreaLocationRepository storageAreaLocationRepository, IProductCategoryRepository iProductCategoryRepository) {
         this.productRepository = productRepository;
         this.entityManagerUtil = entityManagerUtil;
         this.storageDetailRepository = storageDetailRepository;
+        this.productBomRepository = productBomRepository;
+        this.storageAreaLocationRepository = storageAreaLocationRepository;
+        this.iProductCategoryRepository = iProductCategoryRepository;
     }
 
     @Override
@@ -106,6 +110,10 @@ public class IProductImpl extends AbstractService<Product> implements IProduct {
                 }else {
                     StorageDetail checkStorageDetail=storageDetailRepository.findByMaterialNo(saved.getProductNo());
                     UpdateStorageTable(checkStorageDetail,saved);
+                    StorageAreaLocation storage=storageAreaLocationRepository.findByStorageCode(saved.getStorageCode());
+                    saved.setStorageName(storage.getName());
+                    ProductCategory category=iProductCategoryRepository.findByCategoryId(saved.getCategoryId());
+                    saved.setCategory(category.getName());
                     result.setData(saved);
                 }
             }
@@ -124,6 +132,10 @@ public class IProductImpl extends AbstractService<Product> implements IProduct {
             }else {
                 StorageDetail checkStorageDetail=storageDetailRepository.findByMaterialNo(saved.getProductNo());
                 UpdateStorageTable(checkStorageDetail,saved);
+                StorageAreaLocation storage=storageAreaLocationRepository.findByStorageCode(saved.getStorageCode());
+                saved.setStorageName(storage.getName());
+                ProductCategory category=iProductCategoryRepository.findByCategoryId(saved.getCategoryId());
+                saved.setCategory(category.getName());
                 result.setData(saved);
             }
         }
@@ -160,6 +172,15 @@ public class IProductImpl extends AbstractService<Product> implements IProduct {
     public Product Query(String productNo) {
         return productRepository.findByProductNo(productNo);
     }
+
+    @Override
+    public Product QueryProductAndBomList(String productNo) {
+        Product product=productRepository.findByProductNo(productNo);
+        List<ProductBom> pbs=productBomRepository.findByProductNo(productNo);
+        product.setProductBomList(pbs);
+        return product;
+    }
+
 
 
 }

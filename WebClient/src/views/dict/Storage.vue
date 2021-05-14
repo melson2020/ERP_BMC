@@ -17,7 +17,7 @@
           :header-row-style="{height:'40px' ,'align':'center'}"
           :row-style="{height:'40px'}"
           style="width: 100%">
-        <el-table-column prop="storageCode" label="仓库代码" width="180px"></el-table-column>
+        <el-table-column prop="storageCode" label="仓库代码" width="140px"></el-table-column>
         <el-table-column prop="name" label="仓库名称" width="220px"> </el-table-column>
         <el-table-column prop="location" label="仓库位置" width="220px"> </el-table-column>
         <el-table-column prop="description" label="备注信息"> </el-table-column>
@@ -119,6 +119,7 @@ export default {
         StorageAddDialog: false,
         searchContent: "",
         loading: false,
+        editIndex:'',
         newStorage:{
           id:'',
           StorageCode:'',
@@ -210,6 +211,7 @@ export default {
       },
 
     handleEdit(index,row){
+      this.editIndex=index;
       let cat={storageCode:row.storageCode,index:index}
       this.QueryStorageObj(cat)
         .then(res=>{
@@ -245,7 +247,9 @@ export default {
             this.SaveStorage(this.editStorage)
             .then(res=>{
               if(res.resultStatus==1){
-                this.GetStorageList();
+                this.storageList.splice(this.editIndex,1,res.data);
+                  this.editIndex="";
+                // this.GetStorageList();
                 this.StorageEditDialog=false;
                 this.$message({
                   showClose:true,

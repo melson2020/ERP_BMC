@@ -17,17 +17,20 @@
           :header-row-style="{height:'40px' ,'align':'center'}"
           :row-style="{height:'40px'}"
           style="width: 100%">
-        <el-table-column prop="productNo" label="产品代码" width="150px"></el-table-column>
+        <el-table-column prop="productNo" label="产品代码" width="140px"></el-table-column>
         <el-table-column prop="name" label="产品名称"> </el-table-column>
         <el-table-column prop="category" label="品类"> </el-table-column>
         <el-table-column prop="specification" label="规格型号" > </el-table-column>
         <el-table-column prop="unit" label="单位" width="100px"> </el-table-column>
         <el-table-column prop="salePrice" label="售价" width="160px"> </el-table-column>
         <el-table-column prop="storageName" label="仓库"></el-table-column>
-        <el-table-column prop="" label="操作" width="100px">
+        <el-table-column prop="" label="操作" width="130px">
           <template slot-scope="scope">
             <el-tooltip effect="light" content="修改产品信息" placement="top">
               <el-button size="mini" @click="handleEdit(scope.$index,scope.row)" plain circle type="primary" icon="el-icon-edit"/>
+            </el-tooltip>
+            <el-tooltip effect="light" content="创建产品Bom" placement="top">
+              <el-button size="mini" @click="handleCreateBoM(scope.$index,scope.row)" circle type="primary" icon="el-icon-setting"/>
             </el-tooltip>
             <el-tooltip effect="light" content="删除产品信息" placement="top">
               <el-button size="mini" @click="handleDelete(scope.$index, scope.row)" plain circle type="danger" icon="el-icon-delete"/>
@@ -53,7 +56,7 @@
               <el-select
                 filterable
                 v-model="newProduct.categoryId"
-                size="mini"
+                size="small"
                 placeholder="选择类别"
                 @change="selectCategoryChanged"
               >
@@ -90,7 +93,7 @@
               <el-select
                 filterable
                 v-model="newProduct.storageCode"
-                size="mini"
+                size="small"
                 placeholder="选择仓库"
                 @change="selectStorageChanged"
               >
@@ -145,7 +148,7 @@
               <el-select
                 filterable
                 v-model="editProduct.categoryId"
-                size="mini"
+                size="small"
                 placeholder="选择类别"
                 @change="selectCategoryChanged"
               >
@@ -182,7 +185,7 @@
               <el-select
                 filterable
                 v-model="editProduct.storageCode"
-                size="mini"
+                size="small"
                 placeholder="选择仓库"
                 @change="selectStorageChanged"
               >
@@ -224,6 +227,127 @@
     </el-dialog>
 
 
+
+    <el-dialog title="创建产品Bom" :visible.sync="productCreateBoMDialog" :close-on-click-modal="false" width="1024px">
+      <el-form status-icon :model="editProductBom" :rules="rules2" ref="productCreateBoMForm" label-width="100px">
+          <el-row>
+          <el-col :span="6">
+            <el-form-item label="产品名称" prop="productName">
+              <el-input v-model="editProductBom.productName" autocomplete="off" disabled></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="产品规格" prop="specification">
+              <el-input v-model="editProductBom.specification" autocomplete="off" disabled></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+          <el-form-item label="Bom版本" prop="version">
+            <el-input autocomplete="off"  v-model="editProductBom.version"></el-input>
+          </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="失效日期" prop="expirationDate">
+              <el-date-picker
+                v-model="editProductBom.expirationDate"
+                type="date"
+                style="width:147px"
+                placeholder="选择日期">
+              </el-date-picker>
+            </el-form-item>
+
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-form-item label="备注信息" prop="description">
+            <el-input
+              v-model="editProductBom.description"
+              autocomplete="off"
+              style="width: 100%;"
+              rows="3"
+              type="textarea"
+              maxlength="200"
+              show-word-limit
+            ></el-input>
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="Bom列表">
+            <el-table
+              :data="editProductBom.productBomList"
+              border
+              style="width: 100%"
+              size="mini"
+              :show-header="false"
+            >
+              <el-table-column prop="bomNo" label="Bom:" width="180px" >
+                <template slot-scope="scope" >
+                  <div class="editProductBomInformation">
+                    <el-form-item label="Bom:" prop="bomNo" label-width="45px" >
+                      <span>{{ scope.row.bomNo }}</span>
+                    </el-form-item>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column prop="expirationDate" label="失效日期:" width="180px" >
+                <template slot-scope="scope" >
+                  <div class="editProductBomInformation">
+                    <el-form-item label="失效日期:" prop="expirationDate" label-width="80px" >
+                      <span>{{getFullTime(scope.row.expirationDate) }}</span>
+                    </el-form-item>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column prop="version" label="版本:"  width="145px" >
+                <template slot-scope="scope">
+                  <div class="editProductBomInformation">
+                    <el-form-item label="版本:" prop="version" label-width="55px" >
+                      <span>{{ scope.row.version }}</span>
+                    </el-form-item>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column prop="description" label="描述:" >
+                <template slot-scope="scope" >
+                  <div class="editProductBomInformation">
+                    <el-form-item label="描述:" prop="description" label-width="45px" >
+                      <span>{{ scope.row.description }}</span>
+                    </el-form-item>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column width="80px" >>
+                <template slot-scope="scope">
+                  <div class="editProductBomOperation">
+                    <el-tooltip effect="light" content="查看Bom" placement="top">
+                      <el-button size="mini" circle icon="el-icon-view" type="primary" ></el-button>
+                    </el-tooltip>
+                    <el-tooltip effect="light" v-if="scope.row.status=='Y'" content="停用Bom" placement="top">
+                      <el-button size="mini" @click.prevent.stop="UpdateProductBomStatus(scope.$index, scope.row,true)" plain circle type="danger" icon="el-icon-close"/>
+                    </el-tooltip>
+                    <el-tooltip effect="light" v-else content="启用Bom" placement="top">
+                      <el-button size="mini" @click.prevent.stop="UpdateProductBomStatus(scope.$index, scope.row,false)" plain circle type="primary" icon="el-icon-check"/>
+                    </el-tooltip>
+                  </div>
+                </template>
+              </el-table-column>
+
+            </el-table>
+
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item>
+            <el-button type="primary" @click="onEditProductBom('productCreateBoMForm')" :loading="loading">保存</el-button>
+            <el-button @click="productCreateBoMDialog = false" v-if="!loading">取 消</el-button>
+          </el-form-item>
+        </el-row>
+      </el-form>
+    </el-dialog>
+
+
+
+
     </div>
 </template>
 <script>
@@ -232,10 +356,13 @@ import { mapActions } from "vuex";
 export default {
     data(){
       return{
+        dateNow:"",
         productEditDialog: false,
         productAddDialog: false,
+        productCreateBoMDialog: false,
         searchContent: "",
         loading: false,
+        editIndex:'',
         newProduct:{
           id:'',
           productNo:'',
@@ -264,7 +391,21 @@ export default {
           status:'',
           description:'',
           createBy:'',
-          createDate:''
+          createDate:'',
+        },
+        editProductBom:{
+          id:'',
+          productNo:'',
+          productName:'',
+          specification:'',
+          bomNo:'',
+          costPrice:'',
+          expirationDate:'',
+          version:'',
+          description:'',
+          createBy:'',
+          createDate:'',
+          productBomList:[],
         },
         rules: {
         name: [
@@ -277,11 +418,16 @@ export default {
           { required: true, message: "请选择存储仓库", trigger: "blur" }
         ],
         },
+        rules2: {
+        version: [
+          { required: true, message: "请输入Bom版本号", trigger: "blur" }
+        ],
+        },
       }
 
     },
     computed: {
-      ...mapGetters(["productList","storageList","categoryList"]),
+      ...mapGetters(["productList","storageList","categoryList","productBomList"]),
       productListPageShow(){
         return this.productList.filter((item)=>{
           let key=
@@ -304,7 +450,12 @@ export default {
       SaveProduct:"SaveProduct",
       PushProductList:"PushProductList",
       QueryProductObj:"QueryProductObj",
-      DeleteProduct:"DeleteProduct"
+      DeleteProduct:"DeleteProduct",
+      QueryProductAndBomObj:"QueryProductAndBomObj",
+      SaveProductBom:"SaveProductBom",
+      UpdateProductBom:"UpdateProductBom",
+      GetProductBomList:"GetProductBomList",
+      
       }),
       selectCategoryChanged(){
 
@@ -378,7 +529,9 @@ export default {
             this.SaveProduct(this.editProduct)
             .then(res=>{
               if(res.resultStatus==1){
-                this.GetProductList();
+                this.productList.splice(this.editIndex,1,res.data);
+                  this.editIndex=""
+                // this.GetProductList();
                 this.productEditDialog=false;
                 this.$message({
                   showClose:true,
@@ -402,6 +555,7 @@ export default {
         })
       },
       handleEdit(index,row){
+        this.editIndex=index;
       this.GetStorageList();
       this.GetCategoryList();
       let prod={productNo:row.productNo,index:index}
@@ -419,7 +573,105 @@ export default {
             let alert = err.message ? err.message : err;
             this.$message.error(alert);
       });
-    },
+      },
+      handleCreateBoM(index,row){
+        let prod={productNo:row.productNo,index:index}
+        this.QueryProductAndBomObj(prod)
+        .then(res=>{
+          if (res.resultStatus == 1) {
+            this.editProductBom.productNo=res.data.productNo;
+            this.editProductBom.productName=res.data.name;
+            this.editProductBom.specification=res.data.specification;
+            this.editProductBom.costPrice=res.data.salesPrice;
+            this.editProductBom.description=res.data.description;
+            this.editProductBom.productBomList=res.data.productBomList;
+            this.editProductBom.expirationDate=new Date().setMonth(new Date().getMonth()+1);
+            this.editProductBom.version="";
+            this.editProductBom.bomNo="";
+            this.editProductBom.id="";
+            this.productCreateBoMDialog=true;
+            }
+            else{
+              this.$message.error(res.message);
+            }
+        })
+        .catch(err=>{
+              let alert = err.message ? err.message : err;
+              this.$message.error(alert);
+        });
+      },
+      UpdateProductBomStatus(index, row,disable) {
+       this.$messageBox.confirm('确认要操作Bom？',"提示",{
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
+        .then(() => {
+          row.status=disable?"N":"Y"
+          this.UpdateProductBom(row)
+              .then(res=>{
+                if(res.resultStatus==1){
+                  row=res.data
+                  this.$message({
+                    showClose:true,
+                    message:"操作成功",
+                    type:"success"
+                  });
+                }
+                else{
+                  this.$message.error(res.message);
+                }
+              })
+              .catch(err=>{
+                  let alert = err.message ? err.message : err;
+                  this.$message.error(alert);
+              });
+        })
+        .catch(e=>e);
+      },
+      getFullTime(time) {
+      return new Date(time).format("yyyy-MM-dd");
+      },
+      onEditProductBom(formName){
+          this.$refs[formName].validate(valid=>{
+            if(valid){
+              this.editProductBom.bomNo="b" + new Date().valueOf();
+              this.editProductBom.createDate=new Date();
+              this.editProductBom.createBy="";
+              this.editProductBom.status="Y";
+              this.SaveProductBom(this.editProductBom)
+              .then(res=>{
+                if(res.resultStatus==1){
+                  this.GetProductList();
+                  this.productCreateBoMDialog=false;
+                  this.editProductBom.productBomList=[];
+                  this.$message({
+                    showClose:true,
+                    message:"操作成功",
+                    type:"success"
+                  });
+                }
+                else{
+                  this.$message({
+                  message: res.message,
+                  type: "warning"
+                });
+                }
+              })
+              .catch(err=>{
+                  let alert = err.message ? err.message : err;
+                  this.$message.error(alert);
+              });
+            }
+            else{
+              this.$message.warning("请填写准确信息");
+              return false;
+            }
+          })
+
+      }
+
+
 
     },
     beforeMount() {
@@ -442,6 +694,18 @@ export default {
 .product-fliter-input {
   width: 400px;
   float: left;
+}
+.editProductBomInformation{
+  display: flex;
+  flex-direction: row;
+  width: auto;
+  justify-content: space-between;
+}
+.editProductBomOperation{
+  display: flex;
+  flex-direction: row;
+  width: auto;
+  justify-content: space-around;
 }
 
 </style>

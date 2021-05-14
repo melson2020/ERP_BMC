@@ -4,9 +4,12 @@ import com.melson.base.BaseResource;
 import com.melson.base.Result;
 import com.melson.base.interceptor.RequiredPermission;
 import com.melson.base.interceptor.SecurityLevel;
+import com.melson.webserver.dict.entity.Customer;
 import com.melson.webserver.dict.entity.Product;
+import com.melson.webserver.dict.entity.ProductBom;
 import com.melson.webserver.dict.entity.StorageDetail;
 import com.melson.webserver.dict.service.IProduct;
+import com.melson.webserver.dict.service.IProductBom;
 import com.melson.webserver.dict.service.IStorageDetail;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,10 +27,12 @@ import java.util.List;
 public class ProductResource extends BaseResource {
     private final IProduct productService;
     private final IStorageDetail storageDetailService;
+    private final IProductBom productBomService;
 
-    public ProductResource(IProduct productService, IStorageDetail storageDetailService) {
+    public ProductResource(IProduct productService, IStorageDetail storageDetailService, IProductBom productBomService) {
         this.productService = productService;
         this.storageDetailService = storageDetailService;
+        this.productBomService = productBomService;
     }
 
     @RequestMapping(value = "/list",method = RequestMethod.GET)
@@ -69,5 +74,15 @@ public class ProductResource extends BaseResource {
         result.setData(pro);
         return result;
     }
+
+    @RequestMapping(value = "/queryProductAndBomList",method = RequestMethod.POST)
+    @RequiredPermission(SecurityLevel.Employee)
+    public Result QueryProductAndBomList(@RequestBody Product product){
+        Product pro=productService.QueryProductAndBomList(product.getProductNo());
+        Result result=new Result();
+        result.setData(pro);
+        return result;
+    }
+
 
 }

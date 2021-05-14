@@ -1,7 +1,7 @@
 spring:
   datasource:
      driver-class-name: com.mysql.jdbc.Driver
-     url: jdbc:mysql://121.4.112.204:3306/bmc_erp?Unicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+     url: jdbc:mysql://121.4.112.204:3306/bmc_erp?Unicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
      username: root
      password: 123!@#jklJKL
   jpa:

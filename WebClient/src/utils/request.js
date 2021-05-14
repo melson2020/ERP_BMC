@@ -136,6 +136,22 @@ export default {
   ReqQueryProductObj(params){
     return service.post("/product/query",params);
   },
+  ReqQueryProductAndBomObj(params){
+    return service.post("/product/queryProductAndBomList",params);
+  },
+  ReqSaveProductBom(param){
+    return service.post("/productBom/saveProductBom",param)
+  },
+
+  ReqUpdateProductBom(params) {
+    return service.post("/productBom/updateProductBom", params);
+  },
+  ReqProductBomList(params){
+    return service.get('/productBom/getProductBomList',params)
+  },
+  ReqQueryProductBomObj(params){
+    return service.post("/productBom/query",params);
+  },
 
 
   ReqCategoryList(params){
@@ -179,6 +195,12 @@ export default {
   ReqQueryMaterialObj(params){
     return service.post("/material/query",params);
   },
+
+
+  ReqSupplyList(params){
+    return service.get('/supply/list',params)    //  //
+  },
+
 
   //订单相关
   GetCreatedOrderList(param){

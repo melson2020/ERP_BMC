@@ -23,6 +23,7 @@ public class ProductBom {
     private String description;     // 备注描述， 信息来BOM表的描述备注，工序，工艺，尺寸等等
     private String createBy;        // 创建人
     private Date createDate;        // 创建日期
+    private String status;          // 状态属性， Y：Bom正常使用 ；  N： Bom 停用
 
     public Integer getId() {
         return id;
@@ -110,5 +111,13 @@ public class ProductBom {
 
     public void setCreateDate(Date createDate) {
         this.createDate = createDate;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
