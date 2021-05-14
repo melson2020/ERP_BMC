@@ -1,9 +1,6 @@
 package com.melson.webserver.order.service;
 
-import com.melson.webserver.order.entity.DelegateTicket;
-import com.melson.webserver.order.entity.OrderForm;
-import com.melson.webserver.order.entity.OrderFormDetail;
-import com.melson.webserver.order.entity.PurchaseDetail;
+import com.melson.webserver.order.entity.*;
 
 import java.util.List;
 
@@ -14,10 +11,17 @@ import java.util.List;
  */
 public interface IDelegateTicketService {
     /**
-     * 生成委托单
+     * 生成委外单 同时生成领料单
      * @param detailList
      * @param form
      * @return
      */
     DelegateTicket GenerateTicket(List<OrderFormDetail> detailList, OrderForm form);
+
+    /**
+     * 委外工序生成 委外清单
+     * @param list 委外工序
+     * @return
+     */
+    DelegateTicket GenerateTicketWithProcess(List<ProducePlanProcess> list,ProducePlan plan,List<ProducePlanDetail> detailList);
 }

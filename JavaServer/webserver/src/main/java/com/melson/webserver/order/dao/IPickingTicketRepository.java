@@ -10,5 +10,5 @@ import org.springframework.stereotype.Repository;
  * @Date 2021/5/7
  */
 @Repository
-public interface IProducePickingTicketRepository extends JpaRepository<PickingTicket,Integer> {
+public interface IPickingTicketRepository extends JpaRepository<PickingTicket,Integer> {
 }

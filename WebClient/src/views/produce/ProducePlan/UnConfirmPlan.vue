@@ -31,7 +31,7 @@
       <el-table-column prop="" width="100px">
         <template slot-scope="scope">
           <el-button type="primary" @click="plneDetail(scope.row)" size="mini"
-            >决策</el-button
+            >配置</el-button
           >
         </template>
       </el-table-column>

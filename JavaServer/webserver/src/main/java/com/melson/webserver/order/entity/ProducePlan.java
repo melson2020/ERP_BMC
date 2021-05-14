@@ -22,6 +22,7 @@ public class ProducePlan {
     private String customerNo;
     private String customerName;
     private String contractNo;
+    private String pickingTicketNo;
     private String type;
     private String planNo;
     private Date createDate;
@@ -126,5 +127,13 @@ public class ProducePlan {
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    public String getPickingTicketNo() {
+        return pickingTicketNo;
+    }
+
+    public void setPickingTicketNo(String pickingTicketNo) {
+        this.pickingTicketNo = pickingTicketNo;
     }
 }

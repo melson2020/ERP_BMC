@@ -13,6 +13,7 @@ import java.util.List;
 public class ProducePlanConfirmInfoVo {
     private ProducePlan plan;
     private List<ProducePlanWorkStation> workStationList;
+    private Boolean confirm;
 
     public ProducePlan getPlan() {
         return plan;
@@ -28,5 +29,13 @@ public class ProducePlanConfirmInfoVo {
 
     public void setWorkStationList(List<ProducePlanWorkStation> workStationList) {
         this.workStationList = workStationList;
+    }
+
+    public Boolean getConfirm() {
+        return confirm;
+    }
+
+    public void setConfirm(Boolean confirm) {
+        this.confirm = confirm;
     }
 }

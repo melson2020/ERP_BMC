@@ -2,6 +2,7 @@ package com.melson.webserver.dict.service.impl;
 
 import com.melson.base.AbstractService;
 import com.melson.base.Result;
+import com.melson.base.service.ISysSequence;
 import com.melson.base.utils.EntityManagerUtil;
 import com.melson.base.utils.EntityUtils;
 import com.melson.webserver.dict.dao.IProductRepository;
@@ -27,11 +28,13 @@ public class IProductImpl extends AbstractService<Product> implements IProduct {
     private final IProductRepository productRepository;
     private final EntityManagerUtil entityManagerUtil;
     private final IStorageDetailRepository storageDetailRepository;
+    private final ISysSequence sysSequenceService;
 
-    public IProductImpl(IProductRepository productRepository, EntityManagerUtil entityManagerUtil, IStorageDetailRepository storageDetailRepository) {
+    public IProductImpl(IProductRepository productRepository, EntityManagerUtil entityManagerUtil, IStorageDetailRepository storageDetailRepository, ISysSequence sysSequenceService) {
         this.productRepository = productRepository;
         this.entityManagerUtil = entityManagerUtil;
         this.storageDetailRepository = storageDetailRepository;
+        this.sysSequenceService = sysSequenceService;
     }
 
     @Override
@@ -117,6 +120,7 @@ public class IProductImpl extends AbstractService<Product> implements IProduct {
         }
         else
         {
+            product.setProductNo(sysSequenceService.GenerateCode(Product.PRODUCT_NO_CHAR));
             Product saved=productRepository.save(product);
             if(saved==null){
                 result.setResultStatus(-1);

@@ -10,6 +10,7 @@ import java.util.Date;
 @Entity
 @Table(name = "product")      //产品表
 public class Product {
+    public static final String PRODUCT_NO_CHAR="P";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

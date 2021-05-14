@@ -20,6 +20,8 @@ public interface IBoms extends IService<Boms> {
      */
     List<BomVo> findByBomNo(String bomNo);
 
+    List<BomVo> findBomVoInBomNos(Set<String> bomNos);
+
     /**
      * 查询Bom 以及相关工序信息 包含物料
      * @param bomNos

@@ -23,6 +23,7 @@ public class BomVo {
     private String manufacturer;
     private String specification;
 
+
     @Transient
     private List<BomVo> childList;
 
@@ -121,4 +122,5 @@ public class BomVo {
     public void setSpecification(String specification) {
         this.specification = specification;
     }
+
 }
