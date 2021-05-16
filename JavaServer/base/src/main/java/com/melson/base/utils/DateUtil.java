@@ -24,24 +24,37 @@ public class DateUtil {
 
     /**
      * 时间转字符串:yyyy-MM-dd HH:mm:ss
+     *
      * @param date
      * @return
      */
-    public static String timeFormat(Date date){
+    public static String timeFormat(Date date) {
         return format(date, TIME_FORMATTER);
     }
 
     /**
      * 时间转字符串:yyyyMMddHHmmss
+     *
      * @param date
      * @return
      */
-    public static String timeShortFormat(Date date){
+    public static String timeShortFormat(Date date) {
         return format(date, TIME_SHORT_FORMATTER);
     }
 
-    private static String format(Date date,DateTimeFormatter dtf){
+    private static String format(Date date, DateTimeFormatter dtf) {
         LocalDateTime ldt = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
         return dtf.format(ldt);
+    }
+
+    /**
+     * 字符串转时间
+     *
+     * @param timeStr
+     * @return
+     */
+    public static Date formatTime(String timeStr) {
+        LocalDateTime ldt = LocalDateTime.parse(timeStr, TIME_FORMATTER);
+        return Date.from(ldt.atZone(ZoneId.systemDefault()).toInstant());
     }
 }

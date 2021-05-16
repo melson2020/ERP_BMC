@@ -12,7 +12,7 @@ create table sys_dict_type
 ) comment '数据字典类型表';
 create index idx1 on sys_dict_type (state);
 create unique index idx2 on sys_dict_type (alias);
-INSERT INTO erp_bmc_transfer.sys_dict_type (id, alias, name, comments, modify, modifyUser, state) VALUES (1, 'commonState', '通用状态', '启用/禁用', '2021-04-15 13:49:12', 1, '1');
+INSERT INTO sys_dict_type (id, alias, name, comments, modify, modifyUser, state) VALUES (1, 'commonState', '通用状态', '启用/禁用', '2021-04-15 13:49:12', 1, '1');
 
 drop table if exists sys_dict;
 create table sys_dict
@@ -28,34 +28,34 @@ create table sys_dict
     state      varchar(2)   not null comment '状态:0=禁用;1=启用;'
 ) comment '数据字典类型表';
 create unique index idx1 on sys_dict (typeId, code);
-INSERT INTO erp_bmc_transfer.sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (1, 1, '0', '禁用', 2, '0=禁用', '2021-04-16 13:49:49', 1, '1');
-INSERT INTO erp_bmc_transfer.sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (2, 1, '1', '启用', 1, '1=启用', '2021-04-15 13:49:51', 1, '1');
+INSERT INTO sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (1, 1, '0', '禁用', 2, '0=禁用', '2021-04-16 13:49:49', 1, '1');
+INSERT INTO sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (2, 1, '1', '启用', 1, '1=启用', '2021-04-15 13:49:51', 1, '1');
 
-INSERT INTO erp_bmc_transfer.sys_dict_type (id, alias, name, comments, modify, modifyUser, state) VALUES (1, 'commonState', '通用状态', '启用/禁用', '2021-04-15 13:49:12', 1, '1');
-INSERT INTO erp_bmc_transfer.sys_dict_type (id, alias, name, comments, modify, modifyUser, state) VALUES (2, 'contractType', '合同类型', '意向/正式', '2021-04-20 00:27:02', 1, '1');
-INSERT INTO erp_bmc_transfer.sys_dict_type (id, alias, name, comments, modify, modifyUser, state) VALUES (3, 'contractState', '合同状态', '', '2021-04-20 00:27:02', 1, '1');
-INSERT INTO erp_bmc_transfer.sys_dict_type (id, alias, name, comments, modify, modifyUser, state) VALUES (4, 'deliverType', '运输方式', '', '2021-04-20 00:27:02', 1, '1');
-INSERT INTO erp_bmc_transfer.sys_dict_type (id, alias, name, comments, modify, modifyUser, state) VALUES (5, 'payWay', '付款方式', '', '2021-04-20 00:27:03', 1, '1');
-INSERT INTO erp_bmc_transfer.sys_dict_type (id, alias, name, comments, modify, modifyUser, state) VALUES (6, 'currency', '付款货币', '', '2021-04-20 00:27:03', 1, '1');
-INSERT INTO erp_bmc_transfer.sys_dict_type (id, alias, name, comments, modify, modifyUser, state) VALUES (7, 'contractTpl', '合同模版', '', '2021-04-20 00:27:03', 1, '1');
-INSERT INTO erp_bmc_transfer.sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (1, 1, '0', '禁用', 2, '0=禁用', '2021-04-16 13:49:49', 1, '1');
-INSERT INTO erp_bmc_transfer.sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (2, 1, '1', '启用', 1, '1=启用', '2021-04-15 13:49:51', 1, '1');
-INSERT INTO erp_bmc_transfer.sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (3, 2, '1', '意向合同', 1, '', '2021-04-20 00:31:28', 1, '1');
-INSERT INTO erp_bmc_transfer.sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (4, 2, '2', '正式合同', 2, '', '2021-04-20 00:31:28', 1, '1');
-INSERT INTO erp_bmc_transfer.sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (5, 3, '0', '已作废', 0, '', '2021-04-20 00:31:28', 1, '1');
-INSERT INTO erp_bmc_transfer.sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (6, 3, '1', '待处理', 1, '', '2021-04-20 00:31:29', 1, '1');
-INSERT INTO erp_bmc_transfer.sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (7, 3, '2', '进行中', 2, '', '2021-04-20 00:31:29', 1, '1');
-INSERT INTO erp_bmc_transfer.sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (8, 3, '3', '已完成', 3, '', '2021-04-20 00:31:29', 1, '1');
-INSERT INTO erp_bmc_transfer.sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (9, 4, '1', 'FCA CHINA', 1, '', '2021-04-20 00:31:29', 1, '1');
-INSERT INTO erp_bmc_transfer.sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (10, 5, '1', '日结', 1, '', '2021-04-20 00:31:29', 1, '1');
-INSERT INTO erp_bmc_transfer.sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (11, 5, '2', '月结', 2, '', '2021-04-20 00:31:29', 1, '1');
-INSERT INTO erp_bmc_transfer.sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (12, 5, '3', '季度结', 3, '', '2021-04-20 00:31:29', 1, '1');
-INSERT INTO erp_bmc_transfer.sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (13, 5, '4', '年结', 4, '', '2021-04-20 00:31:29', 1, '1');
-INSERT INTO erp_bmc_transfer.sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (14, 6, '1', '人民币', 1, '', '2021-04-20 00:31:29', 1, '1');
-INSERT INTO erp_bmc_transfer.sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (15, 6, '2', '美元', 2, '', '2021-04-20 00:31:29', 1, '1');
-INSERT INTO erp_bmc_transfer.sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (16, 7, 'desc', '这里是【合同描述】模版', 1, '', '2021-04-20 00:31:29', 1, '1');
-INSERT INTO erp_bmc_transfer.sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (17, 7, 'remarks', '这里是【合同备注】模版', 2, '', '2021-04-20 00:31:29', 1, '1');
-INSERT INTO erp_bmc_transfer.sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (18, 7, 'explain', '这里是【合同说明】模版', 3, '', '2021-04-20 00:31:29', 1, '1');
+INSERT INTO sys_dict_type (id, alias, name, comments, modify, modifyUser, state) VALUES (1, 'commonState', '通用状态', '启用/禁用', '2021-04-15 13:49:12', 1, '1');
+INSERT INTO sys_dict_type (id, alias, name, comments, modify, modifyUser, state) VALUES (2, 'contractType', '合同类型', '意向/正式', '2021-04-20 00:27:02', 1, '1');
+INSERT INTO sys_dict_type (id, alias, name, comments, modify, modifyUser, state) VALUES (3, 'contractState', '合同状态', '', '2021-04-20 00:27:02', 1, '1');
+INSERT INTO sys_dict_type (id, alias, name, comments, modify, modifyUser, state) VALUES (4, 'deliverType', '运输方式', '', '2021-04-20 00:27:02', 1, '1');
+INSERT INTO sys_dict_type (id, alias, name, comments, modify, modifyUser, state) VALUES (5, 'payWay', '付款方式', '', '2021-04-20 00:27:03', 1, '1');
+INSERT INTO sys_dict_type (id, alias, name, comments, modify, modifyUser, state) VALUES (6, 'currency', '付款货币', '', '2021-04-20 00:27:03', 1, '1');
+INSERT INTO sys_dict_type (id, alias, name, comments, modify, modifyUser, state) VALUES (7, 'contractTpl', '合同模版', '', '2021-04-20 00:27:03', 1, '1');
+INSERT INTO sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (1, 1, '0', '禁用', 2, '0=禁用', '2021-04-16 13:49:49', 1, '1');
+INSERT INTO sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (2, 1, '1', '启用', 1, '1=启用', '2021-04-15 13:49:51', 1, '1');
+INSERT INTO sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (3, 2, '1', '意向合同', 1, '', '2021-04-20 00:31:28', 1, '1');
+INSERT INTO sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (4, 2, '2', '正式合同', 2, '', '2021-04-20 00:31:28', 1, '1');
+INSERT INTO sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (5, 3, '0', '已作废', 0, '', '2021-04-20 00:31:28', 1, '1');
+INSERT INTO sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (6, 3, '1', '待处理', 1, '', '2021-04-20 00:31:29', 1, '1');
+INSERT INTO sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (7, 3, '2', '进行中', 2, '', '2021-04-20 00:31:29', 1, '1');
+INSERT INTO sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (8, 3, '3', '已完成', 3, '', '2021-04-20 00:31:29', 1, '1');
+INSERT INTO sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (9, 4, '1', 'FCA CHINA', 1, '', '2021-04-20 00:31:29', 1, '1');
+INSERT INTO sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (10, 5, '1', '日结', 1, '', '2021-04-20 00:31:29', 1, '1');
+INSERT INTO sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (11, 5, '2', '月结', 2, '', '2021-04-20 00:31:29', 1, '1');
+INSERT INTO sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (12, 5, '3', '季度结', 3, '', '2021-04-20 00:31:29', 1, '1');
+INSERT INTO sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (13, 5, '4', '年结', 4, '', '2021-04-20 00:31:29', 1, '1');
+INSERT INTO sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (14, 6, '1', '人民币', 1, '', '2021-04-20 00:31:29', 1, '1');
+INSERT INTO sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (15, 6, '2', '美元', 2, '', '2021-04-20 00:31:29', 1, '1');
+INSERT INTO sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (16, 7, 'desc', '这里是【合同描述】模版', 1, '', '2021-04-20 00:31:29', 1, '1');
+INSERT INTO sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (17, 7, 'remarks', '这里是【合同备注】模版', 2, '', '2021-04-20 00:31:29', 1, '1');
+INSERT INTO sys_dict (id, typeId, code, value, sort, comments, modify, modifyUser, state) VALUES (18, 7, 'explain', '这里是【合同说明】模版', 3, '', '2021-04-20 00:31:29', 1, '1');
 
 -- 合同定义表
 drop table if exists contract;
@@ -147,3 +147,103 @@ create table order_form
 
 create index idx1 on order_form (createDate);
 create index idx2 on order_form (contractId);
+
+-- 入库单
+-- drop table if exists inventory_inbound;
+create table inventory_inbound
+(
+    id         int auto_increment primary key comment '唯一自增id',
+    formNo     varchar(8)  not null comment '入库单号',
+    batchNo    varchar(14) not null comment '批次号',
+    type       varchar(2)  not null comment '入库类型',
+    customerNo varchar(36) not null comment '供应商',
+    remark     varchar(50) null comment '描述',
+    createDate datetime    not null comment '操作时间',
+    createUser int         not null comment '操作人'
+);
+create unique index idx1 on inventory_inbound (formNo);
+create index idx2 on inventory_inbound (createDate);
+create index idx3 on inventory_inbound (type);
+
+-- 入库明细
+-- drop table if exists inventory_inbound_detail;
+create table inventory_inbound_detail
+(
+    id            int auto_increment primary key comment '唯一自增id',
+    formNo        varchar(8)     not null comment '入库单号',
+    materialNo    varchar(36)    not null comment '物料号/产品编码',
+    name          varchar(255)   not null comment '名称',
+    specification varchar(2)     not null comment '规格',
+    count         int default 0  not null comment '数量',
+    latestPrice   decimal(10, 4) not null comment '最新价格',
+    unit          varchar(2)     not null null comment '数量单位',
+    storageCode   varchar(36)    not null comment '货位号'
+);
+create index idx1 on inventory_inbound_detail (formNo);
+create index idx2 on inventory_inbound_detail (materialNo);
+
+-- 出库单
+-- drop table if exists inventory_outbound;
+create table inventory_outbound
+(
+    id         int auto_increment primary key comment '唯一自增id',
+    formNo     varchar(8)  not null comment '出库单号',
+    type       varchar(2)  not null comment '出库类型',
+    customerNo varchar(36) not null comment '客户',
+    remark     varchar(50) null comment '描述',
+    createDate datetime    not null comment '操作时间',
+    createUser int         not null comment '操作人'
+);
+create unique index idx1 on inventory_outbound (formNo);
+create index idx2 on inventory_outbound (createDate);
+create index idx3 on inventory_outbound (type);
+
+-- 出库明细
+-- drop table if exists inventory_outbound_detail;
+create table inventory_outbound_detail
+(
+    id            int auto_increment primary key comment '唯一自增id',
+    formNo        varchar(8)     not null comment '出库单号',
+    materialNo    varchar(36)    not null comment '物料号/产品编码',
+    name          varchar(255)   not null comment '名称',
+    specification varchar(2)     not null comment '规格',
+    count         int default 0  not null comment '数量',
+    latestPrice   decimal(10, 4) not null comment '最新价格',
+    unit          varchar(2)     not null null comment '数量单位',
+    storageCode   varchar(36)    not null comment '货位号'
+);
+create index idx1 on inventory_outbound_detail (formNo);
+create index idx2 on inventory_outbound_detail (materialNo);
+
+-- 库存盘点单
+-- drop table if exists inventory_stocktaking;
+create table inventory_stocktaking
+(
+    id         int auto_increment primary key comment '唯一自增id',
+    formNo     varchar(8)  not null comment '盘点单号',
+    type       varchar(2)  not null comment '盘点类型',
+    info       varchar(2)  not null comment '盘点内容',
+    remark     varchar(50) null comment '描述',
+    createDate datetime    not null comment '操作时间',
+    createUser int         not null comment '操作人'
+);
+create unique index idx1 on inventory_stocktaking (formNo);
+create index idx2 on inventory_stocktaking (createDate);
+create index idx3 on inventory_stocktaking (type);
+
+-- 库存盘点明细
+-- drop table if exists inventory_stocktaking_detail;
+create table inventory_stocktaking_detail
+(
+    id            int auto_increment primary key comment '唯一自增id',
+    formNo        varchar(8)     not null comment '盘点单号',
+    materialNo    varchar(36)    not null comment '物料号/产品编码',
+    name          varchar(255)   not null comment '名称',
+    specification varchar(2)     not null comment '规格',
+    count         int default 0  not null comment '数量',
+    latestPrice   decimal(10, 4) not null comment '最新价格',
+    unit          varchar(2)     not null null comment '数量单位',
+    storageCode   varchar(36)    not null comment '货位号'
+);
+create index idx1 on inventory_stocktaking_detail (formNo);
+create index idx2 on inventory_stocktaking_detail (materialNo);
