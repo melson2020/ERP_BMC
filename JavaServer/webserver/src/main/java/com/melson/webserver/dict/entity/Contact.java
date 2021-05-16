@@ -9,6 +9,7 @@ import java.util.Date;
 @Entity
 @Table(name="contact")      //联系人表
 public class Contact {
+    public static final String CONTACT_NO_CHAR="CO";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

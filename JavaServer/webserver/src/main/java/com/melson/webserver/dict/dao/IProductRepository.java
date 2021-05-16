@@ -20,4 +20,7 @@ public interface IProductRepository extends JpaRepository<Product,Integer> {
 
     @Query(value = "SELECT * from product where productNo=?1",nativeQuery = true)
     Product findByProductNo(String productNo);
+
+    @Query(value = "SELECT * from product where name =?1 and categoryId=?2 and specification=?3 and supplyId=?4",nativeQuery = true)
+    Product findByCeriteria(String name, String category, String specification, Integer supplyId);
 }

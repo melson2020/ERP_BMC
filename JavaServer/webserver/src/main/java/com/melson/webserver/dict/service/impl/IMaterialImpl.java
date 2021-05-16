@@ -138,11 +138,9 @@ public class IMaterialImpl extends AbstractService<Material> implements IMateria
         ne.setUnit(saved.getUnit());
         ne.setCount(0);
         ne.setStorageCode(saved.getStorageCode());
-        ne.setManufacturer("");
         if(checkStorageDetail!=null)
         {
             ne.setId(checkStorageDetail.getId());
-            ne.setManufacturer(checkStorageDetail.getManufacturer());
             ne.setCount(checkStorageDetail.getCount());
             ne.setFeature(checkStorageDetail.getFeature());
         }

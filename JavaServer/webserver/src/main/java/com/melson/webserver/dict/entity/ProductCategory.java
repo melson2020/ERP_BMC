@@ -9,6 +9,7 @@ import java.util.Date;
 @Entity
 @Table(name = "product_category")      //产品类别表
 public class ProductCategory {
+    public static final String CATEGORY_NO_CHAR="CAT";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

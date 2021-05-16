@@ -2,7 +2,9 @@ package com.melson.webserver.dict.service.impl;
 
 import com.melson.base.AbstractService;
 import com.melson.base.Result;
+import com.melson.base.service.ISysSequence;
 import com.melson.webserver.dict.dao.IProductCategoryRepository;
+import com.melson.webserver.dict.entity.Customer;
 import com.melson.webserver.dict.entity.ProductCategory;
 import com.melson.webserver.dict.service.IProductCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,9 +19,11 @@ import java.util.List;
 @Service
 public class IProductCategoryImpl extends AbstractService<ProductCategory> implements IProductCategory {
     private final IProductCategoryRepository productCategoryRepository;
+    private final ISysSequence sysSequenceService;
 
-    public IProductCategoryImpl(IProductCategoryRepository productCategoryRepository) {
+    public IProductCategoryImpl(IProductCategoryRepository productCategoryRepository, ISysSequence sysSequenceService) {
         this.productCategoryRepository = productCategoryRepository;
+        this.sysSequenceService = sysSequenceService;
     }
 
     @Override
@@ -55,6 +59,9 @@ public class IProductCategoryImpl extends AbstractService<ProductCategory> imple
         }
         else
         {
+            if(productCategory.getId()==null) {
+                productCategory.setCategoryId(sysSequenceService.GenerateCode(ProductCategory.CATEGORY_NO_CHAR));
+            }
             ProductCategory saved=productCategoryRepository.save(productCategory);
             if(saved==null){
                 result.setResultStatus(-1);

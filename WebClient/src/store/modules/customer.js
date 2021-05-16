@@ -49,13 +49,13 @@ const actions = {
     QueryContactObj({},Contact){
         return request.ReqQueryContactObj(Contact);
     },
-    DisableCustomer({ commit }, Customer) {
-        request.ReqDisableCustomer(Customer).then(res => {
+    UpdateCustomer({ }, Customer) {
+        request.ReqUpdateCustomerStatus(Customer).then(res => {
           if (res.resultStatus == 1) {
-            commit("DisableCustomer", Customer)
-            Message.info("删除成功")
+            // commit("DisableCustomer", Customer)
+            Message.info("操作成功")
           } else {
-            Message.warning("删除失败:" + res.message)
+            Message.warning("操作失败:" + res.message)
           }
         }).catch(error => {
           let al = error.message ? error.message : error

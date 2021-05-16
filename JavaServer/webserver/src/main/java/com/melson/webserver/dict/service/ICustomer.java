@@ -29,4 +29,6 @@ public interface ICustomer extends IService<Customer> {
     Integer DisableCustomer(Customer customer);
 
     Customer Query(Integer id, String customerNo);
+
+    Integer UpdateCustomerStatus(Customer customer);
 }

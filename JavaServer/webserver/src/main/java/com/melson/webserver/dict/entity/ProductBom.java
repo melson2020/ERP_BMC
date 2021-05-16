@@ -3,6 +3,7 @@ package com.melson.webserver.dict.entity;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Messi on 2021/4/23
@@ -14,6 +15,7 @@ public class ProductBom {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String productNo;       // 产品编码
+    private Integer processId;       // 工序
     private String productName;     // 产品名称
     private String specification;   // 产品规格
     private String bomNo;           // BOM编码
@@ -24,6 +26,10 @@ public class ProductBom {
     private String createBy;        // 创建人
     private Date createDate;        // 创建日期
     private String status;          // 状态属性， Y：Bom正常使用 ；  N： Bom 停用
+
+    @Transient
+    private List<Boms> materialVos;   //传BOM过来
+
 
     public Integer getId() {
         return id;
@@ -39,6 +45,14 @@ public class ProductBom {
 
     public void setProductNo(String productNo) {
         this.productNo = productNo;
+    }
+
+    public Integer getProcessId() {
+        return processId;
+    }
+
+    public void setProcessId(Integer processId) {
+        this.processId = processId;
     }
 
     public String getProductName() {
@@ -119,5 +133,13 @@ public class ProductBom {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public List<Boms> getMaterialVos() {
+        return materialVos;
+    }
+
+    public void setMaterialVos(List<Boms> materialVos) {
+        this.materialVos = materialVos;
     }
 }
