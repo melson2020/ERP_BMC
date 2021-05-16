@@ -34,9 +34,15 @@
             <el-tooltip effect="light" content="修改客户资料" placement="top">
               <el-button size="mini" @click="handleEdit(scope.$index,scope.row)" plain circle type="primary" icon="el-icon-edit"/>
             </el-tooltip>
-            <el-tooltip effect="light" content="删除客户资料" placement="top">
-              <el-button size="mini" @click="handleDelete(scope.$index, scope.row)" plain circle type="danger" icon="el-icon-delete"/>
+            <el-tooltip effect="light" v-if="scope.row.status=='Y'" content="停用客户资料" placement="top">
+              <el-button size="mini" @click.prevent.stop="UpdateCustomerStatus(scope.$index, scope.row,true)" plain circle type="danger" icon="el-icon-close"/>
             </el-tooltip>
+            <el-tooltip effect="light" v-else content="启用客户资料" placement="top">
+              <el-button size="mini" @click.prevent.stop="UpdateCustomerStatus(scope.$index, scope.row,false)" plain circle type="primary" icon="el-icon-check"/>
+            </el-tooltip>
+            <!-- <el-tooltip effect="light" content="删除客户资料" placement="top">
+              <el-button size="mini" @click="handleDelete(scope.$index, scope.row)" plain circle type="danger" icon="el-icon-delete"/>
+            </el-tooltip> -->
           </template>
         </el-table-column>
       </el-table>
@@ -265,89 +271,89 @@
             ></el-input>
           </el-form-item>
         </el-row>
-                <el-row>
+        <el-row>
           <el-form-item label="联系人信息">
-          <el-table
-            :data="editCustomer.contactList"
-            border
-            style="width: 100%"
-            size="mini"
-            @cell-click="editCellClick"
-            :show-header="false"
-          >
-            <el-table-column prop="contactName" label="名称:" width="170px" >
-              <template slot-scope="scope" >
-                <div class="contactInformation" >
-                  <el-form-item label="名称:" prop="contactName" label-width="45px" >
-                    <el-input
-                      v-model="scope.row.contactName"
-                      v-if="scope.row.seen"
-                      :disabled="scope.row.isDisable"
-                      size="mini"
-                    ></el-input>
-                    <span v-else>{{ scope.row.contactName }}</span>
-                  </el-form-item>
-                </div>
-              </template>
-            </el-table-column>
-            <el-table-column prop="cellPhone" label="电话:"  width="240px" >
-              <template slot-scope="scope">
-                <div class="contactInformation">
-                  <el-form-item label="电话:" prop="cellPhone" label-width="45px" >
-                    <el-input
-                      v-model="scope.row.phone"
-                      v-if="scope.row.seen"
-                      :disabled="scope.row.isDisable"
-                      size="mini"
-                    ></el-input>
-                    <span v-else>{{ scope.row.phone }}</span>
-                  </el-form-item>
-                </div>
-              </template>
-            </el-table-column>
-            <el-table-column prop="deliverAddress" label="地址:" >
-              <template slot-scope="scope" >
-                <div class="contactInformation">
-                  <el-form-item label="地址:" prop="deliverAddress" label-width="45px" >
-                    <el-input  
-                      v-model="scope.row.deliverAddress"
-                      v-if="scope.row.seen"
-                      :disabled="scope.row.isDisable"
-                      size="mini"
-                      style="width:324px"
-                    ></el-input>
-                    <span v-else>{{ scope.row.deliverAddress }}</span>
-                  </el-form-item>
-                </div>
-              </template>
-            </el-table-column>
-            <el-table-column width="80px" >>
-              <template slot-scope="scope">
-                <div class="contactOperation">
+            <el-table
+              :data="editCustomer.contactList"
+              border
+              style="width: 100%"
+              size="mini"
+              @cell-click="editCellClick"
+              :show-header="false"
+            >
+              <el-table-column prop="contactName" label="名称:" width="170px" >
+                <template slot-scope="scope" >
+                  <div class="contactInformation" >
+                    <el-form-item label="名称:" prop="contactName" label-width="45px" >
+                      <el-input
+                        v-model="scope.row.contactName"
+                        v-if="scope.row.seen"
+                        :disabled="scope.row.isDisable"
+                        size="mini"
+                      ></el-input>
+                      <span v-else>{{ scope.row.contactName }}</span>
+                    </el-form-item>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column prop="cellPhone" label="电话:"  width="240px" >
+                <template slot-scope="scope">
+                  <div class="contactInformation">
+                    <el-form-item label="电话:" prop="cellPhone" label-width="45px" >
+                      <el-input
+                        v-model="scope.row.phone"
+                        v-if="scope.row.seen"
+                        :disabled="scope.row.isDisable"
+                        size="mini"
+                      ></el-input>
+                      <span v-else>{{ scope.row.phone }}</span>
+                    </el-form-item>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column prop="deliverAddress" label="地址:" >
+                <template slot-scope="scope" >
+                  <div class="contactInformation">
+                    <el-form-item label="地址:" prop="deliverAddress" label-width="45px" >
+                      <el-input  
+                        v-model="scope.row.deliverAddress"
+                        v-if="scope.row.seen"
+                        :disabled="scope.row.isDisable"
+                        size="mini"
+                        style="width:324px"
+                      ></el-input>
+                      <span v-else>{{ scope.row.deliverAddress }}</span>
+                    </el-form-item>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column width="80px" >>
+                <template slot-scope="scope">
+                  <div class="contactOperation">
 
-                  <el-tooltip effect="light" content="确定" placement="top">
-                    <el-button size="mini" circle @click.prevent.stop="editSaveContact(scope.$index, scope.row)" icon="el-icon-check" type="primary" ></el-button>
-                  </el-tooltip>
-                  <el-tooltip effect="light" content="删除" placement="top">
-                    <el-button size="mini" :disabled="scope.row.isDisable" @click.prevent.stop="editDeleteContact(scope.$index, scope.row)" plain circle type="danger" icon="el-icon-delete"/>
-                  </el-tooltip>
-                </div>
-              </template>
-            </el-table-column>
+                    <el-tooltip effect="light" content="确定" placement="top">
+                      <el-button size="mini" circle @click.prevent.stop="editSaveContact(scope.$index, scope.row)" icon="el-icon-check" type="primary" ></el-button>
+                    </el-tooltip>
+                    <el-tooltip effect="light" content="删除" placement="top">
+                      <el-button size="mini" :disabled="scope.row.isDisable" @click.prevent.stop="editDeleteContact(scope.$index, scope.row)" plain circle type="danger" icon="el-icon-delete"/>
+                    </el-tooltip>
+                  </div>
+                </template>
+              </el-table-column>
 
-          </el-table>
-          <el-button
-            icon="el-icon-plus"
-            plain
-            class="add-contact"
-            @click="editAddContact"
-            >添加联系人</el-button
-          >
+            </el-table>
+            <el-button
+              icon="el-icon-plus"
+              plain
+              class="add-contact"
+              @click="editAddContact"
+              >添加联系人</el-button
+            >
           </el-form-item>
         </el-row>
         <el-row>
           <el-form-item>
-            <el-button type="primary" @click="onEditcustomer('customerEditForm')" :loading="loading">保存</el-button>
+            <el-button type="primary" @click="onEditcustomer('customerEditForm')" :loading="loading">保 存</el-button>
             <el-button @click="customerEditDialog = false" v-if="!loading">取 消</el-button>
           </el-form-item>
         </el-row>
@@ -463,7 +469,7 @@ export default {
       SaveCustomer: "SaveCustomer",
       PushCustomerList: "PushCustomerList",
       QueryCustomerObj:"QueryCustomerObj",
-      DisableCustomer:"DisableCustomer",
+      UpdateCustomer:"UpdateCustomer",
       SaveContact:"SaveContact",
       GetContactList:"GetContactList",
 
@@ -695,15 +701,17 @@ export default {
         }
       }
     },
-    handleDelete(index, row) {
-      let cus={id:row.id,index:index}
-       this.$messageBox.confirm('确认要删除？',"提示",{
+    UpdateCustomerStatus(index, row,disable) {
+      // let cus={id:row.id,index:index,status:}
+       this.$messageBox.confirm('确认要操作？',"提示",{
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         })
           .then(() => {
-            this.DisableCustomer(cus)
+            row.status=disable?"N":"Y"
+            let cus={id:row.id,index:index,status:row.status}
+            this.UpdateCustomer(cus)
           })
           .catch(e=>e);
       },

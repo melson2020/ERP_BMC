@@ -4,11 +4,11 @@
     <el-input
       class="product-fliter-input"
       size="small"
-      placeholder="搜索产品"
+      placeholder="搜索商品"
       v-model="searchContent"
       suffix-icon="el-icon-search"
     ></el-input>
-    <el-button type="primary" size="small" @click="resetForm('productAddForm')">新建产品</el-button>
+    <el-button type="primary" size="small" @click="resetForm('productAddForm')">新建商品</el-button>
     </div>
 
     <div class="product-content">
@@ -17,22 +17,40 @@
           :header-row-style="{height:'40px' ,'align':'center'}"
           :row-style="{height:'40px'}"
           style="width: 100%">
-        <el-table-column prop="productNo" label="产品代码" width="140px"></el-table-column>
-        <el-table-column prop="name" label="产品名称"> </el-table-column>
-        <el-table-column prop="category" label="品类"> </el-table-column>
-        <el-table-column prop="specification" label="规格型号" > </el-table-column>
-        <el-table-column prop="unit" label="单位" width="100px"> </el-table-column>
-        <el-table-column prop="salePrice" label="售价" width="160px"> </el-table-column>
-        <el-table-column prop="storageName" label="仓库"></el-table-column>
+        <el-table-column prop="productNo" label="商品代码" width="100px"></el-table-column>
+        <el-table-column prop="name" label="商品名称"> </el-table-column>
+        <el-table-column prop="supplyName" label="供应商"> </el-table-column>
+        <el-table-column prop="category" label="商品种类" width="100px"> </el-table-column>
+        <el-table-column prop="specification" label="规格型号" width="120px"> </el-table-column>
+        <el-table-column prop="unit" label="计量单位" width="80px"> </el-table-column>
+        <el-table-column label="重量" width="90px">
+          <template slot-scope="scope"><span>{{scope.row.weight}}{{scope.row.weightUnit}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="体积" width="90px"> 
+          <template slot-scope="scope"><span>{{scope.row.volume}}{{scope.row.volumeUnit}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="salesPrice" label="价格" width="100px"> </el-table-column>
+        <el-table-column prop="storageName" label="仓库" width="120px"></el-table-column>
+        <el-table-column prop="expireDate" label="失效日期" width="120px"> 
+          <template slot-scope="scope">
+            <span>{{getFullTime(scope.row.expireDate) }}</span>
+          </template>
+        </el-table-column>
+
+
+
+
         <el-table-column prop="" label="操作" width="130px">
           <template slot-scope="scope">
-            <el-tooltip effect="light" content="修改产品信息" placement="top">
+            <el-tooltip effect="light" content="修改商品" placement="top">
               <el-button size="mini" @click="handleEdit(scope.$index,scope.row)" plain circle type="primary" icon="el-icon-edit"/>
             </el-tooltip>
-            <el-tooltip effect="light" content="创建产品Bom" placement="top">
+            <el-tooltip effect="light" content="创建商品Bom" placement="top">
               <el-button size="mini" @click="handleCreateBoM(scope.$index,scope.row)" circle type="primary" icon="el-icon-setting"/>
             </el-tooltip>
-            <el-tooltip effect="light" content="删除产品信息" placement="top">
+            <el-tooltip effect="light" content="删除商品" placement="top">
               <el-button size="mini" @click="handleDelete(scope.$index, scope.row)" plain circle type="danger" icon="el-icon-delete"/>
             </el-tooltip>
           </template>
@@ -43,23 +61,21 @@
 
     <div class="product-content-footer"></div>
 
-    <el-dialog title="新建产品" :visible.sync="productAddDialog" :close-on-click-modal="false" width="1024px">
+    <el-dialog title="新建商品" :visible.sync="productAddDialog" :close-on-click-modal="false" width="1024px">
       <el-form status-icon :model="newProduct" :rules="rules" ref="productAddForm" label-width="100px">
-          <el-row>
-          <el-col :span="12">
-            <el-form-item label="产品名称" prop="name">
+        <el-row>
+          <el-col :span="6">
+            <el-form-item label="商品名称" prop="name">
               <el-input v-model="newProduct.name" autocomplete="off" ></el-input>
             </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="产品类别" prop="categoryId">
+            </el-col>
+            <el-col :span="6">
+            <el-form-item label="商品类别" prop="categoryId">
               <el-select
                 filterable
                 v-model="newProduct.categoryId"
                 size="small"
-                placeholder="选择类别"
-                @change="selectCategoryChanged"
-              >
+                placeholder="选择类别">
                 <el-option
                   v-for="vo in categoryList"
                   :label="vo.name"
@@ -69,24 +85,62 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
-            <el-form-item label="产品规格" prop="specification">
+            <el-col :span="6">
+            <el-form-item label="商品规格" prop="specification">
               <el-input v-model="newProduct.specification" autocomplete="off" ></el-input>
             </el-form-item>
           </el-col>
-        </el-row>
-
-        <el-row>
           <el-col :span="6">
-          <el-form-item label="产品单位" prop="unit">
-            <el-input autocomplete="off"  v-model="newProduct.unit"></el-input>
-          </el-form-item>
+            <el-form-item label="供应商" prop="supplyId">
+              <el-select
+                filterable
+                v-model="newProduct.supplyId"
+                size="small"
+                placeholder="选择供应商">
+                <el-option
+                  v-for="vo in supplyList"
+                  :label="vo.name"
+                  :value="vo.id"
+                  :key="vo.name"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+
+        </el-row>
+        <el-row>
+          <el-col :span="6">              
+            <el-form-item label="计量单位" prop="unit">
+                <el-input v-model="newProduct.unit" autocomplete="off" ></el-input>
+            </el-form-item>
+
           </el-col>
           <el-col :span="6">
-          <el-form-item label="产品价格" prop="salesPrice">
-            <el-input v-model="newProduct.salesPrice" autocomplete="off" ></el-input>
-          </el-form-item>
-
+            <el-form-item label="商品单价" prop="salesPrice">
+              <el-input v-model="newProduct.salesPrice" autocomplete="off" ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="商品重量" prop="weight">
+              <el-input v-model="newProduct.weight" autocomplete="off" ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="重量单位" prop="weightUnit">
+              <el-input v-model="newProduct.weightUnit" autocomplete="off" ></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="6">
+            <el-form-item label="商品体积" prop="volume">
+              <el-input v-model="newProduct.volume" autocomplete="off" ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="体积单位" prop="volumeUnit">
+              <el-input v-model="newProduct.volumeUnit" autocomplete="off" ></el-input>
+            </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="存储仓库" prop="storageCode">
@@ -94,9 +148,7 @@
                 filterable
                 v-model="newProduct.storageCode"
                 size="small"
-                placeholder="选择仓库"
-                @change="selectStorageChanged"
-              >
+                placeholder="选择仓库">
                 <el-option
                   v-for="vo in storageList"
                   :label="vo.name"
@@ -107,10 +159,16 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="产品标识" prop="remark">
-              <el-input autocomplete="off"  v-model="newProduct.remark"></el-input>
+            <el-form-item label="失效日期" prop="expireDate">
+              <el-date-picker
+                v-model="newProduct.expireDate"
+                type="date"
+                style="width:147px"
+                placeholder="选择日期">
+              </el-date-picker>
             </el-form-item>
           </el-col>
+
         </el-row>
         <el-row>
           <el-form-item label="备注信息" prop="description">
@@ -135,23 +193,21 @@
     </el-dialog>
 
 
-    <el-dialog title="编辑产品" :visible.sync="productEditDialog" :close-on-click-modal="false" width="1024px">
+    <el-dialog title="编辑商品" :visible.sync="productEditDialog" :close-on-click-modal="false" width="1024px">
       <el-form status-icon :model="editProduct" :rules="rules" ref="productEditForm" label-width="100px">
-          <el-row>
-          <el-col :span="12">
-            <el-form-item label="产品名称" prop="name">
+        <el-row>
+          <el-col :span="6">
+            <el-form-item label="商品名称" prop="name">
               <el-input v-model="editProduct.name" autocomplete="off" ></el-input>
             </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="产品类别" prop="categoryId">
+            </el-col>
+            <el-col :span="6">
+            <el-form-item label="商品类别" prop="categoryId">
               <el-select
                 filterable
                 v-model="editProduct.categoryId"
                 size="small"
-                placeholder="选择类别"
-                @change="selectCategoryChanged"
-              >
+                placeholder="选择类别">
                 <el-option
                   v-for="vo in categoryList"
                   :label="vo.name"
@@ -161,24 +217,62 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
-            <el-form-item label="产品规格" prop="specification">
+            <el-col :span="6">
+            <el-form-item label="商品规格" prop="specification">
               <el-input v-model="editProduct.specification" autocomplete="off" ></el-input>
             </el-form-item>
           </el-col>
-        </el-row>
-
-        <el-row>
           <el-col :span="6">
-          <el-form-item label="产品单位" prop="unit">
-            <el-input autocomplete="off"  v-model="editProduct.unit"></el-input>
-          </el-form-item>
+            <el-form-item label="供应商" prop="supplyId">
+              <el-select
+                filterable
+                v-model="editProduct.supplyId"
+                size="small"
+                placeholder="选择供应商">
+                <el-option
+                  v-for="vo in supplyList"
+                  :label="vo.name"
+                  :value="vo.id"
+                  :key="vo.name"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+
+        </el-row>
+        <el-row>
+          <el-col :span="6">              
+            <el-form-item label="计量单位" prop="unit">
+                <el-input v-model="editProduct.unit" autocomplete="off" ></el-input>
+            </el-form-item>
+
           </el-col>
           <el-col :span="6">
-          <el-form-item label="产品价格" prop="salesPrice">
-            <el-input v-model="editProduct.salesPrice" autocomplete="off" ></el-input>
-          </el-form-item>
-
+            <el-form-item label="商品单价" prop="salesPrice">
+              <el-input v-model="editProduct.salesPrice" autocomplete="off" ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="商品重量" prop="weight">
+              <el-input v-model="editProduct.weight" autocomplete="off" ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="重量单位" prop="weightUnit">
+              <el-input v-model="editProduct.weightUnit" autocomplete="off" ></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="6">
+            <el-form-item label="商品体积" prop="volume">
+              <el-input v-model="editProduct.volume" autocomplete="off" ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="体积单位" prop="volumeUnit">
+              <el-input v-model="editProduct.volumeUnit" autocomplete="off" ></el-input>
+            </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="存储仓库" prop="storageCode">
@@ -186,9 +280,7 @@
                 filterable
                 v-model="editProduct.storageCode"
                 size="small"
-                placeholder="选择仓库"
-                @change="selectStorageChanged"
-              >
+                placeholder="选择仓库">
                 <el-option
                   v-for="vo in storageList"
                   :label="vo.name"
@@ -199,10 +291,16 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="产品标识" prop="remark">
-              <el-input autocomplete="off"  v-model="editProduct.remark"></el-input>
+            <el-form-item label="失效日期" prop="expireDate">
+              <el-date-picker
+                v-model="editProduct.expireDate"
+                type="date"
+                style="width:147px"
+                placeholder="选择日期">
+              </el-date-picker>
             </el-form-item>
           </el-col>
+
         </el-row>
         <el-row>
           <el-form-item label="备注信息" prop="description">
@@ -228,120 +326,269 @@
 
 
 
-    <el-dialog title="创建产品Bom" :visible.sync="productCreateBoMDialog" :close-on-click-modal="false" width="1024px">
-      <el-form status-icon :model="editProductBom" :rules="rules2" ref="productCreateBoMForm" label-width="100px">
+    <el-dialog title="创建商品Bom" :visible.sync="productCreateBoMDialog" :close-on-click-modal="false" width="1024px">
+      <el-form status-icon :model="newProductBom" :rules="rules2" ref="productCreateBoMForm" label-width="100px">
+        <div class="productBom-selected-header">
+          <span>父项物料信息</span>
+        </div>
+        <div class="productBom-selected-content">
           <el-row>
-          <el-col :span="6">
-            <el-form-item label="产品名称" prop="productName">
-              <el-input v-model="editProductBom.productName" autocomplete="off" disabled></el-input>
+            <el-col :span="6">
+              <el-form-item label="商品名称" prop="productName">
+                <el-input v-model="newProductBom.productName" autocomplete="off" disabled></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="制造工序" prop="processId">
+                <el-select
+                  filterable
+                  v-model="newProductBom.processName"
+                  size="small"
+                  placeholder="选择工序"
+                  @change="processChanged">
+                  <el-option
+                    v-for="vo in produceProcessList"
+                    :label="vo.name"
+                    :value="vo"
+                    :key="vo.id"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+            <el-form-item label="Bom版本" prop="version">
+              <el-input autocomplete="off"  v-model="newProductBom.version"></el-input>
             </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="产品规格" prop="specification">
-              <el-input v-model="editProductBom.specification" autocomplete="off" disabled></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-          <el-form-item label="Bom版本" prop="version">
-            <el-input autocomplete="off"  v-model="editProductBom.version"></el-input>
-          </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="失效日期" prop="expirationDate">
-              <el-date-picker
-                v-model="editProductBom.expirationDate"
-                type="date"
-                style="width:147px"
-                placeholder="选择日期">
-              </el-date-picker>
-            </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="失效日期" prop="expirationDate">
+                <el-date-picker
+                  v-model="newProductBom.expirationDate"
+                  type="date"
+                  style="width:147px"
+                  placeholder="选择日期">
+                </el-date-picker>
+              </el-form-item>
 
-          </el-col>
-        </el-row>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-form-item label="备注信息" prop="description">
+              <el-input
+                v-model="newProductBom.description"
+                autocomplete="off"
+                style="width: 100%;"
+                rows="3"
+                type="textarea"
+                maxlength="200"
+                show-word-limit
+              ></el-input>
+            </el-form-item>
+          </el-row>
+        </div>
+        <div class="productBom-selected-header">
+          <span>子项物料详情</span>
+        </div>
+        <div class="productBom-selected-content-special">
         <el-row>
-          <el-form-item label="备注信息" prop="description">
-            <el-input
-              v-model="editProductBom.description"
-              autocomplete="off"
-              style="width: 100%;"
-              rows="3"
-              type="textarea"
-              maxlength="200"
-              show-word-limit
-            ></el-input>
-          </el-form-item>
-        </el-row>
-        <el-row>
-          <el-form-item label="Bom列表">
+          <el-form-item label="物料信息">
+            <el-button
+              icon="el-icon-plus"
+              plain
+              class="add-productBom"
+              @click="addProductBom"
+              >添加子项物料</el-button
+            >
             <el-table
-              :data="editProductBom.productBomList"
+              :data="newProductBom.materialVos"
               border
               style="width: 100%"
               size="mini"
+              @cell-click="addCellClick"
               :show-header="false"
             >
-              <el-table-column prop="bomNo" label="Bom:" width="180px" >
+              <el-table-column prop="name" label="名" width="185px" >
                 <template slot-scope="scope" >
-                  <div class="editProductBomInformation">
-                    <el-form-item label="Bom:" prop="bomNo" label-width="45px" >
-                      <span>{{ scope.row.bomNo }}</span>
+                  <div class="productBominformation" >
+                    <el-form-item label="名" prop="name" label-width="20px" >
+                      <el-select
+                        filterable
+                        v-model="scope.row.name"
+                        v-if="scope.row.seen"
+                        size="mini"
+                        placeholder="选择物料"
+                        @change="materialChanged($event,scope.row)">
+                        <el-option
+                          v-for="vo in productList"
+                          :label="vo.name"
+                          :value="vo"
+                          :key="vo.id"
+                        ></el-option>
+                      </el-select>
+
+                      <span v-else>{{ scope.row.name }}</span>
                     </el-form-item>
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column prop="expirationDate" label="失效日期:" width="180px" >
-                <template slot-scope="scope" >
-                  <div class="editProductBomInformation">
-                    <el-form-item label="失效日期:" prop="expirationDate" label-width="80px" >
-                      <span>{{getFullTime(scope.row.expirationDate) }}</span>
-                    </el-form-item>
-                  </div>
-                </template>
-              </el-table-column>
-              <el-table-column prop="version" label="版本:"  width="145px" >
+              <el-table-column prop="specification" label="规"  width="150px" >
                 <template slot-scope="scope">
-                  <div class="editProductBomInformation">
-                    <el-form-item label="版本:" prop="version" label-width="55px" >
-                      <span>{{ scope.row.version }}</span>
+                  <div class="productBominformation">
+                    <el-form-item label="规" prop="specification" label-width="20px" >
+                      <el-input
+                        v-model="scope.row.specification"
+                        v-if="scope.row.seen"
+                        :disabled="scope.row.isDisable"
+                        size="mini"
+                      ></el-input>
+                      <span v-else>{{ scope.row.specification }}</span>
                     </el-form-item>
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column prop="description" label="描述:" >
+              <el-table-column prop="qty" label="数:" width="110px" >
                 <template slot-scope="scope" >
-                  <div class="editProductBomInformation">
-                    <el-form-item label="描述:" prop="description" label-width="45px" >
-                      <span>{{ scope.row.description }}</span>
+                  <div class="productBominformation">
+                    <el-form-item label="数" prop="chQty" label-width="20px" >
+                      <el-input  
+                        v-model="scope.row.chQty"
+                        v-if="scope.row.seen"
+                        :disabled="scope.row.isDisable"
+                        size="mini"
+                      ></el-input>
+                      <span v-else>{{ scope.row.chQty }}</span>
                     </el-form-item>
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column width="80px" >>
+              <el-table-column prop="lossRate" label="损" width="110px" >
+                <template slot-scope="scope" >
+                  <div class="productBominformation">
+                    <el-form-item label="损" prop="lossRate" label-width="20px" >
+                      <el-input  
+                        v-model="scope.row.lossRate"
+                        v-if="scope.row.seen"
+                        :disabled="scope.row.isDisable"
+                        size="mini"
+                      ></el-input>
+                      <span v-else>{{ scope.row.lossRate }}</span>
+                    </el-form-item>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column prop="supplyName" label="厂家" >
+                <template slot-scope="scope" >
+                  <div class="productBominformation">
+                    <el-form-item label="厂家" prop="supplyName" label-width="40px" >
+                      <el-input  
+                        v-model="scope.row.supplyName"
+                        v-if="scope.row.seen"
+                        :disabled="scope.row.isDisable"
+                        size="mini"
+                        style="width:200px"
+                      ></el-input>
+                      <span v-else>{{ scope.row.supplyName }}</span>
+                    </el-form-item>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column width="70px" >>
                 <template slot-scope="scope">
-                  <div class="editProductBomOperation">
-                    <el-tooltip effect="light" content="查看Bom" placement="top">
-                      <el-button size="mini" circle icon="el-icon-view" type="primary" ></el-button>
+                  <div class="productBomOperation">
+
+                    <el-tooltip effect="light" content="确定" placement="top">
+                      <el-button size="mini" circle @click.prevent.stop="addSaveProductBom(scope.$index, scope.row)" icon="el-icon-check" type="primary" ></el-button>
                     </el-tooltip>
-                    <el-tooltip effect="light" v-if="scope.row.status=='Y'" content="停用Bom" placement="top">
-                      <el-button size="mini" @click.prevent.stop="UpdateProductBomStatus(scope.$index, scope.row,true)" plain circle type="danger" icon="el-icon-close"/>
-                    </el-tooltip>
-                    <el-tooltip effect="light" v-else content="启用Bom" placement="top">
-                      <el-button size="mini" @click.prevent.stop="UpdateProductBomStatus(scope.$index, scope.row,false)" plain circle type="primary" icon="el-icon-check"/>
+                    <el-tooltip effect="light" content="删除" placement="top">
+                      <el-button size="mini" :disabled="scope.row.isDisable" @click.prevent.stop="addDeleteProductBom(scope.$index, scope.row)" plain circle type="danger" icon="el-icon-delete"/>
                     </el-tooltip>
                   </div>
                 </template>
               </el-table-column>
 
             </el-table>
+          </el-form-item>
+        </el-row>
 
-          </el-form-item>
-        </el-row>
-        <el-row>
-          <el-form-item>
-            <el-button type="primary" @click="onEditProductBom('productCreateBoMForm')" :loading="loading">保存</el-button>
-            <el-button @click="productCreateBoMDialog = false" v-if="!loading">取 消</el-button>
-          </el-form-item>
-        </el-row>
+        </div>
+        <div class="productBom-selected-header">
+          <span>物料历史记录</span>
+        </div>
+        <div class="productBom-selected-content">
+          <el-row hight>
+            <el-form-item label="Bom列表">
+              <el-table
+                :data="newProductBom.productBomList"
+                border
+                style="width: 100%"
+                size="mini"
+                :show-header="false"
+              >
+                <el-table-column prop="bomNo" label="Bom:" width="180px" >
+                  <template slot-scope="scope" >
+                    <div class="newProductBomInformation">
+                      <el-form-item label="Bom:" prop="bomNo" label-width="45px" >
+                        <span>{{ scope.row.bomNo }}</span>
+                      </el-form-item>
+                    </div>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="expirationDate" label="失效日期:" width="180px" >
+                  <template slot-scope="scope" >
+                    <div class="newProductBomInformation">
+                      <el-form-item label="失效日期:" prop="expirationDate" label-width="80px" >
+                        <span>{{getFullTime(scope.row.expirationDate) }}</span>
+                      </el-form-item>
+                    </div>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="version" label="版本:"  width="145px" >
+                  <template slot-scope="scope">
+                    <div class="newProductBomInformation">
+                      <el-form-item label="版本:" prop="version" label-width="55px" >
+                        <span>{{ scope.row.version }}</span>
+                      </el-form-item>
+                    </div>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="description" label="描述:" >
+                  <template slot-scope="scope" >
+                    <div class="newProductBomInformation">
+                      <el-form-item label="描述:" prop="description" label-width="45px" >
+                        <span>{{ scope.row.description }}</span>
+                      </el-form-item>
+                    </div>
+                  </template>
+                </el-table-column>
+                <el-table-column width="80px" >>
+                  <template slot-scope="scope">
+                    <div class="newProductBomOperation">
+                      <el-tooltip effect="light" content="查看Bom" placement="top">
+                        <el-button size="mini" circle icon="el-icon-view" type="primary" ></el-button>
+                      </el-tooltip>
+                      <el-tooltip effect="light" v-if="scope.row.status=='Y'" content="停用Bom" placement="top">
+                        <el-button size="mini" @click.prevent.stop="UpdateProductBomStatus(scope.$index, scope.row,true)" plain circle type="danger" icon="el-icon-close"/>
+                      </el-tooltip>
+                      <el-tooltip effect="light" v-else content="启用Bom" placement="top">
+                        <el-button size="mini" @click.prevent.stop="UpdateProductBomStatus(scope.$index, scope.row,false)" plain circle type="primary" icon="el-icon-check"/>
+                      </el-tooltip>
+                    </div>
+                  </template>
+                </el-table-column>
+
+              </el-table>
+
+            </el-form-item>
+          </el-row>
+        </div>
+        <div class="productBom-selected-content">
+          <el-row>
+            <el-form-item>
+              <el-button type="primary" @click="onnewProductBom('productCreateBoMForm')" :loading="loading">保 存</el-button>
+              <el-button @click="productCreateBoMDialog = false" v-if="!loading">取 消</el-button>
+            </el-form-item>
+          </el-row>
+        </div>
       </el-form>
     </el-dialog>
 
@@ -370,11 +617,17 @@ export default {
           categoryId:'',
           specification:'',
           unit:'',
+          supplyId:'',
           salesPrice:'',
+          weight:'',
+          weightUnit:'',
+          volume:'',
+          volumeUnit:'',
           remark:'',
           storageCode:'',
           status:'',
           description:'',
+          expireDate:'',
           createBy:'',
           createDate:''
         },
@@ -385,18 +638,27 @@ export default {
           categoryId:'',
           specification:'',
           unit:'',
+          supplyId:'',
           salesPrice:'',
+          weight:'',
+          weightUnit:'',
+          volume:'',
+          volumeUnit:'',
           remark:'',
           storageCode:'',
           status:'',
           description:'',
+          expireDate:'',
           createBy:'',
-          createDate:'',
+          createDate:''
         },
-        editProductBom:{
+        newProductBom:{
           id:'',
           productNo:'',
           productName:'',
+          processId:'',
+          processNo:'',
+          processCost:'',
           specification:'',
           bomNo:'',
           costPrice:'',
@@ -406,37 +668,75 @@ export default {
           createBy:'',
           createDate:'',
           productBomList:[],
+          materialVos:[],
+          status:'',
+        },
+        editProductBom:{
+          id:'',
+          productNo:'',
+          productName:'',
+          processId:'',
+          processName:'',
+          processNo:'',
+          processCost:'',
+          specification:'',
+          bomNo:'',
+          costPrice:'',
+          expirationDate:'',
+          version:'',
+          description:'',
+          createBy:'',
+          createDate:'',
+          productBomList:[],
+          materialVos:[],
+          status:'',
         },
         rules: {
         name: [
-          { required: true, message: "请输入产品名称", trigger: "blur" }
+          { required: true, message: "请输入商品名称", trigger: "blur" }
+        ],
+        specification: [
+          { required: true, message: "请输入商品规格", trigger: "blur" }
         ],
         categoryId: [
-          { required: true, message: "请选择产品类别", trigger: "blur" }
+          { required: true, message: "请选择商品类别", trigger: "blur" }
         ],
         storageCode: [
           { required: true, message: "请选择存储仓库", trigger: "blur" }
+        ],
+        supplyId: [
+          { required: true, message: "请选择商品供应商", trigger: "blur" }
         ],
         },
         rules2: {
         version: [
           { required: true, message: "请输入Bom版本号", trigger: "blur" }
         ],
+        processId:[
+          { required: true, message: "请选择工序", trigger: "blur" }
+        ],
         },
       }
 
     },
     computed: {
-      ...mapGetters(["productList","storageList","categoryList","productBomList"]),
+      ...mapGetters(["productList","storageList","categoryList","productBomList","supplyList","produceProcessList"]),
       productListPageShow(){
         return this.productList.filter((item)=>{
           let key=
           item.productNo +
           item.name +
           item.specification +
+          item.unit +
           item.salePrice +
+          item.storageName +
+          item.supplyName +
+                    item.weight +
+          item.weightUnit +
+          item.volume +
+                    item.volumeUnit +
           item.category +
-          item.storageName ;
+          item.expireDate ;
           let index = key.toUpperCase().indexOf(this.searchContent.toUpperCase());
           return index != -1;
         });
@@ -455,21 +755,17 @@ export default {
       SaveProductBom:"SaveProductBom",
       UpdateProductBom:"UpdateProductBom",
       GetProductBomList:"GetProductBomList",
-      
+      GetSupplyList:"GetSupplyList",
+      FindAllProduceProcessList: "FindAllProduceProcessList",
       }),
-      selectCategoryChanged(){
-
-
-      },
-      selectStorageChanged(){
-
-      },
       resetForm(formName) {
       if (this.$refs[formName]) {
         this.$refs[formName].resetFields();
       }
       this.GetStorageList();
       this.GetCategoryList();
+      this.GetSupplyList();
+      this.newProduct.expireDate=new Date().setMonth(new Date().getMonth()+12);
       this.productAddDialog = true;
       },
 
@@ -575,20 +871,23 @@ export default {
       });
       },
       handleCreateBoM(index,row){
+        // this.FindAllProduceProcessList();
         let prod={productNo:row.productNo,index:index}
         this.QueryProductAndBomObj(prod)
         .then(res=>{
           if (res.resultStatus == 1) {
-            this.editProductBom.productNo=res.data.productNo;
-            this.editProductBom.productName=res.data.name;
-            this.editProductBom.specification=res.data.specification;
-            this.editProductBom.costPrice=res.data.salesPrice;
-            this.editProductBom.description=res.data.description;
-            this.editProductBom.productBomList=res.data.productBomList;
-            this.editProductBom.expirationDate=new Date().setMonth(new Date().getMonth()+1);
-            this.editProductBom.version="";
-            this.editProductBom.bomNo="";
-            this.editProductBom.id="";
+            this.newProductBom.productNo=res.data.productNo;
+            this.newProductBom.productName=res.data.name;
+            this.newProductBom.specification=res.data.specification;
+            // this.newProductBom.costPrice=res.data.salesPrice;
+            this.newProductBom.description=res.data.description;
+            this.newProductBom.productBomList=res.data.productBomList;
+            this.newProductBom.expirationDate=new Date().setMonth(new Date().getMonth()+12);
+            this.newProductBom.version="";
+            this.newProductBom.bomNo="";
+            this.newProductBom.id="";
+            this.newProductBom.description=res.data.specification;
+            this.newProductBom.materialVos=[];
             this.productCreateBoMDialog=true;
             }
             else{
@@ -632,43 +931,128 @@ export default {
       getFullTime(time) {
       return new Date(time).format("yyyy-MM-dd");
       },
-      onEditProductBom(formName){
-          this.$refs[formName].validate(valid=>{
-            if(valid){
-              this.editProductBom.bomNo="b" + new Date().valueOf();
-              this.editProductBom.createDate=new Date();
-              this.editProductBom.createBy="";
-              this.editProductBom.status="Y";
-              this.SaveProductBom(this.editProductBom)
-              .then(res=>{
-                if(res.resultStatus==1){
-                  this.GetProductList();
-                  this.productCreateBoMDialog=false;
-                  this.editProductBom.productBomList=[];
-                  this.$message({
-                    showClose:true,
-                    message:"操作成功",
-                    type:"success"
-                  });
-                }
-                else{
-                  this.$message({
-                  message: res.message,
-                  type: "warning"
-                });
-                }
-              })
-              .catch(err=>{
-                  let alert = err.message ? err.message : err;
-                  this.$message.error(alert);
-              });
+      onnewProductBom(formName){
+        this.$refs[formName].validate(valid=>{
+          if(valid){
+            var price=this.newProductBom.processCost;
+            for( var i = 0; i < this.newProductBom.materialVos.length; i++) {
+              this.newProductBom.materialVos[i].processId=this.newProductBom.processId;
+              this.newProductBom.materialVos[i].PartNo=this.newProductBom.productNo;
+              price=Number(price) + Number(this.newProductBom.materialVos[i].salesPrice) *(Number(this.newProductBom.materialVos[i].chQty)+Number(this.newProductBom.materialVos[i].lossRate))
             }
-            else{
-              this.$message.warning("请填写准确信息");
-              return false;
+            this.newProductBom.costPrice=price;
+            this.newProductBom.status="Y";
+            this.newProductBom.createDate=new Date();
+            this.newProductBom.createBy="";
+
+            console.log(this.newProductBom);
+            //   this.SaveProductBom(this.newProductBom)
+            //   .then(res=>{
+            //     if(res.resultStatus==1){
+            //       // this.GetProductList();
+            //       this.productCreateBoMDialog=false;
+            //       this.newProductBom.materialVos=[];
+            //       this.$message({
+            //         showClose:true,
+            //         message:"操作成功",
+            //         type:"success"
+            //       });
+            //     }
+            //     else{
+            //       this.$message({
+            //       message: res.message,
+            //       type: "warning"
+            //     });
+            //     }
+            //   })
+            //   .catch(err=>{
+            //       let alert = err.message ? err.message : err;
+            //       this.$message.error(alert);
+            //   });
+            // }
+            // else{
+            //   this.$message.warning("请填写准确信息");
+            //   return false;
             }
           })
 
+      },
+
+      addProductBom(){
+        if(!this.addCheckSavedFlag())
+        {
+          if(!this.addCheckEidtable())
+            {
+              this.newProductBom.materialVos.push({ id:"",bomNo:"",processId:"",processNo:"",PartNo:"",chPartNo: "",index:"",chQty:"" ,lossRate:"", processStation:"", supplyId:"" ,materialCostStatus:"",productNo:"", name: "", specification:"",categoryId: "",supplyName:"",salesPrice:"",seen: false,notSavedFlag:true})
+            }
+        }
+      },
+      materialChanged(event,row){
+        row.chPartNo=event.productNo;
+        row.productNo=event.productNo;
+        row.name=event.name
+        row.specification=event.specification;
+        row.categoryId=event.categoryId;
+        row.supplyId=event.supplyId;
+        row.salesPrice=event.salesPrice;
+        row.supplyName=event.supplyName;
+      },
+      processChanged(event){
+        this.newProductBom.processCost=event.cost;
+        this.newProductBom.processId=event.id;
+        this.newProductBom.processName=event.name;
+        this.newProductBom.productNo=event.processNo;
+      },
+      addCellClick(row){
+        if(!row.seen)
+        {
+          if(!this.addCheckEidtable())
+          {
+            row.seen=true;
+          }
+        }
+      },
+      addCheckSavedFlag(){
+        var list= this.newProductBom.materialVos.filter((item)=>{return item.notSavedFlag
+        })
+        if(list.length>0){
+          this.$message.warning('请先完成子料编辑')
+          return true;
+        }
+      },
+      addCheckEidtable(){
+        var list= this.newProductBom.materialVos.filter((item)=>{return item.seen
+        })
+        if(list.length>0){
+          this.$message.warning('请先完成子料编辑')
+          return true;
+        }
+      },
+      addSaveProductBom(index,row){
+        if(row.productNo.trim()===""|| row.chQty.trim()===""||row.lossRate.trim()===""|| isNaN(row.chQty.trim())|| isNaN(row.lossRate.trim()))
+        {
+          this.$message.warning("请正确填写信息");
+          return false;
+        }
+        else
+        {
+          row.seen=false;
+          row.notSavedFlag=false;
+        }
+
+      },
+      addDeleteProductBom(index,row){
+        row.seen=false;
+        row.notSavedFlag=false;
+        this.$messageBox.confirm('确认要删除？',"提示",{
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          })
+          .then(() => {
+              this.newProductBom.materialVos.splice(index,1)
+          })
+          .catch(e=>e);
       }
 
 
@@ -676,6 +1060,7 @@ export default {
     },
     beforeMount() {
       this.GetProductList();
+      this.FindAllProduceProcessList();
     },
 };
 </script>
@@ -695,17 +1080,46 @@ export default {
   width: 400px;
   float: left;
 }
-.editProductBomInformation{
+.newProductBomInformation{
   display: flex;
   flex-direction: row;
   width: auto;
   justify-content: space-between;
 }
-.editProductBomOperation{
+.newProductBomOperation{
   display: flex;
   flex-direction: row;
   width: auto;
   justify-content: space-around;
 }
-
+.productBom-selected-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid lightgray;
+}
+.productBom-selected-content {
+  padding-top: 8px;
+}
+.productBom-selected-content-special{
+  padding-top: 4px;
+}
+.productBominformation{
+  display: flex;
+  flex-direction: row;
+  width: auto;
+  justify-content: space-between;
+}
+.productBomOperation{
+  display: flex;
+  flex-direction: row;
+  width: auto;
+  justify-content: space-around;
+}
+.add-productBom {
+  margin-top: 5px;
+  width: 100%;
+  border: #dcdfe6 dashed 1px !important;
+}
 </style>

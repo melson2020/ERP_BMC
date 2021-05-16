@@ -55,10 +55,11 @@ public class CustomerResource extends BaseResource {
         return customerService.SaveAndUpdate(customer);
     }
 
-    @RequestMapping(value = "/disable",method = RequestMethod.POST)
-    public Result DisableCustomer(@RequestBody Customer customer){
+    @RequestMapping(value = "/updateStatus",method = RequestMethod.POST)
+    public Result UpdateCustomerStatus(@RequestBody Customer customer){
         Result result=new Result();
-        Integer disableCount=customerService.DisableCustomer(customer);
+//        Integer disableCount=customerService.DisableCustomer(customer);
+        Integer disableCount=customerService.UpdateCustomerStatus(customer);
         result.setResultStatus(disableCount>0?1:-1);
         result.setData(disableCount);
         return result;

@@ -86,8 +86,8 @@ export default {
   ReqQueryContactObj(params){
     return service.post("/customerContact/query",params);
   },
-  ReqDisableCustomer(params) {
-    return service.post("/customer/disable", params);
+  ReqUpdateCustomerStatus(params) {
+    return service.post("/customer/updateStatus", params);
   },
   ReqSaveContact(param){
     return service.post("/customerContact/save",param)

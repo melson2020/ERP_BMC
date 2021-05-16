@@ -19,4 +19,8 @@ public interface ICustomerRepository extends JpaRepository<Customer,Integer> {
     @Modifying
     @Query(value = "update customer set `status`='N' where id=?1",nativeQuery = true)
     Integer disableCustomer(Integer customerId);
+
+    @Modifying
+    @Query(value = "update customer set `status`=?1 where id=?2",nativeQuery = true)
+    Integer updateCustomerStatus(String status, Integer id);
 }

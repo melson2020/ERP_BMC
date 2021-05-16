@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,16 +30,18 @@ public class IProductImpl extends AbstractService<Product> implements IProduct {
     private final IProductBomRepository productBomRepository;
     private final IStorageAreaLocationRepository storageAreaLocationRepository;
     private final IProductCategoryRepository iProductCategoryRepository;
+    private final ISupplyRepository supplyRepository;
 
     private final ISysSequence sysSequenceService;
 
-    public IProductImpl(IProductRepository productRepository, EntityManagerUtil entityManagerUtil, IStorageDetailRepository storageDetailRepository, IProductBomRepository productBomRepository, IStorageAreaLocationRepository storageAreaLocationRepository, IProductCategoryRepository iProductCategoryRepository, ISysSequence sysSequenceService) {
+    public IProductImpl(IProductRepository productRepository, EntityManagerUtil entityManagerUtil, IStorageDetailRepository storageDetailRepository, IProductBomRepository productBomRepository, IStorageAreaLocationRepository storageAreaLocationRepository, IProductCategoryRepository iProductCategoryRepository, ISupplyRepository supplyRepository, ISysSequence sysSequenceService) {
         this.productRepository = productRepository;
         this.entityManagerUtil = entityManagerUtil;
         this.storageDetailRepository = storageDetailRepository;
         this.productBomRepository = productBomRepository;
         this.storageAreaLocationRepository = storageAreaLocationRepository;
         this.iProductCategoryRepository = iProductCategoryRepository;
+        this.supplyRepository = supplyRepository;
         this.sysSequenceService = sysSequenceService;
     }
 
@@ -83,7 +86,7 @@ public class IProductImpl extends AbstractService<Product> implements IProduct {
     @Override
     public List<Product> findAllProduct() {
         List<Product> products = new ArrayList<>();
-        String sql = "SELECT pr.id,pr.productNo,pr.`name`,pr.specification,pr.salesPrice,pc.`name` as category,sr.`name` as storageName,pr.unit from product pr left JOIN product_category pc on pc.categoryId=pr.categoryId left JOIN storage_area_location sr on sr.storageCode=pr.storageCode";
+        String sql = "SELECT pr.id,pr.productNo,pr.`name`,pr.specification,pr.unit,pr.salesPrice,sr.`name` as storageName,su.`name` as supplyName,pr.weight,pr.weightUnit,pr.volume,pr.volumeUnit,pc.`name` as category,pr.expireDate ,pr.categoryId,pr.supplyId ,pr.storageCode from product pr left JOIN product_category pc on pc.categoryId=pr.categoryId left JOIN storage_area_location sr on sr.storageCode=pr.storageCode LEFT JOIN supply su on su.id=pr.supplyId order by pr.id DESC";
         StringBuffer sBuffer = new StringBuffer(sql);
         List<Object[]> list = entityManagerUtil.ExcuteSql(sBuffer.toString());
         for (Object[] obj : list) {
@@ -92,10 +95,19 @@ public class IProductImpl extends AbstractService<Product> implements IProduct {
             pr.setProductNo(obj[1] == null ? null : obj[1].toString());
             pr.setName(obj[2] == null ? null : obj[2].toString());
             pr.setSpecification(obj[3] == null ? null : obj[3].toString());
-            pr.setSalesPrice(obj[4] == null ? null : new BigDecimal(obj[4].toString()));
-            pr.setCategory(obj[5] == null ? null : obj[5].toString());
+            pr.setUnit(obj[4] == null ? null : obj[4].toString());
+            pr.setSalesPrice(obj[5] == null ? null : new BigDecimal(obj[5].toString()));
             pr.setStorageName(obj[6] == null ? null : obj[6].toString());
-            pr.setUnit(obj[7] == null ? null : obj[7].toString());
+            pr.setSupplyName(obj[7] == null ? null : obj[7].toString());
+            pr.setWeight(obj[8] == null ? null : new BigDecimal(obj[8].toString()));
+            pr.setWeightUnit(obj[9] == null ? null : obj[9].toString());
+            pr.setVolume(obj[10] == null ? null : new BigDecimal(obj[10].toString()));
+            pr.setVolumeUnit(obj[11] == null ? null : obj[11].toString());
+            pr.setCategory(obj[12] == null ? null : obj[12].toString());
+            pr.setExpireDate(obj[13]==null?null:(Timestamp) obj[13]);
+            pr.setCategoryId(obj[14] == null ? null : obj[14].toString());
+            pr.setSupplyId(obj[15] == null ? null : new Integer((Integer) obj[15]));
+            pr.setStorageCode(obj[16] == null ? null : obj[16].toString());
             products.add(pr);
         }
         return products;
@@ -104,7 +116,7 @@ public class IProductImpl extends AbstractService<Product> implements IProduct {
     @Override
     public Result SaveAndUpdate(Product product) {
         Result result = new Result();
-        Product checkExist = productRepository.findByName(product.getName());
+        Product checkExist = productRepository.findByCeriteria(product.getName(),product.getCategoryId(),product.getSpecification(),product.getSupplyId());
         if (checkExist != null) {
             if (product.getId() == checkExist.getId()) {
                 Product saved = productRepository.save(product);
@@ -118,6 +130,8 @@ public class IProductImpl extends AbstractService<Product> implements IProduct {
                     saved.setStorageName(storage.getName());
                     ProductCategory category = iProductCategoryRepository.findByCategoryId(saved.getCategoryId());
                     saved.setCategory(category.getName());
+                    Supply supply = supplyRepository.findById(saved.getSupplyId());
+                    saved.setSupplyName(supply.getName());
                     result.setData(saved);
                 }
             } else {
@@ -125,18 +139,22 @@ public class IProductImpl extends AbstractService<Product> implements IProduct {
                 result.setMessage("已经存在此产品名称或联系管理员！");
             }
         } else {
-            product.setProductNo(sysSequenceService.GenerateCode(Product.PRODUCT_NO_CHAR));
+            if(product.getId()==null) {
+                product.setProductNo(sysSequenceService.GenerateCode(Product.PRODUCT_NO_CHAR));
+            }
             Product saved = productRepository.save(product);
             if (saved == null) {
                 result.setResultStatus(-1);
                 result.setMessage("保存失败！");
             } else {
-                StorageDetail checkStorageDetail = storageDetailRepository.findByMaterialNo(saved.getProductNo());
+                StorageDetail checkStorageDetail=new StorageDetail();
                 UpdateStorageTable(checkStorageDetail, saved);
                 StorageAreaLocation storage = storageAreaLocationRepository.findByStorageCode(saved.getStorageCode());
                 saved.setStorageName(storage.getName());
                 ProductCategory category = iProductCategoryRepository.findByCategoryId(saved.getCategoryId());
                 saved.setCategory(category.getName());
+                Supply supply = supplyRepository.findById(saved.getSupplyId());
+                saved.setSupplyName(supply.getName());
                 result.setData(saved);
             }
         }
@@ -148,14 +166,13 @@ public class IProductImpl extends AbstractService<Product> implements IProduct {
         ne.setMaterialNo(saved.getProductNo());
         ne.setName(saved.getName());
         ne.setSpecification(saved.getSpecification());
+        ne.setCount(0);
         ne.setLastestPrice(saved.getSalesPrice());
         ne.setUnit(saved.getUnit());
-        ne.setCount(0);
+        ne.setFeature("");
         ne.setStorageCode(saved.getStorageCode());
-        ne.setManufacturer("");
-        if (checkStorageDetail != null) {
+        if (checkStorageDetail != null&&checkStorageDetail.getId()!=null) {
             ne.setId(checkStorageDetail.getId());
-            ne.setManufacturer(checkStorageDetail.getManufacturer());
             ne.setCount(checkStorageDetail.getCount());
             ne.setFeature(checkStorageDetail.getFeature());
         }

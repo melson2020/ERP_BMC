@@ -27,7 +27,7 @@ public class ISysSequenceImpl implements ISysSequence {
             sysSequence.setValueLength(8);
         }
         Integer newValue=sysSequence.getValue()+1;
-        String code=type+String.format("%07d",newValue);
+        String code=type+String.format("%08d",newValue);
         sysSequence.setValue(newValue);
         sysSequenceDao.save(sysSequence);
         return code;

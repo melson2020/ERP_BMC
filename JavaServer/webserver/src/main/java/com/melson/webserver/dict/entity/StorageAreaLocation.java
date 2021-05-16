@@ -10,6 +10,7 @@ import java.util.Date;
 @Entity
 @Table(name="storage_area_location")
 public class StorageAreaLocation {
+    public static final String STORAGE_NO_CHAR="STO";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

@@ -10,6 +10,7 @@ import java.util.List;
 @Entity
 @Table(name = "customer")      //客户表
 public class Customer {
+    public static final String CUSTOMER_NO_CHAR="CU";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

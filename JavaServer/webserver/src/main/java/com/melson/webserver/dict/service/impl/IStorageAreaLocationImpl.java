@@ -2,7 +2,9 @@ package com.melson.webserver.dict.service.impl;
 
 import com.melson.base.AbstractService;
 import com.melson.base.Result;
+import com.melson.base.service.ISysSequence;
 import com.melson.webserver.dict.dao.IStorageAreaLocationRepository;
+import com.melson.webserver.dict.entity.Product;
 import com.melson.webserver.dict.entity.StorageAreaLocation;
 import com.melson.webserver.dict.service.IStorageAreaLocation;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,9 +19,11 @@ import java.util.List;
 @Service
 public class IStorageAreaLocationImpl extends AbstractService<StorageAreaLocation> implements IStorageAreaLocation {
     private final IStorageAreaLocationRepository storageAreaLocationRepository;
+    private final ISysSequence sysSequenceService;
 
-    public IStorageAreaLocationImpl(IStorageAreaLocationRepository storageAreaLocationRepository) {
+    public IStorageAreaLocationImpl(IStorageAreaLocationRepository storageAreaLocationRepository, ISysSequence sysSequenceService) {
         this.storageAreaLocationRepository = storageAreaLocationRepository;
+        this.sysSequenceService = sysSequenceService;
     }
 
     @Override
@@ -55,6 +59,9 @@ public class IStorageAreaLocationImpl extends AbstractService<StorageAreaLocatio
         }
         else
         {
+            if(storageAreaLocation.getId()==null) {
+                storageAreaLocation.setStorageCode(sysSequenceService.GenerateCode(StorageAreaLocation.STORAGE_NO_CHAR));
+            }
             StorageAreaLocation saved=storageAreaLocationRepository.save(storageAreaLocation);
             if(saved==null){
                 result.setResultStatus(-1);

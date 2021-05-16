@@ -9,24 +9,30 @@ import java.util.List;
  * Created by Messi on 2021/4/23
  */
 @Entity
-@Table(name = "product")      //产品表
+@Table(name = "product")      //商品表
 public class Product {
-    public static final String PRODUCT_NO_CHAR="P";
+    public static final String PRODUCT_NO_CHAR="M";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String productNo;       // 产品编码，8位编码规则 例：P0000001
-    private String name;            // 产品名称
-    private String categoryId;      // 产品类别，8位编码规则 例：CAT00001
-    private String specification;   // 产品规格
-    private String unit;            // 产品单位
+    private String productNo;       // 商品编码，8位编码规则 例：P0000001
+    private String name;            // 商品名称
+    private String categoryId;      // 商品类别，8位编码规则 例：CAT00001
+    private String specification;   // 商品规格
+    private String unit;            // 商品单位
+    private Integer supplyId;       // 商品供应商
     private BigDecimal salesPrice;  // 销售价格
+    private BigDecimal weight;      // 物料重量
+    private String weightUnit;      // 物料重量单位
+    private BigDecimal volume;      // 物料体积
+    private String volumeUnit;      // 物料体积单位
     private String remark;          // 备注信息
-    private String storageCode;     // 产品存储仓库编号 //TODO:进销存端要和这里的仓库编码对应起来
-    private String status;          // 产品是否可售： N：不可售；Y（或空）表示可售
-    private String description;     // 产品备注描述
-    private String createBy;        // 产品创建人
-    private Date createDate;        // 产品创建时间
+    private String storageCode;     // 商品存储仓库编号 //TODO:进销存端要和这里的仓库编码对应起来
+    private String status;          // 商品是否可售： N：不可售；Y（或空）表示可售
+    private String description;     // 商品备注描述
+    private Date expireDate;        // 商品过期时间
+    private String createBy;        // 商品创建人
+    private Date createDate;        // 商品创建时间
 
 
     @Transient
@@ -34,8 +40,14 @@ public class Product {
     @Transient
     private String storageName;
     @Transient
+    private String supplyName;
+    @Transient
     private List<ProductBom> productBomList;
 
+
+    public static String getProductNoChar() {
+        return PRODUCT_NO_CHAR;
+    }
 
     public Integer getId() {
         return id;
@@ -85,12 +97,52 @@ public class Product {
         this.unit = unit;
     }
 
+    public Integer getSupplyId() {
+        return supplyId;
+    }
+
+    public void setSupplyId(Integer supplyId) {
+        this.supplyId = supplyId;
+    }
+
     public BigDecimal getSalesPrice() {
         return salesPrice;
     }
 
     public void setSalesPrice(BigDecimal salesPrice) {
         this.salesPrice = salesPrice;
+    }
+
+    public BigDecimal getWeight() {
+        return weight;
+    }
+
+    public void setWeight(BigDecimal weight) {
+        this.weight = weight;
+    }
+
+    public String getWeightUnit() {
+        return weightUnit;
+    }
+
+    public void setWeightUnit(String weightUnit) {
+        this.weightUnit = weightUnit;
+    }
+
+    public BigDecimal getVolume() {
+        return volume;
+    }
+
+    public void setVolume(BigDecimal volume) {
+        this.volume = volume;
+    }
+
+    public String getVolumeUnit() {
+        return volumeUnit;
+    }
+
+    public void setVolumeUnit(String volumeUnit) {
+        this.volumeUnit = volumeUnit;
     }
 
     public String getRemark() {
@@ -125,6 +177,14 @@ public class Product {
         this.description = description;
     }
 
+    public Date getExpireDate() {
+        return expireDate;
+    }
+
+    public void setExpireDate(Date expireDate) {
+        this.expireDate = expireDate;
+    }
+
     public String getCreateBy() {
         return createBy;
     }
@@ -155,6 +215,14 @@ public class Product {
 
     public void setStorageName(String storageName) {
         this.storageName = storageName;
+    }
+
+    public String getSupplyName() {
+        return supplyName;
+    }
+
+    public void setSupplyName(String supplyName) {
+        this.supplyName = supplyName;
     }
 
     public List<ProductBom> getProductBomList() {

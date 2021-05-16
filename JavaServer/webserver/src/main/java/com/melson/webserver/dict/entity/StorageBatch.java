@@ -16,7 +16,7 @@ public class StorageBatch {
     private String bomNo;
     private String specification;
     private String batchNo;
-    private String manufacturer;
+    private Integer supplyId;
     private Integer count;
     private String countUnit;
     private String storageInCode;
@@ -69,12 +69,12 @@ public class StorageBatch {
         this.batchNo = batchNo;
     }
 
-    public String getManufacturer() {
-        return manufacturer;
+    public Integer getSupplyId() {
+        return supplyId;
     }
 
-    public void setManufacturer(String manufacturer) {
-        this.manufacturer = manufacturer;
+    public void setSupplyId(Integer supplyId) {
+        this.supplyId = supplyId;
     }
 
     public Integer getCount() {

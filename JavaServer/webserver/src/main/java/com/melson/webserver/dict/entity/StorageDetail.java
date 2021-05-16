@@ -16,8 +16,8 @@ public class StorageDetail {
     private String materialNo;         // 包括物料号，产品号等
     private String name;
     private String specification;
-    private String manufacturer;
     private Integer count;
+    private Integer supplyId;
     private BigDecimal lastestPrice;
     private String unit;
     private String feature;
@@ -55,20 +55,20 @@ public class StorageDetail {
         this.specification = specification;
     }
 
-    public String getManufacturer() {
-        return manufacturer;
-    }
-
-    public void setManufacturer(String manufacturer) {
-        this.manufacturer = manufacturer;
-    }
-
     public Integer getCount() {
         return count;
     }
 
     public void setCount(Integer count) {
         this.count = count;
+    }
+
+    public Integer getSupplyId() {
+        return supplyId;
+    }
+
+    public void setSupplyId(Integer supplyId) {
+        this.supplyId = supplyId;
     }
 
     public BigDecimal getLastestPrice() {
