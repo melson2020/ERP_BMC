@@ -24,58 +24,58 @@
                 ></el-option>
               </el-select>
             </div>
-            <div class="cell-div mt40">
-              <span class="cell-div-title">名称：</span>
-              <el-input
-                class="text-left-center"
-                v-model="vendeeInfo.name"
+            <div style="padding: 10px">
+              <el-form
+                ref="vendeeForm"
+                class="contract-form"
+                label-position="left"
+                label-width="50px"
                 size="mini"
-              ></el-input>
-            </div>
-            <div class="cell-div">
-              <span class="cell-div-title">地址：</span>
-              <el-input
-                class="text-left-center"
-                v-model="vendeeInfo.address"
-                size="mini"
-              ></el-input>
-            </div>
-            <div class="cell-div">
-              <span class="cell-div-title">联系：</span>
-              <el-input
-                class="text-left-center"
-                v-model="vendeeInfo.contactUser"
-                size="mini"
-              ></el-input>
-            </div>
-            <div class="cell-div">
-              <span class="cell-div-title">电话：</span>
-              <el-input
-                class="text-left-center"
-                v-model="vendeeInfo.phone"
-                size="mini"
-              ></el-input>
-            </div>
-            <div class="cell-div">
-              <span class="cell-div-title">税号：</span>
-              <el-input
-                class="text-left-center"
-                v-model="vendeeInfo.taxNo"
-                size="mini"
-              ></el-input>
-            </div>
-            <div class="cell-div">
-              <span class="cell-div-title">账号：</span>
-              <el-input
-                class="text-left-center"
-                v-model="vendeeInfo.account"
-                size="mini"
-              ></el-input>
+                :rules="vendeeRules"
+                :model="vendeeInfo"
+              >
+                <el-form-item label="名称" prop="name">
+                  <el-input
+                    class="form-input"
+                    v-model="vendeeInfo.name"
+                  ></el-input>
+                </el-form-item>
+                <el-form-item label="地址" prop="address">
+                  <el-input
+                    class="form-input"
+                    v-model="vendeeInfo.address"
+                  ></el-input>
+                </el-form-item>
+                <el-form-item label="联系" prop="contactUser">
+                  <el-input
+                    class="form-input"
+                    v-model="vendeeInfo.contactUser"
+                  ></el-input>
+                </el-form-item>
+                <el-form-item label="电话" prop="phone">
+                  <el-input
+                    class="form-input"
+                    v-model="vendeeInfo.phone"
+                  ></el-input>
+                </el-form-item>
+                <el-form-item label="税号" prop="taxNo">
+                  <el-input
+                    class="form-input"
+                    v-model="vendeeInfo.taxNo"
+                  ></el-input>
+                </el-form-item>
+                <el-form-item label="账户" prop="account">
+                  <el-input
+                    class="form-input"
+                    v-model="vendeeInfo.account"
+                  ></el-input>
+                </el-form-item>
+              </el-form>
             </div>
           </div>
           <div class="constract-buyer-info-div-left-secfloor">
             <div class="title-div-gray flex justify-content">
-              <span>收货单位</span>
+              <span>收货信息</span>
               <el-select
                 v-model="selectedAddress"
                 @change="diliveryAdrressChanged"
@@ -91,69 +91,80 @@
                 ></el-option>
               </el-select>
             </div>
-            <div class="cell-div mt40">
-              <span class="cell-div-title">名称：</span>
-              <el-input
-                class="text-left-center"
-                v-model="goodReceveInfo.name"
+            <div style="padding: 10px">
+              <el-form
+                ref="goodReceveForm"
+                class="contract-form"
+                label-position="left"
+                label-width="50px"
                 size="mini"
-              ></el-input>
-            </div>
-            <div class="cell-div">
-              <span class="cell-div-title">地址：</span>
-              <el-input
-                class="text-left-center"
-                v-model="goodReceveInfo.address"
-                size="mini"
-              ></el-input>
-            </div>
-            <div class="cell-div">
-              <span class="cell-div-title">联系：</span>
-              <el-input
-                class="text-left-center"
-                v-model="goodReceveInfo.contactUser"
-                size="mini"
-              ></el-input>
-            </div>
-            <div class="cell-div">
-              <span class="cell-div-title">电话：</span>
-              <el-input
-                class="text-left-center"
-                v-model="goodReceveInfo.phone"
-                size="mini"
-              ></el-input>
-            </div>
-            <div class="cell-div">
-              <span class="cell-div-title">税号：</span>
-              <el-input
-                class="text-left-center"
-                v-model="goodReceveInfo.taxNo"
-                size="mini"
-              ></el-input>
-            </div>
-            <div class="cell-div">
-              <span class="cell-div-title">账号：</span>
-              <el-input
-                class="text-left-center"
-                v-model="goodReceveInfo.account"
-                size="mini"
-              ></el-input>
+                :rules="vendeeRules"
+                :model="goodReceveInfo"
+              >
+                <el-form-item label="名称" prop="name">
+                  <el-input
+                    class="form-input"
+                    v-model="goodReceveInfo.name"
+                  ></el-input>
+                </el-form-item>
+                <el-form-item label="地址" prop="address">
+                  <el-input
+                    class="form-input"
+                    v-model="goodReceveInfo.address"
+                  ></el-input>
+                </el-form-item>
+                <el-form-item label="联系" prop="contactUser">
+                  <el-input
+                    class="form-input"
+                    v-model="goodReceveInfo.contactUser"
+                  ></el-input>
+                </el-form-item>
+                <el-form-item label="电话" prop="phone">
+                  <el-input
+                    class="form-input"
+                    v-model="goodReceveInfo.phone"
+                  ></el-input>
+                </el-form-item>
+                <el-form-item label="税号" prop="taxNo">
+                  <el-input
+                    class="form-input"
+                    v-model="goodReceveInfo.taxNo"
+                  ></el-input>
+                </el-form-item>
+                <el-form-item label="账户" prop="account">
+                  <el-input
+                    class="form-input"
+                    v-model="goodReceveInfo.account"
+                  ></el-input>
+                </el-form-item>
+              </el-form>
             </div>
           </div>
         </div>
         <div class="constract-buyer-info-div-right">
           <div class="title-div-gray">资料</div>
-          <div
-            class="cell-div"
-            v-for="detail in contractTemplate.detailList"
-            :key="detail.id"
-          >
-            <span class="cell-div-title mb40">{{ detail.value }}：</span>
-            <el-input
-              class="text-left-center"
-              v-model="contractInfo[detail.bindingField]"
+          <div style="padding: 10px; height: 100%">
+            <el-form
+              ref="contractForm"
+              class="contract-form"
+              label-position="left"
+              label-width="80px"
               size="mini"
-            ></el-input>
+              :rules="contractInfoRules"
+              :model="contractInfo"
+            >
+              <el-form-item
+                :label="detail.value"
+                v-for="detail in contractTemplate.detailList"
+                :prop="detail.bindingField"
+                :key="detail.id"
+              >
+                <el-input
+                  class="form-input"
+                  v-model="contractInfo[detail.bindingField]"
+                ></el-input>
+              </el-form-item>
+            </el-form>
           </div>
         </div>
       </div>
@@ -204,7 +215,7 @@
                 </el-select>
                 <i
                   class="el-icon-delete fz12"
-                  @click="removeContractProduct(scope.$index)"
+                  @click="removeContractProduct(scope.$index, scope.row)"
                 ></i>
               </div>
               <span v-else>{{ scope.row.productName }}</span>
@@ -248,9 +259,6 @@
             </template>
           </el-table-column>
           <el-table-column prop="taxTotalPrice" label="含税总价">
-            <!-- <template slot-scope="scope">
-                <span >{{$my.NumberMul(scope.row.count,scope.row.taxPrice)}}</span>
-              </template> -->
           </el-table-column>
         </el-table>
         <el-button
@@ -310,8 +318,8 @@
       <div class="contract-confirm-div fz9">
         <div class="contract-confirm-box">
           <span>卖方确认</span>
-          <span>{{ companyInfo.name }}</span>
-          <span>{{ companyInfo.address }}</span>
+          <span>名称：{{ companyInfo.name }}</span>
+          <span>地址：{{ companyInfo.address }}</span>
           <span>开户行：{{ companyInfo.bank }}</span>
           <span>账号：{{ companyInfo.account }}</span>
           <span>税号：{{ companyInfo.taxNo }}</span>
@@ -332,15 +340,13 @@
     </div>
     <div class="edit-contract-button-div">
       <el-button @click="saveContract" type="primary">保存合同</el-button>
-      <el-button @click="printPdf" type="primary">打印合同</el-button>
-      <el-button type="warning">清空内容</el-button>
+      <el-button @click="clearContract" type="warning">清空内容</el-button>
     </div>
   </div>
 </template>
 <script>
 import { mapGetters } from "vuex";
 import { mapActions } from "vuex";
-import print from "print-js";
 export default {
   name: "m-create-intent-constract",
   data() {
@@ -358,7 +364,18 @@ export default {
         taxNo: "",
         account: "",
       },
+      purchaserConfirm:{},
       goodReceveInfo: {
+        name: "",
+        addressId: "",
+        address: "",
+        contactUser: "",
+        phone: "",
+        taxNo: "",
+        account: "",
+      },
+      companyInfo: {
+        id:'',
         name: "",
         addressId: "",
         address: "",
@@ -383,19 +400,51 @@ export default {
         quality: "",
         taxRate: "",
       },
-      companyInfo: {
-        name: "测试公司数据",
-        address: "苏州市吴中区鹿山路001号",
-        bank: "中国银行高新区狮山路分行",
-        account: "pp0956743",
-        taxNo: "91384792U874K9",
-      },
       contractProductList: [],
       taxRateList: [],
+      vendeeRules: {
+        name: [{ required: true, message: "请输入名称", trigger: "blur" }],
+        address: [{ required: true, message: "请输入地址", trigger: "blur" }],
+        contactUser: [
+          { required: true, message: "请输入联系人", trigger: "blur" },
+        ],
+        phone: [{ required: true, message: "请输入电话", trigger: "blur" }],
+        taxNo: [{ required: true, message: "请输入税号", trigger: "blur" }],
+        account: [{ required: true, message: "请输入账户", trigger: "blur" }],
+      },
+      contractInfoRules: {
+        contractNo: [
+          { required: true, message: "请输入合同号", trigger: "blur" },
+        ],
+        orderTicketNo: [
+          { required: true, message: "请输入订单号", trigger: "blur" },
+        ],
+        payDate: [
+          { required: true, message: "请输入付款时间", trigger: "blur" },
+        ],
+        payWay: [
+          { required: true, message: "请输入付款方式", trigger: "blur" },
+        ],
+        currency: [{ required: true, message: "请输入币种", trigger: "blur" }],
+        deliverDate: [
+          { required: true, message: "请输入交货时间", trigger: "blur" },
+        ],
+      },
     };
   },
+  watch: {
+    company(c) {
+      if (!this.companyInfo.id) {
+        this.companyInfo.name = c.companyName;
+        this.companyInfo.address = c.address;
+        this.companyInfo.bank = c.companyBankName;
+        this.companyInfo.account = c.companyBankNo;
+        this.companyInfo.taxNo = c.taxNo;
+      }
+    },
+  },
   computed: {
-    ...mapGetters(["contractTemplate", "customerVoList"]),
+    ...mapGetters(["contractTemplate", "customerVoList", "company"]),
     contractProductTotal: function () {
       var contractSummary = { price: 0, tax: 0 };
       var total = 0;
@@ -419,6 +468,8 @@ export default {
       GetContractVoByCustomerNo: "GetContractVoByCustomerNo",
       SearchContractIntentionProductList: "SearchContractIntentionProductList",
       GetContractOne: "GetContractOne",
+      GetCompanyInfo: "GetCompanyInfo",
+      RemoveContractStock: "RemoveContractStock",
     }),
     loadContract(contractId) {
       const loading = this.$loading({
@@ -431,11 +482,17 @@ export default {
         .then((res) => {
           if (res.resultStatus == 1) {
             let existContract = res.data;
+            existContract.productList.map((item) => {
+              item.seen = false;
+            });
             this.vendeeInfo = existContract.purchaser;
             this.goodReceveInfo = existContract.goodReceiveInfo;
             this.contractProductList = existContract.productList;
             this.contractInfo = existContract.contract;
-            this.companyInfo == existContract.vendorConfirm;
+            this.purchaserConfirm=existContract.purchaserConfirm
+            this.companyInfo = existContract.vendorConfirm;
+            console.log(existContract.vendorConfirm)
+             console.log(this.companyInfo)
             loading.close();
           } else {
             loading.close();
@@ -448,14 +505,16 @@ export default {
     addContractDetail() {
       if (
         this.contractProductList.filter((item) => {
-          return item.id < 0;
+          return item.productId < 0;
         }).length > 0
       ) {
         this.$message.warning("请先完成填写");
         return;
       }
+      this.contractProductList.map((item) => {
+        item.seen = false;
+      });
       this.contractProductList.push({
-        id: -1,
         productId: -1,
         productName: "",
         specification: "",
@@ -465,7 +524,6 @@ export default {
         taxTotalPrice: "",
         seen: true,
       });
-      this.selectPid = -1;
     },
     remoteMethod(query) {
       if (this.vendeeInfo.customerNo == "") {
@@ -503,7 +561,6 @@ export default {
       }
     },
     onSelect(item, row) {
-      row.id = item.id;
       row.productId = item.id;
       row.productName = item.productName;
       row.productNo = item.productNo;
@@ -511,25 +568,39 @@ export default {
       row.countUnit = item.unit;
       row.seen = false;
       row.remark = item.remark;
-      row.taxPrice = item.salesPrice == null ? "" : item.salesPrice;
+      row.taxPrice = item.salesPrice == null ? 0 : item.salesPrice;
     },
     cellClick(row) {
       row.seen = true;
-      this.selectPid = row.id;
     },
     loseFcous(index, row) {
       row.seen = false;
     },
-    removeContractProduct(index) {
-      this.contractProductList.splice(index);
-    },
-    printPdf() {
-      print({
-        printable: "outTicketPdf",
-        type: "html",
-        maxWidth: "100%",
-        targetStyles: ["*"],
-      });
+    removeContractProduct(index, row) {
+      if (!row.id) {
+        this.contractProductList.splice(index);
+      } else {
+        this.$messageBox
+          .confirm("确认删除？", "删除产品", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning",
+          })
+          .then(() => {
+            this.RemoveContractStock({ id: row.id })
+              .then((res) => {
+                if (res.resultStatus == 1) {
+                  this.contractProductList.splice(index);
+                } else {
+                  this.$message.warning("删除失败");
+                }
+              })
+              .catch((err) => {
+                this.$message.error(err.message);
+              });
+          })
+          .catch((e) => e);
+      }
     },
     vendeeInfoChanged(customerNo) {
       this.GetContractVoByCustomerNo({ customerNo: customerNo })
@@ -574,25 +645,73 @@ export default {
       this.goodReceveInfo.address = address.deliverAddress;
       this.goodReceveInfo.contactUser = address.contactName;
       this.goodReceveInfo.phone = address.phone;
+      if (this.vendeeInfo.contactUser == "") {
+        this.vendeeInfo.contactUser = address.contactName;
+      }
       this.goodReceveInfo.customerNo = this.vendeeInfo.customerNo;
       this.goodReceveInfo.taxNo = this.vendeeInfo.taxNo;
       this.goodReceveInfo.account = this.vendeeInfo.account;
     },
+    clearContract() {
+      this.$refs["vendeeForm"].resetFields();
+      this.$refs["goodReceveForm"].resetFields();
+      this.$refs["contractForm"].resetFields();
+      this.contractProductList = [];
+      this.contractInfo.taxRate = "";
+    },
     saveContract() {
-      var saveObj = {
-        contract: this.contractInfo,
-        purchaser: this.vendeeInfo,
-        goodReceiveInfo: this.goodReceveInfo,
-        productList: this.contractProductList,
-        vendorConfirm: this.companyInfo,
-        purchaserConfirm: this.vendeeInfo,
-      };
-      this.SaveIntentionContract(saveObj);
+      this.$refs["vendeeForm"].validate((valid) => {
+        if (valid) {
+          this.$refs["goodReceveForm"].validate((v2) => {
+            if (v2) {
+              this.$refs["contractForm"].validate((v3) => {
+                if (v3) {
+                  var checkRes = this.checkProductList();
+                  if (checkRes) {
+                    if (this.contractInfo.taxRate != "") {
+                      var saveObj = {
+                        contract: this.contractInfo,
+                        purchaser: this.vendeeInfo,
+                        goodReceiveInfo: this.goodReceveInfo,
+                        productList: this.contractProductList,
+                        vendorConfirm: this.companyInfo,
+                        purchaserConfirm: this.purchaserConfirm.id?this.purchaserConfirm:this.vendeeInfo,
+                      };
+                      this.SaveIntentionContract(saveObj);
+                    } else {
+                      this.$message.warning("请选择税率");
+                    }
+                  } else {
+                    this.$message.warning("请完善产品信息");
+                  }
+                } else {
+                  this.$message.warning("请填写必要信息");
+                }
+              });
+            } else {
+              this.$message.warning("请填写必要信息");
+            }
+          });
+        } else {
+          this.$message.warning("请填写必要信息");
+        }
+      });
+    },
+    checkProductList: function () {
+      if (this.contractProductList.length <= 0) return false;
+      var pass = true;
+      this.contractProductList.map((item) => {
+        if (item.count <= 0 || item.taxPrice <= 0) {
+          pass = false;
+        }
+      });
+      return pass;
     },
   },
   beforeMount() {
     this.GetContractTemplate();
     this.GetCustomerVoList();
+    this.GetCompanyInfo();
   },
 };
 </script>
@@ -605,11 +724,7 @@ export default {
   flex-direction: column;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
 }
-.create-constract-main-container {
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-}
+
 .constract-header {
   height: 60px;
   display: inline;
@@ -626,17 +741,17 @@ export default {
 .constract-buyer-info-div {
   display: flex;
   flex-direction: row;
-  height: 480px;
-  border: 1px solid rgb(129, 127, 127);
+  // height: 480px;
+  border: 1px solid rgb(209, 205, 205);
 }
 .constract-buyer-info-div-left {
   height: 100%;
-  width: 55%;
+  border-right: 1px solid rgb(209, 205, 205);
+  width: 50%;
 }
 .constract-buyer-info-div-right {
   height: 100%;
-  width: 45%;
-  border-left: 1px solid rgb(129, 127, 127);
+  width: 50%;
   display: flex;
   flex-direction: column;
 }
@@ -658,20 +773,12 @@ export default {
   padding: 0px 10px;
   font-weight: bold;
 }
-.text-left-center {
-  font-size: 0.8rem;
-  padding: 0.1rem 0;
-  text-align: left;
-  width: 300px;
-}
+
 .constract-product-detail-div {
   margin-top: 15px;
-  border: 1px solid rgb(129, 127, 127);
+  border: 1px solid rgb(209, 205, 205);
 }
-.constract-product-detail-summary-div {
-  display: flex;
-  flex-direction: column;
-}
+
 .constract-product-detail-summary-item {
   display: flex;
   flex-direction: row;
@@ -714,22 +821,13 @@ export default {
   padding: 1rem 0;
   text-align: right;
 }
-.cell-div {
-  display: flex;
-  align-items: center;
-  font-size: 0.7rem;
-  padding: 0 10px;
-}
-.cell-div-title {
-  width: 90px;
-  text-align: left;
-}
 .justify-content {
   justify-content: space-between;
 }
 .add-contract-deail {
   margin-top: 2px;
   width: 100%;
+  color: #259dff;
   border: #dcdfe6 dashed 1px !important;
 }
 .contract-product-detail-select-div {
@@ -737,8 +835,12 @@ export default {
   align-items: center;
   justify-content: space-between;
 }
-.contract-product-seen-div{
+.contract-product-seen-div {
   display: flex;
   align-items: center;
+}
+.form-input {
+  width: 350px;
+  float: left;
 }
 </style>

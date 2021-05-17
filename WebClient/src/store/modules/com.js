@@ -9,7 +9,8 @@ const state = {
     loading: {},
     cityList: [],
     provinceList: [],
-    areaList: []
+    areaList: [],
+    company:[]
 };
 
 const actions = {
@@ -58,6 +59,17 @@ const actions = {
     },
     RegisterCompany({},params){
         return request.RegisterCompany(params);
+    },
+    GetCompanyInfo({commit}){
+        request.GetCompanyInfo().then(res=>{
+            if (res.resultStatus == 1) {
+                commit(types.COM_COMPANY_INFO, res.data)
+            } else {
+                Message.warning(res.messgae)
+            }
+        }).catch(err => {
+            Message.error(err.messgae)
+        })
     }
 };
 
@@ -65,7 +77,8 @@ const getters = {
     maskloading: state => state.maskloading,
     provinceList: state => state.provinceList,
     cityList: state => state.cityList,
-    areaList: state => state.areaList
+    areaList: state => state.areaList,
+    company:state=>state.company
 };
 
 const mutations = {
@@ -92,6 +105,9 @@ const mutations = {
     },
     [types.COM_AREA_LIST](state, data) {
         state.areaList = data;
+    },
+    [types.COM_COMPANY_INFO](state,data){
+        state.company=data
     }
 };
 

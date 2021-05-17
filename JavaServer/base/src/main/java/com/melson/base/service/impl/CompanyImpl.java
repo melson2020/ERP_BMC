@@ -75,6 +75,11 @@ public class CompanyImpl extends AbstractService<Company> implements ICompany {
         return result;
     }
 
+    @Override
+    public Company FindCompanyOne() {
+        return companyDao.findAll().get(0);
+    }
+
     //生成公司 返回公司admin roleId
     public Company CreateCompanyAndRoles(Company company) {
         SystemConfig config = systemConfigService.findFormCache("REGISTER_DELAY_DATE");

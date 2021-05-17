@@ -10,7 +10,7 @@
             v-model="searchValue.formalDate"
             type="date"
             format="yyyy 年 MM 月 dd 日"
-            placeholder="选择日期"
+            placeholder="选择日期（转正）"
             size="small"
             value-format="yyyy-MM-dd"
           >

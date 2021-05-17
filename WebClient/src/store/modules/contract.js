@@ -8,7 +8,7 @@ const state = {
     contractTemplate: {},
     customerVoList: [],
     intentionContractList: [],
-    formalContractList:[]
+    formalContractList: []
 };
 
 const actions = {
@@ -74,7 +74,7 @@ const actions = {
             Message.error(err.message)
         })
     },
-    InvalidContract({commit},param){
+    InvalidContract({ commit }, param) {
         request.InvalidContract(param).then(res => {
             if (res.resultStatus == 1) {
                 Message.success("作废成功")
@@ -86,7 +86,7 @@ const actions = {
             Message.error(err.message)
         })
     },
-    GetFormalContractList({commit},param){
+    GetFormalContractList({ commit }, param) {
         request.GetFormalContractList(param).then(res => {
             if (res.resultStatus == 1) {
                 commit(types.CONTRACT_FORMAL_LIST, res.data)
@@ -97,7 +97,10 @@ const actions = {
             Message.error(err.message)
         })
     },
-    GetContractOne({},param){
+    RemoveContractStock({ }, param) {
+        return request.RemoveContractStock(param)
+    },
+    GetContractOne({ }, param) {
         return request.GetContractOne(param);
     }
 };
@@ -106,7 +109,7 @@ const getters = {
     contractTemplate: state => state.contractTemplate,
     customerVoList: state => state.customerVoList,
     intentionContractList: state => state.intentionContractList,
-    formalContractList:state=>state.formalContractList
+    formalContractList: state => state.formalContractList
 };
 
 const mutations = {
@@ -119,14 +122,14 @@ const mutations = {
     [types.CONTRACT_INTENTION_LIST](state, data) {
         state.intentionContractList = data;
     },
-    [types.CONTRACT_FORMAL_LIST](state,data){
+    [types.CONTRACT_FORMAL_LIST](state, data) {
         state.formalContractList = data;
     },
     RemoveIntentionContract(state, data) {
         var index = state.intentionContractList.indexOf(item => {
-            return item.id ===data.id
+            return item.id === data.id
         })
-        state.intentionContractList.splice(index,1)
+        state.intentionContractList.splice(index, 1)
     }
 };
 

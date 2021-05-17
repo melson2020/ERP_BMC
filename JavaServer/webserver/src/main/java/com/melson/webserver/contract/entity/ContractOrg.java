@@ -70,6 +70,8 @@ public class ContractOrg {
      */
     private String account;
 
+    private String customerNo;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getId() {
@@ -150,5 +152,13 @@ public class ContractOrg {
 
     public void setAccount(String account) {
         this.account = account;
+    }
+
+    public String getCustomerNo() {
+        return customerNo;
+    }
+
+    public void setCustomerNo(String customerNo) {
+        this.customerNo = customerNo;
     }
 }

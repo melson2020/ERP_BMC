@@ -17,4 +17,6 @@ public interface ICompany extends IService<Company> {
      * @param company
      */
     Result RegisterCompany(Company company,String password);
+
+    Company FindCompanyOne();
 }

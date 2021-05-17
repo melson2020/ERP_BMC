@@ -1,15 +1,23 @@
 <template>
   <div class="intent-contract-main-container">
     <div class="intent-contract-header">
+      <el-button
+        icon="el-icon-refresh-right"
+        @click="refreshIntentList"
+        type="primary"
+        size="small"
+        >刷新</el-button
+      >
       <el-input
         class="intent-fliter-input"
         size="small"
+        v-model="searchValue"
         placeholder="搜索合同号 / 客户名称"
         suffix-icon="el-icon-search"
       ></el-input>
     </div>
     <el-table
-      :data="intentionContractList"
+      :data="intentionContractListShow"
       border=""
       stripe
       style="width: 100%"
@@ -53,6 +61,13 @@
             @click="deleteOnClick(scope.row.id)"
             circle
           ></el-button>
+          <el-button
+            icon="el-icon-tickets"
+            type="success"
+            size="mini"
+            @click="printOnClick(scope.row.id)"
+            circle
+          ></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -61,10 +76,19 @@
         <m-edit-contract ref="child"></m-edit-contract>
       </div>
     </el-dialog>
+    <el-dialog
+      ref="dialog"
+      title="合同详细"
+      :visible.sync="printDialogVisible"
+      width="1100px"
+    >
+      <m-contractTemplate ref="child"></m-contractTemplate>
+    </el-dialog>
   </div>
 </template>
 <script>
 import editContract from "./EditContract";
+import contractTemplate from "./ContractTemplate";
 import { mapGetters } from "vuex";
 import { mapActions } from "vuex";
 export default {
@@ -72,10 +96,23 @@ export default {
   data() {
     return {
       dialogVisible: false,
+      printDialogVisible: false,
+      searchValue: "",
     };
   },
   computed: {
     ...mapGetters(["intentionContractList"]),
+    intentionContractListShow() {
+      if (this.searchValue == "") {
+        return this.intentionContractList;
+      } else {
+        return this.intentionContractList.filter((item) => {
+          let key = item.contractNo + item.customerName;
+          let index = key.toUpperCase().indexOf(this.searchValue.toUpperCase());
+          return index != -1;
+        });
+      }
+    },
   },
   methods: {
     ...mapActions({
@@ -126,9 +163,19 @@ export default {
         })
         .catch((e) => e);
     },
+    refreshIntentList() {
+      this.GetIntentionContractList();
+    },
+    printOnClick(id) {
+      this.printDialogVisible = !this.printDialogVisible;
+      setTimeout(() => {
+        this.$refs["child"].loadContract(id);
+      }, 200);
+    },
   },
   components: {
     "m-edit-contract": editContract,
+      "m-contractTemplate": contractTemplate,
   },
   beforeMount() {
     this.GetIntentionContractList();
@@ -145,6 +192,9 @@ export default {
   float: right;
 }
 .intent-contract-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   padding-bottom: 10px;
 }
 .intent-contract-submit-div {

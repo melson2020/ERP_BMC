@@ -69,4 +69,6 @@ public interface IContractService {
      * @return
      */
     List<ContractShowVo> findFormalList(Map<String,String[]> kvMap);
+
+    void DeleteContractStock(Integer id);
 }

@@ -154,4 +154,12 @@ public abstract class AbsContractResource extends BaseResource {
     public Result contractTemplate() {
         return success(contractTemplateService.findContractTemplateByType(ContractTemplate.TEMPLATE_NORMAL));
     }
+
+    @DeleteMapping(value = "/deleteStock")
+    public Result DeleteStock(HttpServletRequest request,Integer id){
+        String token=request.getHeader("token");
+        contractService.DeleteContractStock(id);
+        logger.info("用户[{}]删除意向合同产品[{}]", token, id);
+        return success(id);
+    }
 }

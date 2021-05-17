@@ -3,10 +3,13 @@ package com.melson.webserver.dict.resource;
 import com.melson.base.BaseResource;
 import com.melson.base.Result;
 import com.melson.base.ResultType;
+import com.melson.base.entity.Company;
+import com.melson.base.service.ICompany;
 import com.melson.webserver.dict.entity.ProduceProcess;
 import com.melson.webserver.dict.service.*;
 import com.melson.webserver.dict.vo.ContractProductVo;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,10 +25,12 @@ import java.util.List;
 public class CommonResource extends BaseResource {
     private final IProduct productService;
     private final IProduceProcess produceProcessService;
+    private final ICompany companyService;
 
-    public CommonResource(IProduct productService, IProduceProcess produceProcessService) {
+    public CommonResource(IProduct productService, IProduceProcess produceProcessService, ICompany companyService) {
         this.productService = productService;
         this.produceProcessService = produceProcessService;
+        this.companyService = companyService;
     }
 
     @RequestMapping(value = "/initialContract",method = RequestMethod.GET)
@@ -39,5 +44,13 @@ public class CommonResource extends BaseResource {
         return result;
     }
 
-
+   @GetMapping(value = "/company")
+    public Result GetCompanyInfo(){
+       Company company=companyService.FindCompanyOne();
+       if(company!=null){
+           return success(company);
+       }else {
+           return failure(-1,"暂无公司信息");
+       }
+   }
 }

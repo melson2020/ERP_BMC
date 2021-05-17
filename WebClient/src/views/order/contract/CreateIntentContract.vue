@@ -1,6 +1,6 @@
 <template>
   <div class="create-constract-main-container">
-    <m-edit-conratct :edit="false"></m-edit-conratct>
+    <m-edit-conratct></m-edit-conratct>
   </div>
 </template>
 <script>

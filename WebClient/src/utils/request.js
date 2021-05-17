@@ -22,6 +22,9 @@ export default {
   CheckPhoneNumber(params){
     return service.get('/public/checkPhone',params)
   },
+  GetCompanyInfo(){
+    return service.get('/common/company')
+  },
 
   //system 系统交互
   RegisterCompany(params){
@@ -67,6 +70,9 @@ export default {
   },
   GetContractOne(param){
     return service.get('/contract/formal/get',param)
+  },
+  RemoveContractStock(param){
+    return service.deleteOne('/contract/intention/deleteStock',param)
   },
 
 

@@ -28,6 +28,9 @@ public class Company {
     private Integer status;
     private String communicateName;
     private String phoneNumber;
+    private String companyBankName;
+    private String companyBankNo;
+    private String taxNo;
 
     public Integer getId() {
         return id;
@@ -147,5 +150,29 @@ public class Company {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public String getCompanyBankName() {
+        return companyBankName;
+    }
+
+    public void setCompanyBankName(String companyBankName) {
+        this.companyBankName = companyBankName;
+    }
+
+    public String getCompanyBankNo() {
+        return companyBankNo;
+    }
+
+    public void setCompanyBankNo(String companyBankNo) {
+        this.companyBankNo = companyBankNo;
+    }
+
+    public String getTaxNo() {
+        return taxNo;
+    }
+
+    public void setTaxNo(String taxNo) {
+        this.taxNo = taxNo;
     }
 }

@@ -125,6 +125,7 @@ public class ContractServiceImpl implements IContractService {
         purchaser.setContractId(contract.getId());
         purchaser.setContractNo(contract.getContractNo());
         purchaser.setType(ContractOrg.TYPE_PURCHASER);
+        purchaser.setCustomerNo(purchaser.getCustomerNo());
         contractOrgRepository.saveAndFlush(purchaser);
         // 收货单位
         ContractOrg goodReceiveInfo = vo.getGoodReceiveInfo();
@@ -149,20 +150,20 @@ public class ContractServiceImpl implements IContractService {
         purchaserConfirm.setType(ContractOrg.TYPE_PURCHASER_CONFIRM);
         contractOrgRepository.saveAndFlush(purchaserConfirm);
         // 额外属性
-        List<ContractExtend> extendList = new ArrayList<>();
-        List<ContractExtendEnum> extendEnumList = ContractExtendEnum.list();
-        for (ContractExtendEnum extendEnum : extendEnumList) {
-            String value = request.getParameter(extendEnum.getAlias());
-            if (StringUtils.isEmpty(value)) {
-                if (extendEnum.getRequired()) {
-                    logger.error("字段[{}]-[{}]必填", extendEnum.getName(), extendEnum.getAlias());
-                    return null;
-                }
-                value = StringUtils.EMPTY;
-            }
-            extendList.add(new ContractExtend(contract.getId(), extendEnum.getAlias(), value));
-        }
-        contractExtendRepository.saveAll(extendList);
+//        List<ContractExtend> extendList = new ArrayList<>();
+//        List<ContractExtendEnum> extendEnumList = ContractExtendEnum.list();
+//        for (ContractExtendEnum extendEnum : extendEnumList) {
+//            String value = request.getParameter(extendEnum.getAlias());
+//            if (StringUtils.isEmpty(value)) {
+//                if (extendEnum.getRequired()) {
+//                    logger.error("字段[{}]-[{}]必填", extendEnum.getName(), extendEnum.getAlias());
+//                    return null;
+//                }
+//                value = StringUtils.EMPTY;
+//            }
+//            extendList.add(new ContractExtend(contract.getId(), extendEnum.getAlias(), value));
+//        }
+//        contractExtendRepository.saveAll(extendList);
         return contract;
     }
 
@@ -226,5 +227,10 @@ public class ContractServiceImpl implements IContractService {
         List<Object[]> list = entityManagerUtil.ExcuteSql(baseSql.toString());
         List<ContractShowVo> vos = EntityUtils.castEntity(list, ContractShowVo.class, new ContractShowVo());
         return vos;
+    }
+
+    @Override
+    public void DeleteContractStock(Integer id) {
+        contractStockRepository.deleteById(id);
     }
 }
