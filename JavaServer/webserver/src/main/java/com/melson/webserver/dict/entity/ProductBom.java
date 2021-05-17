@@ -15,7 +15,8 @@ public class ProductBom {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String productNo;       // 产品编码
-    private Integer processId;       // 工序
+    private Integer processId;      // 工序
+    private String processNo;       // 工序代号
     private String productName;     // 产品名称
     private String specification;   // 产品规格
     private String bomNo;           // BOM编码
@@ -53,6 +54,14 @@ public class ProductBom {
 
     public void setProcessId(Integer processId) {
         this.processId = processId;
+    }
+
+    public String getProcessNo() {
+        return processNo;
+    }
+
+    public void setProcessNo(String processNo) {
+        this.processNo = processNo;
     }
 
     public String getProductName() {

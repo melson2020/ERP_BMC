@@ -17,9 +17,9 @@ public class Boms {
     private String bomNo;                 // Bom编码，8位编码规则 例：B0000001
     private Integer processId;            // 工序自增编号
     private String processNo;             // 工序序号，对应produce_process表
-    private String PartNo;                // 母件号 ， 非制造半成品的时候的物料通常母件号为空， 从基础物料表中选择
+    private String partNo;                // 母件号 ， 非制造半成品的时候的物料通常母件号为空， 从基础物料表中选择
     private String chPartNo;              // 子件号    非制造半成品的时候的物料通常母件号为空， 从基础物料表中选择
-    private String index;                 // 关系树
+    private String sIndex;                // 关系树
     private BigDecimal chQty;             // 子件数量
     private BigDecimal lossRate;          // 子件折损率
     private String processStation;        // 工位
@@ -74,11 +74,11 @@ public class Boms {
     }
 
     public String getPartNo() {
-        return PartNo;
+        return partNo;
     }
 
     public void setPartNo(String partNo) {
-        PartNo = partNo;
+        this.partNo = partNo;
     }
 
     public String getChPartNo() {
@@ -89,12 +89,12 @@ public class Boms {
         this.chPartNo = chPartNo;
     }
 
-    public String getIndex() {
-        return index;
+    public String getsIndex() {
+        return sIndex;
     }
 
-    public void setIndex(String index) {
-        this.index = index;
+    public void setsIndex(String sIndex) {
+        this.sIndex = sIndex;
     }
 
     public BigDecimal getChQty() {
