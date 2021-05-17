@@ -69,4 +69,30 @@ public class SysRespCode {
      * 作废失败
      */
     public static final int ORDER_FORM_INVALID_FAIL = 212;
+
+    // 301-500 进销存相关
+    /**
+     * 待入库信息为空
+     */
+    public static final int INBOUND_SAVE_IS_NULL = 301;
+    /**
+     * 入库失败
+     */
+    public static final int INBOUND_SAVE_FAIL = 302;
+    /**
+     * 待出库信息为空
+     */
+    public static final int OUTBOUND_SAVE_IS_NULL = 303;
+    /**
+     * 出库失败
+     */
+    public static final int OUTBOUND_SAVE_FAIL = 304;
+    /**
+     * 待盘点信息为空
+     */
+    public static final int STOCKTAKING_SAVE_IS_NULL = 305;
+    /**
+     * 盘点失败
+     */
+    public static final int STOCKTAKING_SAVE_FAIL = 306;
 }
