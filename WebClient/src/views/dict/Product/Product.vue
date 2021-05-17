@@ -357,7 +357,7 @@
             </el-col>
             <el-col :span="6">
             <el-form-item label="Bom版本" prop="version">
-              <el-input autocomplete="off"  v-model="newProductBom.version"></el-input>
+              <el-input autocomplete="off"  v-model="newProductBom.version" disabled></el-input>
             </el-form-item>
             </el-col>
             <el-col :span="6">
@@ -419,7 +419,7 @@
                         placeholder="选择物料"
                         @change="materialChanged($event,scope.row)">
                         <el-option
-                          v-for="vo in productList"
+                          v-for="vo in filterProductList"
                           :label="vo.name"
                           :value="vo"
                           :key="vo.id"
@@ -603,6 +603,7 @@ import { mapActions } from "vuex";
 export default {
     data(){
       return{
+        selectPid:'',
         dateNow:"",
         productEditDialog: false,
         productAddDialog: false,
@@ -740,6 +741,11 @@ export default {
           let index = key.toUpperCase().indexOf(this.searchContent.toUpperCase());
           return index != -1;
         });
+      },
+      filterProductList(){
+        return this.productList.filter((item)=>{
+           return item.id!=this.selectPid
+        })
       }
     },
     methods:{
@@ -871,7 +877,7 @@ export default {
       });
       },
       handleCreateBoM(index,row){
-        // this.FindAllProduceProcessList();
+        this.selectPid=row.id;
         let prod={productNo:row.productNo,index:index}
         this.QueryProductAndBomObj(prod)
         .then(res=>{
@@ -883,7 +889,7 @@ export default {
             this.newProductBom.description=res.data.description;
             this.newProductBom.productBomList=res.data.productBomList;
             this.newProductBom.expirationDate=new Date().setMonth(new Date().getMonth()+12);
-            this.newProductBom.version="";
+            this.newProductBom.version="v1";
             this.newProductBom.bomNo="";
             this.newProductBom.id="";
             this.newProductBom.description=res.data.specification;
@@ -935,9 +941,12 @@ export default {
         this.$refs[formName].validate(valid=>{
           if(valid){
             var price=this.newProductBom.processCost;
+            // debugger
             for( var i = 0; i < this.newProductBom.materialVos.length; i++) {
               this.newProductBom.materialVos[i].processId=this.newProductBom.processId;
-              this.newProductBom.materialVos[i].PartNo=this.newProductBom.productNo;
+              this.newProductBom.materialVos[i].processNo=this.newProductBom.processNo;
+              this.newProductBom.materialVos[i].partNo=this.newProductBom.productNo;
+              this.newProductBom.materialVos[i].sIndex=Number(i+1);
               price=Number(price) + Number(this.newProductBom.materialVos[i].salesPrice) *(Number(this.newProductBom.materialVos[i].chQty)+Number(this.newProductBom.materialVos[i].lossRate))
             }
             this.newProductBom.costPrice=price;
@@ -946,33 +955,33 @@ export default {
             this.newProductBom.createBy="";
 
             console.log(this.newProductBom);
-            //   this.SaveProductBom(this.newProductBom)
-            //   .then(res=>{
-            //     if(res.resultStatus==1){
-            //       // this.GetProductList();
-            //       this.productCreateBoMDialog=false;
-            //       this.newProductBom.materialVos=[];
-            //       this.$message({
-            //         showClose:true,
-            //         message:"操作成功",
-            //         type:"success"
-            //       });
-            //     }
-            //     else{
-            //       this.$message({
-            //       message: res.message,
-            //       type: "warning"
-            //     });
-            //     }
-            //   })
-            //   .catch(err=>{
-            //       let alert = err.message ? err.message : err;
-            //       this.$message.error(alert);
-            //   });
-            // }
-            // else{
-            //   this.$message.warning("请填写准确信息");
-            //   return false;
+              this.SaveProductBom(this.newProductBom)
+              .then(res=>{
+                if(res.resultStatus==1){
+                  // this.GetProductList();
+                  this.productCreateBoMDialog=false;
+                  this.newProductBom.materialVos=[];
+                  this.$message({
+                    showClose:true,
+                    message:"操作成功",
+                    type:"success"
+                  });
+                }
+                else{
+                  this.$message({
+                  message: res.message,
+                  type: "warning"
+                });
+                }
+              })
+              .catch(err=>{
+                  let alert = err.message ? err.message : err;
+                  this.$message.error(alert);
+              });
+            }
+            else{
+              this.$message.warning("请填写准确信息");
+              return false;
             }
           })
 
@@ -983,7 +992,7 @@ export default {
         {
           if(!this.addCheckEidtable())
             {
-              this.newProductBom.materialVos.push({ id:"",bomNo:"",processId:"",processNo:"",PartNo:"",chPartNo: "",index:"",chQty:"" ,lossRate:"", processStation:"", supplyId:"" ,materialCostStatus:"",productNo:"", name: "", specification:"",categoryId: "",supplyName:"",salesPrice:"",seen: false,notSavedFlag:true})
+              this.newProductBom.materialVos.push({ id:"",bomNo:"",processId:"",processNo:"",partNo:"",chPartNo: "",sIndex:"",chQty:"" ,lossRate:"", processStation:"", supplyId:"" ,materialCostStatus:"",productNo:"", name: "", specification:"",categoryId: "",supplyName:"",salesPrice:"",seen: false,notSavedFlag:true})
             }
         }
       },
@@ -1001,7 +1010,7 @@ export default {
         this.newProductBom.processCost=event.cost;
         this.newProductBom.processId=event.id;
         this.newProductBom.processName=event.name;
-        this.newProductBom.productNo=event.processNo;
+        this.newProductBom.processNo=event.processNo;
       },
       addCellClick(row){
         if(!row.seen)

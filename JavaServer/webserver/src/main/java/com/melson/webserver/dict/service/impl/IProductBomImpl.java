@@ -2,7 +2,10 @@ package com.melson.webserver.dict.service.impl;
 
 import com.melson.base.AbstractService;
 import com.melson.base.Result;
+import com.melson.base.service.ISysSequence;
+import com.melson.webserver.dict.dao.IBomsRepository;
 import com.melson.webserver.dict.dao.IProductBomRepository;
+import com.melson.webserver.dict.entity.Boms;
 import com.melson.webserver.dict.entity.ProductBom;
 import com.melson.webserver.dict.service.IProductBom;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,9 +20,13 @@ import java.util.List;
 @Service
 public class IProductBomImpl extends AbstractService<ProductBom> implements IProductBom {
     private final IProductBomRepository productBomRepository;
+    private final ISysSequence sysSequenceService;
+    private final IBomsRepository bomsRepository;
 
-    public IProductBomImpl(IProductBomRepository productBomRepository) {
+    public IProductBomImpl(IProductBomRepository productBomRepository, ISysSequence sysSequenceService, IBomsRepository bomsRepository) {
         this.productBomRepository = productBomRepository;
+        this.sysSequenceService = sysSequenceService;
+        this.bomsRepository = bomsRepository;
     }
 
     @Override
@@ -34,9 +41,14 @@ public class IProductBomImpl extends AbstractService<ProductBom> implements IPro
     }
 
     @Override
+    @Transactional
     public Result SaveAndUpdate(ProductBom pb) {
         Result result=new Result();
+        pb.setBomNo(sysSequenceService.GenerateCode(Boms.BOM_NO_CHAR));
         ProductBom productBom=productBomRepository.save(pb);
+        pb.getMaterialVos().forEach(boms->{boms.setBomNo(pb.getBomNo());});  //设置列表中的BomNo;
+        List<Boms> bomsDetial=pb.getMaterialVos();
+        bomsRepository.saveAll(bomsDetial);
         result.setData(productBom);
         return result;
     }

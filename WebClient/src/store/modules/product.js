@@ -6,7 +6,6 @@ import { Message } from "element-ui";
 const state = {
     productList:[],
     categoryList:[],
-
 };
 
 const actions = {
