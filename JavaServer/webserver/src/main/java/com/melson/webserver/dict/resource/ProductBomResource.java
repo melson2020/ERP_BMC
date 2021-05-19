@@ -66,4 +66,12 @@ public class ProductBomResource extends BaseResource {
         return result;
     }
 
+    @RequestMapping(value = "/ProductBomsDetail",method = RequestMethod.POST)
+    public Result QueryProductBomsDetailList(@RequestBody ProductBom pb){
+        ProductBom pro=productBomService.QueryProductBomsDetailList(pb.getBomNo());
+        Result result=new Result();
+        result.setData(pro);
+        return result;
+    }
+
 }
