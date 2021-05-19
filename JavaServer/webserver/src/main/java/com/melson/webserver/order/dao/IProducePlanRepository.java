@@ -14,4 +14,5 @@ import java.util.List;
 @Repository
 public interface IProducePlanRepository extends JpaRepository<ProducePlan,Integer> {
     List<ProducePlan> findByState(String state);
+    ProducePlan findByOrderFormId(Integer orderFormId);
 }

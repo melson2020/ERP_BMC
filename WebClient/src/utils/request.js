@@ -233,6 +233,15 @@ export default {
   OrderFormConfirm(param){
     return service.post('/orderForm/manage/confirm',param)
   },
+  GetOrderCenterSummaryCount(){
+    return service.get('/orderForm/manage/stateSummary')
+  },
+  GetOrderProduceTypeSummary(param){
+    return service.get('/orderForm/manage/produceTypeSummary',param)
+  },
+  GetOrderFormProcessList(){
+    return service.get('/orderForm/manage/processList')
+  },
 
   //生产计划相关
   /**

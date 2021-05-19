@@ -6,9 +6,12 @@ import com.melson.webserver.contract.entity.ContractStock;
 import com.melson.webserver.order.entity.OrderForm;
 import com.melson.webserver.order.entity.OrderFormDetail;
 import com.melson.webserver.order.vo.OrderFormConfirmVo;
+import com.melson.webserver.order.vo.OrderFormInfoVo;
 import com.melson.webserver.order.vo.OrderFormVo;
+import com.melson.webserver.order.vo.OrderStateSummaryVo;
 import org.springframework.core.annotation.Order;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -27,9 +30,7 @@ public interface IOrderFormService {
      */
     OrderForm list(Integer contractId);
 
-
-    List<OrderForm> createdList();
-
+    
     List<OrderFormDetail> detailList(Integer orderFormId);
 
     /**
@@ -71,4 +72,24 @@ public interface IOrderFormService {
      * @return
      */
     OrderForm invalid(Integer id);
+
+    /**
+     * 获取orderForm 各state 数量 用于订单中心 监控
+     * @return
+     */
+   List<OrderStateSummaryVo>  GetStateSummary();
+
+    /**
+     *获取OrderForm 各produceType 数量
+     */
+    List<OrderStateSummaryVo>  GetProduceTypeSummary(String date);
+
+    List<OrderForm> GetOrderFormListByState(String state);
+
+    /**
+     *
+     * @param id
+     * @return
+     */
+    OrderFormInfoVo GetOrderFormInfo(Integer id);
 }

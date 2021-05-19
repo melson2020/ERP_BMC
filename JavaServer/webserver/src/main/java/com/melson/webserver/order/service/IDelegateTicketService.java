@@ -24,4 +24,6 @@ public interface IDelegateTicketService {
      * @return
      */
     DelegateTicket GenerateTicketWithProcess(List<ProducePlanProcess> list,ProducePlan plan,List<ProducePlanDetail> detailList);
+
+    DelegateTicket FindByOrderFormId(Integer orderFormId);
 }

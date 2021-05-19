@@ -7,7 +7,10 @@ import { Message } from "element-ui";
 const state = {
     orderReadyToReleaseList: [],
     orderFormDetaiList: [],
-    closeDrawer: false
+    closeDrawer: false,
+    orderStateSummary: [],
+    orderProduceTypeSummary:[],
+    orderFormProcessList:[]
 };
 
 const actions = {
@@ -35,7 +38,7 @@ const actions = {
     },
     //获取产品bom 列表
     GetProductBomListByBomNo({ }, param) {
-      return   request.GetProductBomListByBomNo(param);
+        return request.GetProductBomListByBomNo(param);
     },
     //获取产品bom 详细信息
     GetProductBomInfo({ }, param) {
@@ -56,6 +59,42 @@ const actions = {
     },
     TriggerDrawer({ commit }, data) {
         commit("TriggerDrawer", data)
+    },
+    GetOrderCenterSummaryCount({ commit }) {
+        request.GetOrderCenterSummaryCount().then(res => {
+            if (res.resultStatus == 1) {
+                commit(types.ORDER_STATE_SUMMARY, res.data)
+            } else {
+                Message.warning(res.message)
+            }
+
+        }).catch(err => {
+            Message.error(err.message)
+        })
+    },
+    GetOrderProduceTypeSummary({commit},param){
+        request.GetOrderProduceTypeSummary(param).then(res => {
+            if (res.resultStatus == 1) {
+                commit(types.ORDER_PRODUCE_TYPE_SUMMARY, res.data)
+            } else {
+                Message.warning(res.message)
+            }
+
+        }).catch(err => {
+            Message.error(err.message)
+        })
+    },
+    GetOrderFormProcessList({commit}){
+        request.GetOrderFormProcessList().then(res => {
+            if (res.resultStatus == 1) {
+                commit(types.ORDER_FORM_PROCESS_LIST, res.data)
+            } else {
+                Message.warning(res.message)
+            }
+
+        }).catch(err => {
+            Message.error(err.message)
+        })
     }
 
 };
@@ -63,7 +102,10 @@ const actions = {
 const getters = {
     orderReadyToReleaseList: state => state.orderReadyToReleaseList,
     orderFormDetaiList: state => state.orderFormDetaiList,
-    closeDrawer: state => state.closeDrawer
+    closeDrawer: state => state.closeDrawer,
+    orderStateSummary:state=>state.orderStateSummary,
+    orderProduceTypeSummary:state=>state.orderProduceTypeSummary,
+    orderFormProcessList:state=>state.orderFormProcessList
 };
 
 const mutations = {
@@ -76,6 +118,15 @@ const mutations = {
                 item.boms = []
         })
         state.orderFormDetaiList = data;
+    },
+    [types.ORDER_STATE_SUMMARY](state, data) {
+        state.orderStateSummary = data
+    },
+    [types.ORDER_PRODUCE_TYPE_SUMMARY](state, data) {
+        state.orderProduceTypeSummary = data
+    },
+    [types.ORDER_FORM_PROCESS_LIST](state, data) {
+        state.orderFormProcessList = data
     },
     RemoveOrderFormReadyRleaseList(state, data) {
         state.orderReadyToReleaseList.splice(state.orderReadyToReleaseList.indexOf(item => {

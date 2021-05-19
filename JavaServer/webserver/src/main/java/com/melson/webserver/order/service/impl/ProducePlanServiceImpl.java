@@ -106,6 +106,11 @@ public class ProducePlanServiceImpl implements IProducePlanService {
         return producePlanRepository.save(plan);
     }
 
+    @Override
+    public ProducePlan FindByOrderFormId(Integer orderFormId) {
+        return producePlanRepository.findByOrderFormId(orderFormId);
+    }
+
     private ProducePlanDetail CreateProducePlanDetail(OrderFormDetail detail){
         ProducePlanDetail producePlanDetail=new ProducePlanDetail();
         producePlanDetail.setProductId(detail.getProductId());

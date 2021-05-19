@@ -7,6 +7,7 @@ import com.melson.webserver.order.entity.OrderForm;
 import com.melson.webserver.order.service.IOrderFormService;
 import com.melson.webserver.order.vo.OrderFormConfirmVo;
 import com.melson.webserver.order.vo.OrderFormVo;
+import com.melson.webserver.order.vo.OrderStateSummaryVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.MessageFormat;
+import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -44,7 +47,12 @@ public class OrderFormResource extends BaseResource {
 
     @GetMapping(value = "/createdList")
     public Result createdOrderList() {
-        return success(orderFormService.createdList());
+        return success(orderFormService.GetOrderFormListByState(OrderForm.STATE_CREATE));
+    }
+
+    @GetMapping(value = "/processList")
+    public Result ProcessOrderList() {
+        return success(orderFormService.GetOrderFormListByState(OrderForm.STATE_PROCESS));
     }
 
     /**
@@ -58,16 +66,6 @@ public class OrderFormResource extends BaseResource {
         return success(orderFormService.detailList(orderFormId));
     }
 
-    /**
-     * 创建订单编号
-     *
-     * @return
-     */
-    @GetMapping(value = "/createFormNo")
-    public Result createFormNo(String type) {
-        String formNo = MessageFormat.format("O{0}-{1}", type, UUID.randomUUID().toString());
-        return success(formNo);
-    }
 
     @PostMapping(value = "/confirm")
     public  Result orderFormConfirm(@RequestBody OrderFormConfirmVo orderFormVo){
@@ -116,5 +114,17 @@ public class OrderFormResource extends BaseResource {
         }
         logger.info("用户[{}]作废订单[{}]成功", userId, orderForm.getId());
         return success();
+    }
+
+    @GetMapping(value = "/stateSummary")
+    public Result GetOrderCenterSummaryCount(){
+        List<OrderStateSummaryVo> vos=orderFormService.GetStateSummary();
+        return success(vos);
+    }
+
+    @GetMapping(value = "/produceTypeSummary")
+    public Result GetOrderProduceTypeCount(String date){
+        List<OrderStateSummaryVo> vos=orderFormService.GetProduceTypeSummary(date);
+        return success(vos);
     }
 }

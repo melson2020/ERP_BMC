@@ -31,4 +31,6 @@ public interface IProducePlanService {
      * @return
      */
     ProducePlan UpdatePlan(ProducePlan plan,Boolean confirm);
+
+    ProducePlan FindByOrderFormId(Integer orderFormId);
 }
