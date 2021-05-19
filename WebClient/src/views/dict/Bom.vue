@@ -891,5 +891,31 @@ export default {
   width: 400px;
   float: left;
 }
-
+.productBominformation{
+  display: flex;
+  flex-direction: row;
+  width: auto;
+  justify-content: space-between;
+}
+.productBomOperation{
+  display: flex;
+  flex-direction: row;
+  width: auto;
+  justify-content: space-around;
+}
+.add-productBom {
+  margin-top: 5px;
+  width: 100%;
+  border: #dcdfe6 dashed 1px !important;
+}
+.productBom-selected-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid lightgray;
+}
+.productBom-selected-content {
+  padding-top: 8px;
+}
 </style>
