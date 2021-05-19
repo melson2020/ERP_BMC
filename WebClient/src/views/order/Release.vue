@@ -57,7 +57,11 @@
             <span>{{ product.count }}{{ product.countUnit }}</span>
             <span>{{ product.specification }}</span>
             <span>{{ product.remark }}</span>
-            <i class="el-icon-check color-dark-green fz12"></i>
+            <i
+              v-if="product.dataPass"
+              class="el-icon-check color-dark-green fz12"
+            ></i>
+            <i v-else class="el-icon-close colorred fz12"></i>
           </div>
           <div class="order-product-checklist">
             <span>类型：</span>
@@ -176,16 +180,49 @@ export default {
       OrderFormConfirm: "OrderFormConfirm",
       TriggerDrawer: "TriggerDrawer",
     }),
+    checkFormDetailData() {
+      if (this.orderFormDetaiList.length <= 0) return false;
+      var res = true;
+      this.orderFormDetaiList.map((item) => {
+        if (item.produceType && item.produceType == "C") {
+          item.dataPass = true;
+        } else {
+          item.dataPass =
+            item.produceType != null &&
+            item.produceType != "" &&
+            item.bomNo != null &&
+            item.bomNo != "";
+        }
+        if (!item.dataPass) {
+          res = false;
+        }
+      });
+      return res;
+    },
     orderDecideOnclick(form) {
       this.GetOrderFormDetailList({ orderFormId: form.id });
       this.selectedOrderForm = form;
       this.tableShow = !this.tableShow;
     },
     orderConfirm() {
-      this.OrderFormConfirm({
-        orderForm: this.selectedOrderForm,
-        orderFormDetails: this.orderFormDetaiList,
-      });
+      var pass = this.checkFormDetailData();
+      if (pass) {
+        this.$messageBox
+          .confirm("确认下达？", "订单下达", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning",
+          })
+          .then(() => {
+            this.OrderFormConfirm({
+              orderForm: this.selectedOrderForm,
+              orderFormDetails: this.orderFormDetaiList,
+            });
+          })
+          .catch((e) => e);
+      } else {
+        this.$message.warning("请设置完整信息");
+      }
     },
     getFullTime(time) {
       return new Date(time).format("yyyy-MM-dd hh:mm:ss");

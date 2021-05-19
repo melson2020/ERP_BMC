@@ -27,7 +27,7 @@ public class DelegateTicketServiceImpl implements IDelegateTicketService {
     @Autowired
     private IDelegateDetailRepository delegateDetailRepository;
     @Autowired
-    IPickingTicketService pickingTicketService;
+    private IPickingTicketService pickingTicketService;
 
     @Override
     /**
@@ -78,6 +78,11 @@ public class DelegateTicketServiceImpl implements IDelegateTicketService {
         }
         delegateDetailRepository.saveAll(delegateDetails);
         return ticket;
+    }
+
+    @Override
+    public DelegateTicket FindByOrderFormId(Integer orderFormId) {
+        return delegateTicketRepository.findBySourceIdAndType(orderFormId,DelegateTicket.TYPE_ORDER);
     }
 
     private DelegateDetail CreateDelegateDetail(OrderFormDetail orderFormDetail, DelegateTicket ticket) {

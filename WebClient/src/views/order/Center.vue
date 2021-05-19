@@ -1,14 +1,21 @@
 <template>
   <div class="center-main-div">
     <el-row :gutter="10">
-      <el-col v-for="summary in sumarys" :span="6" :key="summary.number"
+      <el-col
+        v-for="summary in orderStateSummary"
+        :span="6"
+        :key="summary.number"
         ><div class="center-summary-card color-bk-gray">
           <span class="center-Summary-card-title color-gray">{{
             summary.title
           }}</span>
           <el-tooltip effect="light" content="点击查看详细" placement="top">
-            <el-button class="center-Summary-card-content colorred" type="text" @click="navigationTo(summary.path)">
-              {{ summary.number }}
+            <el-button
+              class="center-Summary-card-content colorred"
+              type="text"
+              @click="navigationTo(summary.path)"
+            >
+              {{ summary.count }}
             </el-button>
           </el-tooltip>
         </div>
@@ -16,30 +23,51 @@
     </el-row>
     <div class="center-dashboard-div">
       <el-row :gutter="10"
-        ><el-col :span="6"
+        ><el-col :span="7"
           ><div class="center-dashborad-card">
             <div class="center-dashborad-card-header">
-              <span>待处理总数</span>
-              <span class="colorblue fz12">30</span>
+              <div class="center-dashborad-header">
+                <span class="center-font-bold">订单汇总</span>
+                <span class="colorblue fz12 ml40">{{
+                  produceTypeTotalCount
+                }}</span>
+              </div>
+              <el-date-picker
+                v-model="selectMonth"
+                type="month"
+                @change="monthChange"
+                size="medium"
+                placeholder="选择月"
+              >
+              </el-date-picker>
             </div>
-            <el-scrollbar class="order-status-scrollbar">
+            <el-scrollbar
+              class="order-status-scrollbar"
+              v-if="orderProduceTypeSummary.length > 0"
+            >
               <div
-                v-for="detail in orderStatusDetails"
-                :key="detail.id"
+                v-for="detail in orderProduceTypeSummary"
+                :key="detail.title"
                 class="order-status-detail-div"
               >
-                <span>{{ detail.typeName }}</span>
-                <span class="fz12 colorblue">{{ detail.numbers }}</span>
+                <span>{{ detail.title }}</span>
+                <span class="fz12 colorblue">{{ detail.count }}</span>
               </div>
             </el-scrollbar>
+            <div v-else class="order-status-scrollbar">暂无数据</div>
             <div id="chart-1" class="chart-1-div"></div></div
         ></el-col>
-        <el-col :span="18"
+        <el-col :span="17"
           ><div class="center-table-card">
             <div class="table-header-div">
-              <span>待处理订单</span>
+              <span class="center-font-bold">订单进行中</span>
               <div>
-                <el-select placeholder="请选择" size="medium">
+                <el-select
+                  clearable
+                  placeholder="订单状态"
+                  v-model="orderState"
+                  size="medium"
+                >
                   <el-option
                     v-for="item in oderStateList"
                     :key="item.value"
@@ -48,9 +76,15 @@
                   >
                   </el-option>
                 </el-select>
-                <el-select placeholder="请选择" class="ml24" size="medium">
+                <el-select
+                  clearable
+                  placeholder="订单类型"
+                  v-model="orderType"
+                  class="ml24"
+                  size="medium"
+                >
                   <el-option
-                    v-for="item in oderTypeList"
+                    v-for="item in oderProduceTypeList"
                     :key="item.value"
                     :label="item.name"
                     :value="item.value"
@@ -59,28 +93,38 @@
                 </el-select>
               </div>
             </div>
-            <el-table border :data="orderList" stripe style="width: 100%">
-              <el-table-column prop="no" label="订单号"> </el-table-column>
-              <el-table-column prop="customerName" label="客户" width="auto">
+            <el-table
+              border
+              :data="orderFormProcessListShow"
+              stripe
+              style="width: 100%"
+            >
+              <el-table-column prop="formNo" label="订单号" width="180px">
               </el-table-column>
-              <el-table-column prop="date" label="日期" width="auto">
+              <el-table-column prop="customerName" label="客户">
               </el-table-column>
-              <el-table-column prop="user" label="下单人" width="auto">
+              <el-table-column prop="createDate" label="创建日期" width="180px">
+                <template slot-scope="scope">
+                  <span>{{ getFullTime(scope.row.createDate) }}</span>
+                </template>
               </el-table-column>
-              <el-table-column prop="endDate" label="交货日" width="auto">
+              <el-table-column prop="state" label="状态" width="80px">
+                <template slot-scope="scope">
+                  <span v-if="scope.row.state == '2'" class="coloryellow"
+                    >已下单</span
+                  >
+                  <span v-else class="colorgreen">进行中</span>
+                </template>
               </el-table-column>
-              <el-table-column prop="type" label="类型" width="auto">
+              <el-table-column prop="produceType" label="类型" width="auto">
               </el-table-column>
-              <el-table-column prop="status" label="状态" width="auto">
-              </el-table-column>
-              <el-table-column prop="des" label="描述" width="auto">
-              </el-table-column>
-              <el-table-column prop="" label="操作">
+              <el-table-column prop="" label="操作" width="80px">
                 <template slot-scope="scope">
                   <el-button
                     type="primary"
                     icon="el-icon-more"
                     size="mini"
+                    @click="orderFormDetailOnClick(scope.row.id)"
                     circle
                   ></el-button>
                 </template>
@@ -88,73 +132,282 @@
             </el-table></div></el-col
       ></el-row>
     </div>
+    <el-dialog
+      ref="detailDialog"
+      title="订单详细"
+      :visible.sync="detailDialog"
+      width="70%"
+    >
+      <div>
+        <el-form
+          label-position="left"
+          label-width="90px"
+          class="demo-table-expand"
+        >
+          <el-row>
+            <el-col :span="6" class="center-orderForm-info-cell-div">
+              <el-form-item label="订单号：">
+                <span>{{ orderFormInfo.orderForm.formNo }}</span>
+              </el-form-item></el-col
+            >
+            <el-col :span="6" class="center-orderForm-info-cell-div">
+              <el-form-item label="合同号">
+                <span>{{ orderFormInfo.orderForm.contractNo }}</span>
+              </el-form-item></el-col
+            >
+            <el-col :span="6" class="center-orderForm-info-cell-div">
+              <el-form-item label="客户：">
+                <span>{{ orderFormInfo.orderForm.customerName }}</span>
+              </el-form-item></el-col
+            >
+            <el-col :span="6" class="center-orderForm-info-cell-div">
+              <el-form-item label="创建日期：">
+                <span>{{
+                  getFullTime(orderFormInfo.orderForm.createDate)
+                }}</span>
+              </el-form-item></el-col
+            >
+          </el-row>
+          <el-row>
+            <el-col :span="6" class="center-orderForm-info-cell-div">
+              <el-form-item label="生产类型：">
+                <span>{{
+                  getProduceTypeChar(orderFormInfo.orderForm.produceType)
+                }}</span>
+              </el-form-item></el-col
+            >
+            <el-col :span="6" class="center-orderForm-info-cell-div">
+              <el-form-item label="状态">
+                <span
+                  v-if="orderFormInfo.orderForm.state == '2'"
+                  class="coloryellow"
+                  >已下单</span
+                >
+                <span v-else class="colorgreen">进行中</span>
+              </el-form-item></el-col
+            >
+          </el-row>
+        </el-form>
+        <div class="center-orderForm-info-ticket-div">
+          <span class="colorblue fl mb40 fz9">订单产品</span>
+          <el-table
+            border
+            size="mini"
+            :data="orderFormInfo.orderFormDetailList"
+            stripe
+            style="width: 100%"
+          >
+            <el-table-column prop="productName" label="名称"> </el-table-column>
+            <el-table-column prop="specification" label="规格">
+            </el-table-column>
+            <el-table-column prop="remark" label="备注"> </el-table-column>
+            <el-table-column prop="count" label="数量">
+              <template slot-scope="scope">
+                <span>{{ scope.row.count }}{{ scope.row.countUnit }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="produceType" label="类型">
+              <template slot-scope="scope">
+                <span>{{ getProduceTypeChar(scope.row.produceType) }}</span>
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+        <div
+          v-if="orderFormInfo.producePlanList.length > 0"
+          class="center-orderForm-info-ticket-div"
+        >
+          <span class="colorblue fl mb40 fz9">生产计划</span>
+          <el-table
+            border
+            size="mini"
+            :data="orderFormInfo.producePlanList"
+            stripe
+            style="width: 100%"
+          >
+            <el-table-column prop="planNo" label="编号"> </el-table-column>
+            <el-table-column prop="customerName" label="客户">
+            </el-table-column>
+            <el-table-column prop="startDate" label="计划时间">
+              <template slot-scope="scope">
+                <span
+                  >{{ getFullDate(scope.row.startDate) }} 至
+                  {{ getFullDate(scope.row.endDate) }}</span
+                >
+              </template>
+            </el-table-column>
+            <el-table-column prop="pickingTicketNo" label="领料单号">
+            </el-table-column>
+            <el-table-column prop="produceType" label="类型">
+              <template slot-scope="scope">
+                <span>{{ getProduceTypeChar(scope.row.type) }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="state" label="状态">
+              <template slot-scope="scope">
+                <span class="colorred" v-if="scope.row.state == '1'"
+                  >待配置</span
+                >
+                <span class="colorblue" v-else-if="scope.row.state == '2'"
+                  >执行中</span
+                >
+                <span v-else class="colorgreen">已完成</span>
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+
+        <div
+          v-if="orderFormInfo.delegateTicketList.length > 0"
+          class="center-orderForm-info-ticket-div"
+        >
+          <span class="colorblue fl mb40 fz9">委外单</span>
+          <el-table
+            border
+            size="mini"
+            :data="orderFormInfo.delegateTicketList"
+            stripe
+            style="width: 100%"
+          >
+            <el-table-column prop="ticketNo" label="编号"> </el-table-column>
+            <el-table-column prop="customerName" label="客户">
+            </el-table-column>
+          </el-table>
+        </div>
+
+        <div
+          v-if="orderFormInfo.purchaseDetailList.length > 0"
+          class="center-orderForm-info-ticket-div"
+        >
+          <span class="colorblue fl mb40 fz9">采购明细</span>
+          <el-table
+            border
+            size="mini"
+            :data="orderFormInfo.purchaseDetailList"
+            stripe
+            style="width: 100%"
+          >
+            <el-table-column prop="materialNo" label="编号"> </el-table-column>
+            <el-table-column prop="materialName" label="名称">
+            </el-table-column>
+            <el-table-column prop="specification" label="规格">
+            </el-table-column>
+            <el-table-column prop="count" label="数量">
+              <template slot-scope="scope">
+                <span
+                  >{{ scope.row.count }}
+                  {{ scope.row.countUnit }}
+                </span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="remark" label="备注"> </el-table-column>
+          </el-table>
+        </div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
 import * as echarts from "echarts"; //引入echart
+import { mapGetters } from "vuex";
+import { mapActions } from "vuex";
 export default {
   data() {
     return {
-      sumarys: [
-        { title: "合同确认", number: 5,path:'/contract' },
-        { title: "订单下达", number: 6,path:'/release'},
-        { title: "发货确认", number: 1 },
-        { title: "即将截止", number: 9 },
-      ],
+      orderType: "",
+      orderState: "",
+      selectMonth: "",
+      detailDialog: false,
+      orderFormInfo: {
+        orderForm: {},
+        orderFormDetailList: [],
+        producePlanList: [],
+        delegateTicketList: [],
+        purchaseDetailList: [],
+      },
       oderStateList: [
-        { name: "未下单", value: 11 },
-        { name: "生产中", value: 12 },
-        { name: "采购中", value: 13 },
-        { name: "待入库", value: 14 },
+        { name: "已下单", value: "2" },
+        { name: "进行中", value: "3" },
       ],
-      oderTypeList: [
-        { name: "生产订单", value: 15 },
-        { name: "贸易订单", value: 16 },
-        { name: "加工订单", value: 17 },
-        { name: "委外订单", value: 18 },
-      ],
-      orderList: [
-        {
-          no: "00001",
-          customerName: "客户01",
-          date: "2021-04-13",
-          user: "员工01",
-          endDate: "2021-07-15",
-          status: "生产中",
-          des: "",
-          type: "生产订单",
-        },
-        {
-          no: "00002",
-          customerName: "客户02",
-          date: "2021-04-03",
-          user: "员工01",
-          endDate: "2021-07-15",
-          status: "已出单",
-          des: "",
-          type: "委外订单",
-        },
-        {
-          no: "00003",
-          customerName: "客户03",
-          date: "2021-03-13",
-          user: "员工01",
-          endDate: "2021-07-15",
-          status: "生产中",
-          des: "",
-          type: "生产订单",
-        },
-      ],
-      orderStatusDetails: [
-        { id: 1, typeName: "生产/贸易", numbers: 10 },
-        { id: 2, typeName: "委外/生产", numbers: 9 },
-        { id: 3, typeName: "代加工", numbers: 21 },
+      oderProduceTypeList: [
+        { name: "生产", value: "P" },
+        { name: "代工", value: "D" },
+        { name: "采购", value: "C" },
+        { name: "委外", value: "W" },
       ],
     };
   },
+  computed: {
+    ...mapGetters([
+      "orderStateSummary",
+      "orderProduceTypeSummary",
+      "orderFormProcessList",
+    ]),
+    orderFormProcessListShow() {
+      return this.orderFormProcessList.filter((item) => {
+        var existState = false;
+        if (this.orderState == "") {
+          existState = true;
+        } else {
+          existState = item.state.indexOf(this.orderState) != -1;
+        }
+        var existType = false;
+        if (this.orderType == "") {
+          existType = true;
+        } else {
+          existType = item.produceType.indexOf(this.orderType) != -1;
+        }
+        return existState && existType;
+      });
+    },
+    produceTypeTotalCount() {
+      var count = "0";
+      this.orderProduceTypeSummary.map((item) => {
+        count = this.$my.NumberAdd(item.count, count);
+      });
+      return count;
+    },
+  },
+  watch: {
+    orderProduceTypeSummary() {
+      this.drawCharts();
+    },
+  },
   methods: {
-    navigationTo(path){
-       this.$router.replace({ path: '/main/orderManagement'+path });
+    ...mapActions({
+      GetOrderCenterSummaryCount: "GetOrderCenterSummaryCount",
+      GetOrderProduceTypeSummary: "GetOrderProduceTypeSummary",
+      GetOrderFormProcessList: "GetOrderFormProcessList",
+      GetOrderFormInfo: "GetOrderFormInfo",
+    }),
+    getProduceTypeChar(type) {
+      if (!type) return;
+      return type
+        .replace("P", "生产")
+        .replace("D", "代工")
+        .replace("C", "采购")
+        .replace("W", "委外");
+    },
+    navigationTo(path) {
+      if (path != "") {
+        this.$router.replace({ path: "/main/orderManagement" + path });
+      }
+    },
+
+    getFullTime(time) {
+      if (time) {
+        return new Date(time).format("yyyy-MM-dd hh:mm:ss");
+      } else {
+        return "";
+      }
+    },
+
+    getFullDate(time) {
+      if (time) {
+        return new Date(time).format("yyyy-MM-dd");
+      } else {
+        return "";
+      }
     },
 
     Init: function () {
@@ -166,9 +419,27 @@ export default {
         }.bind(this)
       );
     },
+    monthChange(value) {
+      this.GetOrderProduceTypeSummary({ date: value.format("yyyy-MM-dd") });
+    },
+    orderFormDetailOnClick(id) {
+      this.GetOrderFormInfo({ id: id })
+        .then((res) => {
+          if (res.resultStatus == 1) {
+            console.log(res.data);
+            this.orderFormInfo = res.data;
+            this.detailDialog = !this.detailDialog;
+          } else {
+            this.$message.warning(res.messgae);
+          }
+        })
+        .catch((err) => {
+          this.$message.error(err.messgae);
+        });
+    },
     drawCharts() {
       var oderChart = echarts.init(document.getElementById("chart-1"));
-      var option={
+      var option = {
         backgroundColor: "white",
         title: {
           text: "订单占比",
@@ -179,8 +450,7 @@ export default {
             name: "订单占比",
             type: "pie", // 设置图表类型为饼图
             radius: "60%", // 饼图的半径，外半径为可视区尺寸（容器高宽中较小一项）的 55% 长度。
-            data: [
-            ],
+            data: [],
           },
         ],
         color: [
@@ -191,20 +461,34 @@ export default {
           "#898989",
           "#c4cc38",
         ],
+      };
+      if (this.orderProduceTypeSummary.length > 0) {
+        this.orderProduceTypeSummary.map((item) => {
+          option.series[0].data.push({
+            value: item.count,
+            name: item.title,
+          });
+        });
+      } else {
+        option.series[0].data.push({
+          value: 0,
+          name: "无",
+        });
       }
-      this.orderStatusDetails.map((item)=>{
-        option.series[0].data.push({value:item.numbers,name:item.typeName})
-      })
       oderChart.setOption(option);
     },
   },
   mounted() {
-    this.drawCharts();
+    this.GetOrderCenterSummaryCount();
+    this.selectMonth = new Date();
+    this.GetOrderProduceTypeSummary({ date: new Date().format("yyyy-MM-dd") });
+    this.GetOrderFormProcessList();
   },
 };
 </script>
 <style>
 .center-main-div {
+  padding: 0px 5px;
   display: flex;
   flex-direction: column;
 }
@@ -224,7 +508,7 @@ export default {
   border-bottom: 1px solid lightgray;
   display: flex;
   align-items: center;
-  padding: 0px 10px;
+  padding: 0px 5px;
   flex-direction: row;
   justify-content: space-between;
 }
@@ -262,11 +546,11 @@ export default {
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding: 0 5px;
+  padding: 0 10px;
   height: 50px;
 }
 .order-status-detail-div {
-  padding: 5px 10px;
+  padding: 10px 15px;
   font-size: 0.9rem;
   display: flex;
   flex-direction: row;
@@ -282,5 +566,29 @@ export default {
 .chart-1-div {
   height: 300px;
   width: 100%;
+}
+
+.center-dashborad-header {
+  display: flex;
+  padding: 0 5px;
+  align-items: center;
+}
+.center-font-bold {
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+.center-orderForm-info-cell-div {
+  display: flex;
+}
+
+.center-orderForm-info-ticket-div {
+  padding: 10px 0;
+}
+.demo-table-expand .el-form-item {
+  margin-right: 0;
+  margin-bottom: 0;
+}
+.demo-table-expand label {
+  color: #99a9bf;
 }
 </style>

@@ -162,7 +162,7 @@ export default {
       GetContactList:"GetContactList",
       QueryContactObj:"QueryContactObj",
       SaveContact:"SaveContact",
-      DeleteContact:"DeleteContact"
+      DeleteContact:"DeleteContact",
     }),
     handleEdit(index,row){
       this.editIndex=index;

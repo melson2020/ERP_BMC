@@ -29,6 +29,21 @@ public class OrderForm {
     public static  final String STATE_ORDER="2";
 
     /**
+     * 订单状态:3 进行中
+     */
+    public static  final String STATE_PROCESS="3";
+
+    /**
+     * 订单状态:4 待发货
+     */
+    public static  final String STATE_DELIVERY="4";
+
+    /**
+     * 订单状态:5 已完成
+     */
+    public static  final String STATE_COMPLETE="5";
+
+    /**
      * 订单唯一自增id,用于其他表关联
      */
     private Integer id;
@@ -45,7 +60,7 @@ public class OrderForm {
      */
     private String type;
     /**
-     * 订单状态:0=已作废;1=刚创建;2=已下单;3= processing 4 已完成;
+     * 订单状态:0=已作废;1=刚创建;2=已下单;3= processing（生产确认，委外确认，采购确认后） 4 已完成生产/采购/委外 待发货 5：已完成
      */
     private String state;
     /**

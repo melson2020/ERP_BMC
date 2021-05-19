@@ -41,6 +41,10 @@ public class PurchaseDetail {
 
     private Date createDate;
 
+    private Integer sourceId;
+
+    private String sourceNo;
+
     //状态值  如;创建， 已下单，采购中，已入库，完成
     private String state;
 
@@ -138,5 +142,21 @@ public class PurchaseDetail {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public Integer getSourceId() {
+        return sourceId;
+    }
+
+    public void setSourceId(Integer sourceId) {
+        this.sourceId = sourceId;
+    }
+
+    public String getSourceNo() {
+        return sourceNo;
+    }
+
+    public void setSourceNo(String sourceNo) {
+        this.sourceNo = sourceNo;
     }
 }

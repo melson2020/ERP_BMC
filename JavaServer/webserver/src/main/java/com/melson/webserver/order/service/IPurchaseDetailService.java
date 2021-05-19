@@ -15,15 +15,9 @@ public interface IPurchaseDetailService {
     /**
      * 生成 采购需求 采购计划由采购中心生成
      * @param detailList
-     * @param form
-     * @return
-     */
-    List<PurchaseDetail> GeneratePurchaseDetail(List<OrderFormDetail> detailList, OrderForm form);
-
-    /**
-     * 生成采购明细
-     * @param detailList
      * @return
      */
     List<PurchaseDetail> GenerateOrderPurchase(List<OrderFormDetail> detailList);
+
+    List<PurchaseDetail> FindByOrderFormId(Integer orderFormId);
 }

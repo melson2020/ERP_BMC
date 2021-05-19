@@ -11,4 +11,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface IDelegateTicketRepository extends JpaRepository<DelegateTicket,Integer> {
+    DelegateTicket findBySourceIdAndType(Integer sourceId,String type);
 }

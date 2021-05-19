@@ -23,4 +23,5 @@ public interface IContractRepository extends JpaRepository<Contract, Integer> {
 
     Contract findByContractNo(String contractNo);
 
+    int countByState(String state);
 }
