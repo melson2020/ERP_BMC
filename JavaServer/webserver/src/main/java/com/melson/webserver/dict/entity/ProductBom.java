@@ -17,9 +17,12 @@ public class ProductBom {
     private String productNo;       // 产品编码
     private Integer processId;      // 工序
     private String processNo;       // 工序代号
+    private String processName;     // 工序名称
+    private BigDecimal processCost; // 工序费用
     private String productName;     // 产品名称
     private String specification;   // 产品规格
     private String bomNo;           // BOM编码
+    private String bomGenericId;    // Bom Generic ID, 用于存储时间戳
     private BigDecimal costPrice;   // 对应价格
     private Date expirationDate;    // 过期时间
     private String version;         // 版本信息
@@ -64,6 +67,17 @@ public class ProductBom {
         this.processNo = processNo;
     }
 
+
+    public String getProcessName() {
+        return processName;
+    }
+
+    public void setProcessName(String processName) {
+        this.processName = processName;
+    }
+
+
+
     public String getProductName() {
         return productName;
     }
@@ -86,6 +100,14 @@ public class ProductBom {
 
     public void setBomNo(String bomNo) {
         this.bomNo = bomNo;
+    }
+
+    public String getBomGenericId() {
+        return bomGenericId;
+    }
+
+    public void setBomGenericId(String bomGenericId) {
+        this.bomGenericId = bomGenericId;
     }
 
     public BigDecimal getCostPrice() {
@@ -150,5 +172,13 @@ public class ProductBom {
 
     public void setMaterialVos(List<Boms> materialVos) {
         this.materialVos = materialVos;
+    }
+
+    public BigDecimal getProcessCost() {
+        return processCost;
+    }
+
+    public void setProcessCost(BigDecimal processCost) {
+        this.processCost = processCost;
     }
 }

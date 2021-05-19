@@ -49,7 +49,9 @@ const actions = {
     QueryProductAndBomObj({},product){
         return request.ReqQueryProductAndBomObj(product);
     },
-
+    QueryProductBom({},productBom){
+        return request.ReqQueryProductBomDetailObj(productBom);
+    },
 
     
     GetCategoryList({ commit }) {

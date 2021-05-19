@@ -148,6 +148,11 @@ export default {
   ReqSaveProductBom(param){
     return service.post("/productBom/saveProductBom",param)
   },
+  ReqQueryProductBomDetailObj(param){
+    return service.post("/productBom/ProductBomsDetail",param)
+  },
+
+
 
   ReqUpdateProductBom(params) {
     return service.post("/productBom/updateProductBom", params);

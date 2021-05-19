@@ -23,4 +23,9 @@ public interface IBomsRepository extends JpaRepository<Boms, Integer> {
 
     @Query(nativeQuery = true, value = "SELECT b.id, b.bomNo,pp.id as processId,b.processNo,pp.`name` as processName,b.PartNo,b.chPartNo,m.`name` as materialName,b.chQty as materialCount,m.specification, b.`index`,pp.delegateFlag FROM `boms` b RIGHT JOIN material m on b.chPartNo=m.partNo RIGHT JOIN  produce_process pp on b.processNo=pp.processNo WHERE b.bomNo in ?1 ORDER BY b.`index`;")
     List<Object[]> findBomProcessInfoByNo(Set<String> bomNos);
+
+    List<Boms> findByBomNo(String bomNo);
+
+    List<Boms> findByBomNoAndBomGenericId(String bomNo, String bomGenericId);
+
 }

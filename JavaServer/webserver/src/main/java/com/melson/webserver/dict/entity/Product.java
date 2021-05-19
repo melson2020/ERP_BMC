@@ -21,7 +21,7 @@ public class Product {
     private String specification;   // 商品规格
     private String unit;            // 商品单位
     private Integer supplyId;       // 商品供应商
-    private BigDecimal salesPrice;  // 销售价格
+    private BigDecimal salesPrice;  // 物品价格价格
     private BigDecimal weight;      // 物料重量
     private String weightUnit;      // 物料重量单位
     private BigDecimal volume;      // 物料体积

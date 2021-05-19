@@ -876,8 +876,6 @@ export default {
 .productBom-container {
   display: flex;
   flex-direction: column;
-  width: 98%;
-  padding: 10px;
 }
 .productBom-header {
   padding-bottom: 10px;

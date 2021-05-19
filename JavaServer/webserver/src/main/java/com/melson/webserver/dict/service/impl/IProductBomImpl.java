@@ -8,6 +8,7 @@ import com.melson.webserver.dict.dao.IProductBomRepository;
 import com.melson.webserver.dict.entity.Boms;
 import com.melson.webserver.dict.entity.ProductBom;
 import com.melson.webserver.dict.service.IProductBom;
+import com.mysql.cj.util.StringUtils;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,13 +45,37 @@ public class IProductBomImpl extends AbstractService<ProductBom> implements IPro
     @Transactional
     public Result SaveAndUpdate(ProductBom pb) {
         Result result=new Result();
-        pb.setBomNo(sysSequenceService.GenerateCode(Boms.BOM_NO_CHAR));
+        if(StringUtils.isNullOrEmpty(pb.getBomNo())) {
+            pb.setBomNo(sysSequenceService.GenerateCode(Boms.BOM_NO_CHAR));
+        }
         ProductBom productBom=productBomRepository.save(pb);
-        pb.getMaterialVos().forEach(boms->{boms.setBomNo(pb.getBomNo());});  //设置列表中的BomNo;
-        List<Boms> bomsDetial=pb.getMaterialVos();
-        bomsRepository.saveAll(bomsDetial);
-        result.setData(productBom);
-        return result;
+//        pb.getMaterialVos().forEach(boms->{boms.setBomNo(pb.getBomNo());});  //设置列表中的BomNo;
+        List<Boms> bomsDetials=pb.getMaterialVos();
+        Boolean flag;
+        flag = true;
+        for(Boms bo:bomsDetials )
+        {
+            bo.setBomNo(pb.getBomNo());
+            bo.setBomGenericId(pb.getBomGenericId());
+            if(bo.getChQty()==null || StringUtils.isNullOrEmpty(bo.getChQty().toString()))
+            {
+                flag=false;
+            }
+            if(bo.getLossRate()==null ||StringUtils.isNullOrEmpty(bo.getLossRate().toString()))
+            {
+                flag=false;
+            }
+        }
+        if(flag){
+            bomsRepository.saveAll(bomsDetials);
+            result.setData(productBom);
+            return result;
+        }
+        else {
+            result.setResultStatus(-1);
+            result.setMessage("请检查数量和损耗的数据！");
+            return result;
+        }
     }
 
 
@@ -67,5 +92,13 @@ public class IProductBomImpl extends AbstractService<ProductBom> implements IPro
     @Override
     public ProductBom Query(String bomNo) {
         return productBomRepository.findByBomNo(bomNo);
+    }
+
+    @Override
+    public ProductBom QueryProductBomsDetailList(String bomNo) {
+        ProductBom pb=productBomRepository.findByBomNo(bomNo);
+        List<Boms> materialVos=bomsRepository.findByBomNoAndBomGenericId(bomNo,pb.getBomGenericId());
+        pb.setMaterialVos(materialVos);
+        return pb;
     }
 }
