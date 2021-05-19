@@ -12,8 +12,8 @@ import java.util.List;
 public class OrderFormInfoVo {
     private OrderForm orderForm;
     private List<OrderFormDetail> orderFormDetailList;
-    private ProducePlan producePlan;
-    private DelegateTicket delegateTicket;
+    private List<ProducePlan> producePlanList;
+    private List<DelegateTicket> delegateTicketList;
     private List<PurchaseDetail> purchaseDetailList;
 
     public OrderForm getOrderForm() {
@@ -32,20 +32,20 @@ public class OrderFormInfoVo {
         this.orderFormDetailList = orderFormDetailList;
     }
 
-    public ProducePlan getProducePlan() {
-        return producePlan;
+    public List<ProducePlan> getProducePlanList() {
+        return producePlanList;
     }
 
-    public void setProducePlan(ProducePlan producePlan) {
-        this.producePlan = producePlan;
+    public void setProducePlanList(List<ProducePlan> producePlanList) {
+        this.producePlanList = producePlanList;
     }
 
-    public DelegateTicket getDelegateTicket() {
-        return delegateTicket;
+    public List<DelegateTicket> getDelegateTicketList() {
+        return delegateTicketList;
     }
 
-    public void setDelegateTicket(DelegateTicket delegateTicket) {
-        this.delegateTicket = delegateTicket;
+    public void setDelegateTicketList(List<DelegateTicket> delegateTicketList) {
+        this.delegateTicketList = delegateTicketList;
     }
 
     public List<PurchaseDetail> getPurchaseDetailList() {

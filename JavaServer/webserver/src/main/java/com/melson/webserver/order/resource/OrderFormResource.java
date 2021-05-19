@@ -6,6 +6,7 @@ import com.melson.base.constants.SysRespCode;
 import com.melson.webserver.order.entity.OrderForm;
 import com.melson.webserver.order.service.IOrderFormService;
 import com.melson.webserver.order.vo.OrderFormConfirmVo;
+import com.melson.webserver.order.vo.OrderFormInfoVo;
 import com.melson.webserver.order.vo.OrderFormVo;
 import com.melson.webserver.order.vo.OrderStateSummaryVo;
 import org.slf4j.Logger;
@@ -52,7 +53,7 @@ public class OrderFormResource extends BaseResource {
 
     @GetMapping(value = "/processList")
     public Result ProcessOrderList() {
-        return success(orderFormService.GetOrderFormListByState(OrderForm.STATE_PROCESS));
+        return success(orderFormService.GetProcessingOrderForms());
     }
 
     /**
@@ -126,5 +127,11 @@ public class OrderFormResource extends BaseResource {
     public Result GetOrderProduceTypeCount(String date){
         List<OrderStateSummaryVo> vos=orderFormService.GetProduceTypeSummary(date);
         return success(vos);
+    }
+
+    @GetMapping(value = "/orderFormInfo")
+    public Result GetOrderFormInfo(Integer id){
+        OrderFormInfoVo orderFormInfo=orderFormService.GetOrderFormInfo(id);
+        return success(orderFormInfo);
     }
 }

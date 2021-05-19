@@ -28,6 +28,8 @@ public interface IOrderFormRepository extends JpaRepository<OrderForm, Integer> 
     @Query
     List<OrderForm> findByState(String state);
 
+    List<OrderForm> findByStateOrState(String state1,String state2);
+
     /**
      * 查询所有未完成 未作废的各 state 的数量
      * @return

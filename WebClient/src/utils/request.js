@@ -242,6 +242,9 @@ export default {
   GetOrderFormProcessList(){
     return service.get('/orderForm/manage/processList')
   },
+  GetOrderFormInfo(param){
+    return service.get('/orderForm/manage/orderFormInfo',param)
+  },
 
   //生产计划相关
   /**

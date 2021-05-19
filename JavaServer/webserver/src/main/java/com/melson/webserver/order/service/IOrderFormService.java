@@ -87,6 +87,12 @@ public interface IOrderFormService {
     List<OrderForm> GetOrderFormListByState(String state);
 
     /**
+     * 获取进行中的订单  state=2 or state=3
+     * @return
+     */
+    List<OrderForm> GetProcessingOrderForms();
+
+    /**
      *
      * @param id
      * @return

@@ -95,6 +95,9 @@ const actions = {
         }).catch(err => {
             Message.error(err.message)
         })
+    },
+    GetOrderFormInfo({},param){
+     return request.GetOrderFormInfo(param)
     }
 
 };

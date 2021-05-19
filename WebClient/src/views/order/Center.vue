@@ -36,7 +36,7 @@
                 v-model="selectMonth"
                 type="month"
                 @change="monthChange"
-                size="small"
+                size="medium"
                 placeholder="选择月"
               >
               </el-date-picker>
@@ -62,7 +62,12 @@
             <div class="table-header-div">
               <span class="center-font-bold">订单进行中</span>
               <div>
-                <el-select placeholder="请选择" size="medium">
+                <el-select
+                  clearable
+                  placeholder="订单状态"
+                  v-model="orderState"
+                  size="medium"
+                >
                   <el-option
                     v-for="item in oderStateList"
                     :key="item.value"
@@ -71,9 +76,15 @@
                   >
                   </el-option>
                 </el-select>
-                <el-select placeholder="请选择" class="ml24" size="medium">
+                <el-select
+                  clearable
+                  placeholder="订单类型"
+                  v-model="orderType"
+                  class="ml24"
+                  size="medium"
+                >
                   <el-option
-                    v-for="item in oderTypeList"
+                    v-for="item in oderProduceTypeList"
                     :key="item.value"
                     :label="item.name"
                     :value="item.value"
@@ -82,20 +93,38 @@
                 </el-select>
               </div>
             </div>
-            <el-table border :data="orderFormProcessList" stripe style="width: 100%">
-              <el-table-column prop="formNo" label="订单号"> </el-table-column>
-              <el-table-column prop="customerName" label="客户" width="auto">
+            <el-table
+              border
+              :data="orderFormProcessListShow"
+              stripe
+              style="width: 100%"
+            >
+              <el-table-column prop="formNo" label="订单号" width="180px">
               </el-table-column>
-              <el-table-column prop="createDate" label="日期" width="auto">
+              <el-table-column prop="customerName" label="客户">
+              </el-table-column>
+              <el-table-column prop="createDate" label="创建日期" width="180px">
+                <template slot-scope="scope">
+                  <span>{{ getFullTime(scope.row.createDate) }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column prop="state" label="状态" width="80px">
+                <template slot-scope="scope">
+                  <span v-if="scope.row.state == '2'" class="coloryellow"
+                    >已下单</span
+                  >
+                  <span v-else class="colorgreen">进行中</span>
+                </template>
               </el-table-column>
               <el-table-column prop="produceType" label="类型" width="auto">
               </el-table-column>
-              <el-table-column prop="" label="操作">
+              <el-table-column prop="" label="操作" width="80px">
                 <template slot-scope="scope">
                   <el-button
                     type="primary"
                     icon="el-icon-more"
                     size="mini"
+                    @click="orderFormDetailOnClick(scope.row.id)"
                     circle
                   ></el-button>
                 </template>
@@ -103,6 +132,179 @@
             </el-table></div></el-col
       ></el-row>
     </div>
+    <el-dialog
+      ref="detailDialog"
+      title="订单详细"
+      :visible.sync="detailDialog"
+      width="70%"
+    >
+      <div>
+        <el-form
+          label-position="left"
+          label-width="90px"
+          class="demo-table-expand"
+        >
+          <el-row>
+            <el-col :span="6" class="center-orderForm-info-cell-div">
+              <el-form-item label="订单号：">
+                <span>{{ orderFormInfo.orderForm.formNo }}</span>
+              </el-form-item></el-col
+            >
+            <el-col :span="6" class="center-orderForm-info-cell-div">
+              <el-form-item label="合同号">
+                <span>{{ orderFormInfo.orderForm.contractNo }}</span>
+              </el-form-item></el-col
+            >
+            <el-col :span="6" class="center-orderForm-info-cell-div">
+              <el-form-item label="客户：">
+                <span>{{ orderFormInfo.orderForm.customerName }}</span>
+              </el-form-item></el-col
+            >
+            <el-col :span="6" class="center-orderForm-info-cell-div">
+              <el-form-item label="创建日期：">
+                <span>{{
+                  getFullTime(orderFormInfo.orderForm.createDate)
+                }}</span>
+              </el-form-item></el-col
+            >
+          </el-row>
+          <el-row>
+            <el-col :span="6" class="center-orderForm-info-cell-div">
+              <el-form-item label="生产类型：">
+                <span>{{
+                  getProduceTypeChar(orderFormInfo.orderForm.produceType)
+                }}</span>
+              </el-form-item></el-col
+            >
+            <el-col :span="6" class="center-orderForm-info-cell-div">
+              <el-form-item label="状态">
+                <span
+                  v-if="orderFormInfo.orderForm.state == '2'"
+                  class="coloryellow"
+                  >已下单</span
+                >
+                <span v-else class="colorgreen">进行中</span>
+              </el-form-item></el-col
+            >
+          </el-row>
+        </el-form>
+        <div class="center-orderForm-info-ticket-div">
+          <span class="colorblue fl mb40 fz9">订单产品</span>
+          <el-table
+            border
+            size="mini"
+            :data="orderFormInfo.orderFormDetailList"
+            stripe
+            style="width: 100%"
+          >
+            <el-table-column prop="productName" label="名称"> </el-table-column>
+            <el-table-column prop="specification" label="规格">
+            </el-table-column>
+            <el-table-column prop="remark" label="备注"> </el-table-column>
+            <el-table-column prop="count" label="数量">
+              <template slot-scope="scope">
+                <span>{{ scope.row.count }}{{ scope.row.countUnit }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="produceType" label="类型">
+              <template slot-scope="scope">
+                <span>{{ getProduceTypeChar(scope.row.produceType) }}</span>
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+        <div
+          v-if="orderFormInfo.producePlanList.length > 0"
+          class="center-orderForm-info-ticket-div"
+        >
+          <span class="colorblue fl mb40 fz9">生产计划</span>
+          <el-table
+            border
+            size="mini"
+            :data="orderFormInfo.producePlanList"
+            stripe
+            style="width: 100%"
+          >
+            <el-table-column prop="planNo" label="编号"> </el-table-column>
+            <el-table-column prop="customerName" label="客户">
+            </el-table-column>
+            <el-table-column prop="startDate" label="计划时间">
+              <template slot-scope="scope">
+                <span
+                  >{{ getFullDate(scope.row.startDate) }} 至
+                  {{ getFullDate(scope.row.endDate) }}</span
+                >
+              </template>
+            </el-table-column>
+            <el-table-column prop="pickingTicketNo" label="领料单号">
+            </el-table-column>
+            <el-table-column prop="produceType" label="类型">
+              <template slot-scope="scope">
+                <span>{{ getProduceTypeChar(scope.row.type) }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="state" label="状态">
+              <template slot-scope="scope">
+                <span class="colorred" v-if="scope.row.state == '1'"
+                  >待配置</span
+                >
+                <span class="colorblue" v-else-if="scope.row.state == '2'"
+                  >执行中</span
+                >
+                <span v-else class="colorgreen">已完成</span>
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+
+        <div
+          v-if="orderFormInfo.delegateTicketList.length > 0"
+          class="center-orderForm-info-ticket-div"
+        >
+          <span class="colorblue fl mb40 fz9">委外单</span>
+          <el-table
+            border
+            size="mini"
+            :data="orderFormInfo.delegateTicketList"
+            stripe
+            style="width: 100%"
+          >
+            <el-table-column prop="ticketNo" label="编号"> </el-table-column>
+            <el-table-column prop="customerName" label="客户">
+            </el-table-column>
+          </el-table>
+        </div>
+
+        <div
+          v-if="orderFormInfo.purchaseDetailList.length > 0"
+          class="center-orderForm-info-ticket-div"
+        >
+          <span class="colorblue fl mb40 fz9">采购明细</span>
+          <el-table
+            border
+            size="mini"
+            :data="orderFormInfo.purchaseDetailList"
+            stripe
+            style="width: 100%"
+          >
+            <el-table-column prop="materialNo" label="编号"> </el-table-column>
+            <el-table-column prop="materialName" label="名称">
+            </el-table-column>
+            <el-table-column prop="specification" label="规格">
+            </el-table-column>
+            <el-table-column prop="count" label="数量">
+              <template slot-scope="scope">
+                <span
+                  >{{ scope.row.count }}
+                  {{ scope.row.countUnit }}
+                </span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="remark" label="备注"> </el-table-column>
+          </el-table>
+        </div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -112,49 +314,52 @@ import { mapActions } from "vuex";
 export default {
   data() {
     return {
+      orderType: "",
+      orderState: "",
       selectMonth: "",
+      detailDialog: false,
+      orderFormInfo: {
+        orderForm: {},
+        orderFormDetailList: [],
+        producePlanList: [],
+        delegateTicketList: [],
+        purchaseDetailList: [],
+      },
       oderStateList: [
-        { name: "未下单", value: 11 },
-        { name: "生产中", value: 12 },
-        { name: "采购中", value: 13 },
-        { name: "待入库", value: 14 },
+        { name: "已下单", value: "2" },
+        { name: "进行中", value: "3" },
       ],
-      orderList: [
-        {
-          no: "00001",
-          customerName: "客户01",
-          date: "2021-04-13",
-          user: "员工01",
-          endDate: "2021-07-15",
-          status: "生产中",
-          des: "",
-          type: "生产订单",
-        },
-        {
-          no: "00002",
-          customerName: "客户02",
-          date: "2021-04-03",
-          user: "员工01",
-          endDate: "2021-07-15",
-          status: "已出单",
-          des: "",
-          type: "委外订单",
-        },
-        {
-          no: "00003",
-          customerName: "客户03",
-          date: "2021-03-13",
-          user: "员工01",
-          endDate: "2021-07-15",
-          status: "生产中",
-          des: "",
-          type: "生产订单",
-        },
+      oderProduceTypeList: [
+        { name: "生产", value: "P" },
+        { name: "代工", value: "D" },
+        { name: "采购", value: "C" },
+        { name: "委外", value: "W" },
       ],
     };
   },
   computed: {
-    ...mapGetters(["orderStateSummary", "orderProduceTypeSummary","orderFormProcessList"]),
+    ...mapGetters([
+      "orderStateSummary",
+      "orderProduceTypeSummary",
+      "orderFormProcessList",
+    ]),
+    orderFormProcessListShow() {
+      return this.orderFormProcessList.filter((item) => {
+        var existState = false;
+        if (this.orderState == "") {
+          existState = true;
+        } else {
+          existState = item.state.indexOf(this.orderState) != -1;
+        }
+        var existType = false;
+        if (this.orderType == "") {
+          existType = true;
+        } else {
+          existType = item.produceType.indexOf(this.orderType) != -1;
+        }
+        return existState && existType;
+      });
+    },
     produceTypeTotalCount() {
       var count = "0";
       this.orderProduceTypeSummary.map((item) => {
@@ -172,10 +377,37 @@ export default {
     ...mapActions({
       GetOrderCenterSummaryCount: "GetOrderCenterSummaryCount",
       GetOrderProduceTypeSummary: "GetOrderProduceTypeSummary",
-      GetOrderFormProcessList:'GetOrderFormProcessList'
+      GetOrderFormProcessList: "GetOrderFormProcessList",
+      GetOrderFormInfo: "GetOrderFormInfo",
     }),
+    getProduceTypeChar(type) {
+      if (!type) return;
+      return type
+        .replace("P", "生产")
+        .replace("D", "代工")
+        .replace("C", "采购")
+        .replace("W", "委外");
+    },
     navigationTo(path) {
-      this.$router.replace({ path: "/main/orderManagement" + path });
+      if (path != "") {
+        this.$router.replace({ path: "/main/orderManagement" + path });
+      }
+    },
+
+    getFullTime(time) {
+      if (time) {
+        return new Date(time).format("yyyy-MM-dd hh:mm:ss");
+      } else {
+        return "";
+      }
+    },
+
+    getFullDate(time) {
+      if (time) {
+        return new Date(time).format("yyyy-MM-dd");
+      } else {
+        return "";
+      }
     },
 
     Init: function () {
@@ -189,6 +421,21 @@ export default {
     },
     monthChange(value) {
       this.GetOrderProduceTypeSummary({ date: value.format("yyyy-MM-dd") });
+    },
+    orderFormDetailOnClick(id) {
+      this.GetOrderFormInfo({ id: id })
+        .then((res) => {
+          if (res.resultStatus == 1) {
+            console.log(res.data);
+            this.orderFormInfo = res.data;
+            this.detailDialog = !this.detailDialog;
+          } else {
+            this.$message.warning(res.messgae);
+          }
+        })
+        .catch((err) => {
+          this.$message.error(err.messgae);
+        });
     },
     drawCharts() {
       var oderChart = echarts.init(document.getElementById("chart-1"));
@@ -235,7 +482,7 @@ export default {
     this.GetOrderCenterSummaryCount();
     this.selectMonth = new Date();
     this.GetOrderProduceTypeSummary({ date: new Date().format("yyyy-MM-dd") });
-    this.GetOrderFormProcessList()
+    this.GetOrderFormProcessList();
   },
 };
 </script>
@@ -321,13 +568,27 @@ export default {
   width: 100%;
 }
 
-.center-dashborad-header{
-   display: flex;
-   padding: 0 5px;
-   align-items: center;
+.center-dashborad-header {
+  display: flex;
+  padding: 0 5px;
+  align-items: center;
 }
-.center-font-bold{
+.center-font-bold {
   font-weight: bold;
-   font-size: 1.1rem;
+  font-size: 1.1rem;
+}
+.center-orderForm-info-cell-div {
+  display: flex;
+}
+
+.center-orderForm-info-ticket-div {
+  padding: 10px 0;
+}
+.demo-table-expand .el-form-item {
+  margin-right: 0;
+  margin-bottom: 0;
+}
+.demo-table-expand label {
+  color: #99a9bf;
 }
 </style>

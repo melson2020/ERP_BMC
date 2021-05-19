@@ -224,6 +224,11 @@ public class OrderFormServiceImpl implements IOrderFormService {
     }
 
     @Override
+    public List<OrderForm> GetProcessingOrderForms() {
+        return orderFormRepository.findByStateOrState(OrderForm.STATE_ORDER, OrderForm.STATE_PROCESS);
+    }
+
+    @Override
     public OrderFormInfoVo GetOrderFormInfo(Integer id) {
         OrderFormInfoVo infoVo = new OrderFormInfoVo();
         OrderForm orderForm = orderFormRepository.findById(id).orElse(null);
@@ -233,8 +238,16 @@ public class OrderFormServiceImpl implements IOrderFormService {
         List<PurchaseDetail> purchaseDetailList = purchaseDetailService.FindByOrderFormId(orderForm.getId());
         infoVo.setOrderForm(orderForm);
         infoVo.setOrderFormDetailList(orderFormDetails);
-        infoVo.setProducePlan(producePlan);
-        infoVo.setDelegateTicket(delegateTicket);
+        List<ProducePlan> producePlanList = new ArrayList<>();
+        if (producePlan != null) {
+            producePlanList.add(producePlan);
+        }
+        infoVo.setProducePlanList(producePlanList);
+        List<DelegateTicket> delegateTicketList = new ArrayList<>();
+        if (delegateTicket != null) {
+            delegateTicketList.add(delegateTicket);
+        }
+        infoVo.setDelegateTicketList(delegateTicketList);
         infoVo.setPurchaseDetailList(purchaseDetailList);
         return infoVo;
     }
