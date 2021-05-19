@@ -354,7 +354,7 @@
                         @change="materialChanged($event,scope.row)">
                         <el-option
                           v-for="vo in filterProductList"
-                          :label="vo.name"
+                          :label="vo.alias"
                           :value="vo"
                           :key="vo.id"
                         ></el-option>
@@ -539,7 +539,8 @@ export default {
     },
     filterProductList(){
       return this.productList.filter((item)=>{
-          return item.productNo!=this.selectPNO
+        item.alias=item.name+" / "+item.category+" / "+item.specification+" / "+item.supplyName
+        return item.productNo!=this.selectPNO
       })
     }
   },
@@ -877,7 +878,7 @@ export default {
   display: flex;
   flex-direction: column;
   width: 98%;
-  padding: 10px;
+  padding: 15px;
 }
 .productBom-header {
   padding-bottom: 10px;

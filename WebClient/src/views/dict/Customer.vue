@@ -27,6 +27,6 @@ export default {
 <style>
 .customer-tab-pane {
   min-height: 1000px;
-  padding: 0px;
+  padding: 0px !important;
 }
 </style>

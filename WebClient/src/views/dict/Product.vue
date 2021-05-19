@@ -420,7 +420,7 @@
                         @change="materialChanged($event,scope.row)">
                         <el-option
                           v-for="vo in filterProductList"
-                          :label="vo.name"
+                          :label="vo.alias"
                           :value="vo"
                           :key="vo.id"
                         ></el-option>
@@ -686,7 +686,7 @@
                         @change="materialChanged($event,scope.row)">
                         <el-option
                           v-for="vo in filterProductList"
-                          :label="vo.name"
+                          :label="vo.alias"
                           :value="vo"
                           :key="vo.id"
                         ></el-option>
@@ -943,6 +943,7 @@ export default {
       },
       filterProductList(){
         return this.productList.filter((item)=>{
+          item.alias=item.name+" / "+item.category+" / "+item.specification+" / "+item.supplyName
            return item.id!=this.selectPid
         })
       }
@@ -1459,6 +1460,8 @@ export default {
 .product-container {
   display: flex;
   flex-direction: column;
+  width: 98%;
+  padding: 15px;
 }
 .product-header {
   padding-bottom: 10px;

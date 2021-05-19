@@ -327,7 +327,7 @@ export default {
   display: flex;
   flex-direction: column;
   width: 98%;
-  padding: 10px;
+  padding: 15px;
 }
 .supply-header {
   padding-bottom: 10px;
