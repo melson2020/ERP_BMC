@@ -9,8 +9,8 @@ const state = {
     orderFormDetaiList: [],
     closeDrawer: false,
     orderStateSummary: [],
-    orderProduceTypeSummary:[],
-    orderFormProcessList:[]
+    orderProduceTypeSummary: [],
+    orderFormProcessList: []
 };
 
 const actions = {
@@ -72,7 +72,7 @@ const actions = {
             Message.error(err.message)
         })
     },
-    GetOrderProduceTypeSummary({commit},param){
+    GetOrderProduceTypeSummary({ commit }, param) {
         request.GetOrderProduceTypeSummary(param).then(res => {
             if (res.resultStatus == 1) {
                 commit(types.ORDER_PRODUCE_TYPE_SUMMARY, res.data)
@@ -84,7 +84,7 @@ const actions = {
             Message.error(err.message)
         })
     },
-    GetOrderFormProcessList({commit}){
+    GetOrderFormProcessList({ commit }) {
         request.GetOrderFormProcessList().then(res => {
             if (res.resultStatus == 1) {
                 commit(types.ORDER_FORM_PROCESS_LIST, res.data)
@@ -96,8 +96,8 @@ const actions = {
             Message.error(err.message)
         })
     },
-    GetOrderFormInfo({},param){
-     return request.GetOrderFormInfo(param)
+    GetOrderFormInfo({ }, param) {
+        return request.GetOrderFormInfo(param)
     }
 
 };
@@ -106,9 +106,9 @@ const getters = {
     orderReadyToReleaseList: state => state.orderReadyToReleaseList,
     orderFormDetaiList: state => state.orderFormDetaiList,
     closeDrawer: state => state.closeDrawer,
-    orderStateSummary:state=>state.orderStateSummary,
-    orderProduceTypeSummary:state=>state.orderProduceTypeSummary,
-    orderFormProcessList:state=>state.orderFormProcessList
+    orderStateSummary: state => state.orderStateSummary,
+    orderProduceTypeSummary: state => state.orderProduceTypeSummary,
+    orderFormProcessList: state => state.orderFormProcessList
 };
 
 const mutations = {
@@ -118,7 +118,8 @@ const mutations = {
     [types.ORDER_DETAIL_LIST](state, data) {
         data.map(item => {
             item.pboms = [],
-                item.boms = []
+                item.boms = [],
+                item.dataPass = false
         })
         state.orderFormDetaiList = data;
     },
