@@ -2,11 +2,6 @@ package com.melson.webserver.dict.resource;
 
 import com.melson.base.BaseResource;
 import com.melson.base.Result;
-import com.melson.base.interceptor.RequiredPermission;
-import com.melson.base.interceptor.SecurityLevel;
-import com.melson.webserver.dict.entity.Customer;
-import com.melson.webserver.dict.entity.Material;
-import com.melson.webserver.dict.entity.StorageDetail;
 import com.melson.webserver.dict.entity.Supply;
 import com.melson.webserver.dict.service.ISupply;
 import org.springframework.web.bind.annotation.RequestBody;
