@@ -8,6 +8,7 @@ import com.melson.webserver.dict.dao.IProductBomRepository;
 import com.melson.webserver.dict.entity.Boms;
 import com.melson.webserver.dict.entity.ProductBom;
 import com.melson.webserver.dict.service.IProductBom;
+import com.melson.webserver.dict.vo.GroupProductVo;
 import com.mysql.cj.util.StringUtils;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
@@ -23,11 +24,13 @@ public class IProductBomImpl extends AbstractService<ProductBom> implements IPro
     private final IProductBomRepository productBomRepository;
     private final ISysSequence sysSequenceService;
     private final IBomsRepository bomsRepository;
+    private final IProductImpl productService;
 
-    public IProductBomImpl(IProductBomRepository productBomRepository, ISysSequence sysSequenceService, IBomsRepository bomsRepository) {
+    public IProductBomImpl(IProductBomRepository productBomRepository, ISysSequence sysSequenceService, IBomsRepository bomsRepository, IProductImpl productService) {
         this.productBomRepository = productBomRepository;
         this.sysSequenceService = sysSequenceService;
         this.bomsRepository = bomsRepository;
+        this.productService = productService;
     }
 
     @Override
@@ -89,6 +92,7 @@ public class IProductBomImpl extends AbstractService<ProductBom> implements IPro
         return productBomRepository.findAll();
     }
 
+
     @Override
     public ProductBom Query(String bomNo) {
         return productBomRepository.findByBomNo(bomNo);
@@ -98,7 +102,17 @@ public class IProductBomImpl extends AbstractService<ProductBom> implements IPro
     public ProductBom QueryProductBomsDetailList(String bomNo) {
         ProductBom pb=productBomRepository.findByBomNo(bomNo);
         List<Boms> materialVos=bomsRepository.findByBomNoAndBomGenericId(bomNo,pb.getBomGenericId());
+        List<GroupProductVo> groupProductVos=productService.GetProductVoList(pb.getProductNo());
+        pb.setGroupProductVoList(groupProductVos);
         pb.setMaterialVos(materialVos);
         return pb;
+    }
+
+    @Override
+    public ProductBom QueryProductionBomAll(ProductBom pb) {
+        ProductBom pbom=productBomRepository.findByBomNo(pb.getBomNo());
+        List<GroupProductVo> groupProductVos=productService.GetProductVoList(pb.getProductNo());
+        pbom.setGroupProductVoList(groupProductVos);
+        return pbom;
     }
 }

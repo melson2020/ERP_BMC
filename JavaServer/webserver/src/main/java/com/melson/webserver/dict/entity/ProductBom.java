@@ -1,5 +1,7 @@
 package com.melson.webserver.dict.entity;
 
+import com.melson.webserver.dict.vo.GroupProductVo;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -30,9 +32,14 @@ public class ProductBom {
     private String createBy;        // 创建人
     private Date createDate;        // 创建日期
     private String status;          // 状态属性， Y：Bom正常使用 ；  N： Bom 停用
+    private String categoryId;
+    private Integer supplyId;
+    private String supplyName;
 
     @Transient
     private List<Boms> materialVos;   //传BOM过来
+    @Transient
+    private List<GroupProductVo> groupProductVoList;
 
 
     public Integer getId() {
@@ -180,5 +187,37 @@ public class ProductBom {
 
     public void setProcessCost(BigDecimal processCost) {
         this.processCost = processCost;
+    }
+
+    public String getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public Integer getSupplyId() {
+        return supplyId;
+    }
+
+    public void setSupplyId(Integer supplyId) {
+        this.supplyId = supplyId;
+    }
+
+    public String getSupplyName() {
+        return supplyName;
+    }
+
+    public void setSupplyName(String supplyName) {
+        this.supplyName = supplyName;
+    }
+
+    public List<GroupProductVo> getGroupProductVoList() {
+        return groupProductVoList;
+    }
+
+    public void setGroupProductVoList(List<GroupProductVo> groupProductVoList) {
+        this.groupProductVoList = groupProductVoList;
     }
 }

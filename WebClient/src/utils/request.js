@@ -194,18 +194,10 @@ export default {
     return service.post("/storage/queryStorageAreaLocation",params);
   },
 
-  ReqMaterialList(params){
-    return service.get('/material/list',params)    //  //
+  ReqMaterialList(param){
+    return service.get('/common/materialList',param)
   },
-  ReqDeleteMaterial(params){
-    return service.post("/material/delete",params)
-  },
-  ReqSaveMaterial(param){
-    return service.post("/material/save",param)
-  },
-  ReqQueryMaterialObj(params){
-    return service.post("/material/query",params);
-  },
+
 
 
   ReqSupplyList(params){

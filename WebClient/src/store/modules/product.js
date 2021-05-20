@@ -6,6 +6,7 @@ import { Message } from "element-ui";
 const state = {
     productList:[],
     categoryList:[],
+    materialList:[]
 };
 
 const actions = {
@@ -16,6 +17,17 @@ const actions = {
         request.ReqProductList().then(res => {
             if (res.resultStatus == 1) {
                 commit("SetProductList", res.data)
+            } else {
+                Message.warning(res.message)
+            }
+        }).catch(err => {
+            Message.error(err.message)
+        })
+    },
+    GetMaterialList({ commit }, param) {
+        request.ReqMaterialList(param).then(res => {
+            if (res.resultStatus == 1) {
+                commit("SetMaterialList", res.data)
             } else {
                 Message.warning(res.message)
             }
@@ -107,11 +119,15 @@ const actions = {
 const getters = {
     productList:state=>state.productList,
     categoryList:state=>state.categoryList,
+    materialList:state=>state.materialList,
 };
 
 const mutations = {
     SetProductList(state, data) {
         state.productList = data;
+    },
+    SetMaterialList(state, data) {
+        state.materialList = data;
     },
     SetCategoryList(state, data) {
         state.categoryList = data;
