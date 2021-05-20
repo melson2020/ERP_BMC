@@ -207,7 +207,7 @@
                     <el-option
                       v-for="item in group.list"
                       :key="item.id"
-                      :label="item.value"
+                      :label="item.alias"
                       :value="item"
                     >
                     </el-option>
@@ -562,7 +562,7 @@ export default {
     },
     onSelect(item, row) {
       row.productId = item.id;
-      row.productName = item.productName;
+      row.productName = item.name;
       row.productNo = item.productNo;
       row.specification = item.specification;
       row.countUnit = item.unit;

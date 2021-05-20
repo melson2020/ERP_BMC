@@ -17,12 +17,16 @@ public class ProductVo {
     private String bomNo;
     private String bomGenericId;
     private String alias;
+    private Integer id;
+    private String unit;
+    private String remark;
 
 
     public ProductVo() {
     }
 
-    public ProductVo(String productNo, String name, String specification, String categoryId, String category, Integer supplyId, BigDecimal salesPrice, String supplyName, String bomNo, String bomGenericId, String alias) {
+
+    public ProductVo(String productNo, String name, String specification, String categoryId, String category, Integer supplyId, BigDecimal salesPrice, String supplyName, String bomNo, String bomGenericId, String alias, Integer id, String unit, String remark) {
         this.productNo = productNo;
         this.name = name;
         this.specification = specification;
@@ -34,6 +38,9 @@ public class ProductVo {
         this.bomNo = bomNo;
         this.bomGenericId = bomGenericId;
         this.alias = alias;
+        this.id = id;
+        this.unit = unit;
+        this.remark = remark;
     }
 
     public String getProductNo() {
@@ -122,5 +129,29 @@ public class ProductVo {
 
     public void setAlias(String alias) {
         this.alias = alias;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }

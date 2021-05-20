@@ -54,25 +54,23 @@ public class IProductImpl extends AbstractService<Product> implements IProduct {
     @Override
     public List<ContractProductVo> queryContractProducts(String customerNo, String searchValue) {
         List<ContractProductVo> contractProductList = new ArrayList<>();
-        String sql = "SELECT pd.id, cb.productNo,pd.`name` as productName,pd.specification,CONCAT(pd.`name`, '/', pd.specification, '/', cb.description) as vaule,cb.remark,pd.unit,cb.salesPrice from customer_bom cb\n" +
-                "left JOIN product pd on cb.productNo=pd.productNo\n" +
-                "left join product_bom pb on pb.bomNo=cb.bomNo";
+        String sql = "SELECT cp.productNo, pr.name,pr.specification,pr.categoryId, pc.`name` as category,su.id as supplyId,cp.salesPrice,su.`name` as supplyName ,''as bomNo,'' as bomGenericId, CONCAT(pc.`name`,' / ',pr.`name`,' / ',pr.specification,' / ',su.`name`,' / ',cp.remark) as alias ,pr.id,pr.unit ,cp.remark FROM `customer_product` cp left JOIN product pr on pr.productNo=cp.productNo left JOIN supply su on pr.supplyId=su.id left JOIN product_category pc on pr.categoryId=pc.categoryId";
         StringBuffer sBuffer = new StringBuffer(sql);
-        sBuffer.append(" where cb.customerNo='" + customerNo + "'");
+        sBuffer.append(" where cp.customerNo='" + customerNo + "'");
         if (!org.springframework.util.StringUtils.isEmpty(searchValue)) {
             String likeStr = "%" + searchValue + "%";
-            sBuffer.append(" and (pd.`name` like '" + likeStr + "' or pd.specification like '" + likeStr + "')");
+            sBuffer.append(" and (pr.`name` like '" + likeStr + "' or pr.specification like '" + likeStr + "')");
         }
         List<Object[]> list = entityManagerUtil.ExcuteSql(sBuffer.toString());
         List<ProductVo> productVos = EntityUtils.castEntity(list, ProductVo.class, new ProductVo());
         ContractProductVo contractProductVo1 = new ContractProductVo();
         contractProductVo1.setGroupName("常用产品");
         contractProductVo1.setList(productVos);
-        String sql2 = "SELECT id, productNo,`name`,specification, CONCAT(`name`, '/', specification) as vaule,remark,unit,salesPrice from product";
+        String sql2 = "SELECT pr.productNo,pr.name,pr.specification,pr.categoryId,pc.`name` as category,pr.supplyId,pr.salesPrice,su.`name` as supplyName,''as bomNo,'' as bomGenericId,CONCAT(pc.`name`,' / ',pr.`name`,' / ',pr.specification,' / ',su.`name`) as alias ,pr.id,pr.unit ,pr.remark from product pr left JOIN supply su on pr.supplyId=su.id left JOIN product_category pc on pr.categoryId=pc.categoryId ";
         StringBuffer sBuffer2 = new StringBuffer(sql2);
         if (!org.springframework.util.StringUtils.isEmpty(searchValue)) {
             String likeStr = "%" + searchValue + "%";
-            sBuffer2.append(" where `name` like '" + likeStr + "' or specification like '" + likeStr + "'");
+            sBuffer2.append(" where pr.`name` like '" + likeStr + "' or pr.specification like '" + likeStr + "'");
         }
         List<Object[]> list2 = entityManagerUtil.ExcuteSql(sBuffer2.toString());
         List<ProductVo> productVos2 = EntityUtils.castEntity(list2, ProductVo.class, new ProductVo());
@@ -80,8 +78,7 @@ public class IProductImpl extends AbstractService<Product> implements IProduct {
         contractProductVo2.setGroupName("产品列表");
         contractProductVo2.setList(productVos2);
         contractProductList.add(contractProductVo1);
-        contractProductList.add(contractProductVo2);
-        return contractProductList;
+        contractProductList.add(contractProductVo2);return contractProductList;
     }
 
     @Override
@@ -91,7 +88,7 @@ public class IProductImpl extends AbstractService<Product> implements IProduct {
 
     private List<GroupProductVo> generateVoList(String productNo) {
         List<GroupProductVo> voList=new ArrayList<>();
-        String sql ="SELECT pb.productNo,pb.productName as name,pb.specification,pb.categoryId,pc.`name` as category,pb.supplyId,pb.costPrice as salesPrice,pb.supplyName, pb.bomNo,pb.bomGenericId,CONCAT(pc.`name`,' / ',pb.productName,' / ',pb.specification,' / ',pb.supplyName,' / ',pb.description,' / ',pb.version) as alias FROM `product_bom` pb left join product_category pc on pb.categoryId=pc.categoryId ";
+        String sql ="SELECT pb.productNo,pb.productName as name,pb.specification,pb.categoryId,pc.`name` as category,pb.supplyId,pb.costPrice as salesPrice,pb.supplyName, pb.bomNo,pb.bomGenericId,CONCAT(pc.`name`,' / ',pb.productName,' / ',pb.specification,' / ',pb.supplyName,' / ',pb.description,' / ',pb.version) as alias ,''as id,''as unit,'' as remark FROM `product_bom` pb left join product_category pc on pb.categoryId=pc.categoryId ";
         StringBuffer sBuffer = new StringBuffer(sql);
         sBuffer.append(" where pb.productNo<>'" + productNo + "'");
         sBuffer.append("  and pb.status='Y'");
@@ -100,7 +97,7 @@ public class IProductImpl extends AbstractService<Product> implements IProduct {
         GroupProductVo gpvo1=new GroupProductVo();
         gpvo1.setGroupName("成品/半成品");
         gpvo1.setList(productVos1);
-        String sql2 ="SELECT pr.productNo,pr.name,pr.specification,pr.categoryId,pc.`name` as category,pr.supplyId,pr.salesPrice,su.`name` as supplyName,''as bomNo,'' as bomGenericId,CONCAT(pc.`name`,' / ',pr.`name`,' / ',pr.specification,' / ',su.`name`) as alias from product pr left JOIN supply su on pr.supplyId=su.id left JOIN product_category pc on pr.categoryId=pc.categoryId left JOIN (SELECT productNo from product_bom) pb on pr.productNo=pb.productNo WHERE pb.productNo is null ";
+        String sql2 ="SELECT pr.productNo,pr.name,pr.specification,pr.categoryId,pc.`name` as category,pr.supplyId,pr.salesPrice,su.`name` as supplyName,''as bomNo,'' as bomGenericId,CONCAT(pc.`name`,' / ',pr.`name`,' / ',pr.specification,' / ',su.`name`) as alias ,''as id,''as unit,'' as remark from product pr left JOIN supply su on pr.supplyId=su.id left JOIN product_category pc on pr.categoryId=pc.categoryId left JOIN (SELECT productNo from product_bom) pb on pr.productNo=pb.productNo WHERE pb.productNo is null ";
         StringBuffer sBuffer2 = new StringBuffer(sql2);
         sBuffer2.append("  and pr.productNo<>'" + productNo + "'");
         List<Object[]> list2 = entityManagerUtil.ExcuteSql(sBuffer2.toString());
