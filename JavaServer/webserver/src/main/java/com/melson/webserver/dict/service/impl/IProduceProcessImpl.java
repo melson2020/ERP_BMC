@@ -4,7 +4,6 @@ import com.melson.base.AbstractService;
 import com.melson.base.service.ISysSequence;
 import com.melson.webserver.dict.dao.IProduceProcessRepository;
 import com.melson.webserver.dict.entity.ProduceProcess;
-import com.melson.webserver.dict.entity.ProduceTech;
 import com.melson.webserver.dict.service.IProduceProcess;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;

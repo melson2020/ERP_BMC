@@ -2,6 +2,13 @@
   <div class="order-release-main-container">
     <div class="order-release-header">
       <span class="colorblue fzb">订单下达</span>
+      <el-button
+        type="primary"
+        size="small "
+        icon="el-icon-refresh-right"
+        @click="orderReleaseRefresh"
+        >刷新</el-button
+      >
     </div>
     <div class="order-release-table-div">
       <el-table
@@ -23,10 +30,10 @@
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button
-              type="success"
+              type="primary"
               size="mini"
               @click="orderDecideOnclick(scope.row)"
-              >决策</el-button
+              >配置</el-button
             >
           </template>
         </el-table-column>
@@ -65,7 +72,11 @@
           </div>
           <div class="order-product-checklist">
             <span>类型：</span>
-            <el-radio-group v-model="product.produceType" size="mini">
+            <el-radio-group
+              v-model="product.produceType"
+              size="mini"
+              @change="produceTypeChanged(product)"
+            >
               <el-radio-button label="P" @click.native="choicePOnclick(product)"
                 >生产</el-radio-button
               >
@@ -184,15 +195,7 @@ export default {
       if (this.orderFormDetaiList.length <= 0) return false;
       var res = true;
       this.orderFormDetaiList.map((item) => {
-        if (item.produceType && item.produceType == "C") {
-          item.dataPass = true;
-        } else {
-          item.dataPass =
-            item.produceType != null &&
-            item.produceType != "" &&
-            item.bomNo != null &&
-            item.bomNo != "";
-        }
+        this.checkProductData(item);
         if (!item.dataPass) {
           res = false;
         }
@@ -221,7 +224,7 @@ export default {
           })
           .catch((e) => e);
       } else {
-        this.$message.warning("请设置完整信息");
+        this.$message.warning("请选类型以及产品BOM");
       }
     },
     getFullTime(time) {
@@ -248,6 +251,7 @@ export default {
               item.seen = true;
             });
             p.boms = res.data;
+            this.checkProductData(p);
           } else {
             this.$message.warning(res.message);
           }
@@ -255,6 +259,22 @@ export default {
         .catch((err) => {
           this.$message.error(err.message);
         });
+    },
+
+    checkProductData(product) {
+      if (product.produceType && product.produceType == "C") {
+        product.dataPass = true;
+      } else {
+        product.dataPass =
+          product.produceType != null &&
+          product.produceType != "" &&
+          product.bomNo != null &&
+          product.bomNo != "";
+      }
+    },
+
+    produceTypeChanged(product) {
+      this.checkProductData(product);
     },
     nodeExpand(item) {
       item.seen = false;
@@ -266,6 +286,9 @@ export default {
     },
     nodeCollapse(item) {
       item.seen = true;
+    },
+    orderReleaseRefresh() {
+      this.GetCreatedOrderList();
     },
   },
   beforeMount() {
@@ -286,6 +309,7 @@ export default {
   display: flex;
   align-items: center;
   padding: 0px 10px;
+  justify-content: space-between;
 }
 .order-release-table-div {
   padding: 5px;

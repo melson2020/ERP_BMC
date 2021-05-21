@@ -1,5 +1,6 @@
 package com.melson.webserver.order.service.impl;
 
+import com.melson.base.utils.EntityUtils;
 import com.melson.webserver.dict.service.IBoms;
 import com.melson.webserver.order.dao.IProducePlanDetailRepository;
 import com.melson.webserver.order.dao.IProducePlanRepository;
@@ -8,6 +9,9 @@ import com.melson.webserver.order.service.IDelegateTicketService;
 import com.melson.webserver.order.service.IPickingTicketService;
 import com.melson.webserver.order.service.IProducePlanProcessService;
 import com.melson.webserver.order.service.IProducePlanService;
+import com.melson.webserver.produce.vo.ProducePlanConfirmInfoVo;
+import com.melson.webserver.produce.vo.ProducePlanPickingTicketVo;
+import com.melson.webserver.produce.vo.ProducePlanStateSummaryVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,38 +42,39 @@ public class ProducePlanServiceImpl implements IProducePlanService {
     private IPickingTicketService pickingTicketService;
 
     /**
-     *
      * @param details
-     * @param form 订单下达 生成生产计划 同时生成工序列表
+     * @param form    订单下达 生成生产计划 同时生成工序列表
      * @return
      */
     @Override
     public ProducePlan GeneratePlan(List<OrderFormDetail> details, OrderForm form) {
-        if(details==null||details.size()<=0)return null;
-        ProducePlan producePlan=new ProducePlan();
+        if (details == null || details.size() <= 0) return null;
+        ProducePlan producePlan = new ProducePlan();
         producePlan.setOrderFormId(form.getId());
         producePlan.setOrderFormNo(form.getFormNo());
         producePlan.setCustomerNo(form.getCustomerNo());
         producePlan.setCustomerName(form.getCustomerName());
         producePlan.setContractNo(form.getContractNo());
-        producePlan.setPlanNo("PL"+System.currentTimeMillis());
+        producePlan.setPlanNo("PL" + System.currentTimeMillis());
         producePlan.setCreateDate(new Date());
         producePlan.setState(ProducePlan.CREATED);
 
-        List<ProducePlanDetail> producePlanDetails=new ArrayList<>();
-        String producePlanType="";
-        for(OrderFormDetail detail:details){
+        List<ProducePlanDetail> producePlanDetails = new ArrayList<>();
+        String producePlanType = "";
+        for (OrderFormDetail detail : details) {
             producePlanDetails.add(CreateProducePlanDetail(detail));
-            if(!producePlanType.contains(detail.getProduceType())){
-                producePlanType+=(detail.getProduceType());
+            if (!producePlanType.contains(detail.getProduceType())) {
+                producePlanType += (detail.getProduceType());
             }
         }
         producePlan.setType(producePlanType);
         producePlanRepository.saveAndFlush(producePlan);
-        producePlanDetails.forEach(producePlanDetail -> {producePlanDetail.setProducePlanId(producePlan.getId());});
-        List<ProducePlanDetail>  savedDetails=producePlanDetailRepository.saveAll(producePlanDetails);
+        producePlanDetails.forEach(producePlanDetail -> {
+            producePlanDetail.setProducePlanId(producePlan.getId());
+        });
+        List<ProducePlanDetail> savedDetails = producePlanDetailRepository.saveAll(producePlanDetails);
         //生成工序记录
-        producePlanProcessService.GeneratePlanProcess(producePlan,savedDetails);
+        producePlanProcessService.GeneratePlanProcess(producePlan, savedDetails);
         return producePlan;
     }
 
@@ -85,23 +90,23 @@ public class ProducePlanServiceImpl implements IProducePlanService {
 
     @Override
     public ProducePlan UpdatePlan(ProducePlan plan, Boolean confirm) {
-        if(confirm){
+        if (confirm) {
             //生成委外单（工序），同时生成领料单
             plan.setState(ProducePlan.PROCESSING);
-            List<ProducePlanProcess> processList=producePlanProcessService.FindByPlanId(plan.getId());
-            List<ProducePlanDetail> planDetails=producePlanDetailRepository.findByProducePlanId(plan.getId());
-            List<ProducePlanProcess> delegateList=new ArrayList<>();
-            for (ProducePlanProcess p:processList){
-                if(p.getDelegateFlag().equals(ProducePlanProcess.DELEGATE_Y)){
+            List<ProducePlanProcess> processList = producePlanProcessService.FindByPlanId(plan.getId());
+            List<ProducePlanDetail> planDetails = producePlanDetailRepository.findByProducePlanId(plan.getId());
+            List<ProducePlanProcess> delegateList = new ArrayList<>();
+            for (ProducePlanProcess p : processList) {
+                if (p.getDelegateFlag().equals(ProducePlanProcess.DELEGATE_Y)) {
                     delegateList.add(p);
                 }
             }
             //ToDo
             //根据delegateList 生成委外明细
-           DelegateTicket ticket=  delegateTicketService.GenerateTicketWithProcess(delegateList,plan,planDetails);
+            DelegateTicket ticket = delegateTicketService.GenerateTicketWithProcess(delegateList, plan, planDetails);
             //根据所有工序 生成取料明细 如有委外 则在明细中表明委外
-           PickingTicket pickingTicket= pickingTicketService.GeneratePickTicketWithPlanProcess(processList,plan,planDetails);
-           plan.setPickingTicketNo(pickingTicket.getTicketNo());
+            PickingTicket pickingTicket = pickingTicketService.GeneratePickTicketWithPlanProcess(processList, plan, planDetails);
+            plan.setPickingTicketNo(pickingTicket.getTicketNo());
         }
         return producePlanRepository.save(plan);
     }
@@ -111,8 +116,26 @@ public class ProducePlanServiceImpl implements IProducePlanService {
         return producePlanRepository.findByOrderFormId(orderFormId);
     }
 
-    private ProducePlanDetail CreateProducePlanDetail(OrderFormDetail detail){
-        ProducePlanDetail producePlanDetail=new ProducePlanDetail();
+    @Override
+    public ProducePlanStateSummaryVo GetStateSummary() {
+        List<Object[]> objList = producePlanRepository.findStateSummary();
+        Map<String, Integer> stateCountMap = new HashMap<>();
+        for (Object[] obj : objList) {
+            stateCountMap.put(obj[0].toString(), Integer.parseInt(obj[1].toString()));
+        }
+        ProducePlanStateSummaryVo vo = new ProducePlanStateSummaryVo(stateCountMap.get(ProducePlan.CREATED) == null ? 0 : stateCountMap.get(ProducePlan.CREATED), stateCountMap.get(ProducePlan.PROCESSING) == null ? 0 : stateCountMap.get(ProducePlan.PROCESSING));
+        return vo;
+    }
+
+    @Override
+    public List<ProducePlanPickingTicketVo> GetProcessingPlanAndPickingTicketInfo() {
+        List<Object[]> objList=producePlanRepository.findProcessingPlanAndPickingTicket();
+        List<ProducePlanPickingTicketVo> list= EntityUtils.castEntity(objList,ProducePlanPickingTicketVo.class,new ProducePlanPickingTicketVo());
+        return list;
+    }
+
+    private ProducePlanDetail CreateProducePlanDetail(OrderFormDetail detail) {
+        ProducePlanDetail producePlanDetail = new ProducePlanDetail();
         producePlanDetail.setProductId(detail.getProductId());
         producePlanDetail.setBomNo(detail.getBomNo());
         producePlanDetail.setRemark(detail.getRemark());

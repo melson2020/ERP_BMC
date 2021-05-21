@@ -63,9 +63,15 @@
         <div v-else>
           <div class="produce-plan-detail-div">
             <el-button type="text" @click="changeTableAreaView">返回</el-button>
-            <div class="produce-plan-detail-title-cell"><span>创建时间：</span><span>2021-04-20</span></div>
-            <div class="produce-plan-detail-title-cell"><span>截止时间：</span><span>2021-07-20</span></div>
-            <div class="produce-plan-detail-title-cell"><span>生产中</span></div>
+            <div class="produce-plan-detail-title-cell">
+              <span>创建时间：</span><span>2021-04-20</span>
+            </div>
+            <div class="produce-plan-detail-title-cell">
+              <span>截止时间：</span><span>2021-07-20</span>
+            </div>
+            <div class="produce-plan-detail-title-cell">
+              <span>生产中</span>
+            </div>
             <div class="produce-plan-detail-title-cell">
               <span>取料状态：</span
               ><i class="el-icon-check color-dark-green fz14"></i>
@@ -97,25 +103,38 @@
       </div>
       <div
         class="monitor-productionLine-box"
-        v-for="productionLine in productLineList"
-        :key="productionLine.indexNo"
+        v-for="productionLine in produceLineStateList"
+        :key="productionLine.lineId"
         :gutter="10"
       >
         <div class="monitor-product-line-title color-yellow">
-          {{ productionLine.name }}
+          {{ productionLine.lineName }}
         </div>
         <el-row :gutter="10" style="width: 100%">
           <el-col
-            :span="2"
-            class="monitor-productionLine-work-station-card fz9"
-            :class="{ bkg: workStation.busy }"
-            v-for="workStation in productionLine.workStationList"
-            :key="workStation.no"
+            :span="3"
+            v-for="workStation in productionLine.workStationVoList"
+            :key="workStation.workStationId"
           >
-            <span>{{ workStation.no }}</span>
-            <span>{{ workStation.name }}</span>
-            <span>{{ workStation.techNo }}</span>
-            <span>{{ workStation.employeeNo }}</span>
+            <div class="monitor-productionLine-work-station-card fz8">
+              <div class="monitor-produce-work-station-float-div">
+                <el-tooltip
+                v-for="plan in workStation.planInfo"
+                :key="plan.planNo"
+                  :content="plan.planNo"
+                  placement="bottom"
+                  effect="light"
+                >
+                  <div class="monitor-work-station-plan-info"></div>
+                </el-tooltip>
+              </div>
+              <div class="monitor-productionLine-work-station-info">
+                <span
+                  >{{ workStation.indexNo }} /
+                  {{ workStation.employeeGroupNo }}</span
+                >
+              </div>
+            </div>
           </el-col>
         </el-row>
       </div>
@@ -123,268 +142,12 @@
   </div>
 </template>
 <script>
+import { mapGetters } from "vuex";
+import { mapActions } from "vuex";
 export default {
   data() {
     return {
       tableShowing: true,
-      productLineList: [
-        {
-          indexNo: "X01",
-          name: "产线1号",
-          location: "厂房1楼区域A",
-          des: "生产网线,未完全启用",
-          workStationList: [
-            {
-              no: "C1",
-              name: "工位1",
-              techNo: "tn01",
-              employeeNo: "组别1",
-              busy: true,
-            },
-            {
-              no: "C2",
-              name: "工位2",
-              techNo: "tn02",
-              employeeNo: "组别2",
-              busy: true,
-            },
-            {
-              no: "C3",
-              name: "工位3",
-              techNo: "tn03",
-              employeeNo: "组别3",
-              busy: false,
-            },
-            {
-              no: "C4",
-              name: "工位4",
-              techNo: "tn04",
-              employeeNo: "组别4",
-              busy: true,
-            },
-            {
-              no: "C5",
-              name: "工位5",
-              techNo: "tn05",
-              employeeNo: "组别5",
-              busy: true,
-            },
-            {
-              no: "C6",
-              name: "工位6",
-              techNo: "tn06",
-              employeeNo: "组别6",
-              busy: false,
-            },
-            {
-              no: "C7",
-              name: "工位7",
-              techNo: "tn07",
-              employeeNo: "组别7",
-              busy: true,
-            },
-            {
-              no: "C8",
-              name: "工位8",
-              techNo: "tn08",
-              employeeNo: "组别8",
-              busy: false,
-            },
-          ],
-        },
-        {
-          indexNo: "X02",
-          name: "产线2号",
-          location: "厂房1楼区域A",
-          des: "生产网线,未完全启用",
-          workStationList: [
-            {
-              no: "S1",
-              name: "工位1",
-              techNo: "tn01",
-              employeeNo: "组别1",
-              busy: true,
-            },
-            {
-              no: "S2",
-              name: "工位2",
-              techNo: "tn02",
-              employeeNo: "组别2",
-              busy: true,
-            },
-            {
-              no: "S3",
-              name: "工位3",
-              techNo: "tn03",
-              employeeNo: "组别3",
-              busy: false,
-            },
-            {
-              no: "S4",
-              name: "工位4",
-              techNo: "tn04",
-              employeeNo: "组别4",
-              busy: true,
-            },
-            {
-              no: "S5",
-              name: "工位5",
-              techNo: "tn05",
-              employeeNo: "组别5",
-              busy: true,
-            },
-            {
-              no: "S6",
-              name: "工位6",
-              techNo: "tn06",
-              employeeNo: "组别6",
-              busy: true,
-            },
-            {
-              no: "S7",
-              name: "工位7",
-              techNo: "tn07",
-              employeeNo: "组别7",
-              busy: false,
-            },
-            {
-              no: "S8",
-              name: "工位8",
-              techNo: "tn08",
-              employeeNo: "组别8",
-              busy: true,
-            },
-          ],
-        },
-           {
-          indexNo: "X02",
-          name: "产线2号",
-          location: "厂房1楼区域A",
-          des: "生产网线,未完全启用",
-          workStationList: [
-            {
-              no: "S1",
-              name: "工位1",
-              techNo: "tn01",
-              employeeNo: "组别1",
-              busy: true,
-            },
-            {
-              no: "S2",
-              name: "工位2",
-              techNo: "tn02",
-              employeeNo: "组别2",
-              busy: true,
-            },
-            {
-              no: "S3",
-              name: "工位3",
-              techNo: "tn03",
-              employeeNo: "组别3",
-              busy: false,
-            },
-            {
-              no: "S4",
-              name: "工位4",
-              techNo: "tn04",
-              employeeNo: "组别4",
-              busy: true,
-            },
-            {
-              no: "S5",
-              name: "工位5",
-              techNo: "tn05",
-              employeeNo: "组别5",
-              busy: true,
-            },
-            {
-              no: "S6",
-              name: "工位6",
-              techNo: "tn06",
-              employeeNo: "组别6",
-              busy: true,
-            },
-            {
-              no: "S7",
-              name: "工位7",
-              techNo: "tn07",
-              employeeNo: "组别7",
-              busy: false,
-            },
-            {
-              no: "S8",
-              name: "工位8",
-              techNo: "tn08",
-              employeeNo: "组别8",
-              busy: true,
-            },
-          ],
-        },
-           {
-          indexNo: "X02",
-          name: "产线2号",
-          location: "厂房1楼区域A",
-          des: "生产网线,未完全启用",
-          workStationList: [
-            {
-              no: "S1",
-              name: "工位1",
-              techNo: "tn01",
-              employeeNo: "组别1",
-              busy: true,
-            },
-            {
-              no: "S2",
-              name: "工位2",
-              techNo: "tn02",
-              employeeNo: "组别2",
-              busy: true,
-            },
-            {
-              no: "S3",
-              name: "工位3",
-              techNo: "tn03",
-              employeeNo: "组别3",
-              busy: false,
-            },
-            {
-              no: "S4",
-              name: "工位4",
-              techNo: "tn04",
-              employeeNo: "组别4",
-              busy: true,
-            },
-            {
-              no: "S5",
-              name: "工位5",
-              techNo: "tn05",
-              employeeNo: "组别5",
-              busy: true,
-            },
-            {
-              no: "S6",
-              name: "工位6",
-              techNo: "tn06",
-              employeeNo: "组别6",
-              busy: true,
-            },
-            {
-              no: "S7",
-              name: "工位7",
-              techNo: "tn07",
-              employeeNo: "组别7",
-              busy: false,
-            },
-            {
-              no: "S8",
-              name: "工位8",
-              techNo: "tn08",
-              employeeNo: "组别8",
-              busy: true,
-            },
-          ],
-        },
-      ],
       producePlanList: [
         {
           planNo: "生产计划单号",
@@ -425,10 +188,19 @@ export default {
       ],
     };
   },
+  computed: {
+    ...mapGetters(["produceLineStateList"]),
+  },
   methods: {
+    ...mapActions({
+      GetProduceLineStateInfo: "GetProduceLineStateInfo",
+    }),
     changeTableAreaView() {
       this.tableShowing = !this.tableShowing;
     },
+  },
+  beforeMount() {
+    this.GetProduceLineStateInfo();
   },
 };
 </script>
@@ -497,15 +269,9 @@ export default {
 .monitor-productionLine-box {
   display: flex;
   flex-direction: row;
-}
-.monitor-productionLine-work-station-card {
   padding: 5px;
-  border: 1px solid lightgray;
-  display: flex;
-  flex-direction: column;
-  margin: 5px;
-  border-radius: 5px;
 }
+
 .monitor-product-line-title {
   width: 100px;
   display: flex;
@@ -543,8 +309,8 @@ export default {
   justify-content: space-between;
   padding: 0px 10px;
   margin-bottom: 20px;
-  border-bottom:  1px solid lightgray;
-  border-top:1px solid lightgray
+  border-bottom: 1px solid lightgray;
+  border-top: 1px solid lightgray;
 }
 .monitor-produce-plan-detail-cell {
   width: 180px;
@@ -556,15 +322,48 @@ export default {
 .monitor-produce-plan-detail-row {
   padding: 0px 10px;
 }
-.border{
-    border: 1px solid lightgray;
+.border {
+  border: 1px solid lightgray;
 }
-.produce-plan-detail-title-cell{
-    display: flex;
-    align-items: center;
-    padding: 0 10px;
-    height: 30px;
-    border-left: 1px solid lightgray;
-    font-weight: 500;
+.produce-plan-detail-title-cell {
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  height: 30px;
+  border-left: 1px solid lightgray;
+  font-weight: 500;
+}
+.monitor-productionLine-work-station-info {
+  display: flex;
+  height: 30px;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  line-height: 30px;
+}
+.monitor-productionLine-work-station-card {
+  position: relative;
+  border: 1px solid lightgray;
+  width: 100%;
+  height: 120px;
+  border-radius: 5px;
+}
+.monitor-produce-work-station-float-div {
+  position: absolute;
+  display: flex;
+  flex-direction: row;
+  align-items:flex-end;
+  height: 100%;
+  width: 100%;
+}
+
+.monitor-work-station-plan-info {
+  width: 100%;
+  border-right: 0.1px solid rgb(201, 195, 195);
+  border-top: 0.1px solid rgb(201, 195, 195);
+  border-bottom: 0.1px solid rgb(201, 195, 195);
+  border-radius: 2px;
+  height: 90px;
+  background: #67c23a;
 }
 </style>

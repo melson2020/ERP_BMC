@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 /**
  * @Author Nelson
- * @Description 生产计划流程物料号信息
+ * @Description 生产计划工序物料号信息
  * @Date 2021/5/12
  */
 public class ProducePlanMaterialVo {

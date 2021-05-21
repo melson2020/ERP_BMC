@@ -2,8 +2,6 @@ package com.melson.webserver.dict.service;
 
 import com.melson.base.IService;
 import com.melson.webserver.dict.entity.ProduceProcess;
-import com.melson.webserver.dict.entity.ProduceTech;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 

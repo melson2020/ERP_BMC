@@ -1,6 +1,7 @@
 package com.melson.webserver.dict.service;
 
 import com.melson.webserver.dict.entity.ProduceLine;
+import com.melson.webserver.produce.vo.ProduceLineStateVo;
 
 import java.util.List;
 
@@ -13,4 +14,5 @@ public interface IProduceLineService {
     ProduceLine SaveOne(ProduceLine line);
     List<ProduceLine> FindAll();
     void DeleteOne(Integer id);
+    List<ProduceLineStateVo> GetProduceLineStateInfo();
 }

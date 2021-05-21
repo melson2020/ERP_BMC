@@ -2,13 +2,10 @@ package com.melson.webserver.dict.resource;
 
 import com.melson.base.BaseResource;
 import com.melson.base.Result;
-import com.melson.webserver.contract.resource.AbsContractResource;
 import com.melson.webserver.dict.entity.ProduceLine;
 import com.melson.webserver.dict.entity.ProduceProcess;
-import com.melson.webserver.dict.entity.ProduceTech;
 import com.melson.webserver.dict.service.IProduceLineService;
 import com.melson.webserver.dict.service.IProduceProcess;
-import com.melson.webserver.dict.service.IProduceTechService;
 import com.melson.webserver.dict.service.IProduceWorkStationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

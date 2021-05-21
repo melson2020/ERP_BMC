@@ -12,6 +12,7 @@ import productBom from './modules/productBom'
 import material from './modules/material'
 import supply from './modules/supply'
 import producePlan from './modules/producePlan'
+import produceMonitor from './modules/produceMonitor'
 
 import {setAsyncRoutes} from "../router/async"
 Vue.use(Vuex);
@@ -46,7 +47,8 @@ export default new Vuex.Store({
     productBom,
     material,
     supply,
-    producePlan
+    producePlan,
+    produceMonitor
 
   }
 });

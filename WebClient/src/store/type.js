@@ -30,4 +30,7 @@ export const DELETE_PRODUCE_LINE="DELETE_PRODUCE_LINE"
 //produce plan
 export const PRODUCE_PLAN_LIST="PRODUCE_PLAN_LIST"
 
+//produce monitor
+export const PRODUCE_LINE_STATE_LIST="PRODUCE_LINE_STATE_LIST"
+
 

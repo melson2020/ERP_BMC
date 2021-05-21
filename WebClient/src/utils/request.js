@@ -273,6 +273,10 @@ export default {
   },
   DeletePlanWorkStation(param){
     return service.deleteOne('/produce/deletePlanWorkStation',param)
+  },
+  //生产计划monitor
+  GetProduceLineStateInfo(){
+    return service.get("/produceMonitor/produceLineStateInfo")
   }
 
 };
