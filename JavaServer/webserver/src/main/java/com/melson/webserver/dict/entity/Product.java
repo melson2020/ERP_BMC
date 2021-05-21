@@ -1,5 +1,8 @@
 package com.melson.webserver.dict.entity;
 
+import com.melson.webserver.dict.vo.GroupProductVo;
+import com.melson.webserver.dict.vo.ProductVo;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -43,6 +46,9 @@ public class Product {
     private String supplyName;
     @Transient
     private List<ProductBom> productBomList;
+    @Transient
+    private List<GroupProductVo> groupProductVoList;
+
 
 
     public static String getProductNoChar() {
@@ -231,5 +237,13 @@ public class Product {
 
     public void setProductBomList(List<ProductBom> productBomList) {
         this.productBomList = productBomList;
+    }
+
+    public List<GroupProductVo> getGroupProductVoList() {
+        return groupProductVoList;
+    }
+
+    public void setGroupProductVoList(List<GroupProductVo> groupProductVoList) {
+        this.groupProductVoList = groupProductVoList;
     }
 }

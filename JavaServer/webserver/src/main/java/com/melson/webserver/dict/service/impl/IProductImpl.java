@@ -9,6 +9,7 @@ import com.melson.webserver.dict.dao.*;
 import com.melson.webserver.dict.entity.*;
 import com.melson.webserver.dict.service.IProduct;
 import com.melson.webserver.dict.vo.ContractProductVo;
+import com.melson.webserver.dict.vo.GroupProductVo;
 import com.melson.webserver.dict.vo.ProductVo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
@@ -53,25 +54,23 @@ public class IProductImpl extends AbstractService<Product> implements IProduct {
     @Override
     public List<ContractProductVo> queryContractProducts(String customerNo, String searchValue) {
         List<ContractProductVo> contractProductList = new ArrayList<>();
-        String sql = "SELECT pd.id, cb.productNo,pd.`name` as productName,pd.specification,CONCAT(pd.`name`, '/', pd.specification, '/', cb.description) as vaule,cb.remark,pd.unit,cb.salesPrice from customer_bom cb\n" +
-                "left JOIN product pd on cb.productNo=pd.productNo\n" +
-                "left join product_bom pb on pb.bomNo=cb.bomNo";
+        String sql = "SELECT cp.productNo, pr.name,pr.specification,pr.categoryId, pc.`name` as category,su.id as supplyId,cp.salesPrice,su.`name` as supplyName ,''as bomNo,'' as bomGenericId, CONCAT(pc.`name`,' / ',pr.`name`,' / ',pr.specification,' / ',su.`name`,' / ',cp.remark) as alias ,pr.id,pr.unit ,cp.remark FROM `customer_product` cp left JOIN product pr on pr.productNo=cp.productNo left JOIN supply su on pr.supplyId=su.id left JOIN product_category pc on pr.categoryId=pc.categoryId";
         StringBuffer sBuffer = new StringBuffer(sql);
-        sBuffer.append(" where cb.customerNo='" + customerNo + "'");
+        sBuffer.append(" where cp.customerNo='" + customerNo + "'");
         if (!org.springframework.util.StringUtils.isEmpty(searchValue)) {
             String likeStr = "%" + searchValue + "%";
-            sBuffer.append(" and (pd.`name` like '" + likeStr + "' or pd.specification like '" + likeStr + "')");
+            sBuffer.append(" and (pr.`name` like '" + likeStr + "' or pr.specification like '" + likeStr + "')");
         }
         List<Object[]> list = entityManagerUtil.ExcuteSql(sBuffer.toString());
         List<ProductVo> productVos = EntityUtils.castEntity(list, ProductVo.class, new ProductVo());
         ContractProductVo contractProductVo1 = new ContractProductVo();
         contractProductVo1.setGroupName("常用产品");
         contractProductVo1.setList(productVos);
-        String sql2 = "SELECT id, productNo,`name`,specification, CONCAT(`name`, '/', specification) as vaule,remark,unit,salesPrice from product";
+        String sql2 = "SELECT pr.productNo,pr.name,pr.specification,pr.categoryId,pc.`name` as category,pr.supplyId,pr.salesPrice,su.`name` as supplyName,''as bomNo,'' as bomGenericId,CONCAT(pc.`name`,' / ',pr.`name`,' / ',pr.specification,' / ',su.`name`) as alias ,pr.id,pr.unit ,pr.remark from product pr left JOIN supply su on pr.supplyId=su.id left JOIN product_category pc on pr.categoryId=pc.categoryId ";
         StringBuffer sBuffer2 = new StringBuffer(sql2);
         if (!org.springframework.util.StringUtils.isEmpty(searchValue)) {
             String likeStr = "%" + searchValue + "%";
-            sBuffer2.append(" where `name` like '" + likeStr + "' or specification like '" + likeStr + "'");
+            sBuffer2.append(" where pr.`name` like '" + likeStr + "' or pr.specification like '" + likeStr + "'");
         }
         List<Object[]> list2 = entityManagerUtil.ExcuteSql(sBuffer2.toString());
         List<ProductVo> productVos2 = EntityUtils.castEntity(list2, ProductVo.class, new ProductVo());
@@ -79,8 +78,56 @@ public class IProductImpl extends AbstractService<Product> implements IProduct {
         contractProductVo2.setGroupName("产品列表");
         contractProductVo2.setList(productVos2);
         contractProductList.add(contractProductVo1);
-        contractProductList.add(contractProductVo2);
-        return contractProductList;
+        contractProductList.add(contractProductVo2);return contractProductList;
+    }
+
+    @Override
+    public List<GroupProductVo> GetProductVoList(String productNo) {
+        return generateVoList(productNo);
+    }
+
+    private List<GroupProductVo> generateVoList(String productNo) {
+        List<GroupProductVo> voList=new ArrayList<>();
+        String sql ="SELECT pb.productNo,pb.productName as name,pb.specification,pb.categoryId,pc.`name` as category,pb.supplyId,pb.costPrice as salesPrice,pb.supplyName, pb.bomNo,pb.bomGenericId,CONCAT(pc.`name`,' / ',pb.productName,' / ',pb.specification,' / ',pb.supplyName,' / ',pb.description,' / ',pb.version) as alias ,''as id,''as unit,'' as remark FROM `product_bom` pb left join product_category pc on pb.categoryId=pc.categoryId ";
+        StringBuffer sBuffer = new StringBuffer(sql);
+        sBuffer.append(" where pb.productNo<>'" + productNo + "'");
+        sBuffer.append("  and pb.status='Y'");
+        List<Object[]> list1 = entityManagerUtil.ExcuteSql(sBuffer.toString());
+        List<ProductVo> productVos1 = GenerateList(list1);
+        GroupProductVo gpvo1=new GroupProductVo();
+        gpvo1.setGroupName("成品/半成品");
+        gpvo1.setList(productVos1);
+        String sql2 ="SELECT pr.productNo,pr.name,pr.specification,pr.categoryId,pc.`name` as category,pr.supplyId,pr.salesPrice,su.`name` as supplyName,''as bomNo,'' as bomGenericId,CONCAT(pc.`name`,' / ',pr.`name`,' / ',pr.specification,' / ',su.`name`) as alias ,''as id,''as unit,'' as remark from product pr left JOIN supply su on pr.supplyId=su.id left JOIN product_category pc on pr.categoryId=pc.categoryId left JOIN (SELECT productNo from product_bom) pb on pr.productNo=pb.productNo WHERE pb.productNo is null ";
+        StringBuffer sBuffer2 = new StringBuffer(sql2);
+        sBuffer2.append("  and pr.productNo<>'" + productNo + "'");
+        List<Object[]> list2 = entityManagerUtil.ExcuteSql(sBuffer2.toString());
+        List<ProductVo> productVos2 = GenerateList(list2);
+        GroupProductVo gpvo2=new GroupProductVo();
+        gpvo2.setGroupName("底料");
+        gpvo2.setList(productVos2);
+        voList.add(gpvo1);
+        voList.add(gpvo2);
+        return voList;
+    }
+
+    private List<ProductVo> GenerateList(List<Object[]> list) {
+        List<ProductVo> productVos=new ArrayList<>();
+        for(Object[] obj : list) {
+            ProductVo pr=new ProductVo();
+            pr.setProductNo(obj[0] == null ? null : obj[0].toString());
+            pr.setName(obj[1] == null ? null : obj[1].toString());
+            pr.setSpecification(obj[2] == null ? null : obj[2].toString());
+            pr.setCategory(obj[3] == null ? null : obj[3].toString());
+            pr.setCategory(obj[4] == null ? null : obj[4].toString());
+            pr.setSupplyId(obj[5] == null ? null : new Integer((Integer) obj[5]));
+            pr.setSalesPrice(obj[6] == null ? null : new BigDecimal(obj[6].toString()));
+            pr.setSupplyName(obj[7] == null ? null : obj[7].toString());
+            pr.setBomNo(obj[8] == null ? null : obj[8].toString());
+            pr.setBomGenericId(obj[9] == null ? null : obj[9].toString());
+            pr.setAlias(obj[10] == null ? null : obj[10].toString());
+            productVos.add(pr);
+        }
+        return productVos;
     }
 
     @Override
@@ -192,11 +239,40 @@ public class IProductImpl extends AbstractService<Product> implements IProduct {
 
     @Override
     public Product QueryProductAndBomList(String productNo) {
-        Product product = productRepository.findByProductNo(productNo);
+        List<Product> products = new ArrayList<>();
+        String sql = "SELECT pr.id,pr.productNo,pr.`name`,pr.specification,pr.unit,pr.salesPrice,sr.`name` as storageName,su.`name` as supplyName,pr.weight,pr.weightUnit,pr.volume,pr.volumeUnit,pc.`name` as category,pr.expireDate ,pr.categoryId,pr.supplyId ,pr.storageCode from product pr left JOIN product_category pc on pc.categoryId=pr.categoryId left JOIN storage_area_location sr on sr.storageCode=pr.storageCode LEFT JOIN supply su on su.id=pr.supplyId ";
+        StringBuffer sBuffer = new StringBuffer(sql);
+        sBuffer.append(" where pr.productNo='" + productNo + "'");
+        List<Object[]> list = entityManagerUtil.ExcuteSql(sBuffer.toString());
+        for (Object[] obj : list) {
+            Product pr = new Product();
+            pr.setId(obj[0] == null ? null : new Integer((Integer) obj[0]));
+            pr.setProductNo(obj[1] == null ? null : obj[1].toString());
+            pr.setName(obj[2] == null ? null : obj[2].toString());
+            pr.setSpecification(obj[3] == null ? null : obj[3].toString());
+            pr.setUnit(obj[4] == null ? null : obj[4].toString());
+            pr.setSalesPrice(obj[5] == null ? null : new BigDecimal(obj[5].toString()));
+            pr.setStorageName(obj[6] == null ? null : obj[6].toString());
+            pr.setSupplyName(obj[7] == null ? null : obj[7].toString());
+            pr.setWeight(obj[8] == null ? null : new BigDecimal(obj[8].toString()));
+            pr.setWeightUnit(obj[9] == null ? null : obj[9].toString());
+            pr.setVolume(obj[10] == null ? null : new BigDecimal(obj[10].toString()));
+            pr.setVolumeUnit(obj[11] == null ? null : obj[11].toString());
+            pr.setCategory(obj[12] == null ? null : obj[12].toString());
+            pr.setExpireDate(obj[13]==null?null:(Timestamp) obj[13]);
+            pr.setCategoryId(obj[14] == null ? null : obj[14].toString());
+            pr.setSupplyId(obj[15] == null ? null : new Integer((Integer) obj[15]));
+            pr.setStorageCode(obj[16] == null ? null : obj[16].toString());
+            products.add(pr);
+        }
+        Product product = products.get(0);
         List<ProductBom> pbs = productBomRepository.findByProductNo(productNo);
+        List<GroupProductVo> groupProductVos= generateVoList(productNo);
+        product.setGroupProductVoList(groupProductVos);
         product.setProductBomList(pbs);
         return product;
     }
+
 
 
 }

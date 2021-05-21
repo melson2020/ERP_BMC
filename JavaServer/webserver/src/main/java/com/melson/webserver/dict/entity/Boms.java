@@ -22,6 +22,9 @@ public class Boms {
     private String partName;
     private String chPartNo;              // 子件号    非制造半成品的时候的物料通常母件号为空， 从基础物料表中选择
     private String chName;                // 子件名
+    private String chBomStatus;           // 是否包含子物料BOM， Y：包含； N：不包含
+    private String chBomNo;               // 子物料BOM 编码
+    private String chBomGenericId;        // 子物料BOM 的识别符
     private String specification;         // 子件规格
     private BigDecimal salesPrice;        // 子件成本
     private String sIndex;                // 关系树
@@ -117,6 +120,30 @@ public class Boms {
 
     public void setChName(String chName) {
         this.chName = chName;
+    }
+
+    public String getChBomStatus() {
+        return chBomStatus;
+    }
+
+    public void setChBomStatus(String chBomStatus) {
+        this.chBomStatus = chBomStatus;
+    }
+
+    public String getChBomNo() {
+        return chBomNo;
+    }
+
+    public void setChBomNo(String chBomNo) {
+        this.chBomNo = chBomNo;
+    }
+
+    public String getChBomGenericId() {
+        return chBomGenericId;
+    }
+
+    public void setChBomGenericId(String chBomGenericId) {
+        this.chBomGenericId = chBomGenericId;
     }
 
     public String getSpecification() {

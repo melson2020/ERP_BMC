@@ -417,13 +417,26 @@
                         v-if="scope.row.seen"
                         size="mini"
                         placeholder="选择物料"
-                        @change="materialChanged($event,scope.row)">
-                        <el-option
-                          v-for="vo in filterProductList"
-                          :label="vo.name"
+                        @change="addMaterialChanged($event,scope.row)">
+                        <!-- <el-option
+                          v-for="vo in materialList"
+                          :label="vo.alias"
                           :value="vo"
                           :key="vo.id"
-                        ></el-option>
+                        ></el-option> -->
+                        <el-option-group
+                          v-for="group in options"
+                          :key="group.groupName"
+                          :label="group.groupName"
+                        >
+                          <el-option
+                            v-for="item in group.list"
+                            :key="item.id"
+                            :label="item.alias"
+                            :value="item"
+                          >
+                          </el-option>
+                        </el-option-group>
                       </el-select>
                       <span v-else>{{ scope.row.chName }}</span>
                     </el-form-item>
@@ -437,7 +450,7 @@
                       <el-input
                         v-model="scope.row.specification"
                         v-if="scope.row.seen"
-                        :disabled="scope.row.isDisable"
+                        disabled
                         size="mini"
                       ></el-input>
                       <span v-else>{{ scope.row.specification }}</span>
@@ -683,13 +696,26 @@
                         v-if="scope.row.seen"
                         size="mini"
                         placeholder="选择物料"
-                        @change="materialChanged($event,scope.row)">
-                        <el-option
-                          v-for="vo in filterProductList"
-                          :label="vo.name"
+                        @change="editMaterialChanged($event,scope.row)">
+                        <!-- <el-option
+                          v-for="vo in materialList"
+                          :label="vo.alias"
                           :value="vo"
                           :key="vo.id"
-                        ></el-option>
+                        ></el-option> -->
+                        <el-option-group
+                          v-for="group in options"
+                          :key="group.groupName"
+                          :label="group.groupName"
+                        >
+                          <el-option
+                            v-for="item in group.list"
+                            :key="item.id"
+                            :label="item.alias"
+                            :value="item"
+                          >
+                          </el-option>
+                        </el-option-group>
                       </el-select>
 
                       <span v-else>{{ scope.row.chName }}</span>
@@ -704,7 +730,7 @@
                       <el-input
                         v-model="scope.row.specification"
                         v-if="scope.row.seen"
-                        :disabled="scope.row.isDisable"
+                        disabled
                         size="mini"
                       ></el-input>
                       <span v-else>{{ scope.row.specification }}</span>
@@ -795,6 +821,7 @@ import { mapActions } from "vuex";
 export default {
     data(){
       return{
+        options: [],
         bomNo:'',
         selectPid:'',
         dateNow:"",
@@ -857,6 +884,9 @@ export default {
           specification:'',
           bomNo:'',
           bomGenericId:'',
+          categoryId:'',
+          supplyId:'',
+          supplyName:'',
           costPrice:'',
           expirationDate:'',
           version:'',
@@ -864,6 +894,7 @@ export default {
           createBy:'',
           createDate:'',
           productBomList:[],
+          groupProductVos:[],
           materialVos:[],
           status:'',
         },
@@ -878,6 +909,9 @@ export default {
           specification:'',
           bomNo:'',
           bomGenericId:'',
+          categoryId:'',
+          supplyId:'',
+          supplyName:'',
           costPrice:'',
           expirationDate:'',
           version:'',
@@ -885,6 +919,7 @@ export default {
           createBy:'',
           createDate:'',
           productBomList:[],
+          groupProductVos:[],
           materialVos:[],
           status:'',
         },
@@ -920,7 +955,7 @@ export default {
 
     },
     computed: {
-      ...mapGetters(["productList","storageList","categoryList","productBomList","supplyList","produceProcessList"]),
+      ...mapGetters(["productList","storageList","categoryList","productBomList","supplyList","produceProcessList","materialList"]),
       productListPageShow(){
         return this.productList.filter((item)=>{
           let key=
@@ -941,11 +976,12 @@ export default {
           return index != -1;
         });
       },
-      filterProductList(){
-        return this.productList.filter((item)=>{
-           return item.id!=this.selectPid
-        })
-      }
+      // filterProductList(){
+      //   return this.productList.filter((item)=>{
+      //     item.alias=item.name+" / "+item.category+" / "+item.specification+" / "+item.supplyName
+      //      return item.id!=this.selectPid
+      //   })
+      // }
     },
     methods:{
       ...mapActions({
@@ -962,7 +998,8 @@ export default {
       GetProductBomList:"GetProductBomList",
       GetSupplyList:"GetSupplyList",
       FindAllProduceProcessList: "FindAllProduceProcessList",
-      QueryProductBom:"QueryProductBom"
+      QueryProductBom:"QueryProductBom",
+      GetMaterialList:"GetMaterialList",
       }),
       resetForm(formName) {
         if (this.$refs[formName]) {
@@ -1077,11 +1114,27 @@ export default {
       });
       },
       handleCreateBoM(index,row){
-        this.selectPid=row.id;
+        // this.selectPid=row.id;
+        // this.GetMaterialList({
+        //   productNo: row.productNo,
+        // });
         let prod={productNo:row.productNo,index:index}
         this.QueryProductAndBomObj(prod)
         .then(res=>{
           if (res.resultStatus == 1) {
+            var productList = res.data.groupProductVoList;
+            var options = [];
+            productList.map((group) => {
+              var subList = group.list;
+              if (subList.length > 0) {
+                options.push({ groupName: group.groupName, list: subList });
+              }
+            });
+            this.options = options;
+
+            this.newProductBom.categoryId=res.data.categoryId;
+            this.newProductBom.supplyId=res.data.supplyId;
+            this.newProductBom.supplyName=res.data.supplyName;
             this.newProductBom.productNo=res.data.productNo;
             this.newProductBom.productName=res.data.name;
             this.newProductBom.specification=res.data.specification;
@@ -1158,6 +1211,13 @@ export default {
                       this.editProductBom.materialVos[i].id="";
                       this.editProductBom.materialVos[i].partName=this.editProductBom.productName;
                       price=Number(price) + Number(this.editProductBom.materialVos[i].salesPrice) *(Number(this.editProductBom.materialVos[i].chQty)+Number(this.editProductBom.materialVos[i].lossRate))
+                      if(this.editProductBom.materialVos[i].chBomNo=== "" || this.editProductBom.materialVos[i].chBomNo == null || this.editProductBom.materialVos[i].chBomNo == undefined)
+                      {
+                        this.editProductBom.materialVos[i].chBomStatus="N"
+                      }
+                      else{
+                        this.editProductBom.materialVos[i].chBomStatus="Y"
+                      }
                     }
                     this.editProductBom.costPrice=price;
                     this.editProductBom.status="Y";
@@ -1227,6 +1287,13 @@ export default {
                       this.newProductBom.materialVos[i].sIndex=Number(i+1);
                       this.newProductBom.materialVos[i].partName=this.newProductBom.productName;
                       price=Number(price) + Number(this.newProductBom.materialVos[i].salesPrice) *(Number(this.newProductBom.materialVos[i].chQty)+Number(this.newProductBom.materialVos[i].lossRate))
+                      if(this.newProductBom.materialVos[i].chBomNo=== "" || this.newProductBom.materialVos[i].chBomNo == null || this.newProductBom.materialVos[i].chBomNo == undefined)
+                      {
+                        this.newProductBom.materialVos[i].chBomStatus="N"
+                      }
+                      else{
+                        this.newProductBom.materialVos[i].chBomStatus="Y"
+                      }
                     }
                     this.newProductBom.costPrice=price;
                     this.newProductBom.status="Y";
@@ -1279,7 +1346,7 @@ export default {
         {
           if(!this.addCheckEidtable())
             {
-              this.newProductBom.materialVos.push({ id:"",bomNo:"",processId:"",processNo:"",partNo:"",partName:"",chPartNo: "",chName:"",specification:"",sIndex:"",chQty:"" ,lossRate:"0", processStation:"", supplyId:"" ,supplyName:"",materialCostStatus:"",productNo:"",categoryId: "",salesPrice:"",seen: false,notSavedFlag:true})
+              this.newProductBom.materialVos.push({ id:"",bomNo:"",processId:"",processNo:"",partNo:"",partName:"",chPartNo: "",chName:"",chBomStatus:"",chBomNo:"",chBomGenericId:"",specification:"",sIndex:"",chQty:"" ,lossRate:"0", processStation:"", supplyId:"" ,supplyName:"",materialCostStatus:"",productNo:"",categoryId: "",salesPrice:"",seen: false,notSavedFlag:true})
             }
         }
       },
@@ -1288,19 +1355,91 @@ export default {
         {
           if(!this.editCheckEidtable())
             {
-              this.editProductBom.materialVos.push({ id:"",bomNo:"",processId:"",processNo:"",partNo:"",partName:"",chPartNo: "",chName:"",specification:"",sIndex:"",chQty:"" ,lossRate:"0", processStation:"", supplyId:"" ,supplyName:"",materialCostStatus:"",productNo:"",categoryId: "",salesPrice:"",seen: false,notSavedFlag:true})
+              this.editProductBom.materialVos.push({ id:"",bomNo:"",processId:"",processNo:"",partNo:"",partName:"",chPartNo: "",chName:"",chBomStatus:"",chBomNo:"",chBomGenericId:"",specification:"",sIndex:"",chQty:"" ,lossRate:"0", processStation:"", supplyId:"" ,supplyName:"",materialCostStatus:"",productNo:"",categoryId: "",salesPrice:"",seen: false,notSavedFlag:true})
             }
         }
       },
-      materialChanged(event,row){
-        row.chPartNo=event.productNo;
-        row.productNo=event.productNo;
-        row.chName=event.name
-        row.specification=event.specification;
-        row.categoryId=event.categoryId;
-        row.supplyId=event.supplyId;
-        row.salesPrice=event.salesPrice;
-        row.supplyName=event.supplyName;
+      editCheckRepeated(event){
+        var list= this.editProductBom.materialVos.filter((item)=>{return item.productNo==event.productNo
+        })
+        if(list.length>0){
+          this.$message.warning('子料重复！')
+          return true;
+        }
+      },
+      editMaterialChanged(event,row){
+        if(!this.editCheckRepeated(event))
+        {
+          row.chPartNo=event.productNo;
+          row.productNo=event.productNo;
+          row.chName=event.name
+          row.specification=event.specification;
+          row.categoryId=event.categoryId;
+          row.supplyId=event.supplyId;
+          row.salesPrice=event.salesPrice;
+          row.supplyName=event.supplyName;
+          row.chBomNo=event.bomNo;
+          row.chBomGenericId=event.bomGenericId;
+        }
+        else{
+          row.chPartNo="";
+          row.productNo="";
+          row.chName="";
+          row.specification="";
+          row.categoryId="";
+          row.supplyId="";
+          row.salesPrice="";
+          row.supplyName="";
+          row.chBomNo="";
+          row.chBomGenericId="";
+          event=null;
+        }
+        // row.chPartNo=event.productNo;
+        // row.productNo=event.productNo;
+        // row.chName=event.name
+        // row.specification=event.specification;
+        // row.categoryId=event.categoryId;
+        // row.supplyId=event.supplyId;
+        // row.salesPrice=event.salesPrice;
+        // row.supplyName=event.supplyName;
+        // row.chBomNo=event.bomNo;
+        // row.chBomGenericId=event.bomGenericId;
+      },
+        addCheckRepeated(event){
+        var list= this.newProductBom.materialVos.filter((item)=>{return item.productNo==event.productNo
+        })
+        if(list.length>0){
+          this.$message.warning('子料重复！')
+          return true;
+        }
+      },
+      addMaterialChanged(event,row){
+        if(!this.addCheckRepeated(event))
+        {
+          row.chPartNo=event.productNo;
+          row.productNo=event.productNo;
+          row.chName=event.name
+          row.specification=event.specification;
+          row.categoryId=event.categoryId;
+          row.supplyId=event.supplyId;
+          row.salesPrice=event.salesPrice;
+          row.supplyName=event.supplyName;
+          row.chBomNo=event.bomNo;
+          row.chBomGenericId=event.bomGenericId;
+        }
+        else{
+          row.chPartNo="";
+          row.productNo="";
+          row.chName="";
+          row.specification="";
+          row.categoryId="";
+          row.supplyId="";
+          row.salesPrice="";
+          row.supplyName="";
+          row.chBomNo="";
+          row.chBomGenericId="";
+          event=null;
+        }
       },
       processChanged(event){
         this.newProductBom.processCost=event.cost;
@@ -1421,7 +1560,7 @@ export default {
 
       ReviewProductBom(index, row) {
         this.bomNo=row.bomNo;
-        let pb={bomNo:row.bomNo,index}
+        let pb={bomNo:row.bomNo,productNo:row.productNo,index}
         this.QueryProductBom(pb)
           .then(res=>{
               if (res.resultStatus == 1) {
@@ -1429,7 +1568,7 @@ export default {
                 let materials = [];
                 for (let index = 0; index < res.data.materialVos.length; index++) {
                     const element = res.data.materialVos[index];
-                    let bom = { id:element.id,bomNo:element.bomNo,processId:element.processId,processNo:element.processNo,partNo:element.partNo,partName:element.partName,chPartNo: element.chPartNo,chName:element.chName,specification:element.specification,salesPrice:element.salesPrice,sIndex:element.sIndex,chQty:element.chQty ,lossRate:element.lossRate, processStation:element.processStation, supplyId:element.supplyId ,supplyName:element.supplyName,materialCostStatus:element.materialCostStatus,productNo:element.chPartNo,categoryId: "",seen: false,notSavedFlag:false };
+                    let bom = { id:element.id,bomNo:element.bomNo,processId:element.processId,processNo:element.processNo,partNo:element.partNo,partName:element.partName,chPartNo: element.chPartNo,chName:element.chName,chBomStatus:element.chBomStatus,chBomNo:element.chBomNo,chBomGenericId:element.chBomGenericId,specification:element.specification,salesPrice:element.salesPrice,sIndex:element.sIndex,chQty:element.chQty ,lossRate:element.lossRate, processStation:element.processStation, supplyId:element.supplyId ,supplyName:element.supplyName,materialCostStatus:element.materialCostStatus,productNo:element.chPartNo,categoryId: "",seen: false,notSavedFlag:false };
                     materials.push(bom);
                 }
                 this.editProductBom.materialVos=materials;
@@ -1459,6 +1598,8 @@ export default {
 .product-container {
   display: flex;
   flex-direction: column;
+  width: 98%;
+  padding: 15px;
 }
 .product-header {
   padding-bottom: 10px;

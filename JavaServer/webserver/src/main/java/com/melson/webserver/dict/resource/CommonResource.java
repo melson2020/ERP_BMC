@@ -8,6 +8,8 @@ import com.melson.base.service.ICompany;
 import com.melson.webserver.dict.entity.ProduceProcess;
 import com.melson.webserver.dict.service.*;
 import com.melson.webserver.dict.vo.ContractProductVo;
+import com.melson.webserver.dict.vo.GroupProductVo;
+import com.melson.webserver.dict.vo.ProductVo;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,4 +55,14 @@ public class CommonResource extends BaseResource {
            return failure(-1,"暂无公司信息");
        }
    }
+
+    @RequestMapping(value = "/materialList",method = RequestMethod.GET)
+    public Result GetProductVoList(HttpServletRequest request){
+        String productNo=request.getParameter("productNo");
+        if (StringUtils.isEmpty(productNo)) return this.GenerateResult(ResultType.ParameterNeeded);
+        Result result=new Result();
+        List<GroupProductVo> productVoList=productService.GetProductVoList(productNo);
+        result.setData(productVoList);
+        return result;
+    }
 }

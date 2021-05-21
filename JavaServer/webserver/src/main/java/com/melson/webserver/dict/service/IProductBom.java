@@ -22,4 +22,6 @@ public interface IProductBom extends IService<ProductBom> {
     ProductBom Query(String bomNo);
 
     ProductBom QueryProductBomsDetailList(String bomNo);
+
+    ProductBom QueryProductionBomAll(ProductBom pb);
 }

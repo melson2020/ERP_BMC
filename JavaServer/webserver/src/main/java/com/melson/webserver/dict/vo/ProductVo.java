@@ -6,36 +6,41 @@ import java.math.BigDecimal;
  * Created by Messi on 2021/4/26
  */
 public class ProductVo {
-    private Integer id;
     private String productNo;
-    private String productName;
+    private String name;
     private String specification;
-    private String value;
-    private String remark;
-    private String unit;
+    private String categoryId;
+    private String category;
+    private Integer supplyId;
     private BigDecimal salesPrice;
+    private String supplyName;
+    private String bomNo;
+    private String bomGenericId;
+    private String alias;
+    private Integer id;
+    private String unit;
+    private String remark;
 
 
     public ProductVo() {
     }
 
-    public ProductVo(Integer id, String productNo, String productName, String specification, String value, String remark, String unit, BigDecimal salesPrice) {
-        this.id = id;
+
+    public ProductVo(String productNo, String name, String specification, String categoryId, String category, Integer supplyId, BigDecimal salesPrice, String supplyName, String bomNo, String bomGenericId, String alias, Integer id, String unit, String remark) {
         this.productNo = productNo;
-        this.productName = productName;
+        this.name = name;
         this.specification = specification;
-        this.value = value;
-        this.remark = remark;
-        this.unit = unit;
+        this.categoryId = categoryId;
+        this.category = category;
+        this.supplyId = supplyId;
         this.salesPrice = salesPrice;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
+        this.supplyName = supplyName;
+        this.bomNo = bomNo;
+        this.bomGenericId = bomGenericId;
+        this.alias = alias;
         this.id = id;
+        this.unit = unit;
+        this.remark = remark;
     }
 
     public String getProductNo() {
@@ -46,12 +51,12 @@ public class ProductVo {
         this.productNo = productNo;
     }
 
-    public String getProductName() {
-        return productName;
+    public String getName() {
+        return name;
     }
 
-    public void setProductName(String productName) {
-        this.productName = productName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getSpecification() {
@@ -62,20 +67,28 @@ public class ProductVo {
         this.specification = specification;
     }
 
-    public String getValue() {
-        return value;
+    public String getCategoryId() {
+        return categoryId;
     }
 
-    public void setValue(String value) {
-        this.value = value;
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
     }
 
-    public String getRemark() {
-        return remark;
+    public String getCategory() {
+        return category;
     }
 
-    public void setRemark(String remark) {
-        this.remark = remark;
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public Integer getSupplyId() {
+        return supplyId;
+    }
+
+    public void setSupplyId(Integer supplyId) {
+        this.supplyId = supplyId;
     }
 
     public BigDecimal getSalesPrice() {
@@ -86,11 +99,59 @@ public class ProductVo {
         this.salesPrice = salesPrice;
     }
 
+    public String getSupplyName() {
+        return supplyName;
+    }
+
+    public void setSupplyName(String supplyName) {
+        this.supplyName = supplyName;
+    }
+
+    public String getBomNo() {
+        return bomNo;
+    }
+
+    public void setBomNo(String bomNo) {
+        this.bomNo = bomNo;
+    }
+
+    public String getBomGenericId() {
+        return bomGenericId;
+    }
+
+    public void setBomGenericId(String bomGenericId) {
+        this.bomGenericId = bomGenericId;
+    }
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public void setAlias(String alias) {
+        this.alias = alias;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public String getUnit() {
         return unit;
     }
 
     public void setUnit(String unit) {
         this.unit = unit;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }

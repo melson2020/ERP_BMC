@@ -352,12 +352,25 @@
                         size="mini"
                         placeholder="选择物料"
                         @change="materialChanged($event,scope.row)">
-                        <el-option
+                        <!-- <el-option
                           v-for="vo in filterProductList"
-                          :label="vo.name"
+                          :label="vo.alias"
                           :value="vo"
                           :key="vo.id"
-                        ></el-option>
+                        ></el-option> -->
+                        <el-option-group
+                          v-for="group in options"
+                          :key="group.groupName"
+                          :label="group.groupName"
+                        >
+                          <el-option
+                            v-for="item in group.list"
+                            :key="item.id"
+                            :label="item.alias"
+                            :value="item"
+                          >
+                          </el-option>
+                        </el-option-group>
                       </el-select>
 
                       <span v-else>{{ scope.row.chName }}</span>
@@ -372,7 +385,7 @@
                       <el-input
                         v-model="scope.row.specification"
                         v-if="scope.row.seen"
-                        :disabled="scope.row.isDisable"
+                        disabled
                         size="mini"
                       ></el-input>
                       <span v-else>{{ scope.row.specification }}</span>
@@ -464,6 +477,7 @@ import { mapActions } from "vuex";
 export default {
   data(){
     return{
+      options: [],
       bomNo:'',
       selectPNO:'',
       productBomEditDialog: false,
@@ -481,6 +495,9 @@ export default {
         specification:'',
         bomNo:'',
         bomGenericId:'',
+        categoryId:'',
+        supplyId:'',
+        supplyName:'',
         costPrice:'',
         expirationDate:'',
         version:'',
@@ -488,6 +505,7 @@ export default {
         createBy:'',
         createDate:'',
         productBomList:[],
+        groupProductVos:[],
         materialVos:[],
         status:'',
       },
@@ -502,6 +520,9 @@ export default {
         specification:'',
         bomNo:'',
         bomGenericId:'',
+        categoryId:'',
+        supplyId:'',
+        supplyName:'',
         costPrice:'',
         expirationDate:'',
         version:'',
@@ -509,6 +530,7 @@ export default {
         createBy:'',
         createDate:'',
         productBomList:[],
+        groupProductVos:[],
         materialVos:[],
         status:'',
       },
@@ -539,7 +561,8 @@ export default {
     },
     filterProductList(){
       return this.productList.filter((item)=>{
-          return item.productNo!=this.selectPNO
+        item.alias=item.name+" / "+item.category+" / "+item.specification+" / "+item.supplyName
+        return item.productNo!=this.selectPNO
       })
     }
   },
@@ -598,7 +621,7 @@ export default {
       {
         if(!this.addCheckEidtable())
           {
-            this.addProductBom.materialVos.push({ id:"",bomNo:"",processId:"",processNo:"",partNo:"",partName:"",chPartNo: "",chName:"",specification:"",sIndex:"",chQty:"" ,lossRate:"0", processStation:"", supplyId:"" ,supplyName:"",materialCostStatus:"",productNo:"",categoryId: "",salesPrice:"",seen: false,notSavedFlag:true})
+            this.addProductBom.materialVos.push({ id:"",bomNo:"",processId:"",processNo:"",partNo:"",partName:"",chPartNo: "",chName:"",chBomStatus:"",chBomNo:"",specification:"",sIndex:"",chQty:"" ,lossRate:"0", processStation:"", supplyId:"" ,supplyName:"",materialCostStatus:"",productNo:"",categoryId: "",salesPrice:"",seen: false,notSavedFlag:true})
           }
       }
     },
@@ -612,17 +635,26 @@ export default {
       this.productBomAddDialog = true;
     },
     handleEdit(index,row){
-      this.selectPNO=row.productNo;
-      let pb={bomNo:row.bomNo,index}
+      // this.selectPNO=row.productNo;
+      let pb={bomNo:row.bomNo,productNo:row.productNo,index}
       this.QueryProductBom(pb)
           .then(res=>{
           if (res.resultStatus == 1) {
+              var productList = res.data.groupProductVoList;
+              var options = [];
+              productList.map((group) => {
+                var subList = group.list;
+                if (subList.length > 0) {
+                  options.push({ groupName: group.groupName, list: subList });
+                }
+              });
+              this.options = options;
               this.editProductBom=res.data;
               this.bomNo=this.editProductBom.bomNo;
               let materials = [];
               for (let index = 0; index < res.data.materialVos.length; index++) {
                   const element = res.data.materialVos[index];
-                  let bom = { id:element.id,bomNo:element.bomNo,processId:element.processId,processNo:element.processNo,partNo:element.partNo,partName:element.partName,chPartNo: element.chPartNo,chName:element.chName,specification:element.specification,salesPrice:element.salesPrice,sIndex:element.sIndex,chQty:element.chQty ,lossRate:element.lossRate, processStation:element.processStation, supplyId:element.supplyId ,supplyName:element.supplyName,materialCostStatus:element.materialCostStatus,productNo:element.chPartNo,categoryId: "",seen: false,notSavedFlag:false };
+                  let bom = { id:element.id,bomNo:element.bomNo,processId:element.processId,processNo:element.processNo,partNo:element.partNo,partName:element.partName,chPartNo: element.chPartNo,chName:element.chName,chBomStatus:element.chBomStatus,chBomNo:element.chBomNo,chBomGenericId:element.chBomGenericId,specification:element.specification,salesPrice:element.salesPrice,sIndex:element.sIndex,chQty:element.chQty ,lossRate:element.lossRate, processStation:element.processStation, supplyId:element.supplyId ,supplyName:element.supplyName,materialCostStatus:element.materialCostStatus,productNo:element.chPartNo,categoryId: "",seen: false,notSavedFlag:false };
                   materials.push(bom);
               }
               this.editProductBom.materialVos=materials;
@@ -717,7 +749,7 @@ export default {
       {
         if(!this.editCheckEidtable())
           {
-            this.editProductBom.materialVos.push({ id:"",bomNo:"",processId:"",processNo:"",partNo:"",partName:"",chPartNo: "",chName:"",specification:"",sIndex:"",chQty:"" ,lossRate:"0", processStation:"", supplyId:"" ,supplyName:"",materialCostStatus:"",productNo:"",categoryId: "",salesPrice:"",seen: false,notSavedFlag:true})
+            this.editProductBom.materialVos.push({ id:"",bomNo:"",processId:"",processNo:"",partNo:"",partName:"",chPartNo: "",chName:"",chBomStatus:"",chBomNo:"",chBomGenericId:"",specification:"",sIndex:"",chQty:"" ,lossRate:"0", processStation:"", supplyId:"" ,supplyName:"",materialCostStatus:"",productNo:"",categoryId: "",salesPrice:"",seen: false,notSavedFlag:true})
           }
       }
     },
@@ -747,15 +779,41 @@ export default {
         return true;
       }
     },
+    checkRepeated(event){
+      var list= this.editProductBom.materialVos.filter((item)=>{return item.productNo==event.productNo
+      })
+      if(list.length>0){
+        this.$message.warning('子料重复！')
+        return true;
+      }
+    },
     materialChanged(event,row){
-      row.chPartNo=event.productNo;
-      row.productNo=event.productNo;
-      row.chName=event.name
-      row.specification=event.specification;
-      row.categoryId=event.categoryId;
-      row.supplyId=event.supplyId;
-      row.salesPrice=event.salesPrice;
-      row.supplyName=event.supplyName;
+        if(!this.checkRepeated(event))
+        {
+          row.chPartNo=event.productNo;
+          row.productNo=event.productNo;
+          row.chName=event.name
+          row.specification=event.specification;
+          row.categoryId=event.categoryId;
+          row.supplyId=event.supplyId;
+          row.salesPrice=event.salesPrice;
+          row.supplyName=event.supplyName;
+          row.chBomNo=event.bomNo;
+          row.chBomGenericId=event.bomGenericId;
+        }
+        else{
+          row.chPartNo="";
+          row.productNo="";
+          row.chName="";
+          row.specification="";
+          row.categoryId="";
+          row.supplyId="";
+          row.salesPrice="";
+          row.supplyName="";
+          row.chBomNo="";
+          row.chBomGenericId="";
+          event=null;
+        }
     },
     // AddProductChanged(event){
     //   this.addProductBom.productName
@@ -814,6 +872,13 @@ export default {
                     this.editProductBom.materialVos[i].id="";
                     this.editProductBom.materialVos[i].partName=this.editProductBom.productName;
                     price=Number(price) + Number(this.editProductBom.materialVos[i].salesPrice) *(Number(this.editProductBom.materialVos[i].chQty)+Number(this.editProductBom.materialVos[i].lossRate))
+                    if(this.editProductBom.materialVos[i].chBomNo=== "" || this.editProductBom.materialVos[i].chBomNo == null || this.editProductBom.materialVos[i].chBomNo == undefined)
+                    {
+                      this.editProductBom.materialVos[i].chBomStatus="N"
+                    }
+                    else{
+                      this.editProductBom.materialVos[i].chBomStatus="Y"
+                    }
                   }
                   this.editProductBom.costPrice=price;
                   this.editProductBom.status="Y";
@@ -877,7 +942,7 @@ export default {
   display: flex;
   flex-direction: column;
   width: 98%;
-  padding: 10px;
+  padding: 15px;
 }
 .productBom-header {
   padding-bottom: 10px;
@@ -890,5 +955,31 @@ export default {
   width: 400px;
   float: left;
 }
-
+.productBominformation{
+  display: flex;
+  flex-direction: row;
+  width: auto;
+  justify-content: space-between;
+}
+.productBomOperation{
+  display: flex;
+  flex-direction: row;
+  width: auto;
+  justify-content: space-around;
+}
+.add-productBom {
+  margin-top: 5px;
+  width: 100%;
+  border: #dcdfe6 dashed 1px !important;
+}
+.productBom-selected-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid lightgray;
+}
+.productBom-selected-content {
+  padding-top: 8px;
+}
 </style>
