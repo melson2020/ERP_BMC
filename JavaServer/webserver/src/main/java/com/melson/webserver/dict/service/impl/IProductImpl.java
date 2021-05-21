@@ -97,7 +97,7 @@ public class IProductImpl extends AbstractService<Product> implements IProduct {
         GroupProductVo gpvo1=new GroupProductVo();
         gpvo1.setGroupName("成品/半成品");
         gpvo1.setList(productVos1);
-        String sql2 ="SELECT pr.productNo,pr.name,pr.specification,pr.categoryId,pc.`name` as category,pr.supplyId,pr.salesPrice,su.`name` as supplyName,''as bomNo,'' as bomGenericId,CONCAT(pc.`name`,' / ',pr.`name`,' / ',pr.specification,' / ',su.`name`) as alias ,''as id,''as unit,'' as remark from product pr left JOIN supply su on pr.supplyId=su.id left JOIN product_category pc on pr.categoryId=pc.categoryId left JOIN (SELECT productNo from product_bom) pb on pr.productNo=pb.productNo WHERE pb.productNo is null ";
+        String sql2 ="SELECT pr.productNo,pr.name,pr.specification,pr.categoryId,pc.`name` as category,pr.supplyId,pr.salesPrice,su.`name` as supplyName,''as bomNo,'' as bomGenericId,CONCAT(pc.`name`,' / ',pr.`name`,' / ',pr.specification,' / ',su.`name`) as alias ,''as id,''as unit,'' as remark from product pr left JOIN supply su on pr.supplyId=su.id left JOIN product_category pc on pr.categoryId=pc.categoryId left JOIN (SELECT productNo from product_bom) pb on pr.productNo=pb.productNo WHERE pb.productNo is null and pr.categoryId<>'CAT00000002' and pr.categoryId<>'CAT00000003'";
         StringBuffer sBuffer2 = new StringBuffer(sql2);
         sBuffer2.append("  and pr.productNo<>'" + productNo + "'");
         List<Object[]> list2 = entityManagerUtil.ExcuteSql(sBuffer2.toString());

@@ -8,7 +8,7 @@
       v-model="searchContent"
       suffix-icon="el-icon-search"
     ></el-input>
-    <el-button type="primary" size="small" @click="resetForm('categoryAddForm')">新建类别</el-button>
+    <!-- <el-button type="primary" size="small" @click="resetForm('categoryAddForm')">新建类别</el-button> -->
     </div>
 
     <div class="category-content">
@@ -20,7 +20,7 @@
         <el-table-column prop="categoryId" label="类别代码" width="140px"></el-table-column>
         <el-table-column prop="name" label="类别名称" width="220px"> </el-table-column>
         <el-table-column prop="description" label="备注信息"> </el-table-column>
-        <el-table-column prop="" label="操作" width="100px">
+        <!-- <el-table-column prop="" label="操作" width="100px">
           <template slot-scope="scope">
             <el-tooltip effect="light" content="修改类别信息" placement="top">
               <el-button size="mini" @click="handleEdit(scope.$index,scope.row)" plain circle type="primary" icon="el-icon-edit"/>
@@ -29,7 +29,7 @@
               <el-button size="mini" @click="handleDelete(scope.$index, scope.row)" plain circle type="danger" icon="el-icon-delete"/>
             </el-tooltip>
           </template>
-        </el-table-column>
+        </el-table-column> -->
       </el-table>
 
     </div>
