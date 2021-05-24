@@ -13,6 +13,8 @@ import java.util.List;
 @Entity
 @Table(name = "product_bom")      //产品和BOM关系表
 public class ProductBom {
+    public static  final  String STATUS_USING="Y";
+    public static  final  String STATUS_FORBID="N";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

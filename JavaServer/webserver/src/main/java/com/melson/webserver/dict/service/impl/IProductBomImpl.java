@@ -40,7 +40,7 @@ public class IProductBomImpl extends AbstractService<ProductBom> implements IPro
 
     @Override
     public List<ProductBom> findProductBoms(String productNo) {
-        List<ProductBom> list=productBomRepository.findByProductNo(productNo);
+        List<ProductBom> list=productBomRepository.findByProductNoAndStatus(productNo,ProductBom.STATUS_USING);
         return list;
     }
 

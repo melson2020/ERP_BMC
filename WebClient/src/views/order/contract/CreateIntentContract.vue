@@ -11,8 +11,6 @@ export default {
     return {};
   },
   computed: {},
-  methods: {},
-  beforeMount() {},
   components:{
     "m-edit-conratct":editContract
   }

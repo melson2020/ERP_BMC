@@ -13,6 +13,7 @@ import java.util.List;
  */
 @Repository
 public interface IProductBomRepository extends JpaRepository<ProductBom,String> {
+    List<ProductBom> findByProductNoAndStatus(String productNo,String status);
     List<ProductBom> findByProductNo(String productNo);
 
     @Modifying
