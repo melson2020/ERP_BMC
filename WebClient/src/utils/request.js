@@ -198,8 +198,6 @@ export default {
     return service.get('/common/materialList',param)
   },
 
-
-
   ReqSupplyList(params){
     return service.get('/supply/list',params)    //  //
   },
@@ -212,6 +210,20 @@ export default {
   ReqDeleteSupply(params){
     return service.post("/supply/delete",params)
   },
+
+  ReqDepartmentList(params){
+    return service.get('/employee/departmentList',params)    //  //
+  },
+  ReqSaveDepartment(param){
+    return service.post("/employee/departmentSave",param)
+  },
+  ReqQueryDepartmentObj(params){
+    return service.post("/employee/queryDepartment",params);
+  },
+  ReqUpdateDepartmentStatus(params) {
+    return service.post("/employee/updateDepartmentStatus", params);
+  },
+
 
 
   //订单相关

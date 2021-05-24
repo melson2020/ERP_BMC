@@ -9,7 +9,7 @@
   </el-tabs>
 </template>
 <script>
-import Department from "./Employee/Employee";
+import Department from "./Employee/Department";
 import Employee from "./Employee/Employee";
 
 export default {

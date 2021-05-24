@@ -17,8 +17,8 @@
           :header-row-style="{height:'40px' ,'align':'center'}"
           :row-style="{height:'40px'}"
           style="width: 100%">
-        <el-table-column prop="categoryId" label="类别代码" width="140px"></el-table-column>
-        <el-table-column prop="name" label="类别名称" width="220px"> </el-table-column>
+        <el-table-column prop="categoryId" label="类别代码" width="180px"></el-table-column>
+        <el-table-column prop="name" label="类别名称" width="280px"> </el-table-column>
         <el-table-column prop="description" label="备注信息"> </el-table-column>
         <!-- <el-table-column prop="" label="操作" width="100px">
           <template slot-scope="scope">
