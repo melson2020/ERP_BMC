@@ -184,7 +184,7 @@ export default {
   font-size: 1.2rem;
   letter-spacing: 0.2rem;
 }
-.login-input /deep/ .el-input__inner {
+.login-input .el-input__inner {
   background: rgba(31, 30, 30, 0.1) !important;
   color: white;
   border: 0.1px solid lightgray !important;

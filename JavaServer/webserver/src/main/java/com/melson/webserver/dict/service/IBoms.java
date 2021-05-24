@@ -18,7 +18,7 @@ public interface IBoms extends IService<Boms> {
      * @param bomNo
      * @return
      */
-    List<BomVo> findByBomNo(String bomNo);
+    List<Boms> findByBomNo(String bomNo);
 
     List<BomVo> findBomVoInBomNos(Set<String> bomNos);
 

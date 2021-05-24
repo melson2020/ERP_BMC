@@ -543,7 +543,7 @@ export default {
               productList.map((group) => {
                 var subList = group.list.filter((item) => {
                   return (
-                    item.value.toLowerCase().indexOf(query.toLowerCase()) > -1
+                    item.alias.toLowerCase().indexOf(query.toLowerCase()) > -1
                   );
                 });
                 if (subList.length > 0) {

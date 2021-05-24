@@ -94,8 +94,9 @@
             v-show="product.produceType !== 'C'"
           >
             <div class="product-bom-choice-div">
-              <span>BOM 选择</span>
+              <span>BOM 选择:</span>
               <el-select
+                class="ml40"
                 size="mini"
                 placeholder="选择BOM"
                 v-model="product.bomNo"
@@ -104,7 +105,9 @@
                 <el-option
                   v-for="pbom in product.pboms"
                   :key="pbom.id"
-                  :label="pbom.productName + '/' + pbom.description"
+                  :label="
+                    pbom.productName + ' ( ' + pbom.bomNo+' )'
+                  "
                   :value="pbom.bomNo"
                 ></el-option>
               </el-select>
@@ -113,6 +116,12 @@
               class="product-bom-tree"
               :data="product.boms"
               :props="defaultProps"
+              check-strictly
+              show-checkbox
+              :default-checked-keys="product.defaultCheckedIds"
+              lazy
+              node-key="id"
+              :load="loadNode"
               @node-expand="nodeExpand"
               @node-collapse="nodeCollapse"
             >
@@ -163,7 +172,8 @@ export default {
       selectedOrderForm: {},
       defaultProps: {
         children: "childList",
-        label: "name",
+        label: "chName",
+        isLeaf: "isLeaf",
       },
     };
   },
@@ -247,11 +257,36 @@ export default {
       this.GetProductBomInfo({ bomNo: p.bomNo })
         .then((res) => {
           if (res.resultStatus == 1) {
+            var defaultCheckIds=[]
             res.data.map((item) => {
               item.seen = true;
+              item.isLeaf = item.chBomStatus == "N";
+              item.childList = [];
+              defaultCheckIds.push(item.id)
             });
             p.boms = res.data;
+            p.defaultCheckedIds=defaultCheckIds
+            console.log(p.boms);
             this.checkProductData(p);
+          } else {
+            this.$message.warning(res.message);
+          }
+        })
+        .catch((err) => {
+          this.$message.error(err.message);
+        });
+    },
+
+    loadNode(node, resolve) {
+      this.GetProductBomInfo({ bomNo: node.data.chBomNo })
+        .then((res) => {
+          if (res.resultStatus == 1) {
+            res.data.map((item) => {
+              item.seen = true;
+              item.isLeaf = item.chBomStatus == "N";
+              item.childList = [];
+            });
+            resolve(res.data);
           } else {
             this.$message.warning(res.message);
           }
