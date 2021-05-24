@@ -1,7 +1,27 @@
 <template>
-  <div>this is Employee</div>
+  <el-tabs type="border-card">
+    <el-tab-pane label="部门列表" class="employee-tab-pane"
+      ><department-department></department-department
+    ></el-tab-pane>
+    <el-tab-pane label="人员列表" class="employee-tab-pane"
+      ><employee-employee></employee-employee
+    ></el-tab-pane>
+  </el-tabs>
 </template>
 <script>
-export default {};
+import Department from "./Employee/Employee";
+import Employee from "./Employee/Employee";
+
+export default {
+  components: {
+    "department-department": Department,
+    "employee-employee": Employee,
+  },
+};
 </script>
-<style></style>
+<style>
+.employee-tab-pane {
+  min-height: 1000px;
+  padding: 0px !important;
+}
+</style>

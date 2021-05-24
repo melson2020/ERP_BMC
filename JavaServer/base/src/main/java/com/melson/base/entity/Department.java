@@ -17,6 +17,7 @@ public class Department {
     private String companyName;
     private String departmentCode;
     private String departmentName;
+    private String description;
     private String parentCode;
 
     public Integer getId() {
@@ -57,6 +58,14 @@ public class Department {
 
     public void setDepartmentName(String departmentName) {
         this.departmentName = departmentName;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getParentCode() {
