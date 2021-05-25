@@ -105,9 +105,7 @@
                 <el-option
                   v-for="pbom in product.pboms"
                   :key="pbom.id"
-                  :label="
-                    pbom.productName + ' ( ' + pbom.bomNo+' )'
-                  "
+                  :label="pbom.productName + ' ( ' + pbom.bomNo + ' )'"
                   :value="pbom.bomNo"
                 ></el-option>
               </el-select>
@@ -121,9 +119,13 @@
               :default-checked-keys="product.defaultCheckedIds"
               lazy
               node-key="id"
-              :load="loadNode"
-              @node-expand="nodeExpand"
-              @node-collapse="nodeCollapse"
+              :load="(node, resolve) => loadNode(node, resolve, product)"
+              @node-expand="
+                (item, node, tree) => nodeExpand(item, node, tree, product)
+              "
+              @node-collapse="
+                (item, node, tree) => nodeCollapse(item, node, tree, product)
+              "
             >
               <!--自定义tree node -->
               <div class="tree-node-bom-div" slot-scope="{ node, data }">
@@ -174,6 +176,7 @@ export default {
         children: "childList",
         label: "chName",
         isLeaf: "isLeaf",
+        disabled: "disabled",
       },
     };
   },
@@ -257,17 +260,19 @@ export default {
       this.GetProductBomInfo({ bomNo: p.bomNo })
         .then((res) => {
           if (res.resultStatus == 1) {
-            var defaultCheckIds=[]
+            var defaultCheckIds = [];
             res.data.map((item) => {
               item.seen = true;
               item.isLeaf = item.chBomStatus == "N";
               item.childList = [];
-              defaultCheckIds.push(item.id)
+              item.disabled = true;
+              defaultCheckIds.push(item.id);
             });
             p.boms = res.data;
-            p.defaultCheckedIds=defaultCheckIds
-            console.log(p.boms);
+            p.defaultCheckedIds = defaultCheckIds;
+            p.bomIds = defaultCheckIds;
             this.checkProductData(p);
+            console.log(p.bomIds);
           } else {
             this.$message.warning(res.message);
           }
@@ -277,7 +282,9 @@ export default {
         });
     },
 
-    loadNode(node, resolve) {
+    loadNode(node, resolve, product) {
+      console.log("loadNode");
+      console.log(product.bomIds);
       this.GetProductBomInfo({ bomNo: node.data.chBomNo })
         .then((res) => {
           if (res.resultStatus == 1) {
@@ -285,8 +292,19 @@ export default {
               item.seen = true;
               item.isLeaf = item.chBomStatus == "N";
               item.childList = [];
+              item.disabled = true;
             });
             resolve(res.data);
+            node.data.childList = res.data;
+            if (node.childNodes.length > 0) {
+              node.checked = false;
+              node.childNodes.map((childNode) => {
+                childNode.checked = true;
+              });
+            }
+            if (node.data.id && product.bomIds) {
+              this.changedBomIds(product, [node.data], res.data);
+            }
           } else {
             this.$message.warning(res.message);
           }
@@ -294,6 +312,20 @@ export default {
         .catch((err) => {
           this.$message.error(err.message);
         });
+    },
+
+    changedBomIds(product, removeBoms, addBoms) {
+      removeBoms.map((item) => {
+        var removeIndex = product.bomIds.indexOf(item.id);
+        if (removeIndex != -1) {
+          product.bomIds.splice(removeIndex, 1);
+        }
+      });
+      addBoms.map((item) => {
+        if (product.bomIds.indexOf(item.id) == -1) {
+          product.bomIds.push(item.id);
+        }
+      });
     },
 
     checkProductData(product) {
@@ -311,17 +343,34 @@ export default {
     produceTypeChanged(product) {
       this.checkProductData(product);
     },
-    nodeExpand(item) {
+    nodeExpand(item, node, tree, product) {
       item.seen = false;
       if (item.childList) {
         item.childList.map((child) => {
           child.seen = true;
         });
       }
+      if (node.childNodes.length > 0) {
+        node.checked = false;
+        node.childNodes.map((childNode) => {
+          childNode.checked = true;
+        });
+      }
+      if (item.childList.length > 0) {
+        this.changedBomIds(product, [item], item.childList);
+      }
     },
-    nodeCollapse(item) {
+    nodeCollapse(item, node, tree, product) {
       item.seen = true;
+      if (node.childNodes.length > 0) {
+        node.checked = true;
+        node.childNodes.map((childNode) => {
+          childNode.checked = false;
+        });
+      }
+      this.changedBomIds(product, item.childList, [item]);
     },
+
     orderReleaseRefresh() {
       this.GetCreatedOrderList();
     },

@@ -1,6 +1,7 @@
 package com.melson.webserver.order.entity;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * @Author Nelson
@@ -75,6 +76,9 @@ public class OrderFormDetail {
      * 产品编号
      */
     private String productNo;
+
+    @Transient
+    private List<Integer> bomIds;
 
     public Integer getId() {
         return id;
@@ -156,6 +160,7 @@ public class OrderFormDetail {
         this.bomChoice = bomChoice;
     }
 
+
     public String getBomNo() {
         return bomNo;
     }
@@ -170,5 +175,13 @@ public class OrderFormDetail {
 
     public void setProductNo(String productNo) {
         this.productNo = productNo;
+    }
+
+    public List<Integer> getBomIds() {
+        return bomIds;
+    }
+
+    public void setBomIds(List<Integer> bomIds) {
+        this.bomIds = bomIds;
     }
 }
