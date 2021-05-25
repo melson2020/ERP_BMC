@@ -60,8 +60,8 @@ public class ProduceResource extends BaseResource {
     }
 
     @GetMapping(value = "/planDetailProcessList")
-    public Result FindProducePlanDetailProcessList(Integer planId,Integer productId){
-        List<ProducePlanProcessVo> list=producePlanProcessService.FindPlanProcess(planId,productId);
+    public Result FindProducePlanDetailProcessList(Integer planId,Integer planDetailId){
+        List<ProducePlanProcessVo> list=producePlanProcessService.FindPlanProcess(planId,planDetailId);
         if(list!=null){
             return success(list);
         }else {

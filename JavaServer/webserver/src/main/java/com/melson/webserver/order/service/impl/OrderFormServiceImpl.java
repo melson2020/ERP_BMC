@@ -19,6 +19,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
@@ -92,7 +93,7 @@ public class OrderFormServiceImpl implements IOrderFormService {
         String orderType = "";
         for (OrderFormDetail detail : detailList) {
             if (!orderType.contains(detail.getProduceType())) {
-                orderType += detail.getProduceType();
+                orderType= StringUtils.isEmpty(orderType)?detail.getProduceType():orderType+'/'+detail.getProduceType();
             }
             String type = detail.getProduceType();
             switch (type) {

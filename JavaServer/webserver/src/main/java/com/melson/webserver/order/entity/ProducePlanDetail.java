@@ -20,11 +20,14 @@ public class ProducePlanDetail {
     private String specification;
     private BigDecimal costPrice;
     private BigDecimal salePrice;
+    //bom 根目录No
     private String bomNo;
     private String remark;
     private BigDecimal count;
     private String countUnit;
     private String produceType;
+    //选择的bomNo
+    private String bomNos;
 
     public Integer getId() {
         return id;
@@ -120,5 +123,13 @@ public class ProducePlanDetail {
 
     public void setSpecification(String specification) {
         this.specification = specification;
+    }
+
+    public String getBomNos() {
+        return bomNos;
+    }
+
+    public void setBomNos(String bomNos) {
+        this.bomNos = bomNos;
     }
 }

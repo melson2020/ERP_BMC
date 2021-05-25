@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -137,13 +138,20 @@ public class ProducePlanServiceImpl implements IProducePlanService {
     private ProducePlanDetail CreateProducePlanDetail(OrderFormDetail detail) {
         ProducePlanDetail producePlanDetail = new ProducePlanDetail();
         producePlanDetail.setProductId(detail.getProductId());
-        producePlanDetail.setBomNo(detail.getBomNo());
         producePlanDetail.setRemark(detail.getRemark());
         producePlanDetail.setProductName(detail.getProductName());
         producePlanDetail.setSpecification(detail.getSpecification());
         producePlanDetail.setCount(new BigDecimal(detail.getCount()));
         producePlanDetail.setCountUnit(detail.getCountUnit());
         producePlanDetail.setProduceType(detail.getProduceType());
+        producePlanDetail.setBomNo(detail.getBomNo());
+        String bomNos= "";
+        if(detail.getBomNos()!=null&&detail.getBomNos().size()>0){
+           for(String bomId:detail.getBomNos()){
+               bomNos=StringUtils.isEmpty(bomNos)?bomId.toString():bomNos+"-"+bomId;
+           }
+        }
+        producePlanDetail.setBomNos(bomNos);
         return producePlanDetail;
     }
 

@@ -44,7 +44,7 @@ public class PickingTicketServiceImpl implements IPickingTicketService {
         }
         List<PickingTicketDetail> ticketDetails = new ArrayList<>();
         for (ProducePlanProcess p : processList) {
-            ticketDetails.add(CreateTicketDetailWithProcess(p, detailIdMap.get(p.getProductId()),ticket.getId()));
+            ticketDetails.add(CreateTicketDetailWithProcess(p, detailIdMap.get(p.getProductId()), ticket.getId()));
         }
         pickingTicketDetailRepository.saveAll(ticketDetails);
         return ticket;
@@ -55,34 +55,55 @@ public class PickingTicketServiceImpl implements IPickingTicketService {
         if (details == null || details.size() <= 0) return null;
         Set<String> bomNos = new HashSet<>();
         details.forEach(formDetail -> {
-            if (!bomNos.contains(formDetail.getBomNo())) {
-                bomNos.add(formDetail.getBomNo());
+            if (formDetail.getBomNos().size() > 0) {
+                for (String no : formDetail.getBomNos()) {
+                    bomNos.add(no);
+                }
             }
         });
         List<BomVo> bomVos = bomsService.findBomVoInBomNos(bomNos);
-        List<BomVo> rootList=GetRootList(bomVos);
-        PickingTicket ticket=new PickingTicket();
-        ticket.setTicketNo(PickingTicket.TICKET_NO_CHAR+System.currentTimeMillis());
+        Map<String, List<BomVo>> bomVoMap = new HashMap<>();
+        for (BomVo vo : bomVos) {
+            List<BomVo> existList = bomVoMap.get(vo.getBomNo());
+            if (existList == null) {
+                existList = new ArrayList<>();
+                existList.add(vo);
+                bomVoMap.put(vo.getBomNo(), existList);
+            } else {
+                existList.add(vo);
+            }
+        }
+        PickingTicket ticket = new PickingTicket();
+        ticket.setTicketNo(PickingTicket.TICKET_NO_CHAR + System.currentTimeMillis());
         ticket.setSourceId(form.getId());
         ticket.setSourceNo(form.getFormNo());
         ticket.setType(PickingTicket.TYPE_ORDER);
         ticket.setCreateDate(new Date());
         ticket.setState(PickingTicket.STATE_CREATE);
         pickingTicketRepository.saveAndFlush(ticket);
-        Map<String,OrderFormDetail> orderFormDetailMap=new HashMap<>(details.size());
-        for(OrderFormDetail detail:details){
-            orderFormDetailMap.put(detail.getBomNo(),detail);
+        Map<String, OrderFormDetail> orderFormDetailMap = new HashMap<>(details.size());
+        for (OrderFormDetail detail : details) {
+            orderFormDetailMap.put(detail.getBomNo(), detail);
         }
-        List<PickingTicketDetail> pickingTicketDetailList=new ArrayList<>();
-        for (BomVo vo:rootList){
-            pickingTicketDetailList.add(CreateTicketWithBomVo(vo,orderFormDetailMap.get(vo.getBomNo()),ticket.getId()));
+        List<PickingTicketDetail> pickingTicketDetailList = new ArrayList<>();
+        for (OrderFormDetail detail : details) {
+
+            if (detail.getBomNos().size() <= 0) continue;
+            List<BomVo> boms = new ArrayList<>();
+            for (String bomNo : detail.getBomNos()) {
+                boms.addAll(bomVoMap.get(bomNo));
+            }
+            List<BomVo> rootList = GetRootList(boms);
+            for (BomVo vo : rootList) {
+                pickingTicketDetailList.add(CreateTicketWithBomVo(vo, orderFormDetailMap.get(vo.getBomNo()), ticket.getId()));
+            }
         }
         pickingTicketDetailRepository.saveAll(pickingTicketDetailList);
         return null;
     }
 
     private PickingTicketDetail CreateTicketDetailWithProcess(ProducePlanProcess process, ProducePlanDetail
-            producePlanDetail,Integer ticketId) {
+            producePlanDetail, Integer ticketId) {
         PickingTicketDetail detail = new PickingTicketDetail();
         String detailType = producePlanDetail.getProduceType().equals(OrderFormDetail.PRODUCE_TYPE_D) ? producePlanDetail.getProduceType() : process.getDelegateFlag().equals(ProducePlanProcess.DELEGATE_Y) ? "W" : "P";
         detail.setType(detailType);
@@ -95,7 +116,7 @@ public class PickingTicketServiceImpl implements IPickingTicketService {
         return detail;
     }
 
-    private List<BomVo> GetRootList(List<BomVo> voList){
+    private List<BomVo> GetRootList(List<BomVo> voList) {
         Set<String> partNoSet = new HashSet<>();
         voList.forEach(bomVo -> partNoSet.add(bomVo.getBomNo() + bomVo.getPartNo()));
         List<BomVo> rootList = new ArrayList<>();
@@ -107,8 +128,8 @@ public class PickingTicketServiceImpl implements IPickingTicketService {
         return rootList;
     }
 
-    private PickingTicketDetail CreateTicketWithBomVo(BomVo bomVo,OrderFormDetail formDetail,Integer ticketId){
-        PickingTicketDetail detail=new PickingTicketDetail();
+    private PickingTicketDetail CreateTicketWithBomVo(BomVo bomVo, OrderFormDetail formDetail, Integer ticketId) {
+        PickingTicketDetail detail = new PickingTicketDetail();
         detail.setType(OrderFormDetail.PRODUCE_TYPE_W);
         detail.setTicketId(ticketId);
         detail.setMaterialNo(bomVo.getChPartNo());

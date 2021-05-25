@@ -196,7 +196,7 @@ export default {
         this.loading = true;
         this.FindPlanDetailProcessList({
           planId: row.producePlanId,
-          productId: row.productId,
+          planDetailId: row.id,
         })
           .then((res) => {
             if (res.resultStatus == 1) {

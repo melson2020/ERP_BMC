@@ -14,15 +14,14 @@ import java.util.Set;
  */
 @Repository
 public interface IBomsRepository extends JpaRepository<Boms, Integer> {
-    @Query(value = "SELECT b.id, b.bomNo,b.PartNo,p.name,b.chPartNo,p.unit,b.chQty,b.supplyName as manufacturer,p.specification FROM boms b RIGHT JOIN product p on b.chPartNo=p.productNo WHERE b.bomNo=?1 ORDER BY b.`sindex`", nativeQuery = true)
+    @Query(value = "SELECT b.id, b.bomNo,b.PartNo,p.name,b.chPartNo,p.unit,b.chQty,b.supplyName as manufacturer,p.specification FROM boms b RIGHT JOIN product p on b.chPartNo=p.productNo WHERE b.bomNo= ? 1 ORDER BY b.`sindex`", nativeQuery = true)
     List<Object[]> findBomInfoByNo(String bomNo);
 
-    //暂时不在使用
-    @Query(value = "SELECT b.id, b.bomNo,b.PartNo,m.name,b.chPartNo,m.unit,b.chQty,b.manufacturer,m.specification FROM boms b RIGHT JOIN material m on b.chPartNo=m.partNo WHERE b.bomNo in ?1 ORDER BY b.`index`", nativeQuery = true)
-    List<Object[]> findBomInfoByNos(Set<String> bomNos);
+    @Query(value = "SELECT b.id,b.bomNo,b.partNo,p.`name`,b.chPartNo,p.unit,b.chQty,b.supplyName,p.specification FROM `boms` b RIGHT JOIN product p ON b.chPartNo=p.productNo WHERE b.bomNo in ? 1 ORDER BY b.`index`", nativeQuery = true)
+    List<Object[]> findBomInfoInBomNos(Set<String> bomNos);
 
-    @Query(nativeQuery = true, value = "SELECT b.id, b.bomNo,pp.id as processId,b.processNo,pp.`name` as processName,b.PartNo,b.chPartNo,m.`name` as materialName,b.chQty as materialCount,m.specification, b.`index`,pp.delegateFlag FROM `boms` b RIGHT JOIN material m on b.chPartNo=m.partNo RIGHT JOIN  produce_process pp on b.processNo=pp.processNo WHERE b.bomNo in ?1 ORDER BY b.`index`;")
-    List<Object[]> findBomProcessInfoByNo(Set<String> bomNos);
+    @Query(nativeQuery = true, value = "SELECT b.id,b.bomNo,b.processId,b.processNo,pp.`name` as processName,b.partNo,b.chPartNo,b.chName as materialName,b.chQty as materialCount,b.sIndex as 'index',pp.delegateFlag,p.id as materialId from boms b RIGHT JOIN produce_process pp ON b.processId=pp.id RIGHT JOIN product p on b.chPartNo=p.productNo WHERE b.bomNo in ?1")
+    List<Object[]> findBomProcessInfoInBomNos(Set<String> bomNos);
 
     List<Boms> findByBomNo(String bomNo);
 

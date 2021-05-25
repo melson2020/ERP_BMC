@@ -2,6 +2,7 @@ package com.melson.webserver.order.service.impl;
 
 import com.melson.webserver.dict.service.IBoms;
 import com.melson.webserver.dict.vo.BomProcessVo;
+import com.melson.webserver.dict.vo.BomVo;
 import com.melson.webserver.order.dao.IProducePlanProcessRepository;
 import com.melson.webserver.order.entity.ProducePlan;
 import com.melson.webserver.order.entity.ProducePlanDetail;
@@ -13,6 +14,7 @@ import com.melson.webserver.produce.vo.ProducePlanMaterialVo;
 import com.melson.webserver.produce.vo.ProducePlanProcessVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.*;
 
@@ -34,21 +36,43 @@ public class ProducePlanProcessServiceImpl implements IProducePlanProcessService
     public List<ProducePlanProcess> GeneratePlanProcess(ProducePlan plan, List<ProducePlanDetail> detailList) {
         if (detailList == null || detailList.size() <= 0) return null;
         Set<String> bomNos = new HashSet<>();
-        Map<String, Integer> bomNoMap = new HashMap<>();
         detailList.forEach(detail -> {
-            if (!bomNos.contains(detail.getBomNo())) {
-                bomNos.add(detail.getBomNo());
-            }
-            if (bomNoMap.get(detail.getBomNo()) == null) {
-                bomNoMap.put(detail.getBomNo(), detail.getProductId());
+            String[] bomIdArr = detail.getBomNos().split("-");
+            for (String no : bomIdArr) {
+                if (!StringUtils.isEmpty(no)) {
+                    bomNos.add(no);
+                }
             }
         });
-        List<BomProcessVo> bomProcessVoList = bomsService.findBomProcessVoByNo(bomNos);
-        List<BomProcessVo> rootList = FindRootList(bomProcessVoList);
+        List<BomProcessVo> bomProcessVoList = bomsService.findBomProcessVoInBomNos(bomNos);
+        //按照bomNo 分类 防止detail 出现相同product 的bug 以detail 生成ProducePlanProcess
+        Map<String, List<BomProcessVo>> bomProcessVoMap = new HashMap<>();
+        for (BomProcessVo vo : bomProcessVoList) {
+            List<BomProcessVo> existList = bomProcessVoMap.get(vo.getBomNo());
+            if (existList == null) {
+                existList = new ArrayList<>();
+                existList.add(vo);
+                bomProcessVoMap.put(vo.getBomNo(), existList);
+            } else {
+                existList.add(vo);
+            }
+        }
+
         List<ProducePlanProcess> planProcessList = new ArrayList<>();
-        for (BomProcessVo vo : rootList) {
-            ProducePlanProcess p = CreatePlanProcess(vo, plan, bomNoMap.get(vo.getBomNo()));
-            planProcessList.add(p);
+        //生成 ProducePlanProcess
+        for (ProducePlanDetail producePlanDetail : detailList) {
+            List<BomProcessVo> boms = new ArrayList<>();
+            String[] detialBomNos = producePlanDetail.getBomNos().split("-");
+            if (detialBomNos.length <= 0) continue;
+            for (String bomNo : detialBomNos) {
+                boms.addAll(bomProcessVoMap.get(bomNo));
+            }
+            List<BomProcessVo> sortedList = GenerateBomTree(boms, producePlanDetail.getBomNo());
+//            List<BomProcessVo> rootList = FindRootList(sortedList);
+            for (BomProcessVo vo : sortedList) {
+                ProducePlanProcess p = CreatePlanProcess(vo, plan, producePlanDetail);
+                planProcessList.add(p);
+            }
         }
         return producePlanProcessRepository.saveAll(planProcessList);
     }
@@ -59,8 +83,8 @@ public class ProducePlanProcessServiceImpl implements IProducePlanProcessService
     }
 
     @Override
-    public List<ProducePlanProcessVo> FindPlanProcess(Integer planId, Integer productId) {
-        List<ProducePlanProcess> processList = producePlanProcessRepository.findByPlanIdAndProductIdOrderByProcessIndex(planId, productId);
+    public List<ProducePlanProcessVo> FindPlanProcess(Integer planId, Integer planDetailId) {
+        List<ProducePlanProcess> processList = producePlanProcessRepository.findByPlanIdAndPlanDetailIdOrderByProcessIndex(planId, planDetailId);
         List<ProducePlanProcessVo> voList = GroupToVoList(processList);
         FillWorkStation(voList, planId);
         return voList;
@@ -75,20 +99,84 @@ public class ProducePlanProcessServiceImpl implements IProducePlanProcessService
      */
     private List<BomProcessVo> FindRootList(List<BomProcessVo> bomProcessVoList) {
         Set<String> partNoSet = new HashSet<>();
-        bomProcessVoList.forEach(bomVo -> partNoSet.add(bomVo.getBomNo() + bomVo.getPartNo()));
+        bomProcessVoList.forEach(bomVo -> partNoSet.add(bomVo.getPartNo()));
         List<BomProcessVo> rootList = new ArrayList<>();
         for (BomProcessVo vo : bomProcessVoList) {
-            String key = vo.getBomNo() + vo.getChPartNo();
+            String key = vo.getChPartNo();
             if (partNoSet.contains(key)) continue;
             rootList.add(vo);
         }
         return rootList;
     }
 
-    private ProducePlanProcess CreatePlanProcess(BomProcessVo vo, ProducePlan plan, Integer productId) {
+
+    private List<BomProcessVo> GenerateBomTree(List<BomProcessVo> bomVos, String rootBomNo) {
+        List<BomProcessVo> res = new ArrayList<>();
+        List<BomProcessVo> remindList = new ArrayList<>();
+        for (BomProcessVo bomVo : bomVos) {
+            if (bomVo.getBomNo().equals(rootBomNo)) {
+                res.add(bomVo);
+            } else {
+                remindList.add(bomVo);
+            }
+        }
+        for (BomProcessVo vo : res) {
+            List<BomProcessVo> childList = FindChildList(vo.getChPartNo(), remindList);
+            childList.forEach(bomVo -> {
+                bomVo.setIndex(vo.getIndex() + "-" + bomVo.getIndex());
+            });
+            vo.setChildList(childList);
+        }
+        return SetProcessVoIndex(res);
+    }
+
+    private List<BomProcessVo> SetProcessVoIndex(List<BomProcessVo> res) {
+        List<BomProcessVo> vos = new ArrayList<>();
+        for (BomProcessVo vo : res) {
+            vos.add(vo);
+            List<BomProcessVo> list = GetAllChildList(vo);
+            if (list != null) vos.addAll(list);
+        }
+        return vos;
+    }
+
+    private List<BomProcessVo> GetAllChildList(BomProcessVo vo) {
+        List<BomProcessVo> vos = new ArrayList<>();
+        if (vo.getChildList() == null || vo.getChildList().size() <= 0) return null;
+        for (BomProcessVo child : vo.getChildList()) {
+            List<BomProcessVo> list = GetAllChildList(child);
+            vos.add(child);
+            if (list != null) vos.addAll(list);
+        }
+        return vos;
+    }
+
+
+    private List<BomProcessVo> FindChildList(String childNo, List<BomProcessVo> remindList) {
+        List<BomProcessVo> childList = new ArrayList<>();
+        List<BomProcessVo> reList = new ArrayList<>();
+        for (BomProcessVo vo : remindList) {
+            if (vo.getPartNo().equals(childNo)) {
+                childList.add(vo);
+            } else {
+                reList.add(vo);
+            }
+        }
+        if (reList.size() < 0) return null;
+        for (BomProcessVo vo : childList) {
+            List<BomProcessVo> childList2 = FindChildList(vo.getChPartNo(), remindList);
+            childList2.forEach(bomVo -> {
+                bomVo.setIndex(vo.getIndex() + "-" + bomVo.getIndex());
+            });
+            vo.setChildList(childList2);
+        }
+        return childList;
+    }
+
+    private ProducePlanProcess CreatePlanProcess(BomProcessVo vo, ProducePlan plan, ProducePlanDetail producePlanDetail) {
         ProducePlanProcess process = new ProducePlanProcess();
         process.setPlanId(plan.getId());
-        process.setProductId(productId);
+        process.setProductId(producePlanDetail.getProductId());
         process.setProcessId(vo.getProcessId());
         process.setProcessNo(vo.getProcessNo());
         process.setProcessName(vo.getProcessName());
@@ -98,6 +186,7 @@ public class ProducePlanProcessServiceImpl implements IProducePlanProcessService
         process.setBomNo(vo.getBomNo());
         process.setProcessIndex(vo.getIndex());
         process.setDelegateFlag(vo.getDelegateFlag());
+        process.setPlanDetailId(producePlanDetail.getId());
         return process;
     }
 
@@ -144,7 +233,7 @@ public class ProducePlanProcessServiceImpl implements IProducePlanProcessService
         vo.setProcessName(example.getProcessName());
         vo.setBomNo(example.getBomNo());
         vo.setDelegateFlag(example.getDelegateFlag());
-        String replaceIndex = example.getProcessIndex().replace("-", "");
+        String replaceIndex = processList.get(processList.size() - 1).getProcessIndex().replace("-", "");
         if (replaceIndex.length() < indexLength) {
             Integer baseZero = new Double(Math.pow(10.0, Double.valueOf(indexLength - replaceIndex.length()))).intValue();
             String zeroString = baseZero.toString().substring(1);

@@ -230,6 +230,7 @@ export default {
             type: "warning",
           })
           .then(() => {
+            console.log(this.orderFormDetaiList)
             this.OrderFormConfirm({
               orderForm: this.selectedOrderForm,
               orderFormDetails: this.orderFormDetaiList,
@@ -270,9 +271,8 @@ export default {
             });
             p.boms = res.data;
             p.defaultCheckedIds = defaultCheckIds;
-            p.bomIds = defaultCheckIds;
+            p.bomNos = [p.bomNo];
             this.checkProductData(p);
-            console.log(p.bomIds);
           } else {
             this.$message.warning(res.message);
           }
@@ -283,8 +283,6 @@ export default {
     },
 
     loadNode(node, resolve, product) {
-      console.log("loadNode");
-      console.log(product.bomIds);
       this.GetProductBomInfo({ bomNo: node.data.chBomNo })
         .then((res) => {
           if (res.resultStatus == 1) {
@@ -302,8 +300,8 @@ export default {
                 childNode.checked = true;
               });
             }
-            if (node.data.id && product.bomIds) {
-              this.changedBomIds(product, [node.data], res.data);
+            if (node.data.chBomNo && product.bomNos) {
+              this.addBomNo(product, node.data.chBomNo);
             }
           } else {
             this.$message.warning(res.message);
@@ -314,18 +312,20 @@ export default {
         });
     },
 
-    changedBomIds(product, removeBoms, addBoms) {
-      removeBoms.map((item) => {
-        var removeIndex = product.bomIds.indexOf(item.id);
-        if (removeIndex != -1) {
-          product.bomIds.splice(removeIndex, 1);
-        }
-      });
-      addBoms.map((item) => {
-        if (product.bomIds.indexOf(item.id) == -1) {
-          product.bomIds.push(item.id);
-        }
-      });
+    removeBomNo(product, bomNo) {
+      var removeIndex = product.bomNos.indexOf(bomNo);
+      if (removeIndex != -1) {
+        product.bomNos.splice(removeIndex, 1);
+      }
+      console.log(this.orderFormDetaiList);
+    },
+    addBomNo(product, bomNo) {
+      var detail=this.orderFormDetaiList.find(item=>{return item.id==product.id})
+      if (detail.bomNos.indexOf(bomNo) == -1) {
+        console.log('addBomNo')
+        detail.bomNos.push(bomNo);
+      }
+      console.log(this.orderFormDetaiList);
     },
 
     checkProductData(product) {
@@ -357,7 +357,7 @@ export default {
         });
       }
       if (item.childList.length > 0) {
-        this.changedBomIds(product, [item], item.childList);
+        this.addBomNo(product, node.data.chBomNo);
       }
     },
     nodeCollapse(item, node, tree, product) {
@@ -368,7 +368,7 @@ export default {
           childNode.checked = false;
         });
       }
-      this.changedBomIds(product, item.childList, [item]);
+      this.removeBomNo(product, node.data.chBomNo);
     },
 
     orderReleaseRefresh() {
