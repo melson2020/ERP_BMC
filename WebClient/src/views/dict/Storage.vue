@@ -17,7 +17,7 @@
           :header-row-style="{height:'40px' ,'align':'center'}"
           :row-style="{height:'40px'}"
           style="width: 100%">
-        <el-table-column prop="storageCode" label="仓库代码" width="140px"></el-table-column>
+        <el-table-column prop="storageCode" label="仓库代码" width="180px"></el-table-column>
         <el-table-column prop="name" label="仓库名称" width="220px"> </el-table-column>
         <el-table-column prop="location" label="仓库位置" width="220px"> </el-table-column>
         <el-table-column prop="description" label="备注信息"> </el-table-column>

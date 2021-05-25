@@ -1,6 +1,7 @@
 package com.melson.base.entity;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * @Author Nelson
@@ -10,6 +11,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "department")
 public class Department {
+    public static final String DEPARTMENT_NO_CHAR="DE";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -17,7 +19,11 @@ public class Department {
     private String companyName;
     private String departmentCode;
     private String departmentName;
+    private String description;
     private String parentCode;
+    private Date createDate;
+    private String createBy;
+    private String status;
 
     public Integer getId() {
         return id;
@@ -59,11 +65,43 @@ public class Department {
         this.departmentName = departmentName;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public String getParentCode() {
         return parentCode;
     }
 
     public void setParentCode(String parentCode) {
         this.parentCode = parentCode;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    public String getCreateBy() {
+        return createBy;
+    }
+
+    public void setCreateBy(String createBy) {
+        this.createBy = createBy;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

@@ -60,7 +60,6 @@ public class ProductCategoryResource extends BaseResource {
     }
 
     @RequestMapping(value = "/query",method = RequestMethod.POST)
-    @RequiredPermission(SecurityLevel.Employee)
     public Result QueryCategory(@RequestBody ProductCategory productCategory){
         ProductCategory category=productCategoryService.Query(productCategory.getCategoryId());
         Result result=new Result();
