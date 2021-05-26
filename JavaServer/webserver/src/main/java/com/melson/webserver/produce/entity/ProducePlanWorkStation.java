@@ -14,10 +14,7 @@ public class ProducePlanWorkStation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private Integer planId;
-    /**
-     * 生产计划状态  1 为执行中  2 已完成
-     */
-    private String planState;
+
     private Integer workStationId;
     private Integer processId;
     private String workStationName;
@@ -89,11 +86,5 @@ public class ProducePlanWorkStation {
         this.produceLineId = produceLineId;
     }
 
-    public String getPlanState() {
-        return planState;
-    }
 
-    public void setPlanState(String planState) {
-        this.planState = planState;
-    }
 }

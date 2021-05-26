@@ -11,4 +11,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface IPickingTicketRepository extends JpaRepository<PickingTicket,Integer> {
+    PickingTicket findBySourceIdAndType(Integer id,String type);
 }

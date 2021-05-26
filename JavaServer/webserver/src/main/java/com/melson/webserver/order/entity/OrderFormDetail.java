@@ -78,7 +78,7 @@ public class OrderFormDetail {
     private String productNo;
 
     @Transient
-    private List<Integer> bomIds;
+    private List<String> bomNos;
 
     public Integer getId() {
         return id;
@@ -177,11 +177,11 @@ public class OrderFormDetail {
         this.productNo = productNo;
     }
 
-    public List<Integer> getBomIds() {
-        return bomIds;
+    public List<String> getBomNos() {
+        return bomNos;
     }
 
-    public void setBomIds(List<Integer> bomIds) {
-        this.bomIds = bomIds;
+    public void setBomNos(List<String> bomNos) {
+        this.bomNos = bomNos;
     }
 }

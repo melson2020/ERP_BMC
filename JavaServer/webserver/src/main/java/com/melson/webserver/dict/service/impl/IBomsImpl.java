@@ -41,49 +41,16 @@ public class IBomsImpl extends AbstractService<Boms> implements IBoms {
 
     @Override
     public List<BomVo> findBomVoInBomNos(Set<String> bomNos) {
-        List<Object[]> objects=bomsRepository.findBomInfoByNos(bomNos);
+        List<Object[]> objects=bomsRepository.findBomInfoInBomNos(bomNos);
         List<BomVo> voList= EntityUtils.castEntity(objects,BomVo.class,new BomVo());
         return voList;
     }
 
     @Override
-    public List<BomProcessVo> findBomProcessVoByNo(Set<String> bomNos) {
-        List<Object[]> list=bomsRepository.findBomProcessInfoByNo(bomNos);
+    public List<BomProcessVo> findBomProcessVoInBomNos(Set<String> bomNos) {
+        List<Object[]> list=bomsRepository.findBomProcessInfoInBomNos(bomNos);
         List<BomProcessVo> voList= EntityUtils.castEntity(list,BomProcessVo.class,new BomProcessVo());
         return voList;
     }
 
-//    private List<BomVo> GenerateBomTree(List<BomVo> bomVos){
-//        List<BomVo> res=new ArrayList<>();
-//        List<BomVo> remindList=new ArrayList<>();
-//        for (BomVo bomVo:bomVos){
-//            if(bomVo.getPartNo().equals("-1")){
-//                res.add(bomVo);
-//            }else {
-//                remindList.add(bomVo);
-//            }
-//        }
-//        for(BomVo vo:res){
-//            vo.setChildList(FindChildList(vo.getChPartNo(),remindList));
-//        }
-//        return res;
-//    }
-
-
-//    private List<BomVo> FindChildList(String childNo,List<BomVo> remindList){
-//          List<BomVo> childList=new ArrayList<>();
-//          List<BomVo> reList=new ArrayList<>();
-//          for (BomVo vo:remindList){
-//              if(vo.getPartNo().equals(childNo)){
-//                  childList.add(vo);
-//              }else {
-//                  reList.add(vo);
-//              }
-//          }
-//          if(reList.size()<0)return null;
-//          for(BomVo vo:childList){
-//              vo.setChildList(FindChildList(vo.getChPartNo(),reList));
-//          }
-//          return childList;
-//    }
 }

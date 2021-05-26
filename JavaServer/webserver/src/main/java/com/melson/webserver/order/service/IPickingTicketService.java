@@ -21,4 +21,6 @@ public interface IPickingTicketService {
      * @return
      */
     PickingTicket GeneratePickTicketWithOrderFormDetail(OrderForm form,List<OrderFormDetail> details);
+
+    PickingTicket FindByPlanId(Integer planId);
 }

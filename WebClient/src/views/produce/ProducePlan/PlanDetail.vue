@@ -196,7 +196,7 @@ export default {
         this.loading = true;
         this.FindPlanDetailProcessList({
           planId: row.producePlanId,
-          productId: row.productId,
+          planDetailId: row.id,
         })
           .then((res) => {
             if (res.resultStatus == 1) {
@@ -241,6 +241,7 @@ export default {
         var w = {
           workStationId: selectWorkStation.id,
           processId: row.processId,
+          produceLineId:selectWorkStation.produceLineId,
           planId: this.producePlan.id,
           workStationName: selectWorkStation.name,
           produceLineName: selectWorkStation.produceLineName,

@@ -1,6 +1,8 @@
 package com.melson.webserver.dict.vo;
 
+import javax.persistence.Transient;
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @Author Nelson
@@ -13,30 +15,33 @@ public class BomProcessVo {
     private Integer processId;
     private String processNo;
     private String processName;
-    private String PartNo;
+    private String partNo;
     private String chPartNo;
     private String materialName;
     private BigDecimal materialCount;
-    private String specification;
     private String index;
     private String delegateFlag;
+    private Integer materialId;
+
+    @Transient
+    private List<BomProcessVo> childList;
 
     public BomProcessVo() {
     }
 
-    public BomProcessVo(Integer id, String bomNo, Integer processId, String processNo, String processName, String partNo, String chPartNo, String materialName, BigDecimal materialCount, String specification, String index, String delegateFlag) {
+    public BomProcessVo(Integer id, String bomNo, Integer processId, String processNo, String processName, String partNo, String chPartNo, String materialName, BigDecimal materialCount, String index, String delegateFlag, Integer materialId) {
         this.id = id;
         this.bomNo = bomNo;
         this.processId = processId;
         this.processNo = processNo;
         this.processName = processName;
-        PartNo = partNo;
+        this.partNo = partNo;
         this.chPartNo = chPartNo;
         this.materialName = materialName;
         this.materialCount = materialCount;
-        this.specification = specification;
         this.index = index;
         this.delegateFlag = delegateFlag;
+        this.materialId = materialId;
     }
 
     public Integer getId() {
@@ -72,11 +77,11 @@ public class BomProcessVo {
     }
 
     public String getPartNo() {
-        return PartNo;
+        return partNo;
     }
 
     public void setPartNo(String partNo) {
-        PartNo = partNo;
+        this.partNo = partNo;
     }
 
     public String getChPartNo() {
@@ -103,14 +108,6 @@ public class BomProcessVo {
         this.materialCount = materialCount;
     }
 
-    public String getSpecification() {
-        return specification;
-    }
-
-    public void setSpecification(String specification) {
-        this.specification = specification;
-    }
-
     public String getIndex() {
         return index;
     }
@@ -133,5 +130,21 @@ public class BomProcessVo {
 
     public void setDelegateFlag(String delegateFlag) {
         this.delegateFlag = delegateFlag;
+    }
+
+    public Integer getMaterialId() {
+        return materialId;
+    }
+
+    public void setMaterialId(Integer materialId) {
+        this.materialId = materialId;
+    }
+
+    public List<BomProcessVo> getChildList() {
+        return childList;
+    }
+
+    public void setChildList(List<BomProcessVo> childList) {
+        this.childList = childList;
     }
 }
