@@ -281,6 +281,15 @@ export default {
   //生产计划monitor
   GetProduceLineStateInfo(){
     return service.get("/produceMonitor/produceLineStateInfo")
+  },
+  GetMonitorCountSummary(){
+    return service.get("/produceMonitor/countSummary")
+  },
+  GetProcessPlanList(){
+    return service.get("/produceMonitor/processingPlanList")
+  },
+  GetPlanInfo(param){
+    return service.get('/produceMonitor/producePlanInfo',param)
   }
 
 };

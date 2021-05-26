@@ -114,6 +114,7 @@ public class OrderFormServiceImpl implements IOrderFormService {
         formVo.setState(OrderForm.STATE_ORDER);
         formVo.setProduceType(orderType);
         OrderForm form = orderFormRepository.save(formVo);
+        orderFormDetailService.saveAll(detailList);
         return form;
     }
 

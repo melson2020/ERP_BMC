@@ -28,6 +28,7 @@ public class ProducePlanProcess {
     private String processIndex;
     private String delegateFlag;
     private Integer planDetailId;
+    private String partMaterialNo;
 
     public Integer getId() {
         return id;
@@ -131,5 +132,13 @@ public class ProducePlanProcess {
 
     public void setPlanDetailId(Integer planDetailId) {
         this.planDetailId = planDetailId;
+    }
+
+    public String getPartMaterialNo() {
+        return partMaterialNo;
+    }
+
+    public void setPartMaterialNo(String partMaterialNo) {
+        this.partMaterialNo = partMaterialNo;
     }
 }

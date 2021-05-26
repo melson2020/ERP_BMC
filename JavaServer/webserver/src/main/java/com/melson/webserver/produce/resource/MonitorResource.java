@@ -15,7 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
  * @Author Nelson
  * @Description
  * @Date 2021/5/20
- */@RestController
+ */
+@RestController
 @RequestMapping(value = "/produceMonitor")
 public class MonitorResource extends BaseResource {
     private static final Logger logger = LoggerFactory.getLogger(MonitorResource.class);
@@ -25,17 +26,22 @@ public class MonitorResource extends BaseResource {
     private IProduceLineService produceLineService;
 
     @GetMapping(value = "/countSummary")
-    public Result GetPlanStateCountSummary(){
+    public Result GetPlanStateCountSummary() {
         return success(producePlanService.GetStateSummary());
     }
 
     @GetMapping(value = "/processingPlanList")
-    public Result GetProcessingPlanList(){
+    public Result GetProcessingPlanList() {
         return success(producePlanService.GetProcessingPlanAndPickingTicketInfo());
     }
 
     @GetMapping(value = "/produceLineStateInfo")
-    public Result GetProduceLineStateInfo(){
-        return  success(produceLineService.GetProduceLineStateInfo());
+    public Result GetProduceLineStateInfo() {
+        return success(produceLineService.GetProduceLineStateInfo());
+    }
+
+    @GetMapping(value = "/producePlanInfo")
+    public Result GetProducePlanInfo(Integer planId) {
+        return success(producePlanService.FindPlanInfo(planId));
     }
 }

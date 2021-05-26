@@ -11,7 +11,7 @@
               class="produce-monitor-Summary-card-content colorred"
               type="text"
             >
-              3
+              {{ countSummary.confirmCount }}
             </el-button>
           </el-tooltip>
         </div>
@@ -21,75 +21,41 @@
           <span class="produce-monitor-summary-card-title color-gray"
             >计划进行中</span
           >
-          <span class="produce-monitor-Summary-card-content colorred">5</span>
+          <span class="produce-monitor-Summary-card-content colorred">
+            {{ countSummary.processCount }}</span
+          >
         </div>
       </el-col>
     </el-row>
     <div class="produce-monitor-doing-plan-div">
       <div class="undoing-plan-div-title colorblue">生产列表</div>
       <el-scrollbar class="planing-scrollbar">
-        <el-table
-          v-if="tableShowing"
-          :data="producePlanList"
-          script
-          border
-          size="small"
-        >
+        <el-table :data="processingPlanList" script border size="small">
           <el-table-column prop="planNo" label="单号" width="180">
           </el-table-column>
-          <el-table-column prop="orderNo" label="订单号" width="180">
+          <el-table-column prop="orderFormNo" label="订单号" width="180">
           </el-table-column>
           <el-table-column prop="createDate" label="创建时间">
           </el-table-column>
-          <el-table-column prop="completeDate" label="计划完成时间">
+          <el-table-column prop="endDate" label="计划完成时间">
           </el-table-column>
-          <el-table-column prop="pickingTikcetNo" label="领料单号">
+          <el-table-column prop="pickingTicketNo" label="领料单号">
           </el-table-column>
           <el-table-column prop="pickingState" label="领料状态">
           </el-table-column>
           <el-table-column prop="planState" label="状态"> </el-table-column>
-          <el-table-column prop="" width="100px">
-            <template>
+          <el-table-column  width="100px">
+            <template slot-scope="scope">
               <el-button
                 icon="el-icon-more"
                 type="primary"
                 size="mini"
-                @click="changeTableAreaView"
+                @click="changeTableAreaView(scope.row.id)"
                 circle
               ></el-button>
             </template>
           </el-table-column>
         </el-table>
-        <div v-else>
-          <div class="produce-plan-detail-div">
-            <el-button type="text" @click="changeTableAreaView">返回</el-button>
-            <div class="produce-plan-detail-title-cell">
-              <span>创建时间：</span><span>2021-04-20</span>
-            </div>
-            <div class="produce-plan-detail-title-cell">
-              <span>截止时间：</span><span>2021-07-20</span>
-            </div>
-            <div class="produce-plan-detail-title-cell">
-              <span>生产中</span>
-            </div>
-            <div class="produce-plan-detail-title-cell">
-              <span>取料状态：</span
-              ><i class="el-icon-check color-dark-green fz14"></i>
-            </div>
-          </div>
-          <div class="flex fz9">
-            <span class="monitor-produce-plan-detail-cell">产品A</span>
-            <span class="monitor-produce-plan-detail-cell">数量：100</span>
-            <span class="monitor-produce-plan-detail-cell">入库： 0/100</span>
-            <span class="monitor-produce-plan-detail-cell">process</span>
-          </div>
-          <div class="flex fz9">
-            <span class="monitor-produce-plan-detail-cell">产品B</span>
-            <span class="monitor-produce-plan-detail-cell">数量：40</span>
-            <span class="monitor-produce-plan-detail-cell">入库： 40/40</span>
-            <span class="monitor-produce-plan-detail-cell">completed</span>
-          </div>
-        </div>
       </el-scrollbar>
     </div>
 
@@ -119,8 +85,8 @@
             <div class="monitor-productionLine-work-station-card fz8">
               <div class="monitor-produce-work-station-float-div">
                 <el-tooltip
-                v-for="plan in workStation.planInfo"
-                :key="plan.planNo"
+                  v-for="plan in workStation.planInfo"
+                  :key="plan.planNo"
                   :content="plan.planNo"
                   placement="bottom"
                   effect="light"
@@ -139,68 +105,50 @@
         </el-row>
       </div>
     </div>
+    <el-dialog
+      title="生产计划详细"
+      :visible.sync="detailInfoShowing"
+      width="70%"
+    >
+    <m-plan-info ref="planInfo"></m-plan-info>
+    </el-dialog>
   </div>
 </template>
 <script>
 import { mapGetters } from "vuex";
 import { mapActions } from "vuex";
+import planInfo from './Monitor/PlanInfo';
 export default {
   data() {
     return {
-      tableShowing: true,
-      producePlanList: [
-        {
-          planNo: "生产计划单号",
-          orderNo: "订单号01",
-          completeDate: "预计完成时间",
-          createDate: "创建时间",
-          pickingTikcetNo: "领料单号",
-          pickingState: "领料状态（未领料）",
-          planState: "计划状态（生产中/待入库/入库中）",
-        },
-        {
-          planNo: "生产计划单号",
-          orderNo: "订单号01",
-          completeDate: "预计完成时间",
-          createDate: "创建时间",
-          pickingTikcetNo: "领料单号",
-          pickingState: "领料状态（未领料）",
-          planState: "计划状态（生产中/待入库/入库中）",
-        },
-        {
-          planNo: "生产计划单号",
-          orderNo: "订单号01",
-          completeDate: "预计完成时间",
-          createDate: "创建时间",
-          pickingTikcetNo: "领料单号",
-          pickingState: "领料状态（未领料）",
-          planState: "计划状态（生产中/待入库/入库中）",
-        },
-        {
-          planNo: "生产计划单号",
-          orderNo: "订单号01",
-          completeDate: "预计完成时间",
-          createDate: "创建时间",
-          pickingTikcetNo: "领料单号",
-          pickingState: "领料状态（未领料）",
-          planState: "计划状态（生产中/待入库/入库中）",
-        },
-      ],
+      detailInfoShowing: false,
     };
   },
   computed: {
-    ...mapGetters(["produceLineStateList"]),
+    ...mapGetters([
+      "produceLineStateList",
+      "countSummary",
+      "processingPlanList",
+    ]),
   },
   methods: {
     ...mapActions({
       GetProduceLineStateInfo: "GetProduceLineStateInfo",
+      GetPlanCountSummary: "GetPlanCountSummary",
+      GetProcessingPlanList: "GetProcessingPlanList",
     }),
-    changeTableAreaView() {
-      this.tableShowing = !this.tableShowing;
+    changeTableAreaView(planId) {
+      this.detailInfoShowing = !this.detailInfoShowing;
+      setTimeout(()=>{ this.$refs['planInfo'].loadPlanInfo(planId)},200)
     },
+  },
+  components: {
+    "m-plan-info":planInfo ,
   },
   beforeMount() {
     this.GetProduceLineStateInfo();
+    this.GetPlanCountSummary();
+    this.GetProcessingPlanList();
   },
 };
 </script>
@@ -352,7 +300,7 @@ export default {
   position: absolute;
   display: flex;
   flex-direction: row;
-  align-items:flex-end;
+  align-items: flex-end;
   height: 100%;
   width: 100%;
 }

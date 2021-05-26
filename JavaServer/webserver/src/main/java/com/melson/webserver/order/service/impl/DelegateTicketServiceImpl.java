@@ -85,6 +85,11 @@ public class DelegateTicketServiceImpl implements IDelegateTicketService {
         return delegateTicketRepository.findBySourceIdAndType(orderFormId,DelegateTicket.TYPE_ORDER);
     }
 
+    @Override
+    public DelegateTicket FindByPlanId(Integer planId) {
+        return delegateTicketRepository.findBySourceIdAndType(planId,DelegateTicket.TYPE_PLAN);
+    }
+
     private DelegateDetail CreateDelegateDetail(OrderFormDetail orderFormDetail, DelegateTicket ticket) {
         DelegateDetail delegateDetail = new DelegateDetail();
         delegateDetail.setDelegateTicketId(ticket.getId());

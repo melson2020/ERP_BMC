@@ -16,4 +16,6 @@ public interface IOrderFormDetailService {
 
     List<OrderFormDetail> findDetailListByFormId(Integer formId);
 
+    List<OrderFormDetail> saveAll(List<OrderFormDetail> details);
+
 }

@@ -241,6 +241,7 @@ export default {
         var w = {
           workStationId: selectWorkStation.id,
           processId: row.processId,
+          produceLineId:selectWorkStation.produceLineId,
           planId: this.producePlan.id,
           workStationName: selectWorkStation.name,
           produceLineName: selectWorkStation.produceLineName,

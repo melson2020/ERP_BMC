@@ -181,6 +181,7 @@ public class ProducePlanProcessServiceImpl implements IProducePlanProcessService
         process.setProcessNo(vo.getProcessNo());
         process.setProcessName(vo.getProcessName());
         process.setMaterialNo(vo.getChPartNo());
+        process.setPartMaterialNo(vo.getPartNo());
         process.setMaterialName(vo.getMaterialName());
         process.setMaterialCount(vo.getMaterialCount());
         process.setBomNo(vo.getBomNo());

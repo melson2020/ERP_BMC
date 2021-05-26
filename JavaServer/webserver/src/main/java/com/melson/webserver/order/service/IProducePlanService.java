@@ -4,6 +4,7 @@ import com.melson.webserver.order.entity.OrderForm;
 import com.melson.webserver.order.entity.OrderFormDetail;
 import com.melson.webserver.order.entity.ProducePlan;
 import com.melson.webserver.order.entity.ProducePlanDetail;
+import com.melson.webserver.produce.vo.ProducePlanInfoVo;
 import com.melson.webserver.produce.vo.ProducePlanPickingTicketVo;
 import com.melson.webserver.produce.vo.ProducePlanStateSummaryVo;
 
@@ -41,4 +42,6 @@ public interface IProducePlanService {
     ProducePlanStateSummaryVo GetStateSummary();
 
     List<ProducePlanPickingTicketVo> GetProcessingPlanAndPickingTicketInfo();
+
+    ProducePlanInfoVo FindPlanInfo(Integer planId);
 }

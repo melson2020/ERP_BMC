@@ -43,6 +43,7 @@
       :visible.sync="tableShow"
       direction="rtl"
       :with-header="false"
+      class="order-form-detail-drawer"
       size="800px"
     >
       <div class="order-decide-detail-div" v-show="tableShow">
@@ -54,6 +55,7 @@
           >
           <span>合同号：{{ selectedOrderForm.contractNo }}</span>
         </div>
+
         <div
           class="order-detail-component"
           v-for="product in orderFormDetaiList"
@@ -98,6 +100,7 @@
               <el-select
                 class="ml40"
                 size="mini"
+                clearable
                 placeholder="选择BOM"
                 v-model="product.bomNo"
                 @change="productBomChanged(product)"
@@ -154,6 +157,7 @@
             >
           </div>
         </div>
+
         <el-button
           class="order-confirm-button"
           type="primary"
@@ -230,7 +234,7 @@ export default {
             type: "warning",
           })
           .then(() => {
-            console.log(this.orderFormDetaiList)
+            console.log(this.orderFormDetaiList);
             this.OrderFormConfirm({
               orderForm: this.selectedOrderForm,
               orderFormDetails: this.orderFormDetaiList,
@@ -320,9 +324,13 @@ export default {
       console.log(this.orderFormDetaiList);
     },
     addBomNo(product, bomNo) {
-      var detail=this.orderFormDetaiList.find(item=>{return item.id==product.id})
+       console.log('进入函数')
+      var detail = this.orderFormDetaiList.find((item) => {
+        return item.id == product.id;
+      });
+      console.log(detail)
       if (detail.bomNos.indexOf(bomNo) == -1) {
-        console.log('addBomNo')
+        console.log("addBomNo");
         detail.bomNos.push(bomNo);
       }
       console.log(this.orderFormDetaiList);
@@ -380,7 +388,7 @@ export default {
   },
 };
 </script>
-<style>
+<style lang="less">
 .margin-left-20 {
   margin-left: 30px;
 }
@@ -463,5 +471,9 @@ export default {
 }
 .fzb {
   font-weight: bold;
+}
+.el-drawer__body {
+  overflow: auto;
+  overflow-x: hidden;
 }
 </style>
