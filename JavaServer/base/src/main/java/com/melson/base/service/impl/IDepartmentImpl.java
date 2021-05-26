@@ -3,7 +3,9 @@ package com.melson.base.service.impl;
 import com.melson.base.AbstractService;
 import com.melson.base.Result;
 import com.melson.base.dao.IDepartmentDao;
+import com.melson.base.dao.IRoleDao;
 import com.melson.base.entity.Department;
+import com.melson.base.entity.Role;
 import com.melson.base.service.IDepartment;
 import com.melson.base.service.ISysSequence;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,10 +21,12 @@ import java.util.List;
 public class IDepartmentImpl extends AbstractService<Department> implements IDepartment {
     private final IDepartmentDao departmentDao;
     private final ISysSequence sysSequenceService;
+    private final IRoleDao roleDao;
 
-    public IDepartmentImpl(IDepartmentDao departmentDao, ISysSequence sysSequenceService) {
+    public IDepartmentImpl(IDepartmentDao departmentDao, ISysSequence sysSequenceService, IRoleDao roleDao) {
         this.departmentDao = departmentDao;
         this.sysSequenceService = sysSequenceService;
+        this.roleDao = roleDao;
     }
 
     @Override
@@ -52,7 +56,7 @@ public class IDepartmentImpl extends AbstractService<Department> implements IDep
             else
             {
                 result.setResultStatus(-1);
-                result.setMessage("已经存在此类别名称或联系管理员！");
+                result.setMessage("已经存在此名称或联系管理员！");
             }
         }
         else
@@ -82,4 +86,5 @@ public class IDepartmentImpl extends AbstractService<Department> implements IDep
         Integer count = departmentDao.updateDepartmentStatus(department.getStatus(),department.getId());
         return count;
     }
+
 }

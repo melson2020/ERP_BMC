@@ -735,7 +735,6 @@ export default {
     },
     newCellClick(row) {
        row.seen=true;
-
     },
     editCellClick(row){
       if(!row.seen)

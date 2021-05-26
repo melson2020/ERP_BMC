@@ -54,7 +54,53 @@ const actions = {
           let al = error.message ? error.message : error
           Message.error(al)
         })
-      },
+    },
+
+
+    GetemployeeList({ commit }, params) {
+      request.ReqEmployeeList(params).then(res => {
+          if (res.resultStatus == 1) {
+              commit("SetEmployeeList", res.data)
+          } else {
+              Message.warning(res.message)
+          }
+      }).catch(err => {
+          Message.error(err.message)
+      })
+    },
+    Saveemployee({ },newEmployee){
+    return request.ReqSaveEmployee(newEmployee);
+    },
+    QueryemployeeObj({},Employee){
+      return request.ReqQueryEmployeeObj(Employee);
+    },
+    PushemployeeList({commit}, Employee){
+      commit("PushEmployeeList",Employee);
+    },
+    UpdateemployeeStatus({commit }, Employee) {
+      request.ReqUpdateEmployeeStatus(Employee).then(res => {
+        if (res.resultStatus == 1) {
+          commit("DisableEmployee", Employee)
+          Message.info("操作成功")
+        } else {
+          Message.warning("操作失败:" + res.message)
+        }
+      }).catch(error => {
+        let al = error.message ? error.message : error
+        Message.error(al)
+      })
+    },
+    GetRoleList({ commit }) {
+      request.ReqRoleList().then(res => {
+          if (res.resultStatus == 1) {
+              commit("SetRoleList", res.data)
+          } else {
+              Message.warning(res.message)
+          }
+      }).catch(err => {
+          Message.error(err.message)
+      })
+  },
 
 };
 
@@ -72,9 +118,18 @@ const mutations = {
     PushDepartmentList(state,data){
         state.departmentList.push(data);
     },
-    // DisableCustomer(state, data) {
-    //     state.customerList.splice(data.index, 1)
-    // },
+    SetEmployeeList(state, data) {
+      state.employeeList=data;
+    },
+    PushEmployeeList(state,data){
+      state.employeeList.push(data);
+    },
+    DisableEmployee(state, data) {
+      state.employeeList.splice(data.index, 1)
+    },
+    SetRoleList(state, data) {
+      state.roleList=data;
+    },
 };
 
 export default {

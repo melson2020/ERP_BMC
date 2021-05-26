@@ -1405,7 +1405,7 @@ export default {
         // row.chBomNo=event.bomNo;
         // row.chBomGenericId=event.bomGenericId;
       },
-        addCheckRepeated(event){
+      addCheckRepeated(event){
         var list= this.newProductBom.materialVos.filter((item)=>{return item.productNo==event.productNo
         })
         if(list.length>0){

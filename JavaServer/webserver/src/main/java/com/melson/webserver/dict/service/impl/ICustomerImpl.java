@@ -146,6 +146,7 @@ public class ICustomerImpl extends AbstractService<Customer> implements ICustome
         String sql = "SELECT id,customerNo,contactName,deliverAddress,phone,tags,description from customer_contact";
         StringBuffer buffer = new StringBuffer(sql);
         buffer.append(" where customerNo='" + customerNo + "'");
+        buffer.append(" and `status`='Y'");
         String excuteSql = buffer.toString();
         List<Object[]> list = entityManagerUtil.ExcuteSql(excuteSql);
         List<DeliverAddress> deliverAddresses = EntityUtils.castEntity(list, DeliverAddress.class, new DeliverAddress());

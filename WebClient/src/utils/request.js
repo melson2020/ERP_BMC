@@ -224,6 +224,22 @@ export default {
     return service.post("/employee/updateDepartmentStatus", params);
   },
 
+  ReqEmployeeList(params){
+    return service.get('/employee/employeeList',params)    //  //
+  },
+  ReqSaveEmployee(param){
+    return service.post("/employee/employeeSave",param)
+  },
+  ReqQueryEmployeeObj(params){
+    return service.post("/employee/queryEmployee",params);
+  },
+  ReqUpdateEmployeeStatus(params) {
+    return service.post("/employee/updateEmployeeStatus", params);
+  },
+  ReqRoleList(params){
+    return service.get('/employee/roleList',params)
+  },
+
 
 
   //订单相关

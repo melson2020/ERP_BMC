@@ -17,16 +17,23 @@ public class User {
     private Integer id;
     private String userId;
     private String userName;
-    private String department;
-    private String userType;
+    private Integer departmentId;
+    private String userType;        // Admin: 最高管理员，系统生成  ； Normal:正常建立的用户
     private Date createDate;
     private String subscriptionId;
     private String companyCode;
     private String loginName;
     private String password;
+    private String description;
+    private String status;
+    private String createBy;
 
     @Transient
     private List<Menu> menuList;
+    @Transient
+    private String department;
+    @Transient
+    private List<UserRole> userRoleList;
 
     public Integer getId() {
         return id;
@@ -114,5 +121,45 @@ public class User {
 
     public void setMenuList(List<Menu> menuList) {
         this.menuList = menuList;
+    }
+
+    public Integer getDepartmentId() {
+        return departmentId;
+    }
+
+    public void setDepartmentId(Integer departmentId) {
+        this.departmentId = departmentId;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getCreateBy() {
+        return createBy;
+    }
+
+    public void setCreateBy(String createBy) {
+        this.createBy = createBy;
+    }
+
+    public List<UserRole> getUserRoleList() {
+        return userRoleList;
+    }
+
+    public void setUserRoleList(List<UserRole> userRoleList) {
+        this.userRoleList = userRoleList;
     }
 }
