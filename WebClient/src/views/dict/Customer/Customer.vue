@@ -445,7 +445,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["customerList"]),
+    ...mapGetters(["customerList","userInfo"]),
     customerListPageShow(){
       return this.customerList.filter((item)=>{
         let key=
@@ -491,7 +491,7 @@ export default {
             customer.customerNo="cu" + new Date().valueOf();
             customer.createDate=new Date();
             customer.status="Y";
-            customer.createBy="";     //TODO： 待添加创建人
+            customer.createBy=this.userInfo.loginName;     //TODO： 待添加创建人
             // customer.contactList=this.contactList;
 
             this.SaveCustomer(customer)

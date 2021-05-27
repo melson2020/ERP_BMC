@@ -542,7 +542,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["productBomList","productList","produceProcessList"]),
+    ...mapGetters(["productBomList","productList","produceProcessList","userInfo"]),
     productBomListPageShow(){
       return this.productBomList.filter((item)=>{
         let key=
@@ -883,7 +883,7 @@ export default {
                   this.editProductBom.costPrice=price;
                   this.editProductBom.status="Y";
                   this.editProductBom.createDate=new Date();
-                  this.editProductBom.createBy="";
+                  this.editProductBom.createBy=this.userInfo.loginName;
                   this.editProductBom.bomGenericId=new Date().valueOf();
 
 

@@ -134,7 +134,7 @@ export default {
 
     },
     computed: {
-      ...mapGetters(["categoryList"]),
+      ...mapGetters(["categoryList","userInfo"]),
       categoryListPageShow(){
         return this.categoryList.filter((item)=>{
           let key=
@@ -162,7 +162,7 @@ export default {
             category.categoryId="cat" + new Date().valueOf();
             category.createDate=new Date();
             category.status="Y";
-            category.createBy=""; 
+            category.createBy=this.userInfo.loginName;
             this.SaveCategory(category)
               .then(res => {
                 if (res.resultStatus == 1) {

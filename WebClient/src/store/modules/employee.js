@@ -80,7 +80,10 @@ const actions = {
     UpdateemployeeStatus({commit }, Employee) {
       request.ReqUpdateEmployeeStatus(Employee).then(res => {
         if (res.resultStatus == 1) {
-          commit("DisableEmployee", Employee)
+          if(Employee.permission.toUpperCase()=="NORMAL")
+          {
+            commit("DisableEmployee", Employee)
+          }
           Message.info("操作成功")
         } else {
           Message.warning("操作失败:" + res.message)

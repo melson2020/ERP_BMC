@@ -13,7 +13,7 @@
         <template v-for="menu in userInfo.menuList">
           <!--第一层菜单，如果有子菜单则使用submenu 没有则使用menu-item-->
           <el-submenu
-            v-if="menu.subMenuList.length > 0"
+            v-if="menu.subMenuList!=null && menu.subMenuList.length > 0"
             :key="menu.id"
             :index="menu.url"
           >
@@ -24,7 +24,7 @@
             <!--第二层菜单，如果有子菜单则使用submenu 没有则使用menu-item-->
             <template v-for="subMenu in menu.subMenuList">
               <el-submenu
-                v-if="subMenu.subMenuList.length > 0"
+                v-if="subMenu.subMenuList!=null && subMenu.subMenuList.length > 0"
                 class="el-submenu-item"
                 :index="subMenu.url"
                 :key="subMenu.id"

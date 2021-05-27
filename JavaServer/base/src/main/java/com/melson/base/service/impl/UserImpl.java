@@ -185,6 +185,7 @@ public class UserImpl extends AbstractService<User> implements IUser {
     }
 
     @Override
+    @Transactional
     public Integer UpdateUserStatus(User user) {
         Integer count = userDao.UpdateUserStatus(user.getStatus(),user.getId());
         return count;
@@ -281,9 +282,10 @@ public class UserImpl extends AbstractService<User> implements IUser {
                 reList.add(menu);
             }
         }
-        if (reList.size() <= 0) return null;
-        for (Menu menu : childList) {
-            menu.setSubMenuList(GetChildList(menu.getMenuId(), reList));
+        if (reList.size()>0){
+            for (Menu menu : childList) {
+                menu.setSubMenuList(GetChildList(menu.getMenuId(), reList));
+            }
         }
         return childList;
     }

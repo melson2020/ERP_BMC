@@ -188,7 +188,7 @@ export default {
 
     },
     computed: {
-      ...mapGetters(["supplyList"]),
+      ...mapGetters(["supplyList","userInfo"]),
       supplyListPageShow(){
         return this.supplyList.filter((item)=>{
           let key=
@@ -218,7 +218,7 @@ export default {
             supply.supplyId="cat" + new Date().valueOf();
             supply.createDate=new Date();
             supply.status="Y";
-            supply.createBy=""; 
+            supply.createBy=this.userInfo.loginName;
             this.SaveSupply(supply)
               .then(res => {
                 if (res.resultStatus == 1) {

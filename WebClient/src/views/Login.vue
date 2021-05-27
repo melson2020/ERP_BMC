@@ -75,10 +75,11 @@ export default {
         .then((res) => {
           if (res.resultStatus == 1) {
             var initState = JSON.parse(localStorage.getItem("initState"));
-            console.log('存入缓存',res.data)
+// console.log('存入缓存',res.data)
             localStorage.setItem("userInfo", JSON.stringify(res.data));
             this.ReSetAllStates(initState);
             this.SetLoginUserInfo(res.data);
+// console.log(this.userInfo)
             this.addRoutes(res.data.menuList);
           } else {
             this.$message.error(res.message);
@@ -109,16 +110,17 @@ export default {
           },
           componentPath: firstItem.viewPath
         };
-        if (firstItem.subMenuList.length > 0) {
+        if (firstItem.subMenuList!=null && firstItem.subMenuList.length > 0) {
           route.children = this.getChildren(firstItem);
         }
         mainRoute.children.push(route);
       });
+debugger
       userRoutes.push(mainRoute);
+console.log(userRoutes);
       this.$store.commit("SET_ROUTES", userRoutes);
       this.$router.push({ path: "/main" });
     },
-
     getChildren(menu) {
       var children = [];
       menu.subMenuList.map((subMenu) => {
@@ -131,7 +133,7 @@ export default {
           componentPath:subMenu.viewPath,
         };
         children.push(subRoute);
-        if (subMenu.subMenuList.length > 0) {
+        if (subMenu.subMenuList!=null && subMenu.subMenuList.length > 0) {
           subRoute.children = this.getChildren(subMenu);
         }
       });
@@ -142,7 +144,7 @@ export default {
     ...mapGetters(["userInfo"]),
   },
   created(){
-    console.log('登录页面')
+    // console.log('登录页面')
   }
 };
 </script>

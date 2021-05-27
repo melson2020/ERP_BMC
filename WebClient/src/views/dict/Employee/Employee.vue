@@ -32,9 +32,14 @@
             <el-tooltip effect="light" content="修改" placement="top">
               <el-button size="mini" @click="handleEdit(scope.$index,scope.row)" plain circle type="primary" icon="el-icon-edit"/>
             </el-tooltip>
-            <el-tooltip effect="light" content="删除" placement="top">
-              <el-button size="mini" @click="handleDelete(scope.$index, scope.row)" plain circle type="danger" icon="el-icon-delete"/>
+            <el-tooltip effect="light" v-if="scope.row.status=='Y'" content="停用" placement="top">
+              <el-button size="mini" @click="handleDisable(scope.$index, scope.row,true)" plain circle type="danger" icon="el-icon-delete"/>
             </el-tooltip>
+
+            <el-tooltip effect="light" v-else content="启用" placement="top">
+              <el-button size="mini" @click.prevent.stop="handleDisable(scope.$index, scope.row,false)" plain circle type="primary" icon="el-icon-check"/>
+            </el-tooltip>
+
 
           </template>
         </el-table-column>
@@ -371,6 +376,19 @@ export default {
       GetRoleList:"GetRoleList",
       GetDepartmentList: "GetDepartmentList",
     }),
+    handleDisable(index, row,disable) {
+      this.$messageBox.confirm('确认要操作？',"提示",{
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          row.status=disable?"N":"Y"
+          let Emp={id:row.id,index:index,status:row.status,permission:this.userInfo.userType}
+          this.UpdateemployeeStatus(Emp)
+        })
+        .catch(e=>e);
+    },
     newSaveRole(index,row){
       if(row.roleId===""|| row.roleName===""||row.description==="")
       {
