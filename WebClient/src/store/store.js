@@ -14,6 +14,7 @@ import supply from './modules/supply'
 import producePlan from './modules/producePlan'
 import produceMonitor from './modules/produceMonitor'
 import employee from './modules/employee'
+import delegate from './modules/delegate'
 import {setAsyncRoutes} from "../router/async"
 Vue.use(Vuex);
 
@@ -48,7 +49,7 @@ export default new Vuex.Store({
     supply,
     producePlan,
     produceMonitor,
-    employee
-
+    employee,
+    delegate
   }
 });

@@ -152,6 +152,7 @@ public class OrderFormServiceImpl implements IOrderFormService {
         orderForm.setType(OrderForm.TYPE_SELF);
         orderForm.setState(OrderForm.STATE_CREATE);
         orderForm.setContractNo(contract.getContractNo());
+        orderForm.setCustomerNo(vendeeInfo.getCustomerNo());
         orderForm.setCustomerName(vendeeInfo.getName());
         orderForm.setCreateDate(contract.getCreateDate());
         orderForm.setCreateUser(contract.getCreateUser());

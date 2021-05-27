@@ -6,7 +6,7 @@
         label-position="left"
         label-width="80px"
       >
-        <el-row gutter="10">
+        <el-row :gutter="10">
           <el-col :span="6">
             <el-form-item label="客户名称">
               <el-input
@@ -32,7 +32,7 @@
               ></el-input> </el-form-item
           ></el-col>
         </el-row>
-        <el-row gutter="10">
+        <el-row :gutter="10">
           <el-col :span="6">
             <el-form-item label="订单编号">
               <el-input
@@ -70,7 +70,59 @@
         stripe
         size="mini"
         class="mt20 plan-detail-table"
+        @expand-change="expandChanged"
       >
+        <el-table-column type="expand" width="50px">
+          <template slot-scope="props">
+            <el-table
+              :data="props.row.processList"
+              border
+              :show-header="false"
+              size="mini"
+              style="width: 100%"
+              class="fz8"
+              stripe
+            >
+              <el-table-column label="名称" prop="processName" width="200px">
+                <template slot-scope="scope">
+                  <span>{{ scope.row.processName }}</span>
+                  <el-tag
+                    v-if="scope.row.delegateFlag == 'Y'"
+                    type="danger"
+                    size="mini"
+                    class="ml10"
+                    >委外</el-tag
+                  >
+                </template>
+              </el-table-column>
+              <el-table-column label="料号">
+                <template slot-scope="scope">
+                  <el-tag
+                    class="ml10"
+                    type="warning"
+                    effect="plain"
+                    v-for="item in scope.row.materialVos"
+                    :key="item.materialNo"
+                    >{{ item.materialName }}X{{ item.count }}</el-tag
+                  >
+                </template>
+              </el-table-column>
+              <el-table-column>
+                <template slot-scope="scope">
+                  <el-tag
+                    class="ml10"
+                    effect="plain"
+                    v-for="item in scope.row.workStationList"
+                    :key="item.workStationId"
+                    >{{ item.produceLineName }}|{{ item.workStationName }}|{{
+                      item.employeeGroupName
+                    }}</el-tag
+                  >
+                </template>
+              </el-table-column>
+            </el-table>
+          </template>
+        </el-table-column>
         <el-table-column label="名称" prop="productName"> </el-table-column>
         <el-table-column label="规格" prop="specification"> </el-table-column>
         <el-table-column label="数量" prop="count">
@@ -85,10 +137,16 @@
       </el-table>
     </div>
 
-    <div v-if="planInfo.pickingTicketDetails.length > 0" class="mt20">
+    <div
+      v-if="
+        planInfo.pickingTicketDetails != null &&
+        planInfo.pickingTicketDetails.length > 0
+      "
+      class="mt20"
+    >
       <div class="plan-info-delegate-title-div">
         <span class="colorblue">领料详细</span>
-        <span class="fz9">( {{planInfo.pickingTicket.ticketNo}} )</span>
+        <span class="fz9">( {{ planInfo.pickingTicket.ticketNo }} )</span>
       </div>
       <el-table
         :data="planInfo.pickingTicketDetails"
@@ -109,8 +167,42 @@
           >
         </el-table-column>
         <el-table-column label="备注" prop="remark"> </el-table-column>
+        <el-table-column label="类型" prop="type"> </el-table-column>
         <el-table-column label="是否委外" prop="delegateFlag">
         </el-table-column>
+      </el-table>
+    </div>
+
+    <div
+      v-if="
+        planInfo.delegateDetailList != null &&
+        planInfo.delegateDetailList.length > 0
+      "
+      class="mt20"
+    >
+      <div class="plan-info-delegate-title-div">
+        <span class="colorblue">委外明细</span>
+        <span class="fz9">( {{ planInfo.delegateTicket.ticketNo }} )</span>
+      </div>
+      <el-table
+        :data="planInfo.delegateDetailList"
+        border
+        style="width: 100%"
+        stripe
+        size="mini"
+        class="mt20 plan-detail-table"
+      >
+        <el-table-column label="编号" prop="objectNo"> </el-table-column>
+        <el-table-column label="名称" prop="objectName"> </el-table-column>
+        <el-table-column label="规格" prop="specification"> </el-table-column>
+        <el-table-column label="数量" prop="count">
+          <template slot-scope="scope"
+            ><span
+              >{{ scope.row.count }}{{ scope.row.countUnit }}</span
+            ></template
+          >
+        </el-table-column>
+        <el-table-column label="备注" prop="remark"> </el-table-column>
       </el-table>
     </div>
   </div>
@@ -125,6 +217,7 @@ export default {
         producePlan: {},
         planDetails: [],
         delegateTicket: {},
+        delegateDetailList: [],
         pickingTicket: {},
         pickingTicketDetails: [],
       },
@@ -133,12 +226,16 @@ export default {
   methods: {
     ...mapActions({
       LoadPlanInfo: "LoadPlanInfo",
+      FindPlanDetailProcessList: "FindPlanDetailProcessList",
     }),
     loadPlanInfo(planId) {
       this.loading = true;
       this.LoadPlanInfo({ planId: planId })
         .then((res) => {
           if (res.resultStatus == 1) {
+            res.data.planDetails.map((item) => {
+              item.processList = [];
+            });
             this.planInfo = res.data;
             this.loading = false;
           } else {
@@ -151,13 +248,44 @@ export default {
           this.loading = false;
         });
     },
+    expandChanged(row, sec) {
+      let index = sec.indexOf(row);
+      var expanded = index != -1; //获取是否展开 row为当前行
+      if (expanded) {
+        this.loading = true;
+        console.log(row.producePlanId, row.id);
+        this.FindPlanDetailProcessList({
+          planId: row.producePlanId,
+          planDetailId: row.id,
+        })
+          .then((res) => {
+            if (res.resultStatus == 1) {
+              this.loading = false;
+              row.processList = res.data;
+              console.log(row);
+            } else {
+              this.loading = false;
+              this.$message.warning(res.message);
+            }
+          })
+          .catch((err) => {
+            this.loading = false;
+            this.$message.error(err.message);
+          });
+      }
+    },
   },
 };
 </script>
 <style>
-.plan-info-delegate-title-div{
-    display: flex;
-    align-items: center;
-    margin-top: 10px;
+.plan-info-delegate-title-div {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+.el-table__expanded-cell {
+  padding-top: 0px !important;
+  padding-right: 0px !important;
+  padding-bottom: 0px !important;
 }
 </style>

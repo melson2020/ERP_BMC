@@ -4,6 +4,8 @@ import com.melson.webserver.order.entity.DelegateDetail;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * @Author Nelson
  * @Description
@@ -11,4 +13,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface IDelegateDetailRepository  extends JpaRepository<DelegateDetail, Integer> {
+    List<DelegateDetail> findByDelegateTicketId(Integer ticketId);
 }

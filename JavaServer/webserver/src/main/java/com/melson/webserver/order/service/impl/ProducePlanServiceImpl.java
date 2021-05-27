@@ -1,7 +1,9 @@
 package com.melson.webserver.order.service.impl;
 
+import com.melson.base.utils.DateUtil;
 import com.melson.base.utils.EntityUtils;
 import com.melson.webserver.dict.service.IBoms;
+import com.melson.webserver.order.dao.IDelegateDetailRepository;
 import com.melson.webserver.order.dao.IPickingTicketDetailRepository;
 import com.melson.webserver.order.dao.IProducePlanDetailRepository;
 import com.melson.webserver.order.dao.IProducePlanRepository;
@@ -17,11 +19,19 @@ import com.melson.webserver.produce.vo.ProducePlanStateSummaryVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -41,6 +51,8 @@ public class ProducePlanServiceImpl implements IProducePlanService {
     private IProducePlanProcessService producePlanProcessService;
     @Autowired
     private IDelegateTicketService delegateTicketService;
+    @Autowired
+    private IDelegateDetailRepository delegateDetailRepository;
     @Autowired
     private IPickingTicketService pickingTicketService;
     @Autowired
@@ -146,14 +158,51 @@ public class ProducePlanServiceImpl implements IProducePlanService {
         List<ProducePlanDetail> details = producePlanDetailRepository.findByProducePlanId(planId);
         infoVo.setPlanDetails(details);
         DelegateTicket delegateTicket = delegateTicketService.FindByPlanId(planId);
+        if (delegateTicket != null) {
+            List<DelegateDetail> delegateDetails = delegateDetailRepository.findByDelegateTicketId(delegateTicket.getId());
+            infoVo.setDelegateDetailList(delegateDetails);
+        }
         infoVo.setDelegateTicket(delegateTicket);
         PickingTicket pickingTicket = pickingTicketService.FindByPlanId(planId);
         if (pickingTicket != null) {
             infoVo.setPickingTicket(pickingTicket);
-            List<PickingTicketDetail> pickingTicketDetailList=pickingTicketDetailRepository.findByTicketId(pickingTicket.getId());
+            List<PickingTicketDetail> pickingTicketDetailList = pickingTicketDetailRepository.findByTicketId(pickingTicket.getId());
             infoVo.setPickingTicketDetails(pickingTicketDetailList);
         }
         return infoVo;
+    }
+
+    @Override
+    public List<ProducePlan> FindProducePlanRecord(Map<String, String[]> kvMap) {
+
+        List<ProducePlan> recordList = producePlanRepository.findAll(new Specification<ProducePlan>() {
+            @Nullable
+            @Override
+            public Predicate toPredicate(Root<ProducePlan> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                Predicate predicate = criteriaBuilder.conjunction();
+                predicate.getExpressions().add(criteriaBuilder.notEqual(root.get("state"), "1"));
+                for (String key : kvMap.keySet()) {
+                    if (StringUtils.isEmpty(kvMap.get(key)[0])) continue;
+                    if (key.contains("createDate")) {
+                        try {
+                            Date createDate = new SimpleDateFormat("yyyy-MM-dd").parse(kvMap.get(key)[0]);
+                            predicate.getExpressions().add(criteriaBuilder.greaterThanOrEqualTo(root.get(key), createDate));
+                            Calendar calendar = Calendar.getInstance();
+                            calendar.setTime(createDate);
+                            calendar.add(Calendar.DAY_OF_MONTH, 1);
+                            Date newDate = calendar.getTime();
+                            predicate.getExpressions().add(criteriaBuilder.lessThan(root.get(key), newDate));
+                        } catch (ParseException e) {
+                            continue;
+                        }
+                    } else {
+                        predicate.getExpressions().add(criteriaBuilder.equal(root.get(key), kvMap.get(key)[0]));
+                    }
+                }
+                return predicate;
+            }
+        });
+        return recordList;
     }
 
     private ProducePlanDetail CreateProducePlanDetail(OrderFormDetail detail) {

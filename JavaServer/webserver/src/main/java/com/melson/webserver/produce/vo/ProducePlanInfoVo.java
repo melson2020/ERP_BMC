@@ -13,6 +13,7 @@ public class ProducePlanInfoVo {
     private ProducePlan producePlan;
     private List<ProducePlanDetail> planDetails;
     private DelegateTicket delegateTicket;
+    private List<DelegateDetail> delegateDetailList;
     private PickingTicket pickingTicket;
     private List<PickingTicketDetail> pickingTicketDetails;
 
@@ -54,5 +55,13 @@ public class ProducePlanInfoVo {
 
     public void setDelegateTicket(DelegateTicket delegateTicket) {
         this.delegateTicket = delegateTicket;
+    }
+
+    public List<DelegateDetail> getDelegateDetailList() {
+        return delegateDetailList;
+    }
+
+    public void setDelegateDetailList(List<DelegateDetail> delegateDetailList) {
+        this.delegateDetailList = delegateDetailList;
     }
 }

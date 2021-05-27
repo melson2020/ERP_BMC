@@ -192,15 +192,6 @@ public class ContractServiceImpl implements IContractService {
             logger.error("合同id[{}]已经是正式合同", id);
             return null;
         }
-//        Date date = new Date();
-//        Contract formalContract = new Contract();
-//        BeanUtils.copyProperties(contract, formalContract);
-//        formalContract.setId(null);
-//        formalContract.setContractNo(DateUtil.timeFormat(date));
-//        formalContract.setType(Contract.TYPE_FORMAL);
-//        formalContract.setCreateDate(date);
-//        formalContract.setCreateUser(userId);
-//        formalContract.setSourceId(contract.getId());
         contract.setFormalDate(new Date());
         contract.setType(Contract.TYPE_FORMAL);
         contract.setState(Contract.STATE_PROCESSING);

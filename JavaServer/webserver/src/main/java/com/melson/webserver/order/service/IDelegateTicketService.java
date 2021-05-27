@@ -28,4 +28,6 @@ public interface IDelegateTicketService {
     DelegateTicket FindByOrderFormId(Integer orderFormId);
 
     DelegateTicket FindByPlanId(Integer planId);
+
+    List<DelegateTicket> FindReleaseList();
 }
