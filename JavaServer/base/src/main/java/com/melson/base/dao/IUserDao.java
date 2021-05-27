@@ -45,4 +45,6 @@ public interface IUserDao extends JpaRepository<User, String> {
     @Modifying
     @Query(value = "update `user` set `status`=?1 where id=?2",nativeQuery = true)
     Integer UpdateUserStatus(String status, Integer id);
+
+    List<User> findByDepartmentId(Integer id);
 }

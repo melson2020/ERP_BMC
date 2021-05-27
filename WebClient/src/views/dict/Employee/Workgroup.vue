@@ -4,13 +4,12 @@
       <el-input
         class="department-fliter-input"
         size="small"
-        placeholder="搜索部门"
+        placeholder="搜索组别"
         v-model="searchContent"
         suffix-icon="el-icon-search"
       ></el-input>
-      <el-button type="primary" size="small" @click="resetForm('departmentAddForm')">新建部门</el-button>
+      <el-button type="primary" size="small" @click="resetForm('departmentAddForm')">新建组别</el-button>
     </div>
-
 
     <div class="department-content">
       <el-table :data="departmentListPageShow" 
@@ -91,26 +90,6 @@
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="成员列表">
-            <el-table
-              :data="editDepartment.userList"
-              size="mini"
-              border="" stripe           
-              :header-row-style="{height:'40px' ,'align':'center'}"
-              :row-style="{height:'40px'}"
-              style="width: 100%">
-              <el-table-column prop="userName" label="用户名称" width="200px"></el-table-column>
-              <el-table-column prop="loginName" label="登录名" width="180px"></el-table-column>
-              <el-table-column prop="createDate" label="创建日期" width="140px"> 
-                <template slot-scope="scope">
-                  <span>{{getFullTime(scope.row.createDate) }}</span>
-                </template>
-              </el-table-column>
-              <el-table-column prop="description" label="描述"></el-table-column>
-            </el-table>
-          </el-form-item>
-        </el-row>
-        <el-row>
           <el-form-item>
             <el-button type="primary" @click="onEditDepartment('departmentEditForm')" :loading="loading">保存</el-button>
             <el-button @click="departmentEditDialog = false" v-if="!loading">取 消</el-button>
@@ -151,8 +130,7 @@ export default {
           departmentName: '',
           description: '',
           createDate:'',
-          createBy: '',          
-          userList:[],
+          createBy: '',
       },
       rules: {
         departmentName: [
@@ -175,9 +153,6 @@ export default {
         this.$refs[formName].resetFields();
       }
       this.departmentAddDialog = true;
-    },
-    getFullTime(time) {
-    return new Date(time).format("yyyy-MM-dd");
     },
     onAddDepartment(formName){
       this.$refs[formName].validate(valid => {
