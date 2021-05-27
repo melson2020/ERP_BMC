@@ -115,9 +115,7 @@ export default {
         }
         mainRoute.children.push(route);
       });
-debugger
       userRoutes.push(mainRoute);
-console.log(userRoutes);
       this.$store.commit("SET_ROUTES", userRoutes);
       this.$router.push({ path: "/main" });
     },

@@ -39,6 +39,10 @@ export default {
   SystemLogout(){
     return service.post('/login/logout')
   },
+  //修改密码
+  ResetPassword(params){
+    return service.post("/login/restPassword",params)
+  },
 
   //合同相关
   GetContractTemplate(){
