@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * @Author Nelson
  * @Description
@@ -34,4 +36,13 @@ public interface IUserDao extends JpaRepository<User, String> {
     @Modifying
     @Query(nativeQuery = true, value = "update user set password = :pwd where id = :id")
     void updatePwd(@Param("id") Integer id, @Param("pwd") String pwd);
+
+    @Query(value = "SELECT * FROM `user` where `status`='Y'",nativeQuery = true)
+    List<User> findByStatus();
+
+    User findByUserNameAndLoginName(String userName, String loginName);
+
+    @Modifying
+    @Query(value = "update `user` set `status`=?1 where id=?2",nativeQuery = true)
+    Integer UpdateUserStatus(String status, Integer id);
 }

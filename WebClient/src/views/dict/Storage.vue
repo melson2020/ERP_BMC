@@ -147,7 +147,7 @@ export default {
 
     },
     computed: {
-      ...mapGetters(["storageList"]),
+      ...mapGetters(["storageList","userInfo"]),
       StorageListPageShow(){
         return this.storageList.filter((item)=>{
           let key=
@@ -174,7 +174,7 @@ export default {
             let Storage=this.newStorage;
             Storage.storageCode="sc" + new Date().valueOf();
             Storage.createDate=new Date();
-            Storage.createBy=""; 
+            Storage.createBy=this.userInfo.loginName;
             this.SaveStorage(Storage)
               .then(res => {
                 if (res.resultStatus == 1) {

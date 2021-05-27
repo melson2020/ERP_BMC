@@ -17,6 +17,7 @@ public class Role {
     private String roleName;
     private String companyId;
     private String departmentCode;
+    private String description;
 
     public Integer getId() {
         return id;
@@ -56,5 +57,13 @@ public class Role {
 
     public void setDepartmentCode(String departmentCode) {
         this.departmentCode = departmentCode;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

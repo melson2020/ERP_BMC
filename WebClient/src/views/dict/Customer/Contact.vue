@@ -143,7 +143,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["contactList"]),
+    ...mapGetters(["contactList","userInfo"]),
     contactListPageShow(){
       return this.contactList.filter((item)=>{
         let key=
@@ -199,6 +199,7 @@ export default {
       onEditContact(formName){
          this.$refs[formName].validate(valid=>{
            if(valid){
+             this.editContact.createBy=this.userInfo.loginName;
               this.SaveContact(this.editContact)
               .then(res=>{
                   if(res.resultStatus==1){ 

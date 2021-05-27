@@ -955,7 +955,7 @@ export default {
 
     },
     computed: {
-      ...mapGetters(["productList","storageList","categoryList","productBomList","supplyList","produceProcessList","materialList"]),
+      ...mapGetters(["productList","storageList","categoryList","productBomList","supplyList","produceProcessList","materialList","userInfo"]),
       productListPageShow(){
         return this.productList.filter((item)=>{
           let key=
@@ -1019,7 +1019,7 @@ export default {
             let product=this.newProduct;
             product.productNo="p" + new Date().valueOf();
             product.createDate=new Date();
-            product.createBy=""; 
+            product.createBy=this.userInfo.loginName;
             product.status="Y";
             this.SaveProduct(product)
               .then(res => {
@@ -1222,7 +1222,7 @@ export default {
                     this.editProductBom.costPrice=price;
                     this.editProductBom.status="Y";
                     this.editProductBom.createDate=new Date();
-                    this.editProductBom.createBy="";
+                    this.editProductBom.createBy=this.userInfo.loginName;
                     this.editProductBom.bomGenericId=new Date().valueOf();
 
 
@@ -1298,7 +1298,7 @@ export default {
                     this.newProductBom.costPrice=price;
                     this.newProductBom.status="Y";
                     this.newProductBom.createDate=new Date();
-                    this.newProductBom.createBy="";
+                    this.newProductBom.createBy=this.userInfo.loginName;
                     this.newProductBom.bomGenericId=new Date().valueOf();
                       this.SaveProductBom(this.newProductBom)
                       .then(res=>{
@@ -1405,7 +1405,7 @@ export default {
         // row.chBomNo=event.bomNo;
         // row.chBomGenericId=event.bomGenericId;
       },
-        addCheckRepeated(event){
+      addCheckRepeated(event){
         var list= this.newProductBom.materialVos.filter((item)=>{return item.productNo==event.productNo
         })
         if(list.length>0){

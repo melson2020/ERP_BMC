@@ -15,6 +15,10 @@ public class UserRole {
     private Integer id;
     private String roleId;
     private String userId;
+    private String description;
+
+    @Transient
+    private String roleName;
 
     public Integer getId() {
         return id;
@@ -38,5 +42,21 @@ public class UserRole {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
     }
 }

@@ -1,8 +1,11 @@
 package com.melson.base.service;
 
 import com.melson.base.IService;
+import com.melson.base.Result;
 import com.melson.base.entity.Company;
 import com.melson.base.entity.User;
+
+import java.util.List;
 
 /**
  * @Author Nelson
@@ -31,4 +34,12 @@ public interface IUser extends IService<User> {
      * @param pwd md5加密后的新密码
      */
     void updatePwd(Integer id, String pwd);
+
+    List<User> GetEmployeeList(String userType);
+
+    Result SaveAndUpdate(User user);
+
+    User QueryEmployee(Integer id);
+
+    Integer UpdateUserStatus(User user);
 }

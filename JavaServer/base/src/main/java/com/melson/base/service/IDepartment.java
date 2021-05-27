@@ -3,6 +3,7 @@ package com.melson.base.service;
 import com.melson.base.IService;
 import com.melson.base.Result;
 import com.melson.base.entity.Department;
+import com.melson.base.entity.Role;
 
 import java.util.List;
 
@@ -17,4 +18,5 @@ public interface IDepartment extends IService<Department> {
     Department Query(Integer id);
 
     Integer UpdateDepartmentStatus(Department department);
+
 }

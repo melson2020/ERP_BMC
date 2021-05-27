@@ -161,7 +161,7 @@ export default {
         let department=this.newDepartment
         department.createDate=new Date();
         department.status="Y";
-        department.createBy="";     //TODO： 待添加创建人
+        department.createBy=this.userInfo.loginName;     //TODO： 待添加创建人
         this.SaveDepartment(department)
           .then(res => {
             if (res.resultStatus == 1) {
@@ -255,7 +255,7 @@ export default {
 
   },
   computed:{
-    ...mapGetters(["departmentList"]),
+    ...mapGetters(["departmentList","userInfo"]),
     departmentListPageShow(){
       return this.departmentList.filter((item)=>{
         let key=
