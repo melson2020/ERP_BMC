@@ -263,6 +263,9 @@ export default {
   FindProducePlanList(param){
     return service.get('/produce/producePlanList',param)
   },
+  FindProducePlanRecord(param){
+    return service.get('/produce/planRecord',param)
+  },
   FindProducePlanDetailList(param){
     return service.get('/produce/planDetailList',param)
   },
@@ -290,6 +293,11 @@ export default {
   },
   GetPlanInfo(param){
     return service.get('/produceMonitor/producePlanInfo',param)
+  },
+
+  //委外相关
+  GetDelegateReleaseList(param){
+    return service.get('/delegate/releaseList',param)
   }
 
 };

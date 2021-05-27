@@ -162,13 +162,14 @@ public class ProducePlanProcessServiceImpl implements IProducePlanProcessService
                 reList.add(vo);
             }
         }
-        if (reList.size() < 0) return null;
-        for (BomProcessVo vo : childList) {
-            List<BomProcessVo> childList2 = FindChildList(vo.getChPartNo(), remindList);
-            childList2.forEach(bomVo -> {
-                bomVo.setIndex(vo.getIndex() + "-" + bomVo.getIndex());
-            });
-            vo.setChildList(childList2);
+        if (reList.size() > 0) {
+            for (BomProcessVo vo : childList) {
+                List<BomProcessVo> childList2 = FindChildList(vo.getChPartNo(), remindList);
+                childList2.forEach(bomVo -> {
+                    bomVo.setIndex(vo.getIndex() + "-" + bomVo.getIndex());
+                });
+                vo.setChildList(childList2);
+            }
         }
         return childList;
     }

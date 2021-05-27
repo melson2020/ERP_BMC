@@ -2,6 +2,7 @@ package com.melson.webserver.order.dao;
 
 import com.melson.webserver.order.entity.ProducePlan;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +14,7 @@ import java.util.List;
  * @Date 2021/5/7
  */
 @Repository
-public interface IProducePlanRepository extends JpaRepository<ProducePlan,Integer> {
+public interface IProducePlanRepository extends JpaRepository<ProducePlan,Integer> , JpaSpecificationExecutor<ProducePlan> {
     List<ProducePlan> findByState(String state);
     ProducePlan findByOrderFormId(Integer orderFormId);
 

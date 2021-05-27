@@ -326,4 +326,9 @@ export default {
   align-items: center;
   flex-direction: row-reverse;
 }
+.el-table__expanded-cell {
+  padding-top: 0px !important;
+  padding-right: 0px !important;
+  padding-bottom: 0px !important;
+}
 </style>

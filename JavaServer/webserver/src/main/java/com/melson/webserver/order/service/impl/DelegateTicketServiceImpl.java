@@ -44,6 +44,7 @@ public class DelegateTicketServiceImpl implements IDelegateTicketService {
         ticket.setType(DelegateTicket.TYPE_ORDER);
         ticket.setTicketNo("W" + System.currentTimeMillis());
         ticket.setCreateDate(new Date());
+        ticket.setState(DelegateTicket.STATE_CREATE);
         delegateTicketRepository.saveAndFlush(ticket);
         List<DelegateDetail> delegateDetails = new ArrayList<>();
         for (OrderFormDetail detail : detailList) {
@@ -51,7 +52,7 @@ public class DelegateTicketServiceImpl implements IDelegateTicketService {
             delegateDetails.add(delegateDetail);
         }
         delegateDetailRepository.saveAll(delegateDetails);
-        pickingTicketService.GeneratePickTicketWithOrderFormDetail(form,detailList);
+        PickingTicket pickingTicket= pickingTicketService.GeneratePickTicketWithOrderFormDetail(form,detailList);
         return ticket;
     }
 
@@ -71,6 +72,7 @@ public class DelegateTicketServiceImpl implements IDelegateTicketService {
         ticket.setTicketNo("W" + System.currentTimeMillis());
         ticket.setCreateDate(new Date());
         ticket.setType(DelegateTicket.TYPE_PLAN);
+        ticket.setState(DelegateTicket.STATE_CREATE);
         delegateTicketRepository.saveAndFlush(ticket);
         List<DelegateDetail> delegateDetails = new ArrayList<>();
         for (ProducePlanProcess p : list) {
@@ -88,6 +90,11 @@ public class DelegateTicketServiceImpl implements IDelegateTicketService {
     @Override
     public DelegateTicket FindByPlanId(Integer planId) {
         return delegateTicketRepository.findBySourceIdAndType(planId,DelegateTicket.TYPE_PLAN);
+    }
+
+    @Override
+    public List<DelegateTicket> FindReleaseList() {
+        return delegateTicketRepository.findByState(DelegateTicket.STATE_CREATE);
     }
 
     private DelegateDetail CreateDelegateDetail(OrderFormDetail orderFormDetail, DelegateTicket ticket) {

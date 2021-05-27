@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author Nelson
@@ -51,6 +52,18 @@ public class ProduceResource extends BaseResource {
     @GetMapping(value = "/planDetailList")
     public Result FindProducePlanDetail(Integer planId){
         List<ProducePlanDetail> list=producePlanService.FindPlanDetailList(planId);
+        if(list!=null){
+            return success(list);
+        }else {
+            return failure(-1,"查询失败");
+
+        }
+    }
+
+    @GetMapping(value = "/planRecord")
+    public Result FindProducePlanRecord(HttpServletRequest request){
+        Map<String,String[]> kvMap=request.getParameterMap();
+        List<ProducePlan> list=producePlanService.FindProducePlanRecord(kvMap);
         if(list!=null){
             return success(list);
         }else {

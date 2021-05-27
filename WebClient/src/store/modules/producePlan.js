@@ -4,7 +4,8 @@ import { Message } from "element-ui";
 import * as types from '../type'
 
 const state = {
-    producePlanList: []
+    producePlanList: [],
+    producePlanRecordList:[]
 };
 
 const actions = {
@@ -12,6 +13,17 @@ const actions = {
         request.FindProducePlanList(param).then(res => {
             if (res.resultStatus == 1) {
                 commit(types.PRODUCE_PLAN_LIST, res.data)
+            } else {
+                Message.warning(res.message)
+            }
+        }).catch(err => {
+            Message.error(err.message)
+        })
+    },
+    FindProducePlanRecord({commit},param){
+        request.FindProducePlanRecord(param).then(res => {
+            if (res.resultStatus == 1) {
+                commit(types.PRODUCE_PLAN_RECORD_LIST, res.data)
             } else {
                 Message.warning(res.message)
             }
@@ -38,12 +50,16 @@ const actions = {
 };
 
 const getters = {
-    producePlanList: state => state.producePlanList
+    producePlanList: state => state.producePlanList,
+    producePlanRecordList:state=>state.producePlanRecordList
 };
 
 const mutations = {
     [types.PRODUCE_PLAN_LIST](state, data) {
         state.producePlanList = data
+    },
+    [types.PRODUCE_PLAN_RECORD_LIST](state, data) {
+        state.producePlanRecordList = data
     }
 };
 

@@ -13,6 +13,10 @@ import java.util.Date;
 public class DelegateTicket {
     public static  final  String TYPE_ORDER="ORDER";
     public static  final String TYPE_PLAN="PLAN";
+    public static  final String STATE_CREATE="1";
+    public static  final String STATE_PROCESSING="2";
+    public static  final String STATE_PICKING="3";
+    public static  final String STATE_COMPLETE="4";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -25,6 +29,10 @@ public class DelegateTicket {
     private String contractNo;
     private String ticketNo;
     private Date createDate;
+    /**
+     * 委外单状态 1： 刚创建 2：已下单 3：已领料 4 已完成
+     */
+    private String state;
     /**
      * 委外单类型 ORDER 订单委外 PLAN 生产计划工序委外
      */
@@ -100,5 +108,13 @@ public class DelegateTicket {
 
     public void setCreateDate(Date createDate) {
         this.createDate = createDate;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 }

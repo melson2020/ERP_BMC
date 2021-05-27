@@ -9,6 +9,7 @@ import com.melson.webserver.produce.vo.ProducePlanPickingTicketVo;
 import com.melson.webserver.produce.vo.ProducePlanStateSummaryVo;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author Nelson
@@ -44,4 +45,6 @@ public interface IProducePlanService {
     List<ProducePlanPickingTicketVo> GetProcessingPlanAndPickingTicketInfo();
 
     ProducePlanInfoVo FindPlanInfo(Integer planId);
+
+    List<ProducePlan> FindProducePlanRecord(Map<String,String[]> kvMap);
 }
