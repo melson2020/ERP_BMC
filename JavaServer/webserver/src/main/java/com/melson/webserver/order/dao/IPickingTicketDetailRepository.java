@@ -12,4 +12,5 @@ import java.util.List;
  */
 public interface IPickingTicketDetailRepository extends JpaRepository<PickingTicketDetail,Integer> {
     List<PickingTicketDetail> findByTicketId(Integer ticketId);
+    List<PickingTicketDetail> findByTicketIdAndType(Integer ticketId,String type);
 }

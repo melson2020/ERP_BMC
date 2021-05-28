@@ -1,5 +1,6 @@
 package com.melson.webserver.order.service;
 
+import com.melson.webserver.delegate.vo.DelegateReleaseVo;
 import com.melson.webserver.order.entity.*;
 
 import java.util.List;
@@ -30,4 +31,14 @@ public interface IDelegateTicketService {
     DelegateTicket FindByPlanId(Integer planId);
 
     List<DelegateTicket> FindReleaseList();
+
+    /**
+     * 获取正在执行中的list 包括 state=2 state=3
+     * @return
+     */
+    List<DelegateTicket> FindProcessingList();
+
+    DelegateReleaseVo FindReleaseInfo(Integer ticketId);
+
+    DelegateTicket DelegateTicketConfirm(DelegateReleaseVo releaseVo);
 }

@@ -262,7 +262,6 @@ export default {
             if (res.resultStatus == 1) {
               this.loading = false;
               row.processList = res.data;
-              console.log(row);
             } else {
               this.loading = false;
               this.$message.warning(res.message);

@@ -1,7 +1,9 @@
 package com.melson.webserver.order.service.impl;
 
+import com.melson.webserver.delegate.vo.DelegateReleaseVo;
 import com.melson.webserver.order.dao.IDelegateDetailRepository;
 import com.melson.webserver.order.dao.IDelegateTicketRepository;
+import com.melson.webserver.order.dao.IPickingTicketDetailRepository;
 import com.melson.webserver.order.entity.*;
 import com.melson.webserver.order.service.IDelegateTicketService;
 import com.melson.webserver.order.service.IPickingTicketService;
@@ -28,6 +30,8 @@ public class DelegateTicketServiceImpl implements IDelegateTicketService {
     private IDelegateDetailRepository delegateDetailRepository;
     @Autowired
     private IPickingTicketService pickingTicketService;
+    @Autowired
+    private IPickingTicketDetailRepository pickingTicketDetailRepository;
 
     @Override
     /**
@@ -96,6 +100,37 @@ public class DelegateTicketServiceImpl implements IDelegateTicketService {
     public List<DelegateTicket> FindReleaseList() {
         return delegateTicketRepository.findByState(DelegateTicket.STATE_CREATE);
     }
+
+    @Override
+    public List<DelegateTicket> FindProcessingList() {
+        return delegateTicketRepository.findByStateOrState(DelegateTicket.STATE_PROCESSING,DelegateTicket.STATE_PICKING);
+    }
+
+    @Override
+    public DelegateReleaseVo FindReleaseInfo(Integer ticketId) {
+        DelegateReleaseVo releaseVo=new DelegateReleaseVo();
+        DelegateTicket ticket=delegateTicketRepository.findById(ticketId).orElse(null);
+        releaseVo.setDelegateTicket(ticket);
+        List<DelegateDetail> ticketDetailList=delegateDetailRepository.findByDelegateTicketId(ticketId);
+        releaseVo.setDelegateDetailList(ticketDetailList);
+        PickingTicket pickingTicket=pickingTicketService.FindBySourceIdAndType(ticket.getSourceId(),ticket.getType());
+        releaseVo.setPickingTicket(pickingTicket);
+        List<PickingTicketDetail> pickingTicketDetailList=pickingTicketDetailRepository.findByTicketIdAndType(pickingTicket.getId(),OrderFormDetail.PRODUCE_TYPE_W);
+        releaseVo.setPickingTicketDetailList(pickingTicketDetailList);
+        return releaseVo;
+    }
+
+    @Override
+    @Transactional
+    public DelegateTicket DelegateTicketConfirm(DelegateReleaseVo releaseVo) {
+        DelegateTicket ticket=releaseVo.getDelegateTicket();
+        ticket.setState(DelegateTicket.STATE_PROCESSING);
+        List<DelegateDetail> delegateDetails=releaseVo.getDelegateDetailList();
+        delegateDetailRepository.saveAll(delegateDetails);
+        return delegateTicketRepository.save(ticket);
+
+    }
+
 
     private DelegateDetail CreateDelegateDetail(OrderFormDetail orderFormDetail, DelegateTicket ticket) {
         DelegateDetail delegateDetail = new DelegateDetail();

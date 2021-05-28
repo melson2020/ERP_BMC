@@ -23,4 +23,6 @@ public interface IPickingTicketService {
     PickingTicket GeneratePickTicketWithOrderFormDetail(OrderForm form,List<OrderFormDetail> details);
 
     PickingTicket FindByPlanId(Integer planId);
+
+    PickingTicket FindBySourceIdAndType(Integer sourceId,String type);
 }

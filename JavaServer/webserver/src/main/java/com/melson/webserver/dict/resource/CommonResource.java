@@ -28,11 +28,13 @@ public class CommonResource extends BaseResource {
     private final IProduct productService;
     private final IProduceProcess produceProcessService;
     private final ICompany companyService;
+    private final ITaxRate taxRateService;
 
-    public CommonResource(IProduct productService, IProduceProcess produceProcessService, ICompany companyService) {
+    public CommonResource(IProduct productService, IProduceProcess produceProcessService, ICompany companyService, ITaxRate taxRateService) {
         this.productService = productService;
         this.produceProcessService = produceProcessService;
         this.companyService = companyService;
+        this.taxRateService = taxRateService;
     }
 
     @RequestMapping(value = "/initialContract",method = RequestMethod.GET)
@@ -64,5 +66,10 @@ public class CommonResource extends BaseResource {
         List<GroupProductVo> productVoList=productService.GetProductVoList(productNo);
         result.setData(productVoList);
         return result;
+    }
+
+    @RequestMapping(value = "/taxRateList",method = RequestMethod.GET)
+    public Result GetTaxRateList(){
+        return success(taxRateService.getAll());
     }
 }

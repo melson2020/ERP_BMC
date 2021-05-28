@@ -25,6 +25,9 @@ export default {
   GetCompanyInfo(){
     return service.get('/common/company')
   },
+  GetTaxRateList(){
+    return service.get('/common/taxRateList')
+  },
 
   //system 系统交互
   RegisterCompany(params){
@@ -347,6 +350,15 @@ export default {
   //委外相关
   GetDelegateReleaseList(param){
     return service.get('/delegate/releaseList',param)
+  },
+  GetDelegateProcessingList(param){
+    return service.get('/delegate/processingList',param)
+  },
+  GetDelegateReleaseInfo(param){
+    return service.get('/delegate/releaseInfo',param)
+  },
+  DelegateTicketReleaseConfirm(param){
+    return service.post('/delegate/confirm',param)
   }
 
 };
