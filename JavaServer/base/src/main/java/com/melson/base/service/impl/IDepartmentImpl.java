@@ -4,8 +4,9 @@ import com.melson.base.AbstractService;
 import com.melson.base.Result;
 import com.melson.base.dao.IDepartmentDao;
 import com.melson.base.dao.IRoleDao;
+import com.melson.base.dao.IUserDao;
 import com.melson.base.entity.Department;
-import com.melson.base.entity.Role;
+import com.melson.base.entity.User;
 import com.melson.base.service.IDepartment;
 import com.melson.base.service.ISysSequence;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -22,11 +23,13 @@ public class IDepartmentImpl extends AbstractService<Department> implements IDep
     private final IDepartmentDao departmentDao;
     private final ISysSequence sysSequenceService;
     private final IRoleDao roleDao;
+    private final IUserDao userDao;
 
-    public IDepartmentImpl(IDepartmentDao departmentDao, ISysSequence sysSequenceService, IRoleDao roleDao) {
+    public IDepartmentImpl(IDepartmentDao departmentDao, ISysSequence sysSequenceService, IRoleDao roleDao, IUserDao userDao) {
         this.departmentDao = departmentDao;
         this.sysSequenceService = sysSequenceService;
         this.roleDao = roleDao;
+        this.userDao = userDao;
     }
 
     @Override
@@ -77,7 +80,10 @@ public class IDepartmentImpl extends AbstractService<Department> implements IDep
 
     @Override
     public Department Query(Integer id) {
-        return departmentDao.findByDepartmentId(id);
+        Department department=departmentDao.findByDepartmentId(id);
+        List<User> userList=userDao.findByDepartmentId(id);
+        department.setUserList(userList);
+        return department;
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.melson.base.entity;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Author Nelson
@@ -24,6 +25,9 @@ public class Department {
     private Date createDate;
     private String createBy;
     private String status;
+
+    @Transient
+    private List<User> userList;
 
     public Integer getId() {
         return id;
@@ -103,5 +107,13 @@ public class Department {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public List<User> getUserList() {
+        return userList;
+    }
+
+    public void setUserList(List<User> userList) {
+        this.userList = userList;
     }
 }

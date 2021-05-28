@@ -23,13 +23,13 @@
         <el-table-column prop="description" label="描述"> </el-table-column>
         <el-table-column prop="" label="操作" width="100px">
           <template slot-scope="scope">
-            <el-tooltip effect="light" content="修改部门信息" placement="top">
+            <el-tooltip effect="light" content="修改" placement="top">
               <el-button size="mini" @click="handleEdit(scope.$index,scope.row)" plain circle type="primary" icon="el-icon-edit"/>
             </el-tooltip>
-            <el-tooltip effect="light" v-if="scope.row.status=='Y'" content="停用部门资料" placement="top">
+            <el-tooltip effect="light" v-if="scope.row.status=='Y'" content="停用" placement="top">
               <el-button size="mini" @click.prevent.stop="UpdateStatus(scope.$index, scope.row,true)" plain circle type="danger" icon="el-icon-close"/>
             </el-tooltip>
-            <el-tooltip effect="light" v-else content="启用部门资料" placement="top">
+            <el-tooltip effect="light" v-else content="启用" placement="top">
               <el-button size="mini" @click.prevent.stop="UpdateStatus(scope.$index, scope.row,false)" plain circle type="primary" icon="el-icon-check"/>
             </el-tooltip>
 
@@ -70,7 +70,7 @@
       </el-form>
     </el-dialog>
 
-    <el-dialog title="编辑部门" :visible.sync="departmentEditDialog" :close-on-click-modal="false" width="1024px">
+    <el-dialog :title=departmentCode :visible.sync="departmentEditDialog" :close-on-click-modal="false" width="1024px">
       <el-form status-icon :model="editDepartment" :rules="rules" ref="departmentEditForm" label-width="100px">
           <el-row>
             <el-form-item label="部门名称" prop="departmentName">
@@ -91,6 +91,26 @@
           </el-form-item>
         </el-row>
         <el-row>
+          <el-form-item label="成员列表">
+            <el-table
+              :data="editDepartment.userList"
+              size="mini"
+              border="" stripe           
+              :header-row-style="{height:'40px' ,'align':'center'}"
+              :row-style="{height:'40px'}"
+              style="width: 100%">
+              <el-table-column prop="userName" label="用户名称" width="200px"></el-table-column>
+              <el-table-column prop="loginName" label="登录名" width="180px"></el-table-column>
+              <el-table-column prop="createDate" label="创建日期" width="140px"> 
+                <template slot-scope="scope">
+                  <span>{{getFullTime(scope.row.createDate) }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column prop="description" label="描述"></el-table-column>
+            </el-table>
+          </el-form-item>
+        </el-row>
+        <el-row>
           <el-form-item>
             <el-button type="primary" @click="onEditDepartment('departmentEditForm')" :loading="loading">保存</el-button>
             <el-button @click="departmentEditDialog = false" v-if="!loading">取 消</el-button>
@@ -108,6 +128,7 @@ import { mapActions } from "vuex";
 export default {
   data() {
     return{
+      departmentCode:'',
       departmentEditDialog: false,
       departmentAddDialog: false,
       searchContent: "",
@@ -131,7 +152,8 @@ export default {
           departmentName: '',
           description: '',
           createDate:'',
-          createBy: '',
+          createBy: '',          
+          userList:[],
       },
       rules: {
         departmentName: [
@@ -154,6 +176,9 @@ export default {
         this.$refs[formName].resetFields();
       }
       this.departmentAddDialog = true;
+    },
+    getFullTime(time) {
+    return new Date(time).format("yyyy-MM-dd");
     },
     onAddDepartment(formName){
       this.$refs[formName].validate(valid => {
@@ -228,6 +253,7 @@ export default {
         .then(res=>{
           if (res.resultStatus == 1) {
             this.editDepartment=res.data;
+            this.departmentCode=this.editDepartment.departmentCode;
             this.departmentEditDialog = true;
           }
           else{

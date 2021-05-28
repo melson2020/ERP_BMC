@@ -2,6 +2,7 @@ package com.melson.webserver.login.resource;
 
 import com.melson.base.BaseResource;
 import com.melson.base.Result;
+import com.melson.base.ResultType;
 import com.melson.base.constants.SysConstants;
 import com.melson.base.constants.SysRespCode;
 import com.melson.base.entity.User;
@@ -9,6 +10,7 @@ import com.melson.base.service.IUser;
 import com.melson.base.utils.CookieUtil;
 import com.melson.base.utils.MD5Util;
 import com.melson.webserver.login.vo.LoginUserSession;
+import com.melson.webserver.login.vo.UserVo;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -122,4 +124,14 @@ public class LoginResource extends BaseResource {
         logger.info("用户注销登录成功");
         return success();
     }
+
+    @RequestMapping(value = "/restPassword", method = RequestMethod.POST)
+    public Result ResetPass(@RequestBody UserVo userVo, HttpServletRequest request) {
+        if (userVo.hasEmptyParams()) return this.GenerateResult(ResultType.ParameterNeeded);
+        Result result = new Result();
+        // 修改逻辑
+        System.out.println("Rest Call: /login/restPassword ...");
+        return result;
+    }
+
 }

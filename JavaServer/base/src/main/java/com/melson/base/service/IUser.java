@@ -42,4 +42,6 @@ public interface IUser extends IService<User> {
     User QueryEmployee(Integer id);
 
     Integer UpdateUserStatus(User user);
+
+
 }

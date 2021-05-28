@@ -13,6 +13,9 @@ const actions = {
     },
     SetLoginUserInfo({commit},user){
         commit(types.LOGIN_USERINFO, user)
+    },
+    ResetPassword({ }, employee) {
+        return request.ResetPassword(employee);
     }
 };
 

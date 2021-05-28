@@ -161,7 +161,7 @@ public class UserImpl extends AbstractService<User> implements IUser {
         List<User> userList=GenerateUserList(list);
         User user=userList.get(0);
 
-        String sql2 = "SELECT ur.id,ur.roleId,ur.userId,ur.description,ro.roleName FROM `user_role` ur LEFT JOIN role ro on ro.id=ur.roleId";
+        String sql2 = "SELECT ur.id,ur.roleId,ur.userId,ur.description,ro.roleName FROM `user_role` ur LEFT JOIN role ro on ro.roleId=ur.roleId";
         StringBuffer sBuffer2 = new StringBuffer(sql2);
         sBuffer2.append(" where ur.userId='" + user.getUserId() + "'");
         List<Object[]> list2 = entityManagerUtil.ExcuteSql(sBuffer2.toString());

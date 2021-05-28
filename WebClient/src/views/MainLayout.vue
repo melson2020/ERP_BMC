@@ -81,8 +81,35 @@
               >
             </el-dropdown-menu>
           </el-dropdown>
-        </div></el-header
-      >
+
+          <el-dialog
+            title="重置密码"
+            :visible.sync="restPassFormVisible"
+            @close="dailogOnClose('resetform')"
+            :close-on-click-modal="false"
+            :show-close="false"
+          >
+            <el-form :model="systemUser" :rules="rules" ref="resetform">
+              <el-form-item label="登录账户" label-width="120px" prop="loginName">
+                <el-input v-model="systemUser.loginName" autocomplete="off"></el-input>
+              </el-form-item>
+              <el-form-item label="原始密码" label-width="120px" prop="oldPass">
+                <el-input type="password" v-model="systemUser.oldPass" autocomplete="off"></el-input>
+              </el-form-item>
+              <el-form-item label="用户新密码" label-width="120px" prop="newPass">
+                <el-input type="password" v-model="systemUser.newPass" autocomplete="off"></el-input>
+              </el-form-item>
+              <el-form-item label="确认新密码" label-width="120px" prop="checkNewPass">
+                <el-input type="password" v-model="systemUser.checkNewPass" autocomplete="off"></el-input>
+              </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+              <el-button @click="restPassFormVisible = false">取 消</el-button>
+              <el-button type="primary" @click="resetConfirm('resetform')">确 定</el-button>
+            </div>
+          </el-dialog>
+
+        </div></el-header>
       <el-main class="mainlayout-el-main"> <router-view /></el-main>
     </el-container>
   </el-container>
@@ -92,11 +119,51 @@ import { mapGetters } from "vuex";
 import { mapActions } from "vuex";
 export default {
   data() {
-    return { menuArrow: "el-icon-s-fold", isCollapse: false };
+    var validateNewPass = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入密码"));
+      } else {
+        if (this.systemUser.checkNewPass !== "") {
+          this.$refs.resetform.validateField("checkNewPass");
+        }
+        callback();
+      }
+    };
+    var validateCheckNewPass = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请再次输入密码"));
+      } else if (value !== this.systemUser.newPass) {
+        callback(new Error("两次输入密码不一致!"));
+      } else {
+        callback();
+      }
+    };
+    return { 
+      menuArrow: "el-icon-s-fold", 
+      isCollapse: false,
+      restPassFormVisible: false,
+      systemUser: {
+        userId: "",
+        oldPass: "",
+        newPass: "",
+        checkNewPass: "",
+        loginName: ""
+      },
+      rules: {
+        loginName: [
+          { required: true, message: "请输入登录账户", trigger: "blur" }
+        ],
+        oldPass: [{ required: true, message: "请输入原始密码", trigger: "blur" }],
+        newPass: [{ validator: validateNewPass, trigger: "blur" }],
+        checkNewPass: [{ validator: validateCheckNewPass, trigger: "blur" }]
+      }
+    };
   },
   methods: {
      ...mapActions({
       SetLoginUserInfo: "SetLoginUserInfo",
+      ResetPassword: "ResetPassword",
+
     }),
      logout: function() {
       this.$messageBox
@@ -112,9 +179,40 @@ export default {
         })
         .catch(e => e);
     },
+    resetPass: function() {
+      this.systemUser.loginName = this.userInfo.loginName;
+      this.systemUser.userId = this.userInfo.userId;
+      this.restPassFormVisible = true;
+    },
     menuCollapseChange() {
       this.isCollapse = !this.isCollapse;
       this.menuArrow = this.isCollapse ? "el-icon-s-unfold" : "el-icon-s-fold";
+    },
+    resetConfirm(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          this.ResetPassword(this.systemUser)
+            .then(res => {
+              if (res.resultStatus == 1) {
+                this.$message.success("重置成功");
+                this.userInfo.loginName=this.systemUser.loginName
+                // this.SetLoginStatus(this.userInfo)
+                localStorage.setItem("userInfo",JSON.stringify(this.userInfo))
+
+
+                this.restPassFormVisible = false;
+              } else {
+                this.$message.error("密码错误");
+              }
+            })
+            .catch(error => {
+              this.$message.error(error.message ? error.message : error);
+            });
+        } else {
+          this.$message.warning("请填写准确信息");
+          return false;
+        }
+      });
     },
   },
   computed: {
