@@ -1000,6 +1000,7 @@ export default {
       FindAllProduceProcessList: "FindAllProduceProcessList",
       QueryProductBom:"QueryProductBom",
       GetMaterialList:"GetMaterialList",
+      DeleteDetailBoms:"DeleteDetailBoms",
       }),
       resetForm(formName) {
         if (this.$refs[formName]) {
@@ -1520,6 +1521,8 @@ export default {
       addDeleteProductBom(index,row){
         row.seen=false;
         row.notSavedFlag=false;
+        if(row.id!=="")
+        {
         this.$messageBox.confirm('确认要删除？',"提示",{
             confirmButtonText: '确定',
             cancelButtonText: '取消',
@@ -1529,6 +1532,11 @@ export default {
               this.newProductBom.materialVos.splice(index,1)
           })
           .catch(e=>e);
+        }
+        else
+        {
+          this.newProductBom.materialVos.splice(index,1)
+        }
       },
       editSaveProductBom(index,row){
         try {
@@ -1554,15 +1562,23 @@ export default {
       editDeleteProductBom(index,row){
         row.seen=false;
         row.notSavedFlag=false;
+        if(row.id!=="")
+        {
         this.$messageBox.confirm('确认要删除？',"提示",{
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
           })
           .then(() => {
+              this.DeleteDetailBoms(row)
               this.editProductBom.materialVos.splice(index,1)
           })
           .catch(e=>e);
+        }
+        else
+        {
+          this.editProductBom.materialVos.splice(index,1)
+        }
       },
 
       ReviewProductBom(index, row) {
