@@ -624,7 +624,7 @@
                   v-model="editProductBom.processName"
                   size="small"
                   placeholder="选择工序"
-                  @change="processChanged">
+                  @change="editprocessChanged">
                   <el-option
                     v-for="vo in produceProcessList"
                     :label="vo.name"
@@ -1094,9 +1094,10 @@ export default {
         })
       },
       handleEdit(index,row){
-        this.editIndex=index;
+      this.editIndex=index;
       this.GetStorageList();
       this.GetCategoryList();
+      this.GetSupplyList();
       let prod={productNo:row.productNo,index:index}
       this.QueryProductObj(prod)
         .then(res=>{
@@ -1208,7 +1209,7 @@ export default {
                       this.editProductBom.materialVos[i].processNo=this.editProductBom.processNo;
                       this.editProductBom.materialVos[i].partNo=this.editProductBom.productNo;
                       this.editProductBom.materialVos[i].sIndex=Number(i+1);
-                      this.editProductBom.materialVos[i].id="";
+                      // this.editProductBom.materialVos[i].id="";
                       this.editProductBom.materialVos[i].partName=this.editProductBom.productName;
                       price=Number(price) + Number(this.editProductBom.materialVos[i].salesPrice) *(Number(this.editProductBom.materialVos[i].chQty)+Number(this.editProductBom.materialVos[i].lossRate))
                       if(this.editProductBom.materialVos[i].chBomNo=== "" || this.editProductBom.materialVos[i].chBomNo == null || this.editProductBom.materialVos[i].chBomNo == undefined)
@@ -1446,6 +1447,12 @@ export default {
         this.newProductBom.processId=event.id;
         this.newProductBom.processName=event.name;
         this.newProductBom.processNo=event.processNo;
+      },
+      editprocessChanged(event){
+        this.editProductBom.processCost=event.cost;
+        this.editProductBom.processId=event.id;
+        this.editProductBom.processName=event.name;
+        this.editProductBom.processNo=event.processNo;
       },
       addCellClick(row){
         if(!row.seen)

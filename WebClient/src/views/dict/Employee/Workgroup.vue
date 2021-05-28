@@ -274,29 +274,13 @@ export default {
         row.seen=false;
         row.notSavedFlag=false;
         this.SaveUserGroup(row)
-          .then(res => {
-            if (res.resultStatus == 1) {
-              this.$message({
-                showClose: true,
-                message: "保存成功",
-                type: "success"
-              });
-            } else {
-              this.$message({
-                message: res.message,
-                type: "warning"
-              });
-            }
-          })
-          .catch(err => {
-            let alert = err.message ? err.message : err;
-            this.$messgae.error(alert);
-          });
       }
     },
     editDeleteGroup(index,row){
       row.seen=false;
       row.notSavedFlag=false;
+      if(row.id!=="")
+      {
       this.$messageBox.confirm('确认要删除？',"提示",{
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -307,6 +291,12 @@ export default {
           this.editworkGroup.userGroups.splice(index,1)
         })
         .catch(e=>e);
+        }
+        else
+        {
+          this.editworkGroup.userGroups.splice(index,1)
+        }
+
     },
     editWrokGroup(){
       if(!this.editCheckSavedFlag())
@@ -381,7 +371,11 @@ export default {
       });
     },
     onEditworkGroup(formName){
-      this.$refs[formName].validate(valid=>{
+    if(!this.editCheckSavedFlag())
+      {
+        if(!this.editCheckEidtable())
+        {
+          this.$refs[formName].validate(valid=>{
         if(valid){
           this.SaveworkGroup(this.editworkGroup)
           .then(res=>{
@@ -409,7 +403,8 @@ export default {
           return false;
         }
       })
-
+        }
+      }
     },
     handleEdit(index,row){
       this.editIndex=index;

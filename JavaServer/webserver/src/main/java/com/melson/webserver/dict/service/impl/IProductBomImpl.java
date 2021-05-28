@@ -52,7 +52,6 @@ public class IProductBomImpl extends AbstractService<ProductBom> implements IPro
             pb.setBomNo(sysSequenceService.GenerateCode(Boms.BOM_NO_CHAR));
         }
         ProductBom productBom=productBomRepository.save(pb);
-//        pb.getMaterialVos().forEach(boms->{boms.setBomNo(pb.getBomNo());});  //设置列表中的BomNo;
         List<Boms> bomsDetials=pb.getMaterialVos();
         Boolean flag;
         flag = true;

@@ -574,6 +574,8 @@ export default {
       UpdateProductBom:"UpdateProductBom",
       GetProductList:"GetProductList",
       FindAllProduceProcessList: "FindAllProduceProcessList",
+      SaveDetailBoms:"SaveDetailBoms",
+      DeleteDetailBoms:"DeleteDetailBoms",
     }),
     addSaveProductBom(index,row){
       if(row.productNo===""|| row.chQty===""||row.lossRate===""|| isNaN(row.chQty)|| isNaN(row.lossRate))
@@ -812,6 +814,7 @@ export default {
           row.supplyName="";
           row.chBomNo="";
           row.chBomGenericId="";
+          row.bomNo="";
           event=null;
         }
     },
@@ -829,6 +832,8 @@ export default {
         {
           row.seen=false;
           row.notSavedFlag=false;
+// console.log(row);
+          // this.SaveDetailBoms(row);
         }
       } catch (error) {
         this.$message({
@@ -842,15 +847,22 @@ export default {
     editDeleteProductBom(index,row){
       row.seen=false;
       row.notSavedFlag=false;
+      if(row.id!=="")
+      {
       this.$messageBox.confirm('确认要删除？',"提示",{
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         })
         .then(() => {
-            this.editProductBom.materialVos.splice(index,1)
+          this.DeleteDetailBoms(row)
+          this.editProductBom.materialVos.splice(index,1)
         })
         .catch(e=>e);
+      }
+      else{
+        this.editProductBom.materialVos.splice(index,1)
+      }
     },
     oneditProductBom(formName){
       if(!this.editCheckSavedFlag())
@@ -869,7 +881,7 @@ export default {
                     this.editProductBom.materialVos[i].processNo=this.editProductBom.processNo;
                     this.editProductBom.materialVos[i].partNo=this.editProductBom.productNo;
                     this.editProductBom.materialVos[i].sIndex=Number(i+1);
-                    this.editProductBom.materialVos[i].id="";
+                    // this.editProductBom.materialVos[i].id="";
                     this.editProductBom.materialVos[i].partName=this.editProductBom.productName;
                     price=Number(price) + Number(this.editProductBom.materialVos[i].salesPrice) *(Number(this.editProductBom.materialVos[i].chQty)+Number(this.editProductBom.materialVos[i].lossRate))
                     if(this.editProductBom.materialVos[i].chBomNo=== "" || this.editProductBom.materialVos[i].chBomNo == null || this.editProductBom.materialVos[i].chBomNo == undefined)

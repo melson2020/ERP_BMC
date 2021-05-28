@@ -167,6 +167,14 @@ export default {
   ReqQueryProductBomObj(params){
     return service.post("/productBom/query",params);
   },
+  ReqSaveDetailBoms(param){
+    return service.post("/productBom/detailBomsSave",param)
+  },
+  ReqDeleteDetailBoms(params){
+    return service.post("/productBom/detailBomsDelete",params)
+  },
+
+  
 
 
   ReqCategoryList(params){
@@ -265,7 +273,6 @@ export default {
   ReqDeleteUserGroup(params){
     return service.post("/employee/deleteUserGroup",params)
   },
-
 
 
   //订单相关

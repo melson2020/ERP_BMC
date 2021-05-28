@@ -32,6 +32,38 @@ const actions = {
     QueryProductBomObj({},ProductBom){
         return request.ReqQueryProductBomObj(ProductBom);
     },
+    SaveDetailBoms({ },Bom){
+        request
+          .ReqSaveDetailBoms(Bom)
+          .then(res => {
+            if (res.resultStatus == 1) {
+              Message.warning("保存成功")
+            } else {
+              Message.warning("保存失败")
+            }
+          })
+          .catch(err => {
+            let alert = err.message ? err.message : err;
+            this.$messgae.error(alert);
+          });
+      },
+
+    DeleteDetailBoms({ }, Bom) {
+        request
+          .ReqDeleteDetailBoms(Bom)
+          .then(res=>{
+              if (res.resultStatus == 1) {
+                  Message.warning("删除成功")
+              }
+              else {
+                  Message.warning("删除失败");
+              }
+          })
+          .catch(error => {
+              let al = error.message ? error.message : error
+              Message.error(al)
+          })
+      },
 
 };
 

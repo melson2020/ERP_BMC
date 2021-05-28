@@ -3,6 +3,7 @@ package com.melson.webserver.dict.dao;
 import com.melson.webserver.dict.entity.Boms;
 import com.melson.webserver.dict.vo.BomVo;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -27,4 +28,7 @@ public interface IBomsRepository extends JpaRepository<Boms, Integer> {
 
     List<Boms> findByBomNoAndBomGenericId(String bomNo, String bomGenericId);
 
+    @Modifying
+    @Query(value = "DELETE from `boms` WHERE id =?1",nativeQuery = true)
+    Integer deleteByIntId(Integer id);
 }

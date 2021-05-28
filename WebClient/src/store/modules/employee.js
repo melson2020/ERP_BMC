@@ -155,23 +155,35 @@ const actions = {
           })
     },
     SaveUserGroup({ },UserGroup){
-      return request.ReqSaveUserGroup(UserGroup);
+      request
+        .ReqSaveUserGroup(UserGroup)
+        .then(res => {
+          if (res.resultStatus == 1) {
+            Message.warning("保存成功")
+          } else {
+            Message.warning("保存失败")
+          }
+        })
+        .catch(err => {
+          let alert = err.message ? err.message : err;
+          this.$messgae.error(alert);
+        });
     },
     DeleteUserGroup({ }, UserGroup) {
       request
-          .ReqDeleteUserGroup(UserGroup)
-          .then(res=>{
-              if (res.resultStatus == 1) {
-                  Message.info("删除成功")
-              }
-              else {
-                  Message.info("删除失败:" + res.message);
-              }
-          })
-          .catch(error => {
-              let al = error.message ? error.message : error
-              Message.error(al)
-          })
+        .ReqDeleteUserGroup(UserGroup)
+        .then(res=>{
+            if (res.resultStatus == 1) {
+                Message.warning("删除成功")
+            }
+            else {
+                Message.warning("删除失败");
+            }
+        })
+        .catch(error => {
+            let al = error.message ? error.message : error
+            Message.error(al)
+        })
     },
 
 };

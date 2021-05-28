@@ -113,7 +113,6 @@ const actions = {
         return request.ReqQueryCategoryObj(Category);
     },
 
-
 };
 
 const getters = {

@@ -1,6 +1,7 @@
 package com.melson.webserver.dict.service;
 
 import com.melson.base.IService;
+import com.melson.base.Result;
 import com.melson.webserver.dict.entity.Boms;
 import com.melson.webserver.dict.vo.BomProcessVo;
 import com.melson.webserver.dict.vo.BomVo;
@@ -28,4 +29,8 @@ public interface IBoms extends IService<Boms> {
      * @return
      */
     List<BomProcessVo> findBomProcessVoInBomNos(Set<String> bomNos);
+
+    Result SaveAndUpdate(Boms bom);
+
+    Integer DeleteUserGroup(Integer id);
 }

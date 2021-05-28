@@ -2,10 +2,9 @@ package com.melson.webserver.dict.resource;
 
 import com.melson.base.BaseResource;
 import com.melson.base.Result;
-import com.melson.base.interceptor.RequiredPermission;
-import com.melson.base.interceptor.SecurityLevel;
-import com.melson.webserver.dict.entity.Product;
+import com.melson.webserver.dict.entity.Boms;
 import com.melson.webserver.dict.entity.ProductBom;
+import com.melson.webserver.dict.service.IBoms;
 import com.melson.webserver.dict.service.IProductBom;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,9 +18,11 @@ import java.util.List;
 @RequestMapping("/productBom")
 public class ProductBomResource extends BaseResource {
     private final IProductBom productBomService;
+    private final IBoms bomsService;
 
-    public ProductBomResource(IProductBom productBomService) {
+    public ProductBomResource(IProductBom productBomService, IBoms bomsService) {
         this.productBomService = productBomService;
+        this.bomsService = bomsService;
     }
 
     /**
@@ -71,6 +72,19 @@ public class ProductBomResource extends BaseResource {
         ProductBom pro=productBomService.QueryProductBomsDetailList(pb.getBomNo());
         Result result=new Result();
         result.setData(pro);
+        return result;
+    }
+
+    @RequestMapping(value = "/detailBomsSave",method = RequestMethod.POST)
+    public Result SaveDetailBom(@RequestBody Boms bom){
+        return bomsService.SaveAndUpdate(bom);
+    }
+
+    @RequestMapping(value = "/detailBomsDelete",method = RequestMethod.POST)
+    public Result DeleteDetailBom(@RequestBody Boms bom){
+        Result result=new Result();
+        Integer deleteCount=bomsService.DeleteUserGroup(bom.getId());
+        result.setResultStatus(deleteCount>0?1:-1);
         return result;
     }
 
