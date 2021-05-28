@@ -125,6 +125,11 @@ public class PickingTicketServiceImpl implements IPickingTicketService {
         return pickingTicketRepository.findBySourceIdAndType(planId,PickingTicket.TYPE_PLAN);
     }
 
+    @Override
+    public PickingTicket FindBySourceIdAndType(Integer sourceId,String type) {
+        return pickingTicketRepository.findBySourceIdAndType(sourceId,type);
+    }
+
     private PickingTicketDetail CreateTicketDetailWithProcess(ProducePlanProcess process, ProducePlanDetail
             producePlanDetail, Integer ticketId) {
         PickingTicketDetail detail = new PickingTicketDetail();

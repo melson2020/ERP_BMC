@@ -10,7 +10,8 @@ const state = {
     cityList: [],
     provinceList: [],
     areaList: [],
-    company:[]
+    company:[],
+    taxRateList:[]
 };
 
 const actions = {
@@ -70,6 +71,17 @@ const actions = {
         }).catch(err => {
             Message.error(err.messgae)
         })
+    },
+    GetTaxRateList({commit}){
+        request.GetTaxRateList().then(res=>{
+            if (res.resultStatus == 1) {
+                commit(types.COM_TAX_RATE_LIST, res.data)
+            } else {
+                Message.warning(res.messgae)
+            }
+        }).catch(err => {
+            Message.error(err.messgae)
+        })
     }
 };
 
@@ -78,7 +90,8 @@ const getters = {
     provinceList: state => state.provinceList,
     cityList: state => state.cityList,
     areaList: state => state.areaList,
-    company:state=>state.company
+    company:state=>state.company,
+    taxRateList:state=>state.taxRateList
 };
 
 const mutations = {
@@ -108,6 +121,9 @@ const mutations = {
     },
     [types.COM_COMPANY_INFO](state,data){
         state.company=data
+    },
+    [types.COM_TAX_RATE_LIST](state,data){
+        state.taxRateList=data
     }
 };
 

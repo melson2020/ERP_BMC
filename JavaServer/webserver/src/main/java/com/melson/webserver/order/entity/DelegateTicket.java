@@ -38,6 +38,15 @@ public class DelegateTicket {
      */
     private String type;
 
+    private Date delegateDate;
+
+    private String taxRate;
+
+    private Integer supplyId;
+
+    private String supplyName;
+
+
     public Integer getId() {
         return id;
     }
@@ -116,5 +125,37 @@ public class DelegateTicket {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public Date getDelegateDate() {
+        return delegateDate;
+    }
+
+    public void setDelegateDate(Date delegateDate) {
+        this.delegateDate = delegateDate;
+    }
+
+    public String getTaxRate() {
+        return taxRate;
+    }
+
+    public void setTaxRate(String taxRate) {
+        this.taxRate = taxRate;
+    }
+
+    public Integer getSupplyId() {
+        return supplyId;
+    }
+
+    public void setSupplyId(Integer supplyId) {
+        this.supplyId = supplyId;
+    }
+
+    public String getSupplyName() {
+        return supplyName;
+    }
+
+    public void setSupplyName(String supplyName) {
+        this.supplyName = supplyName;
     }
 }

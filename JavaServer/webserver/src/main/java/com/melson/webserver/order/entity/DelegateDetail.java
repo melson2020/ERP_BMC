@@ -30,6 +30,8 @@ public class DelegateDetail {
      */
     private String materialInfo;
 
+    private BigDecimal delegatePrice;
+
     public Integer getId() {
         return id;
     }
@@ -108,5 +110,13 @@ public class DelegateDetail {
 
     public void setMaterialInfo(String materialInfo) {
         this.materialInfo = materialInfo;
+    }
+
+    public BigDecimal getDelegatePrice() {
+        return delegatePrice;
+    }
+
+    public void setDelegatePrice(BigDecimal delegatePrice) {
+        this.delegatePrice = delegatePrice;
     }
 }

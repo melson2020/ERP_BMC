@@ -15,4 +15,5 @@ import java.util.List;
 public interface IDelegateTicketRepository extends JpaRepository<DelegateTicket,Integer> {
     DelegateTicket findBySourceIdAndType(Integer sourceId,String type);
     List<DelegateTicket> findByState(String state);
+    List<DelegateTicket> findByStateOrState(String state1,String state2);
 }
