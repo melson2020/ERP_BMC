@@ -6,6 +6,7 @@ import com.melson.base.dao.IUserDao;
 import com.melson.base.entity.User;
 import com.melson.base.service.ISysSequence;
 import com.melson.base.utils.EntityUtils;
+import com.melson.base.utils.NumUtil;
 import com.melson.webserver.dict.dao.IUserGroupRepository;
 import com.melson.webserver.dict.dao.IWorkGroupRepository;
 import com.melson.webserver.dict.entity.Product;
@@ -72,10 +73,13 @@ public class IWorkGroupImpl extends AbstractService<WorkGroup> implements IWorkG
         }
         else
         {
-            if(wg.getId()==null) {
-                wg.setWorkGroupCode(sysSequenceService.GenerateCode(WorkGroup.WORKGROUP_NO_CHAR));
-            }
+//            if(wg.getId()==null) {
+//                wg.setWorkGroupCode(sysSequenceService.GenerateCode(WorkGroup.WORKGROUP_NO_CHAR));
+//            }
             WorkGroup saved=workGroupRepository.save(wg);
+            Integer length=8;
+            wg.setWorkGroupCode(NumUtil.incrementCode(wg.getId(),WorkGroup.WORKGROUP_NO_CHAR,length));
+            workGroupRepository.save(wg);
             if(saved==null){
                 result.setResultStatus(-1);
                 result.setMessage("保存失败！");

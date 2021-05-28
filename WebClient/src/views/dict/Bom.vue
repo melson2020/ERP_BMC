@@ -35,7 +35,7 @@
 
         <el-table-column prop="" label="操作" width="100px">
           <template slot-scope="scope">
-            <el-tooltip effect="light" content="修改Bom信息" placement="top">
+            <el-tooltip effect="light" content="修改Bom" placement="top">
               <el-button size="mini" @click="handleEdit(scope.$index,scope.row)" :disabled="scope.row.status=='N'" plain circle type="primary" icon="el-icon-edit"/>
             </el-tooltip>
             <el-tooltip effect="light" v-if="scope.row.status=='Y'" content="停用Bom" placement="top">

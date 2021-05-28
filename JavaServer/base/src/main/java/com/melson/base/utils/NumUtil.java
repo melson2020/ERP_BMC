@@ -12,6 +12,7 @@ public class NumUtil {
      * 默认编码长度
      */
     public static final int DEFAULT_LENGTH = 10;
+    public static final int CODE_LENGTH = 10;
 
     /**
      * 根据id前面拼接0,默认10位
@@ -32,5 +33,9 @@ public class NumUtil {
      */
     public static String incrementNum(int id, int length) {
         return String.format("%0" + length + "d", id);
+    }
+
+    public static String incrementCode(Integer id, String codeChar, Integer length) {
+        return String.format(codeChar + "%0" + length + "d", id);
     }
 }

@@ -3,9 +3,11 @@ package com.melson.webserver.dict.service.impl;
 import com.melson.base.AbstractService;
 import com.melson.base.Result;
 import com.melson.base.service.ISysSequence;
+import com.melson.base.utils.NumUtil;
 import com.melson.webserver.dict.dao.IProductCategoryRepository;
 import com.melson.webserver.dict.entity.Customer;
 import com.melson.webserver.dict.entity.ProductCategory;
+import com.melson.webserver.dict.entity.StorageAreaLocation;
 import com.melson.webserver.dict.service.IProductCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
@@ -59,10 +61,13 @@ public class IProductCategoryImpl extends AbstractService<ProductCategory> imple
         }
         else
         {
-            if(productCategory.getId()==null) {
-                productCategory.setCategoryId(sysSequenceService.GenerateCode(ProductCategory.CATEGORY_NO_CHAR));
-            }
+//            if(productCategory.getId()==null) {
+//                productCategory.setCategoryId(sysSequenceService.GenerateCode(ProductCategory.CATEGORY_NO_CHAR));
+//            }
             ProductCategory saved=productCategoryRepository.save(productCategory);
+            Integer length=8;
+            productCategory.setCategoryId(NumUtil.incrementCode(productCategory.getId(), ProductCategory.CATEGORY_NO_CHAR,length));
+            productCategoryRepository.save(productCategory);
             if(saved==null){
                 result.setResultStatus(-1);
                 result.setMessage("保存失败！");

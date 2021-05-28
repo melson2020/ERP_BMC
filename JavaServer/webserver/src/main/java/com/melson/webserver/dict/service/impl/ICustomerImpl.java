@@ -5,6 +5,7 @@ import com.melson.base.Result;
 import com.melson.base.service.ISysSequence;
 import com.melson.base.utils.EntityUtils;
 import com.melson.base.utils.EntityManagerUtil;
+import com.melson.base.utils.NumUtil;
 import com.melson.webserver.dict.dao.ICustomerContactRepository;
 import com.melson.webserver.dict.dao.ICustomerRepository;
 import com.melson.webserver.dict.dao.ITaxRateRepository;
@@ -183,10 +184,13 @@ public class ICustomerImpl extends AbstractService<Customer> implements ICustome
         }
         else
         {
-            if(customer.getId()==null) {
-                customer.setCustomerNo(sysSequenceService.GenerateCode(Customer.CUSTOMER_NO_CHAR));
-            }
+//            if(customer.getId()==null) {
+//                customer.setCustomerNo(sysSequenceService.GenerateCode(Customer.CUSTOMER_NO_CHAR));
+//            }
             Customer saved=customerRepository.save(customer);
+            Integer length=8;
+            customer.setCustomerNo(NumUtil.incrementCode(customer.getId(), Customer.CUSTOMER_NO_CHAR,length));
+            customerRepository.save(customer);
             customerContactRepository.saveAll(customer.getContactList());
             if(saved==null){
                 result.setResultStatus(-1);

@@ -44,13 +44,13 @@
 
         <el-table-column prop="" label="操作" width="130px">
           <template slot-scope="scope">
-            <el-tooltip effect="light" content="修改商品" placement="top">
+            <el-tooltip effect="light" content="修改" placement="top">
               <el-button size="mini" @click="handleEdit(scope.$index,scope.row)" plain circle type="primary" icon="el-icon-edit"/>
             </el-tooltip>
-            <el-tooltip effect="light" content="创建商品Bom" placement="top">
+            <el-tooltip effect="light" content="创建Bom" placement="top">
               <el-button size="mini" @click="handleCreateBoM(scope.$index,scope.row)" circle type="primary" icon="el-icon-setting"/>
             </el-tooltip>
-            <el-tooltip effect="light" content="删除商品" placement="top">
+            <el-tooltip effect="light" content="删除" placement="top">
               <el-button size="mini" @click="handleDelete(scope.$index, scope.row)" plain circle type="danger" icon="el-icon-delete"/>
             </el-tooltip>
           </template>

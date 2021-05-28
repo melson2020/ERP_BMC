@@ -31,13 +31,13 @@
         </el-table-column>
         <el-table-column prop="" label="操作" width="100px">
           <template slot-scope="scope">
-            <el-tooltip effect="light" content="修改客户资料" placement="top">
-              <el-button size="mini" @click="handleEdit(scope.$index,scope.row)" plain circle type="primary" icon="el-icon-edit"/>
+            <el-tooltip effect="light" content="修改" placement="top">
+              <el-button size="mini" :disabled="scope.row.status=='N'"  @click="handleEdit(scope.$index,scope.row)" plain circle type="primary" icon="el-icon-edit"/>
             </el-tooltip>
-            <el-tooltip effect="light" v-if="scope.row.status=='Y'" content="停用客户资料" placement="top">
+            <el-tooltip effect="light" v-if="scope.row.status=='Y'" content="停用" placement="top">
               <el-button size="mini" @click.prevent.stop="UpdateCustomerStatus(scope.$index, scope.row,true)" plain circle type="danger" icon="el-icon-close"/>
             </el-tooltip>
-            <el-tooltip effect="light" v-else content="启用客户资料" placement="top">
+            <el-tooltip effect="light" v-else content="启用" placement="top">
               <el-button size="mini" @click.prevent.stop="UpdateCustomerStatus(scope.$index, scope.row,false)" plain circle type="primary" icon="el-icon-check"/>
             </el-tooltip>
             <!-- <el-tooltip effect="light" content="删除客户资料" placement="top">
@@ -273,6 +273,13 @@
         </el-row>
         <el-row>
           <el-form-item label="联系人信息">
+            <el-button
+              icon="el-icon-plus"
+              plain
+              class="add-contact"
+              @click="editAddContact"
+              >添加联系人</el-button
+            >
             <el-table
               :data="editCustomer.contactList"
               border
@@ -342,13 +349,6 @@
               </el-table-column>
 
             </el-table>
-            <el-button
-              icon="el-icon-plus"
-              plain
-              class="add-contact"
-              @click="editAddContact"
-              >添加联系人</el-button
-            >
           </el-form-item>
         </el-row>
         <el-row>
@@ -674,8 +674,9 @@ export default {
                 .then(res=>{
                   if(res.resultStatus==1){
                     this.customerList.splice(this.editIndex,1,res.data);
-                  this.editIndex="";
+                    this.editIndex="";
                     // this.GetCustomerList();
+                    this.GetContactList();
                     this.customerEditDialog=false;
                     this.editCustomer.contactList=[];
                     this.$message({

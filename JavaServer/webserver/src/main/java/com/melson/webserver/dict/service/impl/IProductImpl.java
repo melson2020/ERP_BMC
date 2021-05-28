@@ -5,6 +5,7 @@ import com.melson.base.Result;
 import com.melson.base.service.ISysSequence;
 import com.melson.base.utils.EntityManagerUtil;
 import com.melson.base.utils.EntityUtils;
+import com.melson.base.utils.NumUtil;
 import com.melson.webserver.dict.dao.*;
 import com.melson.webserver.dict.entity.*;
 import com.melson.webserver.dict.service.IProduct;
@@ -186,10 +187,13 @@ public class IProductImpl extends AbstractService<Product> implements IProduct {
                 result.setMessage("已经存在此产品名称或联系管理员！");
             }
         } else {
-            if(product.getId()==null) {
-                product.setProductNo(sysSequenceService.GenerateCode(Product.PRODUCT_NO_CHAR));
-            }
+//            if(product.getId()==null) {
+//                product.setProductNo(sysSequenceService.GenerateCode(Product.PRODUCT_NO_CHAR));
+//            }
             Product saved = productRepository.save(product);
+            Integer length=8;
+            product.setProductNo(NumUtil.incrementCode(product.getId(), Product.PRODUCT_NO_CHAR,length));
+            productRepository.save(product);
             if (saved == null) {
                 result.setResultStatus(-1);
                 result.setMessage("保存失败！");

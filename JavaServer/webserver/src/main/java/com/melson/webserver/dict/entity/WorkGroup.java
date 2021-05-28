@@ -99,4 +99,5 @@ public class WorkGroup {
     public void setUserGroups(List<UserGroup> userGroups) {
         this.userGroups = userGroups;
     }
+
 }
