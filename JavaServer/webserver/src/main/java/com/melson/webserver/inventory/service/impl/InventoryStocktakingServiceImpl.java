@@ -86,7 +86,7 @@ public class InventoryStocktakingServiceImpl implements IInventoryStocktakingSer
         form.setCreateDate(date);
         form.setCreateUser(userId);
         inventoryStocktakingRepository.saveAndFlush(form);
-        form.setFormNo(NumUtil.incrementNum(form.getId()));
+        form.setFormNo(NumUtil.incrementCode(InventoryStocktaking.CODE_PREFIX, form.getId()));
         inventoryStocktakingRepository.saveAndFlush(form);
         // 2.保存盘点明细
         if (vo.getDetailVoList() == null || vo.getDetailVoList().isEmpty()) {

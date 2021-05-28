@@ -86,7 +86,7 @@ public class InventoryOutboundServiceImpl implements IInventoryOutboundService {
         form.setCreateDate(date);
         form.setCreateUser(userId);
         inventoryOutboundRepository.saveAndFlush(form);
-        form.setFormNo(NumUtil.incrementNum(form.getId()));
+        form.setFormNo(NumUtil.incrementCode(InventoryOutbound.CODE_PREFIX,form.getId()));
         inventoryOutboundRepository.saveAndFlush(form);
         // 2.保存出库明细
         if (vo.getDetailVoList() == null || vo.getDetailVoList().isEmpty()) {
