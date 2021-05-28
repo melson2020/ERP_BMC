@@ -1,27 +1,32 @@
 package com.melson.webserver.dict.entity;
 
+import com.melson.base.entity.User;
+
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 /**
- * Created by Messi on 2021/5/13
+ * Created by Messi on 2021/5/27
  */
 @Entity
-@Table(name = "supply")
-public class Supply {
+@Table(name="work_group")
+public class WorkGroup {
+    public static final String WORKGROUP_NO_CHAR="WG";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer id;                   //
+    private String workGroupCode;
     private String name;
-    private String address;
-    private String contact;
-    private String phone;
     private String description;
     private String status;
     private String createBy;
     private Date createDate;
 
-
+    @Transient
+    private List<User> userList;
+    @Transient
+    private List<UserGroup> userGroups;
 
     public Integer getId() {
         return id;
@@ -31,36 +36,20 @@ public class Supply {
         this.id = id;
     }
 
+    public String getWorkGroupCode() {
+        return workGroupCode;
+    }
+
+    public void setWorkGroupCode(String workGroupCode) {
+        this.workGroupCode = workGroupCode;
+    }
+
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getContact() {
-        return contact;
-    }
-
-    public void setContact(String contact) {
-        this.contact = contact;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
     }
 
     public String getDescription() {
@@ -93,5 +82,21 @@ public class Supply {
 
     public void setCreateDate(Date createDate) {
         this.createDate = createDate;
+    }
+
+    public List<User> getUserList() {
+        return userList;
+    }
+
+    public void setUserList(List<User> userList) {
+        this.userList = userList;
+    }
+
+    public List<UserGroup> getUserGroups() {
+        return userGroups;
+    }
+
+    public void setUserGroups(List<UserGroup> userGroups) {
+        this.userGroups = userGroups;
     }
 }

@@ -244,6 +244,28 @@ export default {
     return service.get('/employee/roleList',params)
   },
 
+  ReqWorkGroupList(params){
+    return service.get('/employee/workGroupList',params)
+  },
+  ReqSaveNewWorkGroup(param){
+    return service.post("/employee/workGroupSave",param)
+  },
+  ReqQueryWorkGroupObj(params){
+    return service.post("/employee/queryWorkGroup",params);
+  },
+  ReqUpdateWorkGroupStatus(params) {
+    return service.post("/employee/updateWorkGroupStatus", params);
+  },
+  ReqDeleteWorkGroup(params){
+    return service.post("/employee/deleteWorkGroup",params)
+  },
+  ReqSaveUserGroup(param){
+    return service.post("/employee/userGroupSave",param)
+  },
+  ReqDeleteUserGroup(params){
+    return service.post("/employee/deleteUserGroup",params)
+  },
+
 
 
   //订单相关

@@ -70,7 +70,7 @@
       </el-form>
     </el-dialog>
 
-    <el-dialog title="编辑部门" :visible.sync="departmentEditDialog" :close-on-click-modal="false" width="1024px">
+    <el-dialog :title=departmentCode :visible.sync="departmentEditDialog" :close-on-click-modal="false" width="1024px">
       <el-form status-icon :model="editDepartment" :rules="rules" ref="departmentEditForm" label-width="100px">
           <el-row>
             <el-form-item label="部门名称" prop="departmentName">
@@ -128,6 +128,7 @@ import { mapActions } from "vuex";
 export default {
   data() {
     return{
+      departmentCode:'',
       departmentEditDialog: false,
       departmentAddDialog: false,
       searchContent: "",
@@ -252,6 +253,7 @@ export default {
         .then(res=>{
           if (res.resultStatus == 1) {
             this.editDepartment=res.data;
+            this.departmentCode=this.editDepartment.departmentCode;
             this.departmentEditDialog = true;
           }
           else{

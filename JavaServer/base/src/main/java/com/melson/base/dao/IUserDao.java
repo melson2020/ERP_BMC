@@ -47,4 +47,7 @@ public interface IUserDao extends JpaRepository<User, String> {
     Integer UpdateUserStatus(String status, Integer id);
 
     List<User> findByDepartmentId(Integer id);
+
+    @Query(value = "SELECT us.id,us.userId,us.userName,us.departmentId,us.userType,ug.createDate,us.subscriptionId,us.companyCode,us.loginName,us.`password`,ug.description,us.`status`,us.createBy,us.department FROM `user` us LEFT JOIN user_group ug on ug.userId=us.userId where ug.workGroupId=?1",nativeQuery = true)
+    List<User> findByWorkGroupId(Integer id);
 }

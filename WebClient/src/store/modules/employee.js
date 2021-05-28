@@ -6,7 +6,8 @@ import { Message } from "element-ui";
 const state = {
     departmentList: [],
     employeeList: [],
-    roleList:[]
+    roleList:[],
+    workGroupList:[]
 };
 
 const actions = {
@@ -103,14 +104,83 @@ const actions = {
       }).catch(err => {
           Message.error(err.message)
       })
-  },
+    },
+    GetworkGroupList({ commit }) {
+      request.ReqWorkGroupList().then(res => {
+          if (res.resultStatus == 1) {
+              commit("SetWorkGroupList", res.data)
+          } else {
+              Message.warning(res.message)
+          }
+      }).catch(err => {
+          Message.error(err.message)
+      })
+    },
+    SaveworkGroup({ },newWorkGroup){
+      return request.ReqSaveNewWorkGroup(newWorkGroup);
+    },
+    QueryworkGroupObj({},WorkGroup){
+      return request.ReqQueryWorkGroupObj(WorkGroup);
+    },
+    PushworkGroupList({commit}, WorkGroup){
+      commit("PushWorkGroupList",WorkGroup);
+    },
+    UpdateworkGroupStatus({}, WorkGroup) {
+      request.ReqUpdateWorkGroupStatus(WorkGroup).then(res => {
+        if (res.resultStatus == 1) {
+          Message.info("操作成功")
+        } else {
+          Message.warning("操作失败:" + res.message)
+        }
+      }).catch(error => {
+        let al = error.message ? error.message : error
+        Message.error(al)
+      })
+    },
+    DeleteworkGroup({ commit }, WorkGroup) {
+      request
+          .ReqDeleteWorkGroup(WorkGroup)
+          .then(res=>{
+              if (res.resultStatus == 1) {
+                  commit("SpliceWorkGroupList", WorkGroup)
+                  Message.info("删除成功")
+              }
+              else {
+                  Message.info("删除失败:" + res.message);
+              }
+          })
+          .catch(error => {
+              let al = error.message ? error.message : error
+              Message.error(al)
+          })
+    },
+    SaveUserGroup({ },UserGroup){
+      return request.ReqSaveUserGroup(UserGroup);
+    },
+    DeleteUserGroup({ }, UserGroup) {
+      request
+          .ReqDeleteUserGroup(UserGroup)
+          .then(res=>{
+              if (res.resultStatus == 1) {
+                  Message.info("删除成功")
+              }
+              else {
+                  Message.info("删除失败:" + res.message);
+              }
+          })
+          .catch(error => {
+              let al = error.message ? error.message : error
+              Message.error(al)
+          })
+    },
 
 };
 
 const getters = {
     departmentList: state => state.departmentList,
     employeeList: state => state.employeeList,
-    roleList:state=>state.roleList
+    roleList:state=>state.roleList,
+    workGroupList:state=>state.workGroupList,
 };
 
 const mutations = {
@@ -133,6 +203,15 @@ const mutations = {
     SetRoleList(state, data) {
       state.roleList=data;
     },
+    SetWorkGroupList(state, data) {
+      state.workGroupList=data;
+    },
+    PushWorkGroupList(state,data){
+      state.workGroupList.push(data);
+    },
+    SpliceWorkGroupList(state, data) {
+      state.workGroupList.splice(data.index, 1);
+  },
 };
 
 export default {
