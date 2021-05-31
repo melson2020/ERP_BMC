@@ -32,5 +32,5 @@ public interface IBoms extends IService<Boms> {
 
     Result SaveAndUpdate(Boms bom);
 
-    Integer DeleteUserGroup(Integer id);
+    Integer DeleteUserGroup(Boms bom);
 }

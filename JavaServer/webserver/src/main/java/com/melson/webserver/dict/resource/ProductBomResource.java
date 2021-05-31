@@ -83,7 +83,7 @@ public class ProductBomResource extends BaseResource {
     @RequestMapping(value = "/detailBomsDelete",method = RequestMethod.POST)
     public Result DeleteDetailBom(@RequestBody Boms bom){
         Result result=new Result();
-        Integer deleteCount=bomsService.DeleteUserGroup(bom.getId());
+        Integer deleteCount=bomsService.DeleteUserGroup(bom);
         result.setResultStatus(deleteCount>0?1:-1);
         return result;
     }

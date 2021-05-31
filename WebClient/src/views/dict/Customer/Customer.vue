@@ -641,7 +641,6 @@ export default {
             this.editCustomer.phone=res.data.phone;
             this.editCustomer.status=res.data.status;
             this.editCustomer.taxNo=res.data.taxNo;
-
             let contacts = [];
             for (let index = 0; index < res.data.contactList.length; index++) {
                 const element = res.data.contactList[index];

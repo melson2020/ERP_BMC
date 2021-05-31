@@ -1348,7 +1348,7 @@ export default {
         {
           if(!this.addCheckEidtable())
             {
-              this.newProductBom.materialVos.push({ id:"",bomNo:"",processId:"",processNo:"",partNo:"",partName:"",chPartNo: "",chName:"",chBomStatus:"",chBomNo:"",chBomGenericId:"",specification:"",sIndex:"",chQty:"" ,lossRate:"0", processStation:"", supplyId:"" ,supplyName:"",materialCostStatus:"",productNo:"",categoryId: "",salesPrice:"",seen: false,notSavedFlag:true})
+              this.newProductBom.materialVos.push({ id:"",bomNo:"",bomGenericId:"",processId:"",processNo:"",partNo:"",partName:"",chPartNo: "",chName:"",chBomStatus:"",chBomNo:"",chBomGenericId:"",specification:"",sIndex:"",chQty:"" ,lossRate:"0", processStation:"", supplyId:"" ,supplyName:"",materialCostStatus:"",productNo:"",categoryId: "",salesPrice:"",seen: false,notSavedFlag:true})
             }
         }
       },
@@ -1357,7 +1357,7 @@ export default {
         {
           if(!this.editCheckEidtable())
             {
-              this.editProductBom.materialVos.push({ id:"",bomNo:"",processId:"",processNo:"",partNo:"",partName:"",chPartNo: "",chName:"",chBomStatus:"",chBomNo:"",chBomGenericId:"",specification:"",sIndex:"",chQty:"" ,lossRate:"0", processStation:"", supplyId:"" ,supplyName:"",materialCostStatus:"",productNo:"",categoryId: "",salesPrice:"",seen: false,notSavedFlag:true})
+              this.editProductBom.materialVos.push({ id:"",bomNo:"",bomGenericId:"",processId:"",processNo:"",partNo:"",partName:"",chPartNo: "",chName:"",chBomStatus:"",chBomNo:"",chBomGenericId:"",specification:"",sIndex:"",chQty:"" ,lossRate:"0", processStation:"", supplyId:"" ,supplyName:"",materialCostStatus:"",productNo:"",categoryId: "",salesPrice:"",seen: false,notSavedFlag:true})
             }
         }
       },
@@ -1591,7 +1591,7 @@ export default {
                 let materials = [];
                 for (let index = 0; index < res.data.materialVos.length; index++) {
                     const element = res.data.materialVos[index];
-                    let bom = { id:element.id,bomNo:element.bomNo,processId:element.processId,processNo:element.processNo,partNo:element.partNo,partName:element.partName,chPartNo: element.chPartNo,chName:element.chName,chBomStatus:element.chBomStatus,chBomNo:element.chBomNo,chBomGenericId:element.chBomGenericId,specification:element.specification,salesPrice:element.salesPrice,sIndex:element.sIndex,chQty:element.chQty ,lossRate:element.lossRate, processStation:element.processStation, supplyId:element.supplyId ,supplyName:element.supplyName,materialCostStatus:element.materialCostStatus,productNo:element.chPartNo,categoryId: "",seen: false,notSavedFlag:false };
+                    let bom = { id:element.id,bomNo:element.bomNo,bomGenericId:element.bomGenericId,processId:element.processId,processNo:element.processNo,partNo:element.partNo,partName:element.partName,chPartNo: element.chPartNo,chName:element.chName,chBomStatus:element.chBomStatus,chBomNo:element.chBomNo,chBomGenericId:element.chBomGenericId,specification:element.specification,salesPrice:element.salesPrice,sIndex:element.sIndex,chQty:element.chQty ,lossRate:element.lossRate, processStation:element.processStation, supplyId:element.supplyId ,supplyName:element.supplyName,materialCostStatus:element.materialCostStatus,productNo:element.chPartNo,categoryId: "",seen: false,notSavedFlag:false };
                     materials.push(bom);
                 }
                 this.editProductBom.materialVos=materials;
