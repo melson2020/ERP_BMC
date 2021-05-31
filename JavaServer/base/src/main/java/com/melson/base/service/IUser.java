@@ -44,4 +44,5 @@ public interface IUser extends IService<User> {
     Integer UpdateUserStatus(User user);
 
 
+    User findByUserId(String userId);
 }

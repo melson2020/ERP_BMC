@@ -191,7 +191,12 @@ public class ICustomerImpl extends AbstractService<Customer> implements ICustome
             Integer length=8;
             customer.setCustomerNo(NumUtil.incrementCode(customer.getId(), Customer.CUSTOMER_NO_CHAR,length));
             customerRepository.save(customer);
-            customerContactRepository.saveAll(customer.getContactList());
+            List<CustomerContact> contactList=customer.getContactList();
+            for(CustomerContact obj:contactList)
+            {
+                obj.setCustomerNo(saved.getCustomerNo());
+            }
+            customerContactRepository.saveAll(contactList);
             if(saved==null){
                 result.setResultStatus(-1);
                 result.setMessage("保存失败！");
