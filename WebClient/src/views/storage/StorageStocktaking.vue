@@ -1,26 +1,26 @@
 <template>
-  <div class="storage-in">
-      <div class="storage-in-header">
+  <div class="storage-stocktaking">
+      <div class="storage-stocktaking-header">
       <el-input
         class="Storage-fliter-input"
         size="small"
-        placeholder="搜索入库单"
+        placeholder="搜索盘点单"
         v-model="searchContent"
         suffix-icon="el-icon-search"
       ></el-input>
-      <el-button type="primary" size="small" @click="resetForm('StorageAddForm')">新建入库单</el-button>
+      <el-button type="primary" size="small" @click="resetForm('StorageAddForm')">新建盘点单</el-button>
       </div>
-      <div class="storage-int-body">
-          <div class="undoing-plan-div-title colorblue">入库单ID</div>
+      <div class="storage-stocktaking-body">
+          <div class="undoing-plan-div-title colorblue">盘点单ID</div>
           <el-scrollbar class="planing-scrollbar">
-            <el-table :data="inventoryInboundList" script border size="small">
-              <el-table-column prop="formNo" label="入库单号" width="180">
+            <el-table :data="inventoryOutboundList" script border size="small">
+              <el-table-column prop="formNo" label="盘点单号" width="180">
               </el-table-column>
               <el-table-column prop="batchNo" label="批次号" width="180">
               </el-table-column>
-              <el-table-column prop="createDate" label="入库时间">
+              <el-table-column prop="createDate" label="盘点时间">
               </el-table-column>
-              <el-table-column prop="createUser" label="入库人">
+              <el-table-column prop="createUser" label="盘点人">
               </el-table-column>
               <el-table-column  width="100px">
                 <template slot-scope="scope">
