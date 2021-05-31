@@ -15,7 +15,10 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -80,33 +83,6 @@ public class LoginResource extends BaseResource {
     }
 
     /**
-     * 修改密码
-     *
-     * @param pwd 新密码
-     * @return
-     */
-    @GetMapping(value = "/updatePwd")
-    public Result updatePwd(HttpServletRequest request, String pwd) {
-        Integer userId = getLoginUserId(request);
-        if (userId == null) {
-            return failure(SysRespCode.LOGIN_TIME_OUT, "登录超时");
-        }
-        User user = userService.get(userId);
-        if (user == null) {
-            return failure(SysRespCode.USER_ID_IS_INVALID, "用户id无效");
-        }
-        if (StringUtils.isEmpty(pwd)) {
-            return failure(SysRespCode.USER_PWD_IS_NULL, "用户密码为空");
-        }
-        String newPwd = MD5Util.string2MD5(pwd);
-        if (newPwd.equals(user.getPassword())) {
-            return failure(SysRespCode.USER_PWD_IS_REPEAT, "密码相同");
-        }
-        userService.updatePwd(userId, newPwd);
-        return success(user);
-    }
-
-    /**
      * 注销登录
      *
      * @param request
@@ -125,13 +101,29 @@ public class LoginResource extends BaseResource {
         return success();
     }
 
-    @RequestMapping(value = "/restPassword", method = RequestMethod.POST)
-    public Result ResetPass(@RequestBody UserVo userVo, HttpServletRequest request) {
-        if (userVo.hasEmptyParams()) return this.GenerateResult(ResultType.ParameterNeeded);
-        Result result = new Result();
-        // 修改逻辑
-        System.out.println("Rest Call: /login/restPassword ...");
-        return result;
+    /**
+     * 修改登录密码
+     *
+     * @param vo
+     * @return
+     */
+    @PostMapping(value = "/restPassword")
+    public Result restPassword(@RequestBody UserVo vo) {
+        if (vo.hasEmptyParams()) {
+            return this.GenerateResult(ResultType.ParameterNeeded);
+        }
+        User user = userService.get(vo.getUserId());
+        if (user == null) {
+            return failure(SysRespCode.USER_ID_IS_INVALID, "用户id无效");
+        }
+        if (StringUtils.isEmpty(vo.getNewPass())) {
+            return failure(SysRespCode.USER_PWD_IS_NULL, "用户密码为空");
+        }
+        String newPwd = MD5Util.string2MD5(vo.getNewPass());
+        if (newPwd.equals(user.getPassword())) {
+            return failure(SysRespCode.USER_PWD_IS_REPEAT, "密码相同");
+        }
+        userService.updatePwd(user.getId(), newPwd);
+        return success(user);
     }
-
 }

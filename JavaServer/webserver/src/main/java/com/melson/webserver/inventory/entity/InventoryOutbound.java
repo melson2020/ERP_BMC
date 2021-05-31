@@ -14,6 +14,11 @@ import java.util.Date;
 public class InventoryOutbound {
 
     /**
+     * 编码前缀
+     */
+    public static final String CODE_PREFIX = "OUT";
+
+    /**
      * 唯一自增id
      */
     private Integer id;
