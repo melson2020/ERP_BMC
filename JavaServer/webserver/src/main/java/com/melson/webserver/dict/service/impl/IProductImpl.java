@@ -224,6 +224,7 @@ public class IProductImpl extends AbstractService<Product> implements IProduct {
         ne.setName(saved.getName());
         ne.setSpecification(saved.getSpecification());
         ne.setCount(0);
+        ne.setProductId(saved.getId());
         ne.setLastestPrice(saved.getSalesPrice());
         ne.setUnit(saved.getUnit());
         ne.setFeature("");

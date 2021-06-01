@@ -1,10 +1,11 @@
 /* eslint-disable no-empty-pattern */
 import request from "../../utils/request";
-// import * as types from '../type'
+import * as types from '../type'
 import { Message } from "element-ui";
 
 const state = {
-    storageList:[],
+    storageList: [],
+    storageDetailPage: {}
 };
 
 const actions = {
@@ -20,36 +21,50 @@ const actions = {
         })
     },
     DeleteStorage({ commit }, Storage) {
-      request
-          .ReqDeleteStorage(Storage)
-          .then(res=>{
-              if (res.resultStatus == 1) {
-                  commit("SpliceStorageList", Storage)
-                  Message.info("删除成功")
-              }
-              else {
-                  Message.info("删除失败:" + res.message);
-              }
-          })
-          .catch(error => {
-              let al = error.message ? error.message : error
-              Message.error(al)
-          })
+        request
+            .ReqDeleteStorage(Storage)
+            .then(res => {
+                if (res.resultStatus == 1) {
+                    commit("SpliceStorageList", Storage)
+                    Message.info("删除成功")
+                }
+                else {
+                    Message.info("删除失败:" + res.message);
+                }
+            })
+            .catch(error => {
+                let al = error.message ? error.message : error
+                Message.error(al)
+            })
     },
-    SaveStorage({ },Storage){
+
+    GetStorageDetail({ commit }, params) {
+        request.GetStorageDetails(params).then(res => {
+            if (res.resultStatus == 1) {
+                commit(types.STORAGE_DETAIL_LIST, res.data)
+            } else {
+                Message.warning(res.message)
+            }
+        }).catch(error => {
+            let al = error.message ? error.message : error
+            Message.error(al)
+        })
+    },
+    SaveStorage({ }, Storage) {
         return request.ReqSaveStorage(Storage);
     },
-    PushStorageList({commit}, Storage){
-        commit("PushStorageList",Storage);
+    PushStorageList({ commit }, Storage) {
+        commit("PushStorageList", Storage);
     },
-    QueryStorageObj({},Storage){
+    QueryStorageObj({ }, Storage) {
         return request.ReqQueryStorageObj(Storage);
     },
 
 };
 
 const getters = {
-    storageList:state=>state.storageList,
+    storageList: state => state.storageList,
+    storageDetailPage: state => state.storageDetailPage
 };
 
 const mutations = {
@@ -60,9 +75,12 @@ const mutations = {
     SpliceStorageList(state, data) {
         state.storageList.splice(data.index, 1);
     },
-    PushStorageList(state,data){
+    PushStorageList(state, data) {
         state.storageList.push(data);
     },
+    [types.STORAGE_DETAIL_LIST](state, data) {
+        state.storageDetailPage = data;
+    }
 };
 
 export default {

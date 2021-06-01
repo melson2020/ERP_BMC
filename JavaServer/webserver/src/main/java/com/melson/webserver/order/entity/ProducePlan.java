@@ -26,7 +26,7 @@ public class ProducePlan {
     private String type;
     private String planNo;
     private Date createDate;
-    // 创建 执行 完成
+    // 1创建 2执行 3完成
     private String state;
 
     private Date startDate;

@@ -362,6 +362,11 @@ export default {
   },
   DelegateTicketReleaseConfirm(param){
     return service.post('/delegate/confirm',param)
+  },
+
+  //库存相关
+  GetStorageDetails(param){
+    return service.get('/delegate/confirm',param)
   }
 
 };

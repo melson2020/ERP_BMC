@@ -22,6 +22,7 @@ public class StorageDetail {
     private String unit;
     private String feature;
     private String storageCode;
+    private Integer productId;
 
     public Integer getId() {
         return id;
@@ -101,5 +102,13 @@ public class StorageDetail {
 
     public void setStorageCode(String storageCode) {
         this.storageCode = storageCode;
+    }
+
+    public Integer getProductId() {
+        return productId;
+    }
+
+    public void setProductId(Integer productId) {
+        this.productId = productId;
     }
 }
