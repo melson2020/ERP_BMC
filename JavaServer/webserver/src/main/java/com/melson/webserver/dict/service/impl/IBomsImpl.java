@@ -3,10 +3,12 @@ package com.melson.webserver.dict.service.impl;
 import com.melson.base.AbstractService;
 import com.melson.base.Result;
 import com.melson.base.utils.EntityUtils;
+import com.melson.webserver.dict.dao.IBomLogsDetailRepository;
+import com.melson.webserver.dict.dao.IBomLogsRepository;
 import com.melson.webserver.dict.dao.IBomsRepository;
-import com.melson.webserver.dict.dao.IProductBomRepository;
+import com.melson.webserver.dict.entity.BomLogs;
+import com.melson.webserver.dict.entity.BomLogsDetail;
 import com.melson.webserver.dict.entity.Boms;
-import com.melson.webserver.dict.entity.UserGroup;
 import com.melson.webserver.dict.service.IBoms;
 import com.melson.webserver.dict.vo.BomProcessVo;
 import com.melson.webserver.dict.vo.BomVo;
@@ -14,7 +16,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -24,9 +26,13 @@ import java.util.Set;
 @Service
 public class IBomsImpl extends AbstractService<Boms> implements IBoms {
     private final IBomsRepository bomsRepository;
+    private final IBomLogsRepository bomLogsRepository;
+    private final IBomLogsDetailRepository bomLogsDetailRepository;
 
-    public IBomsImpl(IBomsRepository bomsRepository) {
+    public IBomsImpl(IBomsRepository bomsRepository, IBomLogsRepository bomLogsRepository, IBomLogsDetailRepository bomLogsDetailRepository) {
         this.bomsRepository = bomsRepository;
+        this.bomLogsRepository = bomLogsRepository;
+        this.bomLogsDetailRepository = bomLogsDetailRepository;
     }
 
     @Override
@@ -71,8 +77,30 @@ public class IBomsImpl extends AbstractService<Boms> implements IBoms {
 
     @Override
     @Transactional
-    public Integer DeleteUserGroup(Integer id) {
-        Integer count=bomsRepository.deleteByIntId(id);
+    public Integer DeleteUserGroup(Boms bom) {
+        BomLogs bl=new BomLogs();                  //第一步， 写日志信息
+        bl.setType("删除物料");
+        bl.setBomNo(bom.getBomNo());
+        bl.setModify("删除: "+bom.getChPartNo()+" "+bom.getChName());
+        bl.setModifyBy(bom.getCurrentUser());
+        bl.setModifyDate(new Date());
+        BomLogs saved=bomLogsRepository.save(bl);
+        BomLogsDetail bld=new BomLogsDetail();     //第一步， 写日志信息
+        bld.setBomLogId(saved.getId());
+        bld.setBomId(bom.getId());
+        bld.setBomNo(bom.getBomNo());
+        bld.setBomGenericId(bom.getBomGenericId());
+        bld.setProcessNo(bom.getProcessNo());
+        bld.setPartNo(bom.getPartNo());
+        bld.setChPartNo(bom.getChPartNo());
+        bld.setChBomStatus(bom.getChBomStatus());
+        bld.setSpecification(bom.getSpecification());
+        bld.setChQty(bom.getChQty());
+        bld.setLossRate(bom.getLossRate());
+        bld.setProcessStation(bom.getProcessStation());
+        bld.setSupplyId(bom.getSupplyId());
+        bomLogsDetailRepository.save(bld);
+        Integer count=bomsRepository.deleteByIntId(bom.getId());
         return count;
     }
 

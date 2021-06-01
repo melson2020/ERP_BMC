@@ -46,6 +46,10 @@ public class Boms {
 //    private Date createDate;              // BOM创建日期
 
 
+    @Transient
+    private String currentUser;
+
+
     public static String getBomNoChar() {
         return BOM_NO_CHAR;
     }
@@ -216,5 +220,13 @@ public class Boms {
 
     public void setSalesPrice(BigDecimal salesPrice) {
         this.salesPrice = salesPrice;
+    }
+
+    public String getCurrentUser() {
+        return currentUser;
+    }
+
+    public void setCurrentUser(String currentUser) {
+        this.currentUser = currentUser;
     }
 }

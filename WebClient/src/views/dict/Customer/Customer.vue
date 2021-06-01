@@ -488,7 +488,7 @@ export default {
           this.$refs[formName].validate(valid => {
           if (valid) {
             let customer=this.newCustomer
-            customer.customerNo="cu" + new Date().valueOf();
+            // customer.customerNo="cu" + new Date().valueOf();
             customer.createDate=new Date();
             customer.status="Y";
             customer.createBy=this.userInfo.loginName;     //TODO： 待添加创建人
@@ -641,7 +641,6 @@ export default {
             this.editCustomer.phone=res.data.phone;
             this.editCustomer.status=res.data.status;
             this.editCustomer.taxNo=res.data.taxNo;
-
             let contacts = [];
             for (let index = 0; index < res.data.contactList.length; index++) {
                 const element = res.data.contactList[index];

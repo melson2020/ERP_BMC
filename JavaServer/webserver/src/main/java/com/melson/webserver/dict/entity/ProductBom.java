@@ -222,4 +222,5 @@ public class ProductBom {
     public void setGroupProductVoList(List<GroupProductVo> groupProductVoList) {
         this.groupProductVoList = groupProductVoList;
     }
+
 }

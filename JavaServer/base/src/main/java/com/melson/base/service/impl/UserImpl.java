@@ -192,6 +192,11 @@ public class UserImpl extends AbstractService<User> implements IUser {
     }
 
     @Override
+    public User findByUserId(String userId) {
+        return userDao.findByUserId(userId);
+    }
+
+    @Override
     public User CreateUser(User user) {
         user.setUserId(UUID.randomUUID().toString());
         user.setCreateDate(new Date());
@@ -300,6 +305,7 @@ public class UserImpl extends AbstractService<User> implements IUser {
     }
 
     @Override
+    @Transactional
     public void updatePwd(Integer id, String pwd) {
         userDao.updatePwd(id, pwd);
     }

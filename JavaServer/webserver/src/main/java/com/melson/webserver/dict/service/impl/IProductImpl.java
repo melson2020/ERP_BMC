@@ -18,7 +18,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -88,11 +90,14 @@ public class IProductImpl extends AbstractService<Product> implements IProduct {
     }
 
     private List<GroupProductVo> generateVoList(String productNo) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String now=sdf.format(new Date());
         List<GroupProductVo> voList=new ArrayList<>();
         String sql ="SELECT pb.productNo,pb.productName as name,pb.specification,pb.categoryId,pc.`name` as category,pb.supplyId,pb.costPrice as salesPrice,pb.supplyName, pb.bomNo,pb.bomGenericId,CONCAT(pc.`name`,' / ',pb.productName,' / ',pb.specification,' / ',pb.supplyName,' / ',pb.description,' / ',pb.version) as alias ,''as id,''as unit,'' as remark FROM `product_bom` pb left join product_category pc on pb.categoryId=pc.categoryId ";
         StringBuffer sBuffer = new StringBuffer(sql);
         sBuffer.append(" where pb.productNo<>'" + productNo + "'");
         sBuffer.append("  and pb.status='Y'");
+        sBuffer.append("  and pb.expirationDate>='" + now + "'");
         List<Object[]> list1 = entityManagerUtil.ExcuteSql(sBuffer.toString());
         List<ProductVo> productVos1 = GenerateList(list1);
         GroupProductVo gpvo1=new GroupProductVo();
@@ -101,6 +106,7 @@ public class IProductImpl extends AbstractService<Product> implements IProduct {
         String sql2 ="SELECT pr.productNo,pr.name,pr.specification,pr.categoryId,pc.`name` as category,pr.supplyId,pr.salesPrice,su.`name` as supplyName,''as bomNo,'' as bomGenericId,CONCAT(pc.`name`,' / ',pr.`name`,' / ',pr.specification,' / ',su.`name`) as alias ,''as id,''as unit,'' as remark from product pr left JOIN supply su on pr.supplyId=su.id left JOIN product_category pc on pr.categoryId=pc.categoryId left JOIN (SELECT productNo from product_bom) pb on pr.productNo=pb.productNo WHERE pb.productNo is null and pr.categoryId<>'CAT00000002' and pr.categoryId<>'CAT00000003'";
         StringBuffer sBuffer2 = new StringBuffer(sql2);
         sBuffer2.append("  and pr.productNo<>'" + productNo + "'");
+        sBuffer2.append("  and pr.expireDate>='" + now + "'");
         List<Object[]> list2 = entityManagerUtil.ExcuteSql(sBuffer2.toString());
         List<ProductVo> productVos2 = GenerateList(list2);
         GroupProductVo gpvo2=new GroupProductVo();

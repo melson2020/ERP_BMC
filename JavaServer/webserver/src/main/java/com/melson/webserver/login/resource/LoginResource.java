@@ -112,7 +112,7 @@ public class LoginResource extends BaseResource {
         if (vo.hasEmptyParams()) {
             return this.GenerateResult(ResultType.ParameterNeeded);
         }
-        User user = userService.get(vo.getUserId());
+        User user = userService.findByUserId(vo.getUserId());
         if (user == null) {
             return failure(SysRespCode.USER_ID_IS_INVALID, "用户id无效");
         }
