@@ -4,6 +4,7 @@ import com.melson.webserver.delegate.vo.DelegateReleaseVo;
 import com.melson.webserver.order.entity.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author Nelson
@@ -37,6 +38,8 @@ public interface IDelegateTicketService {
      * @return
      */
     List<DelegateTicket> FindProcessingList();
+
+    List<DelegateTicket> FindRecordList(Map<String,String[]> kvMap);
 
     DelegateReleaseVo FindReleaseInfo(Integer ticketId);
 

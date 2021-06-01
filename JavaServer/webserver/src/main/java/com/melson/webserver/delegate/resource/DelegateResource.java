@@ -10,6 +10,10 @@ import com.melson.webserver.order.service.IDelegateTicketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.Map;
+
 /**
  * @Author Nelson
  * @Description
@@ -46,5 +50,12 @@ public class DelegateResource extends BaseResource {
         } else {
             return failure(-1, "保存失败");
         }
+    }
+
+    @GetMapping(value = "/recordList")
+    public Result FindDelegateRecordList(HttpServletRequest request) {
+        Map<String,String[]> kvMap=request.getParameterMap();
+        List<DelegateTicket> recordList=delegateTicketService.FindRecordList(kvMap);
+        return success(recordList);
     }
 }

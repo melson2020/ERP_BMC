@@ -83,8 +83,8 @@
             :key="workStation.workStationId"
           >
             <div class="monitor-productionLine-work-station-card fz8">
-              <div class="monitor-produce-work-station-float-div">
-                <el-tooltip
+              <div v-if="workStation.planInfo.length>0" class="monitor-produce-work-station-float-div">
+                <el-tooltip 
                   v-for="plan in workStation.planInfo"
                   :key="plan.planNo"
                   :content="plan.planNo"
@@ -94,7 +94,8 @@
                   <div class="monitor-work-station-plan-info"></div>
                 </el-tooltip>
               </div>
-              <div class="monitor-productionLine-work-station-info">
+              <div v-else class="monitor-produce-work-station-float-div monitor-empty-work-station"><span>闲</span></div>
+              <div class="monitor-productionLine-work-station-info color9">
                 <span
                   >{{ workStation.indexNo }} /
                   {{ workStation.employeeGroupNo }}</span
@@ -288,6 +289,7 @@ export default {
   align-items: center;
   width: 100%;
   line-height: 30px;
+  border-bottom:  1px solid lightgray;
 }
 .monitor-productionLine-work-station-card {
   position: relative;
@@ -313,5 +315,11 @@ export default {
   border-radius: 2px;
   height: 90px;
   background: #67c23a;
+}
+.monitor-empty-work-station{
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: lightgray;
 }
 </style>

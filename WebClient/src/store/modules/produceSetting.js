@@ -67,13 +67,13 @@ const actions = {
         }).catch(err => {
             Message.error(err.message)
         })
-    }
-
+    },
 };
 
 const getters = {
     produceProcessList: state => state.produceProcessList,
-    produceLineList: state => state.produceLineList
+    produceLineList: state => state.produceLineList,
+    employeeGroupList:state=>state.employeeGroupList
 };
 
 const mutations = {

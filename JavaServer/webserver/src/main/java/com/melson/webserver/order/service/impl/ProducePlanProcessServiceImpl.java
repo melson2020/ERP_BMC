@@ -12,6 +12,8 @@ import com.melson.webserver.produce.dao.IProducePlanWorkStationRepository;
 import com.melson.webserver.produce.entity.ProducePlanWorkStation;
 import com.melson.webserver.produce.vo.ProducePlanMaterialVo;
 import com.melson.webserver.produce.vo.ProducePlanProcessVo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -25,6 +27,7 @@ import java.util.*;
  */
 @Service
 public class ProducePlanProcessServiceImpl implements IProducePlanProcessService {
+    private static final Logger logger = LoggerFactory.getLogger(ProducePlanProcessServiceImpl.class);
     @Autowired
     private IBoms bomsService;
     @Autowired
@@ -122,9 +125,6 @@ public class ProducePlanProcessServiceImpl implements IProducePlanProcessService
         }
         for (BomProcessVo vo : res) {
             List<BomProcessVo> childList = FindChildList(vo.getChPartNo(), remindList);
-            childList.forEach(bomVo -> {
-                bomVo.setIndex(vo.getIndex() + "-" + bomVo.getIndex());
-            });
             vo.setChildList(childList);
         }
         return SetProcessVoIndex(res);
@@ -135,7 +135,9 @@ public class ProducePlanProcessServiceImpl implements IProducePlanProcessService
         for (BomProcessVo vo : res) {
             vos.add(vo);
             List<BomProcessVo> list = GetAllChildList(vo);
-            if (list != null) vos.addAll(list);
+            if (list != null) {
+                vos.addAll(list);
+            }
         }
         return vos;
     }
@@ -144,9 +146,12 @@ public class ProducePlanProcessServiceImpl implements IProducePlanProcessService
         List<BomProcessVo> vos = new ArrayList<>();
         if (vo.getChildList() == null || vo.getChildList().size() <= 0) return null;
         for (BomProcessVo child : vo.getChildList()) {
+            child.setIndex(vo.getIndex()+"-"+child.getIndex());
             List<BomProcessVo> list = GetAllChildList(child);
             vos.add(child);
-            if (list != null) vos.addAll(list);
+            if (list != null) {
+                vos.addAll(list);
+            }
         }
         return vos;
     }
@@ -165,9 +170,6 @@ public class ProducePlanProcessServiceImpl implements IProducePlanProcessService
         if (reList.size() > 0) {
             for (BomProcessVo vo : childList) {
                 List<BomProcessVo> childList2 = FindChildList(vo.getChPartNo(), remindList);
-                childList2.forEach(bomVo -> {
-                    bomVo.setIndex(vo.getIndex() + "-" + bomVo.getIndex());
-                });
                 vo.setChildList(childList2);
             }
         }
@@ -220,7 +222,7 @@ public class ProducePlanProcessServiceImpl implements IProducePlanProcessService
             public int compare(ProducePlanProcessVo o1, ProducePlanProcessVo o2) {
                 Integer index1 = Integer.valueOf(o1.getIndex());
                 Integer index2 = Integer.valueOf(o2.getIndex());
-                return index1 < index2 ? -1 : 0;
+                return index1 < index2 ? 0 : -1;
             }
         });
         return voList;
@@ -235,7 +237,7 @@ public class ProducePlanProcessServiceImpl implements IProducePlanProcessService
         vo.setProcessName(example.getProcessName());
         vo.setBomNo(example.getBomNo());
         vo.setDelegateFlag(example.getDelegateFlag());
-        String replaceIndex = processList.get(processList.size() - 1).getProcessIndex().replace("-", "");
+        String replaceIndex = processList.get(0).getProcessIndex().replace("-", "");
         if (replaceIndex.length() < indexLength) {
             Integer baseZero = new Double(Math.pow(10.0, Double.valueOf(indexLength - replaceIndex.length()))).intValue();
             String zeroString = baseZero.toString().substring(1);

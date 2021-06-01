@@ -204,7 +204,7 @@ export default {
       FindDelegaetReleaseInfo: "FindDelegaetReleaseInfo",
       GetTaxRateList: "GetTaxRateList",
       DelegateReleaseTicketConfirm: "DelegateReleaseTicketConfirm",
-      SetDelegateDailogFlag:'SetDelegateDailogFlag'
+      SetDelegateDailogFlag: "SetDelegateDailogFlag",
     }),
     getFullTime(time) {
       return new Date(time).format("yyyy-MM-dd hh:mm:ss");
@@ -284,13 +284,13 @@ export default {
       });
     },
   },
-  watch:{
-    delegateDailogCloseFalg(){
-      if(this.delegateDailogCloseFalg){
-          this.delegateTicketDialog = !this.delegateTicketDialog;
-          this.SetDelegateDailogFlag()
+  watch: {
+    delegateDailogCloseFalg() {
+      if (this.delegateDailogCloseFalg) {
+        this.delegateTicketDialog = !this.delegateTicketDialog;
+        this.SetDelegateDailogFlag();
       }
-    }
+    },
   },
   computed: {
     ...mapGetters([
@@ -298,7 +298,7 @@ export default {
       "supplyList",
       "company",
       "taxRateList",
-      "delegateDailogCloseFalg"
+      "delegateDailogCloseFalg",
     ]),
     delegateReleaseListShow() {
       if (this.delegateType == "") {

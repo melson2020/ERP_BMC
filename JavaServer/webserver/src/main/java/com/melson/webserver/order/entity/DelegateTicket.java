@@ -46,6 +46,10 @@ public class DelegateTicket {
 
     private String supplyName;
 
+    private String pickingTicketNo;
+
+    private String inboundTicketNo;
+
 
     public Integer getId() {
         return id;
@@ -157,5 +161,21 @@ public class DelegateTicket {
 
     public void setSupplyName(String supplyName) {
         this.supplyName = supplyName;
+    }
+
+    public String getPickingTicketNo() {
+        return pickingTicketNo;
+    }
+
+    public void setPickingTicketNo(String pickingTicketNo) {
+        this.pickingTicketNo = pickingTicketNo;
+    }
+
+    public String getInboundTicketNo() {
+        return inboundTicketNo;
+    }
+
+    public void setInboundTicketNo(String inboundTicketNo) {
+        this.inboundTicketNo = inboundTicketNo;
     }
 }

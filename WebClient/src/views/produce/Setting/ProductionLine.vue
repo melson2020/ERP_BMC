@@ -115,13 +115,14 @@
                 <el-select
                   v-model="scope.row.employeeGroupNo"
                   placeholder="分配人员"
+                  @change="workGroupChanged($event, scope.row)"
                   size="mini"
                 >
                   <el-option
-                    v-for="employeeGroup in employeeGroupList"
-                    :label="employeeGroup.groupName"
-                    :value="employeeGroup.groupNo"
-                    :key="employeeGroup.groupNo"
+                    v-for="employeeGroup in workGroupList"
+                    :label="employeeGroup.name"
+                    :value="employeeGroup.workGroupCode"
+                    :key="employeeGroup.workGroupCode"
                   ></el-option>
                 </el-select>
               </template>
@@ -177,12 +178,6 @@ export default {
         ],
       },
       productionLineAddDialog: false,
-      employeeGroupList: [
-        { groupName: "team1", groupNo: "01" },
-        { groupName: "team2", groupNo: "02" },
-        { groupName: "team3", groupNo: "03" },
-        { groupName: "team4", groupNo: "04" },
-      ],
       editProductLine: {
         code: "",
         name: "",
@@ -193,7 +188,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["produceProcessList", "produceLineList"]),
+    ...mapGetters(["produceProcessList", "produceLineList", "workGroupList"]),
   },
   methods: {
     ...mapActions({
@@ -204,6 +199,7 @@ export default {
       FindWorkStationList: "FindWorkStationList",
       DeleteOneWorkStation: "DeleteOneWorkStation",
       DeleteOneProduceLine: "DeleteOneProduceLine",
+      GetworkGroupList: "GetworkGroupList",
     }),
     addProductionLine() {
       this.productionLineAddDialog = !this.productionLineAddDialog;
@@ -221,7 +217,10 @@ export default {
           this.editProductLine.code +
           "-" +
           (this.editProductLine.workStationList.length + 1),
-        name: this.editProductLine.name+(this.editProductLine.workStationList.length + 1)+'号工位',
+        name:
+          this.editProductLine.name +
+          (this.editProductLine.workStationList.length + 1) +
+          "号工位",
         techId: "",
         techName: "",
         seen: false,
@@ -255,6 +254,13 @@ export default {
       });
       row.produceProcessName = process.name;
     },
+
+    workGroupChanged(groupNo, row) {
+      var group = this.workGroupList.find((w) => {
+        return w.workGroupCode == groupNo;
+      });
+      row.employeeGroupName = group.name;
+    },
     submit(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -274,8 +280,8 @@ export default {
               .catch((err) => {
                 this.$message.error(err.message);
               });
-          }else{
-             this.$message.warning("请完善工位信息");
+          } else {
+            this.$message.warning("请完善工位信息");
           }
         } else {
           return false;
@@ -346,6 +352,7 @@ export default {
   beforeMount() {
     this.FindAllProduceProcessList();
     this.FindAllProduceLineList();
+    this.GetworkGroupList();
   },
 };
 </script>

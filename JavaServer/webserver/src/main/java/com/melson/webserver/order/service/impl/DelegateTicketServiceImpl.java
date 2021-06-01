@@ -10,10 +10,19 @@ import com.melson.webserver.order.service.IPickingTicketService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -107,6 +116,38 @@ public class DelegateTicketServiceImpl implements IDelegateTicketService {
     }
 
     @Override
+    public List<DelegateTicket> FindRecordList(Map<String, String[]> kvMap) {
+        List<DelegateTicket> recordList = delegateTicketRepository.findAll(new Specification<DelegateTicket>() {
+            @Nullable
+            @Override
+            public Predicate toPredicate(Root<DelegateTicket> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                Predicate predicate = criteriaBuilder.conjunction();
+                predicate.getExpressions().add(criteriaBuilder.equal(root.get("state"), "4"));
+                for (String key : kvMap.keySet()) {
+                    if (StringUtils.isEmpty(kvMap.get(key)[0])) continue;
+                    if (key.contains("delegateDate")) {
+                        try {
+                            Date createDate = new SimpleDateFormat("yyyy-MM-dd").parse(kvMap.get(key)[0]);
+                            predicate.getExpressions().add(criteriaBuilder.greaterThanOrEqualTo(root.get(key), createDate));
+                            Calendar calendar = Calendar.getInstance();
+                            calendar.setTime(createDate);
+                            calendar.add(Calendar.DAY_OF_MONTH, 1);
+                            Date newDate = calendar.getTime();
+                            predicate.getExpressions().add(criteriaBuilder.lessThan(root.get(key), newDate));
+                        } catch (ParseException e) {
+                            continue;
+                        }
+                    } else {
+                        predicate.getExpressions().add(criteriaBuilder.equal(root.get(key), kvMap.get(key)[0]));
+                    }
+                }
+                return predicate;
+            }
+        });
+        return recordList;
+    }
+
+    @Override
     public DelegateReleaseVo FindReleaseInfo(Integer ticketId) {
         DelegateReleaseVo releaseVo=new DelegateReleaseVo();
         DelegateTicket ticket=delegateTicketRepository.findById(ticketId).orElse(null);
@@ -114,6 +155,7 @@ public class DelegateTicketServiceImpl implements IDelegateTicketService {
         List<DelegateDetail> ticketDetailList=delegateDetailRepository.findByDelegateTicketId(ticketId);
         releaseVo.setDelegateDetailList(ticketDetailList);
         PickingTicket pickingTicket=pickingTicketService.FindBySourceIdAndType(ticket.getSourceId(),ticket.getType());
+        ticket.setPickingTicketNo(pickingTicket.getTicketNo());
         releaseVo.setPickingTicket(pickingTicket);
         List<PickingTicketDetail> pickingTicketDetailList=pickingTicketDetailRepository.findByTicketIdAndType(pickingTicket.getId(),OrderFormDetail.PRODUCE_TYPE_W);
         releaseVo.setPickingTicketDetailList(pickingTicketDetailList);

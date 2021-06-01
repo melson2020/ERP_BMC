@@ -6,7 +6,8 @@ import * as types from '../type'
 const state = {
     delegateReleaseList: [],
     delegateDailogCloseFalg: false,
-    delegateProcessingList:[]
+    delegateProcessingList:[],
+    delegateRecordList:[]
 };
 
 const actions = {
@@ -24,8 +25,18 @@ const actions = {
     FindDelegateProcessingList({ commit }) {
         request.GetDelegateProcessingList().then(res => {
             if (res.resultStatus == 1) {
-                console.log(res.data)
                 commit(types.DELEGATE_PROCESSING_LIST, res.data)
+            } else {
+                Message.warning(res.message)
+            }
+        }).catch(err => {
+            Message.error(err.message)
+        })
+    },
+    FindDelegateRecordList({ commit },param) {
+        request.GetDelegateRecordList(param).then(res => {
+            if (res.resultStatus == 1) {
+                commit(types.DELEGATE_RECORD_LIST, res.data)
             } else {
                 Message.warning(res.message)
             }
@@ -57,7 +68,8 @@ const actions = {
 const getters = {
     delegateReleaseList: state => state.delegateReleaseList,
     delegateDailogCloseFalg: state => state.delegateDailogCloseFalg,
-    delegateProcessingList:state=>state.delegateProcessingList
+    delegateProcessingList:state=>state.delegateProcessingList,
+    delegateRecordList:state=>state.delegateRecordList
 };
 
 const mutations = {
@@ -66,6 +78,9 @@ const mutations = {
     },
     [types.DELEGATE_PROCESSING_LIST](state, data) {
         state.delegateProcessingList = data;
+    },
+    [types.DELEGATE_RECORD_LIST](state, data) {
+        state.delegateRecordList = data;
     },
     RemoveDelegateTicket(state, data) {
         var index = state.delegateReleaseList.indexOf(item => {

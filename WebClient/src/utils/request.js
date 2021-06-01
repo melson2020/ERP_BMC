@@ -354,6 +354,9 @@ export default {
   GetDelegateProcessingList(param){
     return service.get('/delegate/processingList',param)
   },
+  GetDelegateRecordList(param){
+    return service.get('/delegate/recordList',param)
+  },
   GetDelegateReleaseInfo(param){
     return service.get('/delegate/releaseInfo',param)
   },

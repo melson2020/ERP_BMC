@@ -4,13 +4,13 @@
     v-model="tabName"
     @tab-click="createContractOnClick"
   >
-    <el-tab-pane label="新建意向合同" class="contract-tab-pane"
+    <el-tab-pane label="新建意向合同" class="contract-tab-pane" name="first"
       ><m-create-intent-constract></m-create-intent-constract
     ></el-tab-pane>
-    <el-tab-pane label="意向合同" class="contract-tab-pane"
+    <el-tab-pane label="意向合同" class="contract-tab-pane" name="second"
       ><m-intent-constract></m-intent-constract
     ></el-tab-pane>
-    <el-tab-pane label="合同查询" class="contract-tab-pane"
+    <el-tab-pane label="合同查询" class="contract-tab-pane" name="third"
       ><m-constract-search></m-constract-search
     ></el-tab-pane>
   </el-tabs>
@@ -23,7 +23,7 @@ import { mapActions } from "vuex";
 export default {
   data() {
     return {
-      tabName: "",
+      tabName: "first",
     };
   },
   methods: {
@@ -32,7 +32,7 @@ export default {
     }),
     createContractOnClick() {
       switch (this.tabName) {
-        case "0":
+        case "1":
           this.GetIntentionContractList();
           break;
         case "2":
@@ -49,6 +49,12 @@ export default {
     "m-create-intent-constract": createIntentConstract,
     "m-constract-search": contractSearch,
   },
+
+  beforeMount(){
+    if(this.$route.query.type){
+      this.tabName="second"
+    }
+  }
 };
 </script>
 <style>

@@ -301,7 +301,7 @@
         </div>
       </div>
       <div class="fz8">
-        <p class="constract-content">{{ contractTemplate.content.value }}</p>
+        <p class="constract-content">{{ contractTemplate.content==null?'': contractTemplate.content.value}}</p>
         <div class="constract-remark-div">
           <div class="remark-title-div">备注</div>
           <div>
@@ -335,7 +335,7 @@
         </div>
       </div>
       <p class="contract-description">
-        {{ contractTemplate.description.value }}
+        {{ contractTemplate.description==null?"":contractTemplate.description.value}}
       </p>
     </div>
     <div class="edit-contract-button-div">

@@ -390,7 +390,7 @@ export default {
     },
     navigationTo(path) {
       if (path != "") {
-        this.$router.replace({ path: "/main/orderManagement" + path });
+        this.$router.push({ path: "/main/orderManagement" + path,query:{type: 'fromCenter'} });
       }
     },
 

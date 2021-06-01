@@ -234,7 +234,6 @@ export default {
             type: "warning",
           })
           .then(() => {
-            console.log(this.orderFormDetaiList);
             this.OrderFormConfirm({
               orderForm: this.selectedOrderForm,
               orderFormDetails: this.orderFormDetaiList,
@@ -316,24 +315,24 @@ export default {
         });
     },
 
-    removeBomNo(product, bomNo) {
+    removeBomNo(product, node, bomNo) {
       var removeIndex = product.bomNos.indexOf(bomNo);
       if (removeIndex != -1) {
         product.bomNos.splice(removeIndex, 1);
       }
-      console.log(this.orderFormDetaiList);
+      node.childNodes.map((childNode) => {
+        if (childNode.childNodes.length > 0) {
+          this.removeBomNo(product, childNode, childNode.data.chBomNo);
+        }
+      });
     },
     addBomNo(product, bomNo) {
-       console.log('进入函数')
       var detail = this.orderFormDetaiList.find((item) => {
         return item.id == product.id;
       });
-      console.log(detail)
       if (detail.bomNos.indexOf(bomNo) == -1) {
-        console.log("addBomNo");
         detail.bomNos.push(bomNo);
       }
-      console.log(this.orderFormDetaiList);
     },
 
     checkProductData(product) {
@@ -376,7 +375,7 @@ export default {
           childNode.checked = false;
         });
       }
-      this.removeBomNo(product, node.data.chBomNo);
+      this.removeBomNo(product, node, node.data.chBomNo);
     },
 
     orderReleaseRefresh() {

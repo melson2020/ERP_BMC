@@ -116,6 +116,11 @@ export default {
       }
     },
     loadDelegateInfo(ticketId) {
+      this.releaseInfo= {
+        delegateTicket: {},
+        delegateDetailList: [],
+        pickingTicketDetailList: [],
+      },
       this.FindDelegaetReleaseInfo({ ticketId: ticketId })
         .then((res) => {
           this.dialogLoading = false;
