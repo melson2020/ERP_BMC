@@ -366,7 +366,16 @@ export default {
 
   //库存相关
   GetStorageDetails(param){
-    return service.get('/delegate/confirm',param)
+    return service.get('/storageDetail/detailList',param)
+  },
+  GetStorageUnitList(param){
+    return service.get('/storageDetail/storageUnitList',param)
+  },
+  SaveStorageUnitOne(param){
+    return service.post("/storageDetail/saveStorageUnit",param)
+  },
+  DeleteStorageUnitOne(param){
+    return service.post("/storageDetail/deleteStorageUnit",param)
   }
 
 };

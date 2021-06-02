@@ -4,6 +4,8 @@ import com.melson.webserver.inventory.entity.StorageUnit;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * @Author Nelson
  * @Description
@@ -11,4 +13,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface IStorageUnitRepository extends JpaRepository<StorageUnit,Integer> {
+    List<StorageUnit> findByProductId(Integer productId);
 }

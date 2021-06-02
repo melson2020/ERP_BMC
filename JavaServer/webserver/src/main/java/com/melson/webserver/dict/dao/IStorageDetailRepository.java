@@ -18,4 +18,6 @@ public interface IStorageDetailRepository extends JpaRepository<StorageDetail,St
     @Modifying
     @Query(value = "delete from storage_detail where materialNo=?1",nativeQuery = true)
     Integer deleteByMaterialNo(String materialNo);
+
+    StorageDetail findByProductIdAndUnit(Integer productId,String unit);
 }
