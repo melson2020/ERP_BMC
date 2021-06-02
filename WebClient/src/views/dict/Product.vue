@@ -1069,9 +1069,9 @@ export default {
             this.SaveProduct(this.editProduct)
             .then(res=>{
               if(res.resultStatus==1){
-                this.productList.splice(this.editIndex,1,res.data);
-                  this.editIndex=""
-                // this.GetProductList();
+                // this.productList.splice(this.editIndex,1,res.data);
+                //   this.editIndex=""
+                this.GetProductList();
                 this.productEditDialog=false;
                 this.$message({
                   showClose:true,

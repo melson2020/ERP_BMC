@@ -12,8 +12,12 @@ import java.util.Date;
 @Entity
 @Table(name = "purchase_detail")
 public class PurchaseDetail {
-    public static final String PURCHASE_TYPE_ORDER="ORDER";
-    public static final String PURCHASE_STATE_CREATE="CREATE";
+    public static final String PURCHASE_TYPE_ORDER="ORDER";         //采购的类型
+    public static final String PURCHASE_TYPE_PLAN="PLAN";
+    public static final String PURCHASE_TYPE_INDIRECT="INDIRECT";
+
+
+    public static final String PURCHASE_STATE_CREATE="CREATE";    //采购的状态
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
