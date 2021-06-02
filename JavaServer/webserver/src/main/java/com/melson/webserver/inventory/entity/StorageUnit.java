@@ -19,8 +19,6 @@ public class StorageUnit {
 
     private Integer productId;
 
-    private  Integer storageId;
-
     private String packageUnit;
 
     private Integer convertCount;
@@ -43,13 +41,6 @@ public class StorageUnit {
         this.productId = productId;
     }
 
-    public Integer getStorageId() {
-        return storageId;
-    }
-
-    public void setStorageId(Integer storageId) {
-        this.storageId = storageId;
-    }
 
     public String getPackageUnit() {
         return packageUnit;

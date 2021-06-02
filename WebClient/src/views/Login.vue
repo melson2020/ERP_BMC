@@ -75,11 +75,9 @@ export default {
         .then((res) => {
           if (res.resultStatus == 1) {
             var initState = JSON.parse(localStorage.getItem("initState"));
-// console.log('存入缓存',res.data)
             localStorage.setItem("userInfo", JSON.stringify(res.data));
             this.ReSetAllStates(initState);
             this.SetLoginUserInfo(res.data);
-// console.log(this.userInfo)
             this.addRoutes(res.data.menuList);
           } else {
             this.$message.error(res.message);

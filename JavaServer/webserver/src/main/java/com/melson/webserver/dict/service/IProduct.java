@@ -26,6 +26,7 @@ public interface IProduct extends IService<Product> {
 
     Product Query(String productNo);
 
+
     Product QueryProductAndBomList(String productNo);
 
     List<GroupProductVo> GetProductVoList(String productNo);

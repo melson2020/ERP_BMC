@@ -50,6 +50,16 @@ const actions = {
             Message.error(al)
         })
     },
+
+    GetStorageUnitListByProductId({},param){
+       return request.GetStorageUnitList(param)
+    },
+    SaveStorageUnitOne({},param){
+        return request.SaveStorageUnitOne(param)
+    },
+    DeleteStorageUnitOne({},param){
+        return request.DeleteStorageUnitOne(param)
+    },
     SaveStorage({ }, Storage) {
         return request.ReqSaveStorage(Storage);
     },
