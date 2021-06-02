@@ -17,15 +17,17 @@
     <el-table
       script
       border
+      size="small"
       class="storage-detail-table"
       :data="storageDetailPage.content"
+      :span-method="objectSpanMethod"
     >
       <el-table-column prop="materialNo" label="编号"> </el-table-column>
       <el-table-column prop="name" label="名称"> </el-table-column>
       <el-table-column prop="specification" label="规格"> </el-table-column>
       <el-table-column prop="count" label="数量">
         <template slot-scope="scope">
-          <span>{{ scope.row.count }}{{ scope.row.countUnit }}</span>
+          <span>{{ scope.row.count }}{{ scope.row.unit }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="" width="100px">
@@ -62,6 +64,7 @@
       title="包装配置"
       :visible.sync="storagePackageSetting"
       width="70%"
+      @close="handleClose"
     >
       <el-form
         label-position="left"
@@ -212,6 +215,14 @@ export default {
       this.GetStorageDetail(params);
     },
 
+    handleClose() {
+      var params = {
+        page: this.currentPage - 1,
+        pageSize: this.pageSize,
+        searchValue: this.searchValue,
+      };
+      this.GetStorageDetail(params);
+    },
     searchOncLick() {
       var params = {
         page: this.currentPage - 1,
@@ -246,12 +257,6 @@ export default {
           .then((res) => {
             if (res.resultStatus == 1) {
               this.storageUnitInfo.storageUnitList.splice(index, 1);
-              var params = {
-                page: this.currentPage,
-                pageSize: this.pageSize,
-                searchValue: this.searchValue,
-              };
-              this.GetStorageDetail(params);
             } else {
               this.$message.warning(res.message);
             }
@@ -278,12 +283,6 @@ export default {
           if (res.resultStatus == 1) {
             res.data.seen = false;
             this.storageUnitInfo.storageUnitList.splice(index, 1, res.data);
-            var params = {
-              page: this.currentPage,
-              pageSize: this.pageSize,
-              searchValue: this.searchValue,
-            };
-            this.GetStorageDetail(params);
           } else {
             this.$message.warning(res.message);
           }
@@ -311,6 +310,16 @@ export default {
       };
       this.storageUnitInfo.storageUnitList.push(addObj);
     },
+    objectSpanMethod({ rowIndex, columnIndex }) {
+      if (columnIndex <= 2) {
+        const _row = this.spanArr[rowIndex];
+        const _col = _row > 0 ? 1 : 0;
+        return {
+          rowspan: _row,
+          colspan: _col,
+        };
+      }
+    },
   },
   computed: {
     ...mapGetters(["storageDetailPage"]),
@@ -330,6 +339,31 @@ export default {
         });
         return unitList;
       };
+    },
+    spanArr() {
+      let spanRowArr = [];
+      let pos = 0;
+      for (
+        let index = 0;
+        index < this.storageDetailPage.content.length;
+        index++
+      ) {
+        if (index == 0) {
+          spanRowArr.push(1);
+          pos = 0;
+        } else {
+          var pre = this.storageDetailPage.content[index - 1];
+          var current = this.storageDetailPage.content[index];
+          if (pre.productId === current.productId) {
+            spanRowArr[pos] += 1;
+            spanRowArr.push(0);
+          } else {
+            spanRowArr.push(1);
+            pos = index;
+          }
+        }
+      }
+      return spanRowArr;
     },
   },
 

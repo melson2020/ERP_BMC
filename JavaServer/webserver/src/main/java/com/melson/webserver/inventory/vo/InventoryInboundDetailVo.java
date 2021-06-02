@@ -17,7 +17,7 @@ public class InventoryInboundDetailVo {
     /**
      * 名称
      */
-    private String name;
+    private String materialName;
     /**
      * 规格
      */
@@ -25,7 +25,7 @@ public class InventoryInboundDetailVo {
     /**
      * 数量
      */
-    private Integer count;
+    private BigDecimal count;
     /**
      * 最新价格
      */
@@ -39,6 +39,24 @@ public class InventoryInboundDetailVo {
      */
     private String storageCode;
 
+    public InventoryInboundDetailVo() {
+
+    }
+
+    public InventoryInboundDetailVo(String materialNo, String materialName, String specification, BigDecimal count, BigDecimal latestPrice, String unit, String storageCode) {
+        this.materialNo = materialNo;
+        this.materialName = materialName;
+        this.specification = specification;
+        this.count = count;
+        this.latestPrice = latestPrice;
+        this.unit = unit;
+        this.storageCode = storageCode;
+    }
+
+    public void setCount(BigDecimal count) {
+        this.count = count;
+    }
+
     public String getMaterialNo() {
         return materialNo;
     }
@@ -47,12 +65,12 @@ public class InventoryInboundDetailVo {
         this.materialNo = materialNo;
     }
 
-    public String getName() {
-        return name;
+    public String getMaterialName() {
+        return materialName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setMaterialName(String materialName) {
+        this.materialName = materialName;
     }
 
     public String getSpecification() {
@@ -63,12 +81,8 @@ public class InventoryInboundDetailVo {
         this.specification = specification;
     }
 
-    public Integer getCount() {
+    public BigDecimal getCount() {
         return count;
-    }
-
-    public void setCount(Integer count) {
-        this.count = count;
     }
 
     public BigDecimal getLatestPrice() {

@@ -28,7 +28,7 @@ public class InventoryInboundDetail {
     /**
      * 名称
      */
-    private String name;
+    private String materialName;
     /**
      * 规格
      */
@@ -36,7 +36,7 @@ public class InventoryInboundDetail {
     /**
      * 数量
      */
-    private Integer count;
+    private BigDecimal count;
     /**
      * 最新价格
      */
@@ -76,12 +76,12 @@ public class InventoryInboundDetail {
         this.materialNo = materialNo;
     }
 
-    public String getName() {
-        return name;
+    public String getMaterialName() {
+        return materialName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setMaterialName(String materialName) {
+        this.materialName = materialName;
     }
 
     public String getSpecification() {
@@ -92,11 +92,11 @@ public class InventoryInboundDetail {
         this.specification = specification;
     }
 
-    public Integer getCount() {
+    public BigDecimal getCount() {
         return count;
     }
 
-    public void setCount(Integer count) {
+    public void setCount(BigDecimal count) {
         this.count = count;
     }
 

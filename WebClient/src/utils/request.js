@@ -354,6 +354,9 @@ export default {
   GetDelegateProcessingList(param){
     return service.get('/delegate/processingList',param)
   },
+  GetDelegateInBoundList(param){
+    return service.get('/delegate/inBoundList',param)
+  },
   GetDelegateRecordList(param){
     return service.get('/delegate/recordList',param)
   },
@@ -376,6 +379,9 @@ export default {
   },
   DeleteStorageUnitOne(param){
     return service.post("/storageDetail/deleteStorageUnit",param)
+  },
+  CreateInventoryInBound(param){
+    return service.get('/inventory/inbound/createInBound',param)
   }
 
 };

@@ -47,6 +47,9 @@ const actions = {
     FindDelegaetReleaseInfo({ }, param) {
         return request.GetDelegateReleaseInfo(param)
     },
+    FindDelegateInBoundList({},param){
+        return request.GetDelegateInBoundList(param)
+    },
     DelegateReleaseTicketConfirm({ commit }, param) {
         request.DelegateTicketReleaseConfirm(param).then(res => {
             if (res.resultStatus == 1) {

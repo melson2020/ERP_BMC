@@ -69,6 +69,9 @@ const actions = {
     QueryStorageObj({ }, Storage) {
         return request.ReqQueryStorageObj(Storage);
     },
+    CreateInventoryInBound({},param){
+        return request.CreateInventoryInBound(param)
+    }
 
 };
 

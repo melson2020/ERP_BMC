@@ -2,6 +2,7 @@ package com.melson.webserver.inventory.resource;
 
 import com.melson.base.BaseResource;
 import com.melson.base.Result;
+import com.melson.base.ResultType;
 import com.melson.base.constants.SysRespCode;
 import com.melson.base.utils.DateUtil;
 import com.melson.webserver.inventory.entity.InventoryInbound;
@@ -10,6 +11,7 @@ import com.melson.webserver.inventory.vo.InventoryInboundVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -69,5 +71,23 @@ public class InventoryInboundResource extends BaseResource {
         }
         logger.info("用户[{}]入库[{}]成功", userId, form.getFormNo());
         return success(form.getFormNo());
+    }
+
+    /**
+     * 依据委外单/采购单/生产计划/代工详细 生产入库单
+     *
+     * @return
+     */
+    @GetMapping(value = "/createInBound")
+    public Result CreateInBoundWithExistTicket(HttpServletRequest request, Integer ticketId, String ticketType) {
+        if (ticketId == null || StringUtils.isEmpty(ticketType)) return GenerateResult(ResultType.ParameterNeeded);
+        String token = request.getHeader("token");
+        Integer userId = Integer.parseInt(token);
+        InventoryInboundVo created = inventoryInboundService.createInBoundWithTicket(ticketId, ticketType, userId);
+        if (created != null) {
+            return success(created);
+        } else {
+            return failure(-1, "创建失败");
+        }
     }
 }

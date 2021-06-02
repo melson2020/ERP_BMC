@@ -1,5 +1,8 @@
 package com.melson.webserver.inventory.vo;
 
+import javax.persistence.Transient;
+import javax.transaction.Transactional;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -23,16 +26,31 @@ public class InventoryInboundVo {
      */
     private String type;
     /**
-     * 供应商
+     * 来源单号
      */
-    private String customerNo;
+    private String sourceNo;
+    /**
+     * 来源Id
+     */
+    private Integer sourceId;
     /**
      * 描述
      */
     private String remark;
+
+    /**
+     * 供应商
+     */
+    private Integer supplyId;
+
+    private Date createDate;
+
+    private Integer createUser;
+
     /**
      * 入库明细
      */
+    @Transient
     private List<InventoryInboundDetailVo> detailVoList;
 
     public String getFormNo() {
@@ -59,13 +77,6 @@ public class InventoryInboundVo {
         this.type = type;
     }
 
-    public String getCustomerNo() {
-        return customerNo;
-    }
-
-    public void setCustomerNo(String customerNo) {
-        this.customerNo = customerNo;
-    }
 
     public String getRemark() {
         return remark;
@@ -81,5 +92,45 @@ public class InventoryInboundVo {
 
     public void setDetailVoList(List<InventoryInboundDetailVo> detailVoList) {
         this.detailVoList = detailVoList;
+    }
+
+    public String getSourceNo() {
+        return sourceNo;
+    }
+
+    public void setSourceNo(String sourceNo) {
+        this.sourceNo = sourceNo;
+    }
+
+    public Integer getSourceId() {
+        return sourceId;
+    }
+
+    public void setSourceId(Integer sourceId) {
+        this.sourceId = sourceId;
+    }
+
+    public Integer getSupplyId() {
+        return supplyId;
+    }
+
+    public void setSupplyId(Integer supplyId) {
+        this.supplyId = supplyId;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    public Integer getCreateUser() {
+        return createUser;
+    }
+
+    public void setCreateUser(Integer createUser) {
+        this.createUser = createUser;
     }
 }

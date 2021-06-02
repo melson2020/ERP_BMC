@@ -1,6 +1,11 @@
 package com.melson.webserver.order.service.impl;
 
+import com.melson.base.utils.DateUtil;
+import com.melson.base.utils.EntityUtils;
 import com.melson.webserver.delegate.vo.DelegateReleaseVo;
+import com.melson.webserver.inventory.entity.InventoryInbound;
+import com.melson.webserver.inventory.vo.InventoryInboundDetailVo;
+import com.melson.webserver.inventory.vo.InventoryInboundVo;
 import com.melson.webserver.order.dao.IDelegateDetailRepository;
 import com.melson.webserver.order.dao.IDelegateTicketRepository;
 import com.melson.webserver.order.dao.IPickingTicketDetailRepository;
@@ -106,8 +111,8 @@ public class DelegateTicketServiceImpl implements IDelegateTicketService {
     }
 
     @Override
-    public List<DelegateTicket> FindReleaseList() {
-        return delegateTicketRepository.findByState(DelegateTicket.STATE_CREATE);
+    public List<DelegateTicket> FindByState(String state) {
+        return delegateTicketRepository.findByState(state);
     }
 
     @Override
@@ -171,6 +176,28 @@ public class DelegateTicketServiceImpl implements IDelegateTicketService {
         delegateDetailRepository.saveAll(delegateDetails);
         return delegateTicketRepository.save(ticket);
 
+    }
+
+    @Override
+    public InventoryInboundVo GenerateInventoryInBound(Integer ticketId,Integer userId) {
+        DelegateTicket delegateTicket=delegateTicketRepository.findById(ticketId).orElse(null);
+        if(delegateTicket==null){
+            logger.info("创建入库单未找到委外单");
+            return null;
+        }
+        List<Object[]> inBoundDetailList=delegateDetailRepository.findInBoundDetailList(ticketId);
+        List<InventoryInboundDetailVo> detailVos= EntityUtils.castEntity(inBoundDetailList,InventoryInboundDetailVo.class,new InventoryInboundDetailVo());
+        InventoryInboundVo inventoryInbound=new InventoryInboundVo();
+        inventoryInbound.setFormNo(InventoryInbound.CODE_PREFIX+ System.currentTimeMillis());
+        inventoryInbound.setBatchNo(DateUtil.timeShortFormat(new Date()));
+        inventoryInbound.setType(InventoryInbound.TYPE_DELEGATE);
+        inventoryInbound.setSourceNo(delegateTicket.getTicketNo());
+        inventoryInbound.setSourceId(ticketId);
+        inventoryInbound.setCreateDate(new Date());
+        inventoryInbound.setCreateUser(userId);
+        inventoryInbound.setSupplyId(delegateTicket.getSupplyId());
+        inventoryInbound.setDetailVoList(detailVos);
+        return inventoryInbound;
     }
 
 

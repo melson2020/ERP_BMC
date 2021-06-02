@@ -38,4 +38,7 @@ public interface IInventoryInboundService {
      * @return
      */
     InventoryInbound save(InventoryInboundVo vo, Integer userId);
+
+
+    InventoryInboundVo createInBoundWithTicket(Integer ticketId,String ticketType,Integer userId);
 }
