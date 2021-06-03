@@ -61,7 +61,7 @@ public class IStorageDetailImpl extends AbstractService<StorageDetail> implement
 
     @Override
     public Page<StorageDetail> FindAllStorageList(String searchValue, Integer page, Integer pageSize) {
-        Pageable pageable = PageRequest.of(page, pageSize, Sort.Direction.ASC, "id");
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.Direction.ASC, "productId");
         Specification<StorageDetail> specification = new Specification<StorageDetail>() {
             @Nullable
             @Override

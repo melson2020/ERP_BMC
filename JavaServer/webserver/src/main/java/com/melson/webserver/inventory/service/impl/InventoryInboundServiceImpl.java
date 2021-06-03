@@ -9,6 +9,7 @@ import com.melson.webserver.inventory.entity.InventoryInboundDetail;
 import com.melson.webserver.inventory.service.IInventoryInboundService;
 import com.melson.webserver.inventory.vo.InventoryInboundDetailVo;
 import com.melson.webserver.inventory.vo.InventoryInboundVo;
+import com.melson.webserver.order.service.IDelegateTicketService;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +36,8 @@ public class InventoryInboundServiceImpl implements IInventoryInboundService {
     private IInventoryInboundRepository inventoryInboundRepository;
     @Autowired
     private IInventoryInboundDetailRepository inventoryInboundDetailRepository;
+    @Autowired
+    private IDelegateTicketService delegateTicketService;
 
     @Override
     public List<InventoryInboundVo> list(Date date) {
@@ -106,5 +109,13 @@ public class InventoryInboundServiceImpl implements IInventoryInboundService {
         // 3.修改库存
         // todo : 关联库存表新增 by wuhuan
         return form;
+    }
+
+    @Override
+    public InventoryInboundVo createInBoundWithTicket(Integer ticketId, String ticketType,Integer userId) {
+        switch (ticketType){
+            case InventoryInbound.TYPE_DELEGATE:return delegateTicketService.GenerateInventoryInBound(ticketId,userId);
+        }
+        return null;
     }
 }

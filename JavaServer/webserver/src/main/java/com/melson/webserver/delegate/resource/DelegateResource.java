@@ -27,7 +27,12 @@ public class DelegateResource extends BaseResource {
 
     @GetMapping(value = "/releaseList")
     public Result FindDelegateReleaseList() {
-        return success(delegateTicketService.FindReleaseList());
+        return success(delegateTicketService.FindByState(DelegateTicket.STATE_CREATE));
+    }
+
+    @GetMapping(value = "/inBoundList")
+    public Result FindInBoundList() {
+        return success(delegateTicketService.FindByState(DelegateTicket.STATE_PICKING));
     }
 
     @GetMapping(value = "/processingList")

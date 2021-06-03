@@ -12,11 +12,16 @@ import java.util.Date;
 @Entity
 @Table(name = "inventory_inbound")
 public class InventoryInbound {
+    public static final String TYPE_DELEGATE = "DELEGATE";
+    public static final String TYPE_PURCHASE = "PURCHASE";
+    public static final String TYPE_PRODUCE = "PRODUCE";
+    public static final String TYPE_OTHERS = "OTHERS";
+    public static final String TYPE_OEM = "OEM";
 
     /**
      * 编码前缀
      */
-    public static final String CODE_PREFIX = "IN";
+    public static final String CODE_PREFIX = "I";
 
     /**
      * 唯一自增id
@@ -35,9 +40,13 @@ public class InventoryInbound {
      */
     private String type;
     /**
-     * 供应商
+     * 来源单号
      */
-    private String customerNo;
+    private String sourceNo;
+    /**
+     * 来源Id
+     */
+    private Integer sourceId;
     /**
      * 描述
      */
@@ -50,6 +59,9 @@ public class InventoryInbound {
      * 操作人
      */
     private Integer createUser;
+
+    private Integer supplyId;
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -85,12 +97,20 @@ public class InventoryInbound {
         this.type = type;
     }
 
-    public String getCustomerNo() {
-        return customerNo;
+    public String getSourceNo() {
+        return sourceNo;
     }
 
-    public void setCustomerNo(String customerNo) {
-        this.customerNo = customerNo;
+    public void setSourceNo(String sourceNo) {
+        this.sourceNo = sourceNo;
+    }
+
+    public Integer getSourceId() {
+        return sourceId;
+    }
+
+    public void setSourceId(Integer sourceId) {
+        this.sourceId = sourceId;
     }
 
     public String getRemark() {
@@ -115,5 +135,13 @@ public class InventoryInbound {
 
     public void setCreateUser(Integer createUser) {
         this.createUser = createUser;
+    }
+
+    public Integer getSupplyId() {
+        return supplyId;
+    }
+
+    public void setSupplyId(Integer supplyId) {
+        this.supplyId = supplyId;
     }
 }

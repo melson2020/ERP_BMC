@@ -1,6 +1,8 @@
 package com.melson.webserver.order.service;
 
 import com.melson.webserver.delegate.vo.DelegateReleaseVo;
+import com.melson.webserver.inventory.entity.InventoryInbound;
+import com.melson.webserver.inventory.vo.InventoryInboundVo;
 import com.melson.webserver.order.entity.*;
 
 import java.util.List;
@@ -31,7 +33,7 @@ public interface IDelegateTicketService {
 
     DelegateTicket FindByPlanId(Integer planId);
 
-    List<DelegateTicket> FindReleaseList();
+    List<DelegateTicket> FindByState(String state);
 
     /**
      * 获取正在执行中的list 包括 state=2 state=3
@@ -44,4 +46,6 @@ public interface IDelegateTicketService {
     DelegateReleaseVo FindReleaseInfo(Integer ticketId);
 
     DelegateTicket DelegateTicketConfirm(DelegateReleaseVo releaseVo);
+
+    InventoryInboundVo GenerateInventoryInBound(Integer ticketId,Integer userId);
 }

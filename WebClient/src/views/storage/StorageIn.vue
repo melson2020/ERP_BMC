@@ -1,45 +1,324 @@
 <template>
-  <div class="storage-in">
-      <div class="storage-in-header">
-      <el-input
-        class="Storage-fliter-input"
-        size="small"
-        placeholder="搜索入库单"
-        v-model="searchContent"
-        suffix-icon="el-icon-search"
-      ></el-input>
-      <el-button type="primary" size="small" @click="resetForm('StorageAddForm')">新建入库单</el-button>
-      </div>
-      <div class="storage-int-body">
-          <div class="undoing-plan-div-title colorblue">入库单ID</div>
-          <el-scrollbar class="planing-scrollbar">
-            <el-table :data="inventoryInboundList" script border size="small">
-              <el-table-column prop="formNo" label="入库单号" width="180">
+  <div class="storage-in-main-div">
+    <div class="storage-in-header-div">
+      <el-row :gutter="5">
+        <el-col :span="6">
+          <el-button
+            class="storage-in-larg-button"
+            @click="inventoryInBoundTypeOnClick('PURCHASE')"
+            type="success"
+            plain
+            >采购入库</el-button
+          >
+        </el-col>
+        <el-col :span="6">
+          <el-button
+            class="storage-in-larg-button"
+            @click="inventoryInBoundTypeOnClick('DELEGATE')"
+            type="warning"
+            plain
+            >委外入库</el-button
+          >
+        </el-col>
+        <el-col :span="6">
+          <el-button
+            class="storage-in-larg-button"
+            @click="inventoryInBoundTypeOnClick('OEM')"
+            type="danger"
+            plain
+            >代工入库</el-button
+          >
+        </el-col>
+        <el-col :span="6">
+          <el-button
+            class="storage-in-larg-button"
+            @click="inventoryInBoundTypeOnClick('PRODUCE')"
+            type="primary"
+            plain
+            >生产入库</el-button
+          >
+        </el-col>
+      </el-row>
+    </div>
+    <div class="storage-in-form-area">
+      <div class="storage-in-form-div">
+        <div class="storage-in-form-header">
+          <span class="colorblue">入库单</span>
+        </div>
+        <el-form
+          ref="form"
+          label-position="left"
+          :model="editInventoryInbound"
+          label-width="80px"
+          class="mt40"
+        >
+          <el-row :gutter="10">
+            <el-col :span="12">
+              <el-form-item label="日期">
+                <el-input
+                  v-model="editInventoryInbound.createDate"
+                ></el-input> </el-form-item
+            ></el-col>
+            <el-col :span="12">
+              <el-form-item label="人员">
+                <el-input
+                  v-model="editInventoryInbound.createUser"
+                ></el-input> </el-form-item
+            ></el-col>
+          </el-row>
+          <el-row :gutter="10">
+            <el-col :span="12">
+              <el-form-item label="来源单号">
+                <el-input
+                  disabled
+                  v-model="editInventoryInbound.sourceNo"
+                  placeholder="入库类型为其他时，不需要填写"
+                ></el-input> </el-form-item
+            ></el-col>
+            <el-col :span="12">
+              <el-form-item label="类型">
+                <el-select
+                  v-model="editInventoryInbound.type"
+                  placeholder="选择类型"
+                  class="w100"
+                >
+                  <el-option label="采购入库" value="PURCHASE" disabled>
+                  </el-option>
+                  <el-option label="委外入库" value="DELEGATE" disabled>
+                  </el-option>
+                  <el-option label="代工入库" value="OEM" disabled> </el-option>
+                  <el-option label="生产入库" value="PRODUCE" disabled>
+                  </el-option>
+                  <el-option label="其他" value="OTHERS"> </el-option>
+                </el-select> </el-form-item
+            ></el-col>
+          </el-row>
+          <el-row :gutter="10">
+            <el-col :span="12">
+              <el-form-item label="批次号">
+                <el-input
+                  v-model="editInventoryInbound.batchNo"
+                ></el-input> </el-form-item
+            ></el-col>
+            <el-col :span="12"> </el-col>
+          </el-row>
+          <el-form-item label="入库详细">
+            <el-table
+              :data="editInventoryInbound.detailVoList"
+              script
+              border
+              size="mini"
+            >
+              <el-table-column prop="materialNo" label="编号">
               </el-table-column>
-              <el-table-column prop="batchNo" label="批次号" width="180">
+              <el-table-column prop="materialName" label="名称">
               </el-table-column>
-              <el-table-column prop="createDate" label="入库时间">
+              <el-table-column prop="specification" label="规格">
               </el-table-column>
-              <el-table-column prop="createUser" label="入库人">
-              </el-table-column>
-              <el-table-column  width="100px">
+              <el-table-column prop="count" label="数量">
                 <template slot-scope="scope">
-                  <el-button
-                    icon="el-icon-more"
-                    type="primary"
-                    size="mini"
-                    @click="changeTableAreaView(scope.row.id)"
-                    circle
-                  ></el-button>
+                  <span>{{ scope.row.count }}{{ scope.row.unit }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column prop="count" label="数量">
+                <template slot-scope="scope">
+                  <el-select v-model="scope.row.storageCode" placeholder="选择仓库" size="mini">
+                    <el-option v-for="storage in storageList" :label="storage.name" :value="storage.storageCode" :key="storage.storageCode"></el-option>
+                  </el-select>
                 </template>
               </el-table-column>
             </el-table>
-          </el-scrollbar>
+            <el-button
+              icon="el-icon-plus"
+              v-if="inventoryInboundType == 'OTHERS'"
+              plain
+              class="add-storage-in-deail mt40"
+              >添加详细</el-button
+            >
+          </el-form-item>
+          <el-form-item label="入库备注">
+            <el-input
+              type="textarea"
+              placeholder="请输入内容"
+              maxlength="50"
+              show-word-limit
+            ></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary">立即创建</el-button>
+            <el-button>取消</el-button>
+          </el-form-item>
+        </el-form>
       </div>
+    </div>
+    <el-dialog title="入库选择" :visible.sync="dialogVisible" width="60%">
+      <div v-if="inventoryInboundType == 'DELEGATE'">
+        <span class="colorblue fl mb40">委外单</span>
+        <el-table script border size="mini" :data="delegateInBoundList">
+          <el-table-column prop="ticketNo" label="单号"> </el-table-column>
+          <el-table-column prop="customerName" label="客户"> </el-table-column>
+          <el-table-column prop="supplyName" label="供货商"> </el-table-column>
+          <el-table-column prop="delegateDate" label="委外日期">
+            <template slot-scope="scope">
+              <span>{{ getFullDate(scope.row.delegateDate) }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="" label="" width="80px">
+            <template slot-scope="scope">
+              <el-button
+                @click="loadInBound(scope.row, 'DELEGATE')"
+                type="success"
+                icon="el-icon-check"
+                size="mini"
+                circle
+              ></el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+      <div v-if="inventoryInboundType == 'PURCHASE'">
+        <span class="colorblue fl mb40">采购单</span>
+        <el-table script border size="mini">
+          <el-table-column prop="materialNo" label="编号"> </el-table-column>
+          <el-table-column prop="name" label="名称"> </el-table-column>
+          <el-table-column prop="specification" label="规格"> </el-table-column>
+          <el-table-column prop="count" label="数量">
+            <template slot-scope="scope">
+              <span>{{ scope.row.count }}{{ scope.row.unit }}</span>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+      <div v-if="inventoryInboundType == 'OEM'">
+        <span class="colorblue fl mb40">代工给料</span>
+        <el-table script border size="mini">
+          <el-table-column prop="materialNo" label="编号"> </el-table-column>
+          <el-table-column prop="name" label="名称"> </el-table-column>
+          <el-table-column prop="specification" label="规格"> </el-table-column>
+          <el-table-column prop="count" label="数量">
+            <template slot-scope="scope">
+              <span>{{ scope.row.count }}{{ scope.row.unit }}</span>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+      <div v-if="inventoryInboundType == 'PRODUCE'">
+        <span class="colorblue fl mb40">生产入库</span>
+        <el-table script border size="mini">
+          <el-table-column prop="materialNo" label="编号"> </el-table-column>
+          <el-table-column prop="name" label="名称"> </el-table-column>
+          <el-table-column prop="specification" label="规格"> </el-table-column>
+          <el-table-column prop="count" label="数量">
+            <template slot-scope="scope">
+              <span>{{ scope.row.count }}{{ scope.row.unit }}</span>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+    </el-dialog>
   </div>
-
 </template>
 <script>
-export default {};
+import { mapGetters } from "vuex";
+import { mapActions } from "vuex";
+export default {
+  data() {
+    return {
+      editInventoryInbound: {
+        detailVoList: [],
+      },
+      dialogVisible: false,
+      inventoryInboundType: "",
+      delegateInBoundList: [],
+    };
+  },
+
+  methods: {
+    ...mapActions({
+      FindDelegateInBoundList: "FindDelegateInBoundList",
+      CreateInventoryInBound: "CreateInventoryInBound",
+      GetStorageList:'GetStorageList'
+    }),
+    inventoryInBoundTypeOnClick(type) {
+      this.inventoryInboundType = type;
+      this.FindDelegateInBoundList()
+        .then((res) => {
+          if (res.resultStatus == 1) {
+            this.dialogVisible = true;
+            this.delegateInBoundList = res.data;
+          } else {
+            this.$message.warning(res.message);
+          }
+        })
+        .catch((err) => {
+          this.$message.error(err.message);
+        });
+    },
+
+    loadInBound(row, type) {
+      this.CreateInventoryInBound({ ticketId: row.id, ticketType: type })
+        .then((res) => {
+          if (res.resultStatus == 1) {
+            this.editInventoryInbound = res.data;
+            console.log(this.editInventoryInbound);
+            this.dialogVisible = false;
+          } else {
+            this.$message.warning(res.message);
+          }
+        })
+        .catch((err) => {
+          this.$message.error(err.message);
+        });
+    },
+
+    getFullDate(time) {
+      if (time) {
+        return new Date(time).format("yyyy-MM-dd");
+      } else {
+        return "";
+      }
+    },
+  },
+  computed: {
+    ...mapGetters(["storageList"]),
+  },
+
+  mounted(){
+    this.GetStorageList()
+  }
+};
 </script>
-<style></style>
+<style>
+.storage-in-main-div {
+  padding: 5px 10px;
+}
+.storage-in-larg-button {
+  width: 100%;
+  height: 60px;
+  font-size: 1.1rem;
+}
+.storage-in-form-area {
+  padding: 20px 0px;
+  display: flex;
+  justify-content: center;
+}
+.storage-in-form-div {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+  width: 100%;
+  border: 1px solid lightgray;
+  padding: 20px;
+}
+.storage-in-form-header {
+  height: 40px;
+  align-items: center;
+  line-height: 40px;
+  font-size: 1.3rem;
+  letter-spacing: 0.2rem;
+  font-weight: 600;
+}
+.add-storage-in-deail {
+  width: 100%;
+  color: #259dff;
+  border: #dcdfe6 dashed 1px !important;
+}
+</style>
