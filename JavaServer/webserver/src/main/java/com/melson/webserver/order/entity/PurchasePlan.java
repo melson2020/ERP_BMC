@@ -2,6 +2,7 @@ package com.melson.webserver.order.entity;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Author Nelson
@@ -44,6 +45,9 @@ public class PurchasePlan {
     private Integer createBy;
     private String description;
 
+
+    @Transient
+    private List<PurchaseDetail> purchaseDetailList;
 
 
     public Integer getId() {
@@ -148,5 +152,13 @@ public class PurchasePlan {
 
     public void setRequester(String requester) {
         this.requester = requester;
+    }
+
+    public List<PurchaseDetail> getPurchaseDetailList() {
+        return purchaseDetailList;
+    }
+
+    public void setPurchaseDetailList(List<PurchaseDetail> purchaseDetailList) {
+        this.purchaseDetailList = purchaseDetailList;
     }
 }

@@ -278,6 +278,22 @@ export default {
   },
 
 
+//采购相关
+ReqPurchaseList(params){
+  return service.get('/employee/purchaseList',params)    //  //
+},
+ReqSavePurchase(param){
+  return service.post("/employee/purchaseSave",param)
+},
+ReqQueryPurchaseObj(params){
+  return service.post("/employee/queryPurchase",params);
+},
+ReqUpdatePurchaseStatus(params) {
+  return service.post("/employee/updatePurchaseStatus", params);
+},
+
+
+
   //订单相关
   GetCreatedOrderList(param){
     return service.get('/orderForm/manage/createdList',param)

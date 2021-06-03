@@ -54,7 +54,7 @@ public class PurchaseDetailServiceImpl implements IPurchaseDetailService {
         pr.setType(PurchasePlan.PURCHASE_TYPE_ORDER);
         pr.setState(PurchasePlan.PURCHASE_STATE_CREATE);
         pr.setCreateDate(formVo.getCreateDate());
-        pr.setCreateBy(formVo.getCreateUser());
+//        pr.setCreateBy(formVo.getCreateUser());
         pr.setRequester(PurchasePlan.PURCHASE_ACCOUNT_MRP);
         pr.setDescription(formVo.getFormNo()+" "+formVo.getContractNo());
         PurchasePlan saved=purchasePlanRepository.save(pr);
