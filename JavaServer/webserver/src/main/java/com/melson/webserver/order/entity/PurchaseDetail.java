@@ -25,6 +25,7 @@ public class PurchaseDetail {
     public static final String PURCHASE_STATE_BUYING="BUYING";      //采购中
     public static final String PURCHASE_STATE_COMPLETE="COMPLETE";  //已入库
     public static final String PURCHASE_STATE_CANCEL="CANCEL";      //取消
+    public static final String PURCHASE_STATE_REJECT="REJECT";      //否决
 
 
     @Id

@@ -17,8 +17,15 @@
           :header-row-style="{height:'40px' ,'align':'center'}"
           :row-style="{height:'40px'}"
           style="width: 100%">
-        <el-table-column prop="purchaseId" label="类别代码" width="180px"></el-table-column>
-        <el-table-column prop="name" label="类别名称" width="280px"> </el-table-column>
+        <el-table-column prop="planNo" label="PR-NO" width="180px"></el-table-column>
+        <el-table-column prop="type" label="采购类型" width="280px"> </el-table-column>
+        <el-table-column prop="state" label="状态" width="280px"> </el-table-column>
+        <el-table-column prop="createDate" label="创建日期" width="140px"> 
+          <template slot-scope="scope">
+            <span>{{getFullTime(scope.row.createDate) }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="requester" label="采购人" width="280px"> </el-table-column>
         <el-table-column prop="description" label="备注信息"> </el-table-column>
         <!-- <el-table-column prop="" label="操作" width="100px">
           <template slot-scope="scope">
@@ -154,8 +161,10 @@ export default {
       purchaseListPageShow(){
         return this.purchaseList.filter((item)=>{
           let key=
-          item.purchaseId +
-          item.name +
+          item.planNo +
+          item.type +
+          item.state +
+          item.requester +
           item.description ;
           let index = key.toUpperCase().indexOf(this.searchContent.toUpperCase());
           return index != -1;
@@ -170,49 +179,51 @@ export default {
       QueryPurchaseObj:"QueryPurchaseObj",
       DisablePurchase:"DisablePurchase",
       }),
-      onAddpurchase(formName){
-        this.$refs[formName].validate(valid => {
-          if (valid) {
-            let purchase=this.newpurchase;
-            purchase.purchaseId="cat" + new Date().valueOf();
-            purchase.createDate=new Date();
-            purchase.status="Y";
-            purchase.createBy=this.userInfo.loginName;
-            this.SavePurchase(purchase)
-              .then(res => {
-                if (res.resultStatus == 1) {
-                  this.purchaseAddDialog = false;
-                  this.PushPurchaseList(res.data);
-                  this.$message({
-                    showClose: true,
-                    message: "创建成功",
-                    type: "success"
-                  });
-                } else {
-                  this.$message({
-                    message: res.message,
-                    type: "warning"
-                  });
-                }
-              })
-              .catch(err => {
-                let alert = err.message ? err.message : err;
-                this.$messgae.error(alert);
-              });
-          }
-          else{
-            this.$message.warning("请填写必要信息");
-            return false;
-          }
-        });
-      },
-      resetForm(formName) {
-      if (this.$refs[formName]) {
-        this.$refs[formName].resetFields();
-      }
-      this.purchaseAddDialog = true;
-      },
-
+    onAddpurchase(formName){
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          let purchase=this.newpurchase;
+          purchase.purchaseId="cat" + new Date().valueOf();
+          purchase.createDate=new Date();
+          purchase.status="Y";
+          purchase.createBy=this.userInfo.loginName;
+          this.SavePurchase(purchase)
+            .then(res => {
+              if (res.resultStatus == 1) {
+                this.purchaseAddDialog = false;
+                this.PushPurchaseList(res.data);
+                this.$message({
+                  showClose: true,
+                  message: "创建成功",
+                  type: "success"
+                });
+              } else {
+                this.$message({
+                  message: res.message,
+                  type: "warning"
+                });
+              }
+            })
+            .catch(err => {
+              let alert = err.message ? err.message : err;
+              this.$messgae.error(alert);
+            });
+        }
+        else{
+          this.$message.warning("请填写必要信息");
+          return false;
+        }
+      });
+    },
+    resetForm(formName) {
+    if (this.$refs[formName]) {
+      this.$refs[formName].resetFields();
+    }
+    this.purchaseAddDialog = true;
+    },
+    getFullTime(time) {
+    return new Date(time).format("yyyy-MM-dd");
+    },
     handleEdit(index,row){
       this.editIndex=index;
       let cat={purchaseId:row.purchaseId,index:index}
