@@ -77,6 +77,8 @@ public class OrderFormDetail {
      */
     private String productNo;
 
+    private Integer supplyId;
+
     @Transient
     private List<String> bomNos;
 
@@ -183,5 +185,13 @@ public class OrderFormDetail {
 
     public void setBomNos(List<String> bomNos) {
         this.bomNos = bomNos;
+    }
+
+    public Integer getSupplyId() {
+        return supplyId;
+    }
+
+    public void setSupplyId(Integer supplyId) {
+        this.supplyId = supplyId;
     }
 }

@@ -76,6 +76,7 @@ public class ContractStock {
      */
     private String productNo;
 
+    private Integer supplyId;
 
 
     @Id
@@ -208,5 +209,13 @@ public class ContractStock {
 
     public void setProductNo(String productNo) {
         this.productNo = productNo;
+    }
+
+    public Integer getSupplyId() {
+        return supplyId;
+    }
+
+    public void setSupplyId(Integer supplyId) {
+        this.supplyId = supplyId;
     }
 }

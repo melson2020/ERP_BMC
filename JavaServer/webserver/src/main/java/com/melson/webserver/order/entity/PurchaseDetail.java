@@ -12,20 +12,28 @@ import java.util.Date;
 @Entity
 @Table(name = "purchase_detail")
 public class PurchaseDetail {
-    public static final String PURCHASE_TYPE_ORDER="ORDER";         //采购的类型
-    public static final String PURCHASE_TYPE_PLAN="PLAN";
-    public static final String PURCHASE_TYPE_INDIRECT="INDIRECT";
 
 
-    public static final String PURCHASE_STATE_CREATE="CREATE";    //采购的状态
+//    使用 purchase_plan中的定义变量
+//    public static final String PURCHASE_TYPE_ORDER="ORDER";           //生产采购
+//    public static final String PURCHASE_TYPE_PLAN="PLAN";             //计划采购
+//    public static final String PURCHASE_TYPE_INDIRECT="INDIRECT";     //间接采购
+
+//    针对purchase_detail中的每一条可以设置状态
+    public static final String PURCHASE_STATE_CREATE="CREATE";      //待审核
+    public static final String PURCHASE_STATE_APPROVE="APPROVE";    //已批准
+    public static final String PURCHASE_STATE_BUYING="BUYING";      //采购中
+    public static final String PURCHASE_STATE_COMPLETE="COMPLETE";  //已入库
+    public static final String PURCHASE_STATE_CANCEL="CANCEL";      //取消
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     /**
-     * 类型 标明 生产源头 如:订单生成,生产生成等
+     * 类型 标明 生产源头 如:订单生成,生产生成,间接采购等
      */
-    private String type;
+    private String type;                         // purchase_plan 传过来
 
     private String materialNo;
 
@@ -39,9 +47,11 @@ public class PurchaseDetail {
 
     private String countUnit;
 
-    private String purchasePlanNo;
+    private String purchasePlanNo;                // purchase_plan 传过来
 
     private String createEmployeeNo;
+
+    private Integer createBy;                     // purchase_plan 传过来
 
     private Date createDate;
 
@@ -49,8 +59,13 @@ public class PurchaseDetail {
 
     private String sourceNo;
 
-    //状态值  如;创建， 已下单，采购中，已入库，完成
-    private String state;
+    private String requester;                     // purchase_plan 传过来
+
+    // 状态值  如;待审核（CREATE），已批准(APPROVE)，采购中(BUYING)，已入库(COMPLETE)
+    private String state;                        // purchase_plan 传过来
+
+    private Integer supplyId;
+
 
     public Integer getId() {
         return id;
@@ -132,6 +147,14 @@ public class PurchaseDetail {
         this.createEmployeeNo = createEmployeeNo;
     }
 
+    public Integer getCreateBy() {
+        return createBy;
+    }
+
+    public void setCreateBy(Integer createBy) {
+        this.createBy = createBy;
+    }
+
     public Date getCreateDate() {
         return createDate;
     }
@@ -162,5 +185,21 @@ public class PurchaseDetail {
 
     public void setSourceNo(String sourceNo) {
         this.sourceNo = sourceNo;
+    }
+
+    public String getRequester() {
+        return requester;
+    }
+
+    public void setRequester(String requester) {
+        this.requester = requester;
+    }
+
+    public Integer getSupplyId() {
+        return supplyId;
+    }
+
+    public void setSupplyId(Integer supplyId) {
+        this.supplyId = supplyId;
     }
 }

@@ -63,7 +63,7 @@ public class OrderFormServiceImpl implements IOrderFormService {
     @Transactional
     /**
      * 订单下达函数
-     * 主逻辑：1：生成对应的 采购计划 生产计划 委外计划 2：更新orderForm 状态
+     * 主逻辑：1：生成对应的 采购计划 生产计划 委外计划 2：更新orderForm 状态 3 : 生产采购计划时，同时生成purchase_plan
      */
     public OrderForm confirm(OrderFormConfirmVo vo) {
         List<OrderFormDetail> detailList = vo.getOrderFormDetails();
@@ -109,7 +109,7 @@ public class OrderFormServiceImpl implements IOrderFormService {
             }
         }
         producePlanService.GeneratePlan(produceList, formVo);
-        purchaseDetailService.GenerateOrderPurchase(purchaseList);
+        purchaseDetailService.GenerateOrderPurchase(purchaseList,formVo);
         delegateTicketService.GenerateTicket(delegateList, formVo);
         formVo.setState(OrderForm.STATE_ORDER);
         formVo.setProduceType(orderType);
