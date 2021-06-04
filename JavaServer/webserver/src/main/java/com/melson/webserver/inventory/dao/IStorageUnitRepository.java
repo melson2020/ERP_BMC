@@ -14,4 +14,6 @@ import java.util.List;
 @Repository
 public interface IStorageUnitRepository extends JpaRepository<StorageUnit,Integer> {
     List<StorageUnit> findByProductId(Integer productId);
+    List<StorageUnit> findByProductIdAndConvertUnit(Integer productId,String convertUit);
+    List<StorageUnit> findByProductIdAndPackageUnit(Integer productId,String packageUnit);
 }
