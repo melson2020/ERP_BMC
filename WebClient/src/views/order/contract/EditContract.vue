@@ -522,6 +522,7 @@ export default {
         count: "0",
         taxPrice: "",
         taxTotalPrice: "",
+        supplyId:"",
         seen: true,
       });
     },
@@ -569,6 +570,7 @@ export default {
       row.seen = false;
       row.remark = item.remark;
       row.taxPrice = item.salesPrice == null ? 0 : item.salesPrice;
+      row.supplyId=item.supplyId;
     },
     cellClick(row) {
       row.seen = true;

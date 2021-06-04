@@ -1,5 +1,6 @@
 package com.melson.webserver.dict.resource;
 
+import com.melson.base.BaseResource;
 import com.melson.base.Result;
 import com.melson.base.entity.Department;
 import com.melson.base.entity.Role;
@@ -24,7 +25,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/employee")
-public class EmployeeResource {
+public class EmployeeResource extends BaseResource {
     private final IDepartment departmentService;
     private final IRole roleService;
     private final IUser userService;
