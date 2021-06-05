@@ -71,6 +71,12 @@ const actions = {
     },
     CreateInventoryInBound({},param){
         return request.CreateInventoryInBound(param)
+    },
+    GetPackageUnitList({},param){
+        return request.GetPackageUnitList(param)
+    },
+    GetUnPackageUnitList({},param){
+        return request.GetUnPackageUnitList(param)
     }
 
 };

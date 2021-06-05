@@ -117,20 +117,138 @@
               </el-table-column>
               <el-table-column prop="count" label="数量">
                 <template slot-scope="scope">
-                  <span>{{ scope.row.count }}{{ scope.row.unit }}</span>
+                  <div class="flex justs">
+                    <span>{{ scope.row.count }}{{ scope.row.unit }}</span>
+                    <div>
+                      <el-popover
+                        placement="bottom-end"
+                        width="auto"
+                        :ref="`popover-${scope.row.id}`"
+                        trigger="click"
+                      >
+                        <div class="flex alic">
+                          <span class="colorblue fz8">打包</span>
+                          <el-select
+                            class="ml40"
+                            v-model="packageUnit"
+                            placeholder="包装单位"
+                            clearable
+                            @change="packageUnitChanged($event, scope.row)"
+                            size="mini"
+                          >
+                            <el-option
+                              v-for="unit in packageUnitList"
+                              :key="unit.id"
+                              :label="unit.packageUnit"
+                              :value="unit.packageUnit"
+                            >
+                            </el-option>
+                          </el-select>
+                          <el-input-number
+                            class="ml40"
+                            size="mini"
+                            :min="0"
+                            :step="1"
+                            v-model="packageCount"
+                            :max="packageMaxCount"
+                            controls-position="right"
+                          ></el-input-number>
+                          <el-button
+                            type="primary"
+                            icon="el-icon-check"
+                            class="ml40"
+                            circle
+                            @click="packageConfirm(scope.row)"
+                            size="mini"
+                          ></el-button>
+                        </div>
+                        <el-button
+                          type="primary"
+                          icon="el-icon-present"
+                          class="ml40"
+                          circle
+                          @click="
+                            packageOnClick(scope.row.materialId, scope.row.unit)
+                          "
+                          plain
+                          size="mini"
+                          slot="reference"
+                        ></el-button>
+                      </el-popover>
+                      <el-popover
+                        placement="bottom-end"
+                        width="auto"
+                        trigger="click"
+                      >
+                        <div class="flex alic">
+                          <span class="colorblue fz8">拆包</span>
+                          <el-input-number
+                            class="ml40 mr40"
+                            v-model="unPackageCount"
+                            :max="unPackageMaxCount"
+                            :min="0"
+                            size="mini"
+                            controls-position="right"
+                          ></el-input-number>
+                          {{ scope.row.unit }} 至
+                          <el-select
+                            class="ml40"
+                            v-model="unPackageUnit"
+                            placeholder="包装单位"
+                            size="mini"
+                          >
+                            <el-option
+                              v-for="unit in unPackageUnitList"
+                              :key="unit.id"
+                              :label="unit.convertUnit"
+                              :value="unit.convertUnit"
+                            >
+                            </el-option>
+                          </el-select>
+                          <el-button
+                            type="primary"
+                            icon="el-icon-check"
+                            class="ml40"
+                            circle
+                            @click="unPackageConfirm(scope.row)"
+                            size="mini"
+                          ></el-button>
+                        </div>
+                        <el-button
+                          type="warning"
+                          icon="el-icon-scissors"
+                          class="ml40"
+                          @click="unPackageOnClick(scope.row)"
+                          circle
+                          plain
+                          size="mini"
+                          slot="reference"
+                        ></el-button>
+                      </el-popover>
+                    </div>
+                  </div>
                 </template>
               </el-table-column>
               <el-table-column prop="count" label="数量">
                 <template slot-scope="scope">
-                  <el-select v-model="scope.row.storageCode" placeholder="选择仓库" size="mini">
-                    <el-option v-for="storage in storageList" :label="storage.name" :value="storage.storageCode" :key="storage.storageCode"></el-option>
+                  <el-select
+                    v-model="scope.row.storageCode"
+                    placeholder="选择仓库"
+                    size="mini"
+                  >
+                    <el-option
+                      v-for="storage in storageList"
+                      :label="storage.name"
+                      :value="storage.storageCode"
+                      :key="storage.storageCode"
+                    ></el-option>
                   </el-select>
                 </template>
               </el-table-column>
             </el-table>
             <el-button
               icon="el-icon-plus"
-              v-if="inventoryInboundType == 'OTHERS'"
+              v-if="editInventoryInbound.type == 'OTHERS'"
               plain
               class="add-storage-in-deail mt40"
               >添加详细</el-button
@@ -230,6 +348,15 @@ export default {
       dialogVisible: false,
       inventoryInboundType: "",
       delegateInBoundList: [],
+      packageUnitList: [],
+      packageUnit: "",
+      packageMaxCount: 0,
+      packageCount: 0,
+
+      unPackageUnitList: [],
+      unPackageUnit: "",
+      unPackageCount: 0,
+      unPackageMaxCount: 0,
     };
   },
 
@@ -237,7 +364,9 @@ export default {
     ...mapActions({
       FindDelegateInBoundList: "FindDelegateInBoundList",
       CreateInventoryInBound: "CreateInventoryInBound",
-      GetStorageList:'GetStorageList'
+      GetStorageList: "GetStorageList",
+      GetPackageUnitList: "GetPackageUnitList",
+      GetUnPackageUnitList: "GetUnPackageUnitList",
     }),
     inventoryInBoundTypeOnClick(type) {
       this.inventoryInboundType = type;
@@ -260,7 +389,6 @@ export default {
         .then((res) => {
           if (res.resultStatus == 1) {
             this.editInventoryInbound = res.data;
-            console.log(this.editInventoryInbound);
             this.dialogVisible = false;
           } else {
             this.$message.warning(res.message);
@@ -269,6 +397,112 @@ export default {
         .catch((err) => {
           this.$message.error(err.message);
         });
+    },
+
+    packageOnClick(productId, unit) {
+      (this.packageUnit = ""),
+        (this.packageCount = 0),
+        (this.packageMaxCount = 0),
+        (this.packageUnitList = []);
+      this.GetPackageUnitList({ productId: productId, unit: unit })
+        .then((res) => {
+          if (res.resultStatus == 1) {
+            this.packageUnitList = res.data;
+          } else {
+            this.$message.warning(res.message);
+          }
+        })
+        .catch((err) => {
+          this.$message.error(err.message);
+        });
+    },
+
+    packageUnitChanged(unit, row) {
+      var selectUnit = this.packageUnitList.find((item) => {
+        return item.packageUnit == unit;
+      });
+      this.packageMaxCount = Math.floor(row.count / selectUnit.convertCount);
+      this.packageCount = this.packageMaxCount;
+    },
+
+    packageConfirm(row) {
+      if (this.packageCount <= 0) {
+        this.$message.info("数量不足无法打包");
+        return;
+      }
+      if (row.count < packageTotalCount) {
+        this.$message.info("打包数量大于已有数量,无法打包");
+        return;
+      }
+      var selectUnit = this.packageUnitList.find((item) => {
+        return item.packageUnit == this.packageUnit;
+      });
+      var packageTotalCount = this.$my.NumberMul(
+        selectUnit.convertCount,
+        this.packageCount
+      );
+      if (row.count > packageTotalCount) {
+        let newRow = {
+          count: this.packageCount,
+          latestPrice: row.latestPrice,
+          materialId: row.materialId,
+          materialName: row.materialName,
+          materialNo: row.materialNo,
+          specification: "0.38mm黑",
+          storageCode: row.storageCode,
+          unit: this.packageUnit,
+        };
+        row.count = this.$my.NumberSub(row.count, packageTotalCount);
+        this.editInventoryInbound.detailVoList.push(newRow);
+      } else {
+        row.count = this.packageCount;
+        row.unit = this.packageUnit;
+      }
+      this.$refs[`popover-${row.id}`].doClose();
+    },
+
+    unPackageOnClick(row) {
+      (this.unPackageUnitList = []),
+        (this.unPackageUnit = ""),
+        (this.unPackageCount = 0),
+        (this.unPackageMaxCount = 0),
+        this.GetUnPackageUnitList({ productId: row.materialId, unit: row.unit })
+          .then((res) => {
+            if (res.resultStatus == 1) {
+              this.unPackageUnitList = res.data;
+              this.unPackageCount = row.count;
+              this.unPackageMaxCount = row.count;
+            } else {
+              this.$message.warning(res.message);
+            }
+          })
+          .catch((err) => {
+            this.$message.error(err.message);
+          });
+    },
+
+    unPackageConfirm(row) {
+      if (this.unPackageCount <= 0 || this.unPackageUnit == "") {
+        this.$message.info("拆包信息不足，无法拆包");
+        return;
+      }
+      if (row.count < this.unPackageCount) {
+        this.$message.info("拆包数量大于已有数量，无法拆包");
+        return;
+      }
+      if (row.count == this.unPackageCount) {
+        var selectUnit = this.unPackageUnitList.find((item) => {
+          return item.convertUnit == this.unPackageUnit;
+        });
+        let unPackageTotalCount = this.$my.NumberMul(
+          selectUnit.convertCount,
+          this.unPackageCount
+        );
+        row.count = unPackageTotalCount;
+        row.unit = selectUnit.convertUnit;
+      } else {
+        console.log("部分拆包");
+      }
     },
 
     getFullDate(time) {
@@ -283,9 +517,9 @@ export default {
     ...mapGetters(["storageList"]),
   },
 
-  mounted(){
-    this.GetStorageList()
-  }
+  mounted() {
+    this.GetStorageList();
+  },
 };
 </script>
 <style>

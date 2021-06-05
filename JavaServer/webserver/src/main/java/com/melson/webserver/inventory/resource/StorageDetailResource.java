@@ -45,4 +45,27 @@ public class StorageDetailResource extends BaseResource {
     public Result DeleteStorageUnit(@RequestBody StorageUnit unit) {
         return storageUnitService.DeleteOne(unit);
     }
+
+
+    /**
+     * 查询product 打包单位list
+     * @param productId
+     * @param unit
+     * @return
+     */
+    @GetMapping(value = "/packageUnitList")
+    public Result FindPackageUnitList(Integer productId,String unit) {
+        return success(storageUnitService.FindPackageUnitList(productId, unit));
+    }
+
+    /**
+     * 查询product 拆包单位list
+     * @param productId
+     * @param unit
+     * @return
+     */
+    @GetMapping(value = "/unPackageUnitList")
+    public Result FindUnPackageUnitList(Integer productId,String unit) {
+        return success(storageUnitService.FindUnPackageUnitList(productId, unit));
+    }
 }

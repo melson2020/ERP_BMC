@@ -39,11 +39,9 @@ public class InventoryInboundDetailVo {
      */
     private String storageCode;
 
-    public InventoryInboundDetailVo() {
+    private Integer materialId;
 
-    }
-
-    public InventoryInboundDetailVo(String materialNo, String materialName, String specification, BigDecimal count, BigDecimal latestPrice, String unit, String storageCode) {
+    public InventoryInboundDetailVo(String materialNo, String materialName, String specification, BigDecimal count, BigDecimal latestPrice, String unit, String storageCode, Integer materialId) {
         this.materialNo = materialNo;
         this.materialName = materialName;
         this.specification = specification;
@@ -51,6 +49,19 @@ public class InventoryInboundDetailVo {
         this.latestPrice = latestPrice;
         this.unit = unit;
         this.storageCode = storageCode;
+        this.materialId = materialId;
+    }
+
+    public InventoryInboundDetailVo() {
+
+    }
+
+    public Integer getMaterialId() {
+        return materialId;
+    }
+
+    public void setMaterialId(Integer materialId) {
+        this.materialId = materialId;
     }
 
     public void setCount(BigDecimal count) {
@@ -108,4 +119,5 @@ public class InventoryInboundDetailVo {
     public void setStorageCode(String storageCode) {
         this.storageCode = storageCode;
     }
+
 }

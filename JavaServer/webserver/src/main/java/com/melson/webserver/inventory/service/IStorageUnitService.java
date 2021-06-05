@@ -15,4 +15,6 @@ public interface IStorageUnitService {
     StorageUnitVo FindStorageUnitListByProductId(Integer productId);
     StorageUnit SaveOne(StorageUnit unit);
     Result DeleteOne(StorageUnit unit);
+    List<StorageUnit> FindPackageUnitList(Integer productId,String convertUnit);
+    List<StorageUnit> FindUnPackageUnitList(Integer productId,String packageUnit);
 }

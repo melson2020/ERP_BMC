@@ -50,6 +50,8 @@ public class InventoryInboundDetail {
      */
     private String storageCode;
 
+    private Integer materialId;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getId() {
@@ -122,5 +124,13 @@ public class InventoryInboundDetail {
 
     public void setStorageCode(String storageCode) {
         this.storageCode = storageCode;
+    }
+
+    public Integer getMaterialId() {
+        return materialId;
+    }
+
+    public void setMaterialId(Integer materialId) {
+        this.materialId = materialId;
     }
 }

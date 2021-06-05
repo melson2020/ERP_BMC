@@ -58,4 +58,14 @@ public class IStorageUnitServiceImpl implements IStorageUnitService {
         }
     }
 
+    @Override
+    public List<StorageUnit> FindPackageUnitList(Integer productId, String convertUnit) {
+        return storageUnitRepository.findByProductIdAndConvertUnit(productId,convertUnit);
+    }
+
+    @Override
+    public List<StorageUnit> FindUnPackageUnitList(Integer productId, String packageUnit) {
+        return storageUnitRepository.findByProductIdAndPackageUnit(productId,packageUnit);
+    }
+
 }
