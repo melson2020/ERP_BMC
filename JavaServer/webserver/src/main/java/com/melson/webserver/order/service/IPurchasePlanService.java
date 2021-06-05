@@ -21,4 +21,12 @@ public interface IPurchasePlanService extends IService<PurchasePlan> {
     PurchasePlan QueryPurchasePlan(String planNo);
 
     Integer UpdatePurchasePlanStatus(PurchasePlan purchase);
+
+    Integer DeletePurchase(PurchasePlan purchase);
+
+    List<PurchasePlan> GetUnderApprovePurchaseList(String state);
+
+    Result ApprovePurchasePlan(PurchasePlan purchase);
+
+    Integer RejectPurchase(PurchasePlan purchase);
 }

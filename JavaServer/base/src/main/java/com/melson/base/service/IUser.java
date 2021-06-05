@@ -45,4 +45,5 @@ public interface IUser extends IService<User> {
 
 
     User findByUserId(String userId);
+
 }

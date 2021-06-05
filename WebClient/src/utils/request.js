@@ -291,7 +291,25 @@ ReqQueryPurchaseObj(params){
 ReqUpdatePurchaseStatus(params) {
   return service.post("/purchase/updatePurchaseStatus", params);
 },
+ReqDeletePurchase(params){
+  return service.post("/purchase/deletePurchase",params)
+},
+ReqQueryProductVos(param){
+  return service.get('/common/productVoList',param)
+},
+ReqEmployeeVoList(params){
+  return service.get('/common/employeeVos',params)    //  //
+},
 
+ReqWaitPurchaseList(params){
+  return service.get('/purchase/underApprovePurchaseList',params)    //  //
+},
+ReqApprovePurchaseObj(param){
+  return service.post("/purchase/purchaseApprove",param)
+},
+ReqRejectPurchaseWait(params){
+  return service.post("/purchase/rejectPurchase",params)
+},
 
 
   //订单相关
@@ -322,6 +340,7 @@ ReqUpdatePurchaseStatus(params) {
   GetOrderFormInfo(param){
     return service.get('/orderForm/manage/orderFormInfo',param)
   },
+
 
   //生产计划相关
   /**

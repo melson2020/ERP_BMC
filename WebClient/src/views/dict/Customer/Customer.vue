@@ -540,6 +540,8 @@ export default {
     editDeleteContact(index, row) {
       row.seen=false;
       row.notSavedFlag=false;
+      if(row.id!=="")
+      {
        this.$messageBox.confirm('确认要删除？',"提示",{
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -559,6 +561,11 @@ export default {
 
         })
         .catch(e=>e);
+      }
+      else
+      {
+        this.editCustomer.contactList.splice(index,1)
+      }
     },
     newSaveContact(index,row){
       if(row.contactName.trim()==="")
@@ -609,6 +616,8 @@ export default {
     newDeleteContact(index, row) {
       row.seen=false;
       row.notSavedFlag=false;
+      if(row.id!=="")
+      {
        this.$messageBox.confirm('确认要删除？',"提示",{
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -618,6 +627,11 @@ export default {
           this.newCustomer.contactList.splice(index,1)
         })
         .catch(e=>e);
+      }
+      else
+      {
+        this.newCustomer.contactList.splice(index,1)
+      }
     },
     handleEdit(index,row){
       this.editIndex=index;
@@ -734,7 +748,13 @@ export default {
       }
     },
     newCellClick(row) {
-       row.seen=true;
+      if(!row.seen)
+      {
+       if(!this.newCheckEidtable())
+        {
+          row.seen=true;
+        }
+      }
     },
     editCellClick(row){
       if(!row.seen)

@@ -37,6 +37,7 @@ public class PurchasePlan {
     private String customerName;
     private String contractNo;
     private String requester;     // 1:MRP , 系统生成的采购单  ；  2：根据页面获取系统的用户名，
+    private Integer requesterId;
     private String planNo;
     // 类型 标明 生产源头 如:订单生成,生产生成,间接采购等
     private String type;
@@ -153,6 +154,14 @@ public class PurchasePlan {
 
     public void setRequester(String requester) {
         this.requester = requester;
+    }
+
+    public Integer getRequesterId() {
+        return requesterId;
+    }
+
+    public void setRequesterId(Integer requesterId) {
+        this.requesterId = requesterId;
     }
 
     public List<PurchaseDetail> getPurchaseDetailList() {

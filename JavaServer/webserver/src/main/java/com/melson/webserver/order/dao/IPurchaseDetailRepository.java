@@ -22,4 +22,10 @@ public interface IPurchaseDetailRepository extends JpaRepository<PurchaseDetail,
     @Modifying
     @Query(value = "update `purchase_detail` set `state`=?1 where purchasePlanNo=?2",nativeQuery = true)
     void UpdateStatus(String state, String planNo);
+
+    @Modifying
+    @Query(value = "delete from `purchase_detail` where purchasePlanNo =?1",nativeQuery = true)
+    void deleteByPrNo(String planNo);
+
+    List<PurchaseDetail> findByState(String state);
 }
