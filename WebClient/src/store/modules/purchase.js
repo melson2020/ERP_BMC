@@ -8,6 +8,7 @@ const state = {
     userVos:[],
     productVos:[],
     purchaseWaitList:[],
+    prList:[],
 };
 
 const actions = {
@@ -115,6 +116,17 @@ const actions = {
           Message.error(al)
       })
     },
+    GetPRList({ commit }, params) {
+      request.ReqPRList(params).then(res => {
+          if (res.resultStatus == 1) {
+              commit(types.PO_WAIT_LIST, res.data)
+          } else {
+              Message.warning(res.message)
+          }
+      }).catch(err => {
+          Message.error(err.message)
+      })
+    },
 
 };
 
@@ -123,6 +135,7 @@ const getters = {
     userVos:state=>state.userVos,
     productVos:state=>state.productVos,
     purchaseWaitList:state=>state.purchaseWaitList,
+    prList:state=>state.prList,
 };
 
 const mutations = {
@@ -154,6 +167,9 @@ const mutations = {
     },
     [types.PURCHASE_REJECT_ITEM](state, data) {
       state.purchaseWaitList.splice(data.index, 1);
+    },
+    [types.PO_WAIT_LIST](state, data) {
+      state.prList=data;
     },
 };
 

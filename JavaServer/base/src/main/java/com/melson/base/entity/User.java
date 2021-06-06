@@ -34,6 +34,10 @@ public class User {
     private String department;
     @Transient
     private List<UserRole> userRoleList;
+    @Transient
+    private Company company;
+
+
 
     public Integer getId() {
         return id;
@@ -161,5 +165,13 @@ public class User {
 
     public void setUserRoleList(List<UserRole> userRoleList) {
         this.userRoleList = userRoleList;
+    }
+
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
     }
 }

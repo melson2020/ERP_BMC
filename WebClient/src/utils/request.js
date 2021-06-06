@@ -310,6 +310,9 @@ ReqApprovePurchaseObj(param){
 ReqRejectPurchaseWait(params){
   return service.post("/purchase/rejectPurchase",params)
 },
+ReqPRList(params){
+  return service.get('/purchase/approvedPurchaseDetailList',params)    //  //
+},
 
 
   //订单相关

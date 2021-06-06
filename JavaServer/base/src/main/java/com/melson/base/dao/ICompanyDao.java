@@ -13,4 +13,6 @@ import org.springframework.stereotype.Repository;
 public interface ICompanyDao extends JpaRepository<Company,String> {
     Company findByPhoneNumber(String phoneNumber);
     Company findByCompanyName(String name);
+
+    Company findByCompanyCode(String companyCode);
 }
