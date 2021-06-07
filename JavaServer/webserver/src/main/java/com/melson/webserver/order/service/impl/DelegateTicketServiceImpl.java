@@ -200,6 +200,11 @@ public class DelegateTicketServiceImpl implements IDelegateTicketService {
         return inventoryInbound;
     }
 
+    @Override
+    public int UpdateStateById(String state,Integer id,String inboundTicketNo) {
+        return delegateTicketRepository.updateStateById(state,inboundTicketNo,id);
+    }
+
 
     private DelegateDetail CreateDelegateDetail(OrderFormDetail orderFormDetail, DelegateTicket ticket) {
         DelegateDetail delegateDetail = new DelegateDetail();

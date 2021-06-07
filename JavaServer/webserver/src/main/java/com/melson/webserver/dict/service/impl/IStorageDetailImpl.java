@@ -1,9 +1,13 @@
 package com.melson.webserver.dict.service.impl;
 
 import com.melson.base.AbstractService;
+import com.melson.webserver.dict.dao.IStorageBatchRepository;
 import com.melson.webserver.dict.dao.IStorageDetailRepository;
+import com.melson.webserver.dict.entity.StorageBatch;
 import com.melson.webserver.dict.entity.StorageDetail;
 import com.melson.webserver.dict.service.IStorageDetail;
+import com.melson.webserver.inventory.entity.InventoryInbound;
+import com.melson.webserver.inventory.entity.InventoryInboundDetail;
 import com.melson.webserver.inventory.entity.StorageUnit;
 import com.melson.webserver.inventory.resource.InventoryStocktakingResource;
 import org.slf4j.Logger;
@@ -25,11 +29,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Messi on 2021/5/10
@@ -38,9 +38,11 @@ import java.util.List;
 public class IStorageDetailImpl extends AbstractService<StorageDetail> implements IStorageDetail {
     private static final Logger logger = LoggerFactory.getLogger(IStorageDetailImpl.class);
     private final IStorageDetailRepository storageDetailRepository;
+    private final IStorageBatchRepository storageBatchRepository;
 
-    public IStorageDetailImpl(IStorageDetailRepository storageDetailRepository) {
+    public IStorageDetailImpl(IStorageDetailRepository storageDetailRepository, IStorageBatchRepository storageBatchRepository) {
         this.storageDetailRepository = storageDetailRepository;
+        this.storageBatchRepository = storageBatchRepository;
     }
 
     @Override
@@ -113,5 +115,54 @@ public class IStorageDetailImpl extends AbstractService<StorageDetail> implement
     @Override
     public void DeleteOne(StorageDetail storageDetail) {
          storageDetailRepository.delete(storageDetail);
+    }
+
+    @Override
+    public List<StorageDetail> InventoryIn(InventoryInbound inbound, List<InventoryInboundDetail> details) {
+        Set<Integer> productIdSet=new HashSet<>();
+        details.forEach(inventoryInboundDetail -> {
+            if(!productIdSet.contains(inventoryInboundDetail.getMaterialId())){
+                productIdSet.add(inventoryInboundDetail.getMaterialId());
+            }
+        });
+        List<StorageDetail> storageDetails=storageDetailRepository.findByProductIdIn(productIdSet);
+        Map<String,StorageDetail> storageDetailMap=new HashMap<>(storageDetails.size());
+        for(StorageDetail storageDetail:storageDetails){
+            String key=storageDetail.getProductId()+storageDetail.getUnit();
+            storageDetailMap.put(key,storageDetail);
+        }
+        List<StorageDetail> storageUpdateList=new ArrayList<>();
+        List<StorageBatch> storageBatchList=new ArrayList<>();
+        for(InventoryInboundDetail inboundDetail:details){
+            String key=inboundDetail.getMaterialId()+inboundDetail.getUnit();
+            StorageDetail storage=storageDetailMap.get(key);
+            if(storage==null){
+                logger.error("入库error: 未找到对应的库存详细：productId=[{}]和 unit [{}]",inboundDetail.getMaterialId(),inboundDetail.getUnit());
+                continue;
+            }
+            storage.setCount(inboundDetail.getCount().add(new BigDecimal(storage.getCount())).intValue());
+            storageUpdateList.add(storage);
+            storageBatchList.add(CreateBatch(storage,inbound,inboundDetail));
+        }
+
+        //插入新增批次
+        storageBatchRepository.saveAll(storageBatchList);
+        //更新库存列表
+        return storageDetailRepository.saveAll(storageUpdateList);
+    }
+
+    private StorageBatch CreateBatch(StorageDetail storageDetail,InventoryInbound inbound,InventoryInboundDetail inboundDetail){
+        StorageBatch storageBatch=new StorageBatch();
+        storageBatch.setMaterialId(storageDetail.getProductId());
+        storageBatch.setName(storageDetail.getName());
+        storageBatch.setSpecification(storageDetail.getSpecification());
+        storageBatch.setBatchNo(inbound.getBatchNo());
+        storageBatch.setSupplyId(storageDetail.getSupplyId());
+        storageBatch.setCount(inboundDetail.getCount().intValue());
+        storageBatch.setCountUnit(inboundDetail.getUnit());
+        storageBatch.setBatchType(inbound.getType());
+        storageBatch.setStorageInCode(inbound.getFormNo());
+        storageBatch.setFinished(0);
+       return storageBatch;
     }
 }

@@ -58,7 +58,8 @@ public class InventoryInboundResource extends BaseResource {
      */
     @PostMapping(value = "/save")
     public Result save(HttpServletRequest request, @RequestBody InventoryInboundVo vo) {
-        Integer userId = getLoginUserId(request);
+        String token = request.getHeader("token");
+        Integer userId = Integer.parseInt(token);
         if (userId == null) {
             return failure(SysRespCode.LOGIN_TIME_OUT, "登录超时");
         }

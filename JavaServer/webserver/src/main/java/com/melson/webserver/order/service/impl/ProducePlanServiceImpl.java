@@ -3,6 +3,9 @@ package com.melson.webserver.order.service.impl;
 import com.melson.base.utils.DateUtil;
 import com.melson.base.utils.EntityUtils;
 import com.melson.webserver.dict.service.IBoms;
+import com.melson.webserver.inventory.entity.InventoryInbound;
+import com.melson.webserver.inventory.vo.InventoryInboundDetailVo;
+import com.melson.webserver.inventory.vo.InventoryInboundVo;
 import com.melson.webserver.order.dao.IDelegateDetailRepository;
 import com.melson.webserver.order.dao.IPickingTicketDetailRepository;
 import com.melson.webserver.order.dao.IProducePlanDetailRepository;
@@ -205,6 +208,23 @@ public class ProducePlanServiceImpl implements IProducePlanService {
         return recordList;
     }
 
+    @Override
+    public InventoryInboundVo GenerateInventoryInBound(Integer ticketId, Integer userId) {
+        ProducePlan producePlan=producePlanRepository.findById(ticketId).orElse(null);
+        List<Object[]> producePlanDetails=producePlanDetailRepository.findInventoryInBoundDetail(producePlan.getId());
+        List<InventoryInboundDetailVo> detailVos=EntityUtils.castEntity(producePlanDetails,InventoryInboundDetailVo.class,new InventoryInboundDetailVo());;
+        InventoryInboundVo inventoryInbound=new InventoryInboundVo();
+        inventoryInbound.setFormNo(InventoryInbound.CODE_PREFIX+ System.currentTimeMillis());
+        inventoryInbound.setBatchNo(DateUtil.timeShortFormat(new Date()));
+        inventoryInbound.setType(InventoryInbound.TYPE_PRODUCE);
+        inventoryInbound.setSourceNo(producePlan.getPlanNo());
+        inventoryInbound.setSourceId(ticketId);
+        inventoryInbound.setCreateDate(new Date());
+        inventoryInbound.setCreateUser(userId);
+        inventoryInbound.setDetailVoList(detailVos);
+        return inventoryInbound;
+    }
+
     private ProducePlanDetail CreateProducePlanDetail(OrderFormDetail detail) {
         ProducePlanDetail producePlanDetail = new ProducePlanDetail();
         producePlanDetail.setProductId(detail.getProductId());
@@ -224,5 +244,6 @@ public class ProducePlanServiceImpl implements IProducePlanService {
         producePlanDetail.setBomNos(bomNos);
         return producePlanDetail;
     }
+
 
 }

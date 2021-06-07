@@ -2,6 +2,8 @@ package com.melson.webserver.dict.service;
 
 import com.melson.base.IService;
 import com.melson.webserver.dict.entity.StorageDetail;
+import com.melson.webserver.inventory.entity.InventoryInbound;
+import com.melson.webserver.inventory.entity.InventoryInboundDetail;
 import com.melson.webserver.inventory.entity.StorageUnit;
 import org.springframework.data.domain.Page;
 
@@ -27,4 +29,6 @@ public interface IStorageDetail extends IService<StorageDetail> {
     StorageDetail FindByProductIdAndUnit(Integer productId,String unit);
 
     void DeleteOne(StorageDetail storageDetail);
+
+    List<StorageDetail> InventoryIn(InventoryInbound inbound,List<InventoryInboundDetail> details);
 }

@@ -5,7 +5,7 @@ import * as types from '../type'
 
 const state = {
     producePlanList: [],
-    producePlanRecordList:[]
+    producePlanRecordList: []
 };
 
 const actions = {
@@ -20,7 +20,7 @@ const actions = {
             Message.error(err.message)
         })
     },
-    FindProducePlanRecord({commit},param){
+    FindProducePlanRecord({ commit }, param) {
         request.FindProducePlanRecord(param).then(res => {
             if (res.resultStatus == 1) {
                 commit(types.PRODUCE_PLAN_RECORD_LIST, res.data)
@@ -31,27 +31,30 @@ const actions = {
             Message.error(err.message)
         })
     },
-    FindPlanDetailList({},param){
+    FindPlanDetailList({ }, param) {
         return request.FindProducePlanDetailList(param)
     },
-    FindPlanDetailProcessList({},param){
+    FindPlanDetailProcessList({ }, param) {
         return request.FindProducePlanDetaiProcessList(param)
     },
-    FindWorkStationListByProcessId({},param){
+    FindWorkStationListByProcessId({ }, param) {
         return request.FindWorkStationListByProcessId(param)
     },
-    SaveProducePlanWorkStation({},param){
+    SaveProducePlanWorkStation({ }, param) {
         return request.SaveProducePlanInfo(param)
     },
-    DeletePlanWorkStation({},param){
+    DeletePlanWorkStation({ }, param) {
         return request.DeletePlanWorkStation(param)
+    },
+    FindProducePlanList({ }, param) {
+        return request.FindProducePlanList(param)
     }
 
 };
 
 const getters = {
     producePlanList: state => state.producePlanList,
-    producePlanRecordList:state=>state.producePlanRecordList
+    producePlanRecordList: state => state.producePlanRecordList
 };
 
 const mutations = {

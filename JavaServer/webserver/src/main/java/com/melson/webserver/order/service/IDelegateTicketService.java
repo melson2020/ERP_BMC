@@ -48,4 +48,6 @@ public interface IDelegateTicketService {
     DelegateTicket DelegateTicketConfirm(DelegateReleaseVo releaseVo);
 
     InventoryInboundVo GenerateInventoryInBound(Integer ticketId,Integer userId);
+
+    int UpdateStateById(String state,Integer id,String inboundTicketNo);
 }

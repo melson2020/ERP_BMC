@@ -1,5 +1,6 @@
 package com.melson.webserver.order.service;
 
+import com.melson.webserver.inventory.vo.InventoryInboundVo;
 import com.melson.webserver.order.entity.OrderForm;
 import com.melson.webserver.order.entity.OrderFormDetail;
 import com.melson.webserver.order.entity.ProducePlan;
@@ -47,4 +48,6 @@ public interface IProducePlanService {
     ProducePlanInfoVo FindPlanInfo(Integer planId);
 
     List<ProducePlan> FindProducePlanRecord(Map<String,String[]> kvMap);
+
+    InventoryInboundVo GenerateInventoryInBound(Integer ticketId,Integer userId);
 }
