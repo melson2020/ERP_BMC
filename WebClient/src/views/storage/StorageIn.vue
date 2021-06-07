@@ -26,7 +26,7 @@
             @click="inventoryInBoundTypeOnClick('OEM')"
             type="danger"
             plain
-            >代工入库</el-button
+            >代工入库<span class="fz8"> (客户给料)</span></el-button
           >
         </el-col>
         <el-col :span="6">
@@ -46,21 +46,23 @@
           <span class="colorblue">入库单</span>
         </div>
         <el-form
-          ref="form"
+          ref="boundInForm"
           label-position="left"
           :model="editInventoryInbound"
+          :rules="rules"
           label-width="80px"
           class="mt40"
         >
           <el-row :gutter="10">
             <el-col :span="12">
-              <el-form-item label="日期">
-                <el-input
-                  v-model="editInventoryInbound.createDate"
-                ></el-input> </el-form-item
-            ></el-col>
+              <el-form-item label="日期" prop="createDate">
+                <span class="fl">
+                  {{ getFullDate(editInventoryInbound.createDate) }}
+                </span></el-form-item
+              ></el-col
+            >
             <el-col :span="12">
-              <el-form-item label="人员">
+              <el-form-item label="人员" prop="createUser">
                 <el-input
                   v-model="editInventoryInbound.createUser"
                 ></el-input> </el-form-item
@@ -68,7 +70,7 @@
           </el-row>
           <el-row :gutter="10">
             <el-col :span="12">
-              <el-form-item label="来源单号">
+              <el-form-item label="来源单号" prop="sourceNo">
                 <el-input
                   disabled
                   v-model="editInventoryInbound.sourceNo"
@@ -76,7 +78,7 @@
                 ></el-input> </el-form-item
             ></el-col>
             <el-col :span="12">
-              <el-form-item label="类型">
+              <el-form-item prop="type" label="类型">
                 <el-select
                   v-model="editInventoryInbound.type"
                   placeholder="选择类型"
@@ -95,14 +97,16 @@
           </el-row>
           <el-row :gutter="10">
             <el-col :span="12">
-              <el-form-item label="批次号">
+              <el-form-item label="批次号" prop="batchNo">
                 <el-input
+                  disabled
+                  placeholder="系统自动生成"
                   v-model="editInventoryInbound.batchNo"
                 ></el-input> </el-form-item
             ></el-col>
             <el-col :span="12"> </el-col>
           </el-row>
-          <el-form-item label="入库详细">
+          <el-form-item label="入库详细" prop="detailVoList">
             <el-table
               :data="editInventoryInbound.detailVoList"
               script
@@ -123,7 +127,7 @@
                       <el-popover
                         placement="bottom-end"
                         width="auto"
-                        :ref="`popover-${scope.row.id}`"
+                        :ref="`packagePopover-${scope.$index}`"
                         trigger="click"
                       >
                         <div class="flex alic">
@@ -158,7 +162,7 @@
                             icon="el-icon-check"
                             class="ml40"
                             circle
-                            @click="packageConfirm(scope.row)"
+                            @click="packageConfirm(scope.$index, scope.row)"
                             size="mini"
                           ></el-button>
                         </div>
@@ -178,6 +182,7 @@
                       <el-popover
                         placement="bottom-end"
                         width="auto"
+                        :ref="`unPackagePopover-${scope.$index}`"
                         trigger="click"
                       >
                         <div class="flex alic">
@@ -210,7 +215,7 @@
                             icon="el-icon-check"
                             class="ml40"
                             circle
-                            @click="unPackageConfirm(scope.row)"
+                            @click="unPackageConfirm(scope.$index, scope.row)"
                             size="mini"
                           ></el-button>
                         </div>
@@ -263,8 +268,10 @@
             ></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary">立即创建</el-button>
-            <el-button>取消</el-button>
+            <el-button type="primary" @click="submitOnClick('boundInForm')"
+              >立即创建</el-button
+            >
+            <el-button @click="cancelOnClick('boundInForm')">重置</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -322,13 +329,19 @@
       </div>
       <div v-if="inventoryInboundType == 'PRODUCE'">
         <span class="colorblue fl mb40">生产入库</span>
-        <el-table script border size="mini">
-          <el-table-column prop="materialNo" label="编号"> </el-table-column>
-          <el-table-column prop="name" label="名称"> </el-table-column>
-          <el-table-column prop="specification" label="规格"> </el-table-column>
-          <el-table-column prop="count" label="数量">
+        <el-table script border size="mini" :data="produceInBoundList">
+          <el-table-column prop="planNo" label="编号"> </el-table-column>
+          <el-table-column prop="customerName" label="客户"> </el-table-column>
+          <el-table-column prop="orderFormNo" label="订单号"> </el-table-column>
+          <el-table-column prop="" label="" width="80px">
             <template slot-scope="scope">
-              <span>{{ scope.row.count }}{{ scope.row.unit }}</span>
+              <el-button
+                @click="loadInBound(scope.row, 'PRODUCE')"
+                type="success"
+                icon="el-icon-check"
+                size="mini"
+                circle
+              ></el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -344,10 +357,13 @@ export default {
     return {
       editInventoryInbound: {
         detailVoList: [],
+        type: "",
       },
       dialogVisible: false,
       inventoryInboundType: "",
       delegateInBoundList: [],
+      produceInBoundList: [],
+
       packageUnitList: [],
       packageUnit: "",
       packageMaxCount: 0,
@@ -357,6 +373,12 @@ export default {
       unPackageUnit: "",
       unPackageCount: 0,
       unPackageMaxCount: 0,
+      rules: {
+        type: [{ required: true, message: "请选择类型", trigger: "blur" }],
+        detailVoList: [
+          { required: true, message: "填入入库详细", trigger: "blur" },
+        ],
+      },
     };
   },
 
@@ -367,14 +389,42 @@ export default {
       GetStorageList: "GetStorageList",
       GetPackageUnitList: "GetPackageUnitList",
       GetUnPackageUnitList: "GetUnPackageUnitList",
+      SaveInventoryInBound: "SaveInventoryInBound",
+      FindProducePlanList: "FindProducePlanList",
     }),
     inventoryInBoundTypeOnClick(type) {
       this.inventoryInboundType = type;
+      switch (type) {
+        case "DELEGATE":
+          this.findDelegateInBoundList();
+          break;
+        case "PRODUCE":
+          this.findProductInBoundList();
+          break;
+      }
+    },
+
+    findDelegateInBoundList() {
       this.FindDelegateInBoundList()
         .then((res) => {
           if (res.resultStatus == 1) {
             this.dialogVisible = true;
             this.delegateInBoundList = res.data;
+          } else {
+            this.$message.warning(res.message);
+          }
+        })
+        .catch((err) => {
+          this.$message.error(err.message);
+        });
+    },
+
+    findProductInBoundList() {
+      this.FindProducePlanList({ state: "2" })
+        .then((res) => {
+          if (res.resultStatus == 1) {
+            this.dialogVisible = true;
+            this.produceInBoundList = res.data;
           } else {
             this.$message.warning(res.message);
           }
@@ -425,7 +475,7 @@ export default {
       this.packageCount = this.packageMaxCount;
     },
 
-    packageConfirm(row) {
+    packageConfirm(index, row) {
       if (this.packageCount <= 0) {
         this.$message.info("数量不足无法打包");
         return;
@@ -441,24 +491,48 @@ export default {
         selectUnit.convertCount,
         this.packageCount
       );
+      let existSameUnitRow = this.editInventoryInbound.detailVoList.find(
+        (item) => {
+          return (
+            item.materialId == row.materialId && item.unit == this.packageUnit
+          );
+        }
+      );
+      //部分打包
       if (row.count > packageTotalCount) {
-        let newRow = {
-          count: this.packageCount,
-          latestPrice: row.latestPrice,
-          materialId: row.materialId,
-          materialName: row.materialName,
-          materialNo: row.materialNo,
-          specification: "0.38mm黑",
-          storageCode: row.storageCode,
-          unit: this.packageUnit,
-        };
+        if (existSameUnitRow) {
+          existSameUnitRow.count = this.$my.NumberAdd(
+            existSameUnitRow.count,
+            this.packageCount
+          );
+        } else {
+          let newRow = {
+            count: this.packageCount,
+            latestPrice: row.latestPrice,
+            materialId: row.materialId,
+            materialName: row.materialName,
+            materialNo: row.materialNo,
+            specification: row.specification,
+            storageCode: row.storageCode,
+            unit: this.packageUnit,
+          };
+          this.editInventoryInbound.detailVoList.push(newRow);
+        }
         row.count = this.$my.NumberSub(row.count, packageTotalCount);
-        this.editInventoryInbound.detailVoList.push(newRow);
       } else {
-        row.count = this.packageCount;
-        row.unit = this.packageUnit;
+        //完全打包
+        if (existSameUnitRow) {
+          existSameUnitRow.count = this.$my.NumberAdd(
+            existSameUnitRow.count,
+            this.packageCount
+          );
+          this.editInventoryInbound.detailVoList.splice(index, 1);
+        } else {
+          row.count = this.packageCount;
+          row.unit = this.packageUnit;
+        }
       }
-      this.$refs[`popover-${row.id}`].doClose();
+      this.$refs[`packagePopover-${index}`].doClose();
     },
 
     unPackageOnClick(row) {
@@ -470,8 +544,8 @@ export default {
           .then((res) => {
             if (res.resultStatus == 1) {
               this.unPackageUnitList = res.data;
-              this.unPackageCount = row.count;
-              this.unPackageMaxCount = row.count;
+              this.unPackageCount = parseInt(row.count);
+              this.unPackageMaxCount = parseInt(row.count);
             } else {
               this.$message.warning(res.message);
             }
@@ -481,7 +555,7 @@ export default {
           });
     },
 
-    unPackageConfirm(row) {
+    unPackageConfirm(index, row) {
       if (this.unPackageCount <= 0 || this.unPackageUnit == "") {
         this.$message.info("拆包信息不足，无法拆包");
         return;
@@ -490,19 +564,57 @@ export default {
         this.$message.info("拆包数量大于已有数量，无法拆包");
         return;
       }
+      var selectUnit = this.unPackageUnitList.find((item) => {
+        return item.convertUnit == this.unPackageUnit;
+      });
+
+      let unPackageTotalCount = this.$my.NumberMul(
+        selectUnit.convertCount,
+        this.unPackageCount
+      );
+      //查询是否存在相同单位的记录
+      let existSameUnitRow = this.editInventoryInbound.detailVoList.find(
+        (item) => {
+          return (
+            item.materialId == row.materialId && item.unit == this.unPackageUnit
+          );
+        }
+      );
+      //完全拆包
       if (row.count == this.unPackageCount) {
-        var selectUnit = this.unPackageUnitList.find((item) => {
-          return item.convertUnit == this.unPackageUnit;
-        });
-        let unPackageTotalCount = this.$my.NumberMul(
-          selectUnit.convertCount,
-          this.unPackageCount
-        );
-        row.count = unPackageTotalCount;
-        row.unit = selectUnit.convertUnit;
+        if (existSameUnitRow) {
+          existSameUnitRow.count = this.$my.NumberAdd(
+            existSameUnitRow.count,
+            unPackageTotalCount
+          );
+          this.editInventoryInbound.detailVoList.splice(index, 1);
+        } else {
+          row.count = unPackageTotalCount;
+          row.unit = selectUnit.convertUnit;
+        }
       } else {
-        console.log("部分拆包");
+        //部分拆包
+        if (existSameUnitRow) {
+          existSameUnitRow.count = this.$my.NumberAdd(
+            existSameUnitRow.count,
+            unPackageTotalCount
+          );
+        } else {
+          var newRow = {
+            latestPrice: row.latestPrice,
+            materialId: row.materialId,
+            materialName: row.materialName,
+            materialNo: row.materialNo,
+            specification: row.specification,
+            storageCode: row.storageCode,
+            count: unPackageTotalCount,
+            unit: this.unPackageUnit,
+          };
+          this.editInventoryInbound.detailVoList.push(newRow);
+        }
+        row.count = this.$my.NumberSub(row.count, this.unPackageCount);
       }
+      this.$refs[`unPackagePopover-${index}`].doClose();
     },
 
     getFullDate(time) {
@@ -511,6 +623,28 @@ export default {
       } else {
         return "";
       }
+    },
+
+    submitOnClick(formName) {
+      this.$refs[formName]
+        .validate((valid) => {
+          if (valid) {
+            this.SaveInventoryInBound(this.editInventoryInbound).then((res) => {
+              if (res.resultStatus == 1) {
+                this.$message.success("入库成功");
+                this.$refs[formName].resetFields();
+              } else {
+                this.$message.warning(res.message);
+              }
+            });
+          }
+        })
+        .catch((err) => {
+          this.$message.error(err.message);
+        });
+    },
+    cancelOnClick(formName) {
+      this.$refs[formName].resetFields();
     },
   },
   computed: {

@@ -77,6 +77,9 @@ const actions = {
     },
     GetUnPackageUnitList({},param){
         return request.GetUnPackageUnitList(param)
+    },
+    SaveInventoryInBound({},param){
+        return request.InventoryInBoundSave(param)
     }
 
 };

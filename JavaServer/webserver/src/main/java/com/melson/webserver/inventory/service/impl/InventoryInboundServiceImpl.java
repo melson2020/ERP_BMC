@@ -2,6 +2,7 @@ package com.melson.webserver.inventory.service.impl;
 
 import com.melson.base.utils.DateUtil;
 import com.melson.base.utils.NumUtil;
+import com.melson.webserver.dict.service.IStorageDetail;
 import com.melson.webserver.inventory.dao.IInventoryInboundDetailRepository;
 import com.melson.webserver.inventory.dao.IInventoryInboundRepository;
 import com.melson.webserver.inventory.entity.InventoryInbound;
@@ -9,13 +10,16 @@ import com.melson.webserver.inventory.entity.InventoryInboundDetail;
 import com.melson.webserver.inventory.service.IInventoryInboundService;
 import com.melson.webserver.inventory.vo.InventoryInboundDetailVo;
 import com.melson.webserver.inventory.vo.InventoryInboundVo;
+import com.melson.webserver.order.entity.DelegateTicket;
 import com.melson.webserver.order.service.IDelegateTicketService;
+import com.melson.webserver.order.service.IProducePlanService;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -38,6 +42,10 @@ public class InventoryInboundServiceImpl implements IInventoryInboundService {
     private IInventoryInboundDetailRepository inventoryInboundDetailRepository;
     @Autowired
     private IDelegateTicketService delegateTicketService;
+    @Autowired
+    private IStorageDetail storageDetailService;
+    @Autowired
+    private IProducePlanService producePlanService;
 
     @Override
     public List<InventoryInboundVo> list(Date date) {
@@ -82,12 +90,12 @@ public class InventoryInboundServiceImpl implements IInventoryInboundService {
     }
 
     @Override
+    @Transactional
     public InventoryInbound save(InventoryInboundVo vo, Integer userId) {
         // 1.保存入库单
         InventoryInbound form = new InventoryInbound();
         BeanUtils.copyProperties(vo, form);
         Date date = new Date();
-        form.setBatchNo(DateUtil.timeFormat(date));
         form.setCreateDate(date);
         form.setCreateUser(userId);
         inventoryInboundRepository.saveAndFlush(form);
@@ -105,17 +113,30 @@ public class InventoryInboundServiceImpl implements IInventoryInboundService {
             detail.setFormNo(form.getFormNo());
             detailList.add(detail);
         });
-        inventoryInboundDetailRepository.saveAll(detailList);
+        List<InventoryInboundDetail> details = inventoryInboundDetailRepository.saveAll(detailList);
         // 3.修改库存
-        // todo : 关联库存表新增 by wuhuan
+        storageDetailService.InventoryIn(form, details);
+        UpdateSourceTicketState(form);
         return form;
     }
 
     @Override
-    public InventoryInboundVo createInBoundWithTicket(Integer ticketId, String ticketType,Integer userId) {
-        switch (ticketType){
-            case InventoryInbound.TYPE_DELEGATE:return delegateTicketService.GenerateInventoryInBound(ticketId,userId);
+    public InventoryInboundVo createInBoundWithTicket(Integer ticketId, String ticketType, Integer userId) {
+        switch (ticketType) {
+            case InventoryInbound.TYPE_DELEGATE:
+                return delegateTicketService.GenerateInventoryInBound(ticketId, userId);
+            case InventoryInbound.TYPE_PRODUCE:
+                return producePlanService.GenerateInventoryInBound(ticketId, userId);
         }
         return null;
+    }
+
+    private void UpdateSourceTicketState(InventoryInbound inbound) {
+        switch (inbound.getType()) {
+            case InventoryInbound.TYPE_DELEGATE:
+                delegateTicketService.UpdateStateById(DelegateTicket.STATE_COMPLETE, inbound.getSourceId(),inbound.getFormNo());
+                break;
+            default:break;
+        }
     }
 }

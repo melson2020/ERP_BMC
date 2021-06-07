@@ -406,6 +406,9 @@ ReqUpdatePurchaseStatus(params) {
   CreateInventoryInBound(param) {
     return service.get('/inventory/inbound/createInBound', param)
   },
+  InventoryInBoundSave(param){
+    return service.post("/inventory/inbound/save", param)
+  }
 
 
 };

@@ -7,6 +7,9 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Set;
+
 /**
  * Created by Messi on 2021/5/10
  */
@@ -20,4 +23,6 @@ public interface IStorageDetailRepository extends JpaRepository<StorageDetail,St
     Integer deleteByMaterialNo(String materialNo);
 
     StorageDetail findByProductIdAndUnit(Integer productId,String unit);
+
+    List<StorageDetail> findByProductIdIn(Set<Integer> productIds);
 }
