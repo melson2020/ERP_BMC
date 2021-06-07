@@ -21,4 +21,6 @@ public interface IPurchaseDetailService {
     List<PurchaseDetail> GenerateOrderPurchase(List<OrderFormDetail> detailList, OrderForm formVo);
 
     List<PurchaseDetail> FindByOrderFormId(Integer orderFormId);
+
+    List<PurchaseDetail> GetAllApprovedPurchaseDetailList(String state);
 }

@@ -5,6 +5,9 @@ import { Message } from "element-ui";
 
 const state = {
     purchaseList: [],
+    userVos:[],
+    productVos:[],
+    purchaseWaitList:[],
 };
 
 const actions = {
@@ -40,12 +43,86 @@ const actions = {
         Message.error(al)
       })
     },
-    
+    DeletePurchase({ commit }, purchase) {
+      request
+          .ReqDeletePurchase(purchase)
+          .then(res => {
+              if (res.resultStatus == 1) {
+                  commit(types.PURCHASE_DELETE_ITEM, purchase)
+                  Message.info("删除成功")
+              }
+              else {
+                  Message.info("删除失败:" + res.message);
+              }
+          })
+          .catch(error => {
+              let al = error.message ? error.message : error
+              Message.error(al)
+          })
+  },
+
+    GetEmployeeVos({commit}, params) {
+      request.ReqEmployeeVoList(params).then(res => {
+          if (res.resultStatus == 1) {
+              commit(types.USER_VO_LIST, res.data)
+          } else {
+              Message.warning(res.message)
+          }
+      }).catch(err => {
+          Message.error(err.message)
+      })
+    },
+    QueryProductVos({commit}, productVo) {
+      request.ReqQueryProductVos(productVo).then(res => {
+          if (res.resultStatus == 1) {
+              commit(types.PRODUCT_VO_LIST, res.data)
+          } else {
+              Message.warning(res.message)
+          }
+      }).catch(err => {
+          Message.error(err.message)
+      })
+    },
+
+    GetPurchaseWaitList({ commit }, params) {
+      request.ReqWaitPurchaseList(params).then(res => {
+          if (res.resultStatus == 1) {
+              commit(types.PURCHASE_WAIT_LIST, res.data)
+          } else {
+              Message.warning(res.message)
+          }
+      }).catch(err => {
+          Message.error(err.message)
+      })
+    },
+    ApprovePurchaseObj({ },purchase){
+      return request.ReqApprovePurchaseObj(purchase);
+    },
+    RejectPurchaseWait({ commit }, purchase) {
+      request
+      .ReqRejectPurchaseWait(purchase)
+      .then(res => {
+          if (res.resultStatus == 1) {
+              commit(types.PURCHASE_REJECT_ITEM, purchase)
+              Message.info("删除成功")
+          }
+          else {
+              Message.info("删除失败:" + res.message);
+          }
+      })
+      .catch(error => {
+          let al = error.message ? error.message : error
+          Message.error(al)
+      })
+    },
 
 };
 
 const getters = {
     purchaseList: state => state.purchaseList,
+    userVos:state=>state.userVos,
+    productVos:state=>state.productVos,
+    purchaseWaitList:state=>state.purchaseWaitList,
 };
 
 const mutations = {
@@ -54,6 +131,29 @@ const mutations = {
     },
     [types.PURCHASE_PUSH_LIST](state,data){
       state.purchaseList.push(data);
+    },
+    [types.USER_VO_LIST](state, data) {
+      state.userVos=data;
+    },
+    [types.PRODUCT_VO_LIST](state, data) {
+      var productList = data;
+      var options = [];
+      productList.map((group) => {
+        var subList = group.list;
+        if (subList.length > 0) {
+          options.push({ groupName: group.groupName, list: subList });
+        }
+      });
+      state.productVos = options;
+    },
+    [types.PURCHASE_DELETE_ITEM](state, data) {
+      state.purchaseList.splice(data.index, 1);
+    },
+    [types.PURCHASE_WAIT_LIST](state, data) {
+      state.purchaseWaitList=data;
+    },
+    [types.PURCHASE_REJECT_ITEM](state, data) {
+      state.purchaseWaitList.splice(data.index, 1);
     },
 };
 

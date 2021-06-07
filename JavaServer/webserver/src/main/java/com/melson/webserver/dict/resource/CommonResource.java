@@ -10,6 +10,7 @@ import com.melson.webserver.dict.service.*;
 import com.melson.webserver.dict.vo.ContractProductVo;
 import com.melson.webserver.dict.vo.GroupProductVo;
 import com.melson.webserver.dict.vo.ProductVo;
+import com.melson.webserver.dict.vo.UserPassVo;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -71,5 +72,22 @@ public class CommonResource extends BaseResource {
     @RequestMapping(value = "/taxRateList",method = RequestMethod.GET)
     public Result GetTaxRateList(){
         return success(taxRateService.getAll());
+    }
+
+    @RequestMapping(value = "/productVoList",method = RequestMethod.GET)
+    public Result GetProductVos(HttpServletRequest request){
+        String params="";
+        Result result=new Result();
+        List<GroupProductVo> productVoList=productService.GetProductVoList(params);
+        result.setData(productVoList);
+        return result;
+    }
+
+    @RequestMapping(value = "/employeeVos",method = RequestMethod.GET)
+    public Result GetEmployeeVos(HttpServletRequest request){
+        List<UserPassVo> vos=productService.GetVos();
+        Result result=new Result();
+        result.setData(vos);
+        return result;
     }
 }

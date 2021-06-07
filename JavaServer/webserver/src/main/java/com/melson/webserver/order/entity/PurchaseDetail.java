@@ -62,10 +62,16 @@ public class PurchaseDetail {
 
     private String requester;                     // purchase_plan 传过来
 
+    private Integer requesterId;
+
     // 状态值  如;待审核（CREATE），已批准(APPROVE)，采购中(BUYING)，已入库(COMPLETE)
     private String state;                        // purchase_plan 传过来
 
     private Integer supplyId;
+
+    private BigDecimal costPrice;
+
+    private String poNo;
 
 
     public Integer getId() {
@@ -196,11 +202,35 @@ public class PurchaseDetail {
         this.requester = requester;
     }
 
+    public Integer getRequesterId() {
+        return requesterId;
+    }
+
+    public void setRequesterId(Integer requesterId) {
+        this.requesterId = requesterId;
+    }
+
     public Integer getSupplyId() {
         return supplyId;
     }
 
     public void setSupplyId(Integer supplyId) {
         this.supplyId = supplyId;
+    }
+
+    public BigDecimal getCostPrice() {
+        return costPrice;
+    }
+
+    public void setCostPrice(BigDecimal costPrice) {
+        this.costPrice = costPrice;
+    }
+
+    public String getPoNo() {
+        return poNo;
+    }
+
+    public void setPoNo(String poNo) {
+        this.poNo = poNo;
     }
 }

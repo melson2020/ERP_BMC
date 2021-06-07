@@ -72,6 +72,11 @@ public class PurchaseDetailServiceImpl implements IPurchaseDetailService {
         return purchaseDetailRepository.findBySourceIdAndType(orderFormId,PurchasePlan.PURCHASE_TYPE_ORDER);
     }
 
+    @Override
+    public List<PurchaseDetail> GetAllApprovedPurchaseDetailList(String state) {
+        return purchaseDetailRepository.findByState(state);
+    }
+
     private PurchaseDetail CreatePurchase(OrderFormDetail formDetail, PurchasePlan pr){
         PurchaseDetail purchaseDetail=new PurchaseDetail();
         purchaseDetail.setType(pr.getType());

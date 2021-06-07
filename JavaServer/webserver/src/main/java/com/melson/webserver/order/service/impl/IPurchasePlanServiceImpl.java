@@ -56,6 +56,7 @@ public class IPurchasePlanServiceImpl extends AbstractService<PurchasePlan> impl
             detail.setPurchasePlanNo(pr.getPlanNo());
             detail.setCreateBy(pr.getCreateBy());
             detail.setRequester(pr.getRequester());
+            detail.setRequesterId(pr.getRequesterId());
         }
         List<PurchaseDetail> detailList=pr.getPurchaseDetailList();
         purchaseDetailRepository.saveAll(detailList);
@@ -78,4 +79,40 @@ public class IPurchasePlanServiceImpl extends AbstractService<PurchasePlan> impl
         purchaseDetailRepository.UpdateStatus(purchase.getState(),purchase.getPlanNo());
         return count;
     }
+
+    @Override
+    @Transactional
+    public Integer DeletePurchase(PurchasePlan purchase) {
+        purchaseDetailRepository.deleteByPrNo(purchase.getPlanNo());     //删除PR 详细表
+        return purchasePlanRepository.deletePrById(purchase.getId());    //删除PR
+    }
+
+    @Override
+    public List<PurchasePlan> GetUnderApprovePurchaseList(String state) {
+        return purchasePlanRepository.findListByState(state);
+    }
+
+    @Override
+    public Result ApprovePurchasePlan(PurchasePlan purchase) {
+        Result result=new Result();
+        purchase.setState(PurchasePlan.PURCHASE_STATE_APPROVE);
+        PurchasePlan saved=purchasePlanRepository.save(purchase);
+        for(PurchaseDetail detail:purchase.getPurchaseDetailList()){
+            detail.setState(purchase.getState());
+        }
+        List<PurchaseDetail> detailList=purchase.getPurchaseDetailList();
+        purchaseDetailRepository.saveAll(detailList);
+        result.setData(saved);
+        return result;
+    }
+
+    @Override
+    @Transactional
+    public Integer RejectPurchase(PurchasePlan purchase) {
+        Integer count = purchasePlanRepository.UpdatePurchaseStatus(purchase.getState(),purchase.getId());
+        purchaseDetailRepository.UpdateStatus(purchase.getState(),purchase.getPlanNo());
+        return count;
+    }
+
+
 }

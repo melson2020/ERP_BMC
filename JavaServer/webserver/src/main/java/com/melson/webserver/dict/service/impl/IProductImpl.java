@@ -2,6 +2,7 @@ package com.melson.webserver.dict.service.impl;
 
 import com.melson.base.AbstractService;
 import com.melson.base.Result;
+import com.melson.base.entity.User;
 import com.melson.base.service.ISysSequence;
 import com.melson.base.utils.EntityManagerUtil;
 import com.melson.base.utils.EntityUtils;
@@ -12,6 +13,7 @@ import com.melson.webserver.dict.service.IProduct;
 import com.melson.webserver.dict.vo.ContractProductVo;
 import com.melson.webserver.dict.vo.GroupProductVo;
 import com.melson.webserver.dict.vo.ProductVo;
+import com.melson.webserver.dict.vo.UserPassVo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -89,15 +91,26 @@ public class IProductImpl extends AbstractService<Product> implements IProduct {
         return generateVoList(productNo);
     }
 
+    @Override
+    public List<UserPassVo> GetVos() {
+        String sql = "SELECT us.id,CONCAT(us.loginName,' / ',us.userName,' / ',de.departmentName) as alias FROM `user` us LEFT JOIN department de on de.id=us.departmentId where us.`status`='Y'";
+        StringBuffer sBuffer = new StringBuffer(sql);
+        List<Object[]> list = entityManagerUtil.ExcuteSql(sBuffer.toString());
+        List<UserPassVo> vos=EntityUtils.castEntity(list, UserPassVo.class, new UserPassVo());
+        return vos;
+    }
+
     private List<GroupProductVo> generateVoList(String productNo) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String now=sdf.format(new Date());
         List<GroupProductVo> voList=new ArrayList<>();
         String sql ="SELECT pb.productNo,pb.productName as name,pb.specification,pb.categoryId,pc.`name` as category,pb.supplyId,pb.costPrice as salesPrice,pb.supplyName, pb.bomNo,pb.bomGenericId,CONCAT(pc.`name`,' / ',pb.productName,' / ',pb.specification,' / ',pb.supplyName,' / ',pb.description,' / ',pb.version) as alias ,''as id,''as unit,'' as remark FROM `product_bom` pb left join product_category pc on pb.categoryId=pc.categoryId ";
         StringBuffer sBuffer = new StringBuffer(sql);
-        sBuffer.append(" where pb.productNo<>'" + productNo + "'");
-        sBuffer.append("  and pb.status='Y'");
+        sBuffer.append(" where pb.status='Y'");
         sBuffer.append("  and pb.expirationDate>='" + now + "'");
+        if (!org.springframework.util.StringUtils.isEmpty(productNo)) {
+            sBuffer.append(" and pb.productNo<>'" + productNo + "'");
+        }
         List<Object[]> list1 = entityManagerUtil.ExcuteSql(sBuffer.toString());
         List<ProductVo> productVos1 = GenerateList(list1);
         GroupProductVo gpvo1=new GroupProductVo();
@@ -105,8 +118,10 @@ public class IProductImpl extends AbstractService<Product> implements IProduct {
         gpvo1.setList(productVos1);
         String sql2 ="SELECT pr.productNo,pr.name,pr.specification,pr.categoryId,pc.`name` as category,pr.supplyId,pr.salesPrice,su.`name` as supplyName,''as bomNo,'' as bomGenericId,CONCAT(pc.`name`,' / ',pr.`name`,' / ',pr.specification,' / ',su.`name`) as alias ,''as id,''as unit,'' as remark from product pr left JOIN supply su on pr.supplyId=su.id left JOIN product_category pc on pr.categoryId=pc.categoryId left JOIN (SELECT productNo from product_bom) pb on pr.productNo=pb.productNo WHERE pb.productNo is null and pr.categoryId<>'CAT00000002' and pr.categoryId<>'CAT00000003'";
         StringBuffer sBuffer2 = new StringBuffer(sql2);
-        sBuffer2.append("  and pr.productNo<>'" + productNo + "'");
         sBuffer2.append("  and pr.expireDate>='" + now + "'");
+        if (!org.springframework.util.StringUtils.isEmpty(productNo)) {
+            sBuffer.append("  and pr.productNo<>'" + productNo + "'");
+        }
         List<Object[]> list2 = entityManagerUtil.ExcuteSql(sBuffer2.toString());
         List<ProductVo> productVos2 = GenerateList(list2);
         GroupProductVo gpvo2=new GroupProductVo();

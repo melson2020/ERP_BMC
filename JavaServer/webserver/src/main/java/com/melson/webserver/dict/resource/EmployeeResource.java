@@ -12,6 +12,7 @@ import com.melson.webserver.dict.entity.UserGroup;
 import com.melson.webserver.dict.entity.WorkGroup;
 import com.melson.webserver.dict.service.IWorkGroup;
 import com.melson.webserver.dict.service.IUserGroup;
+import com.melson.webserver.dict.vo.UserPassVo;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -86,6 +87,7 @@ public class EmployeeResource extends BaseResource {
         result.setData(employeeList);
         return result;
     }
+
 
     @RequestMapping(value = "/employeeSave",method = RequestMethod.POST)
     public Result SaveUser(@RequestBody User user){
