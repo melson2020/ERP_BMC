@@ -313,7 +313,12 @@ ReqRejectPurchaseWait(params){
 ReqPRList(params){
   return service.get('/purchase/approvedPurchaseDetailList',params)    //  //
 },
-
+ReqPOList(params){
+  return service.get('/purchase/createdPoList',params)    //  //
+},
+ReqSavePoList(param){
+  return service.post("/purchase/poSave",param)
+},
 
   //订单相关
   GetCreatedOrderList(param) {

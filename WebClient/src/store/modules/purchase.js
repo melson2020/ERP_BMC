@@ -9,6 +9,7 @@ const state = {
     productVos:[],
     purchaseWaitList:[],
     prList:[],
+    poList:[],
 };
 
 const actions = {
@@ -127,6 +128,20 @@ const actions = {
           Message.error(err.message)
       })
     },
+    GetPOList({ commit }, params) {
+      request.ReqPOList(params).then(res => {
+          if (res.resultStatus == 1) {
+              commit(types.PO_CREATE_LIST, res.data)
+          } else {
+              Message.warning(res.message)
+          }
+      }).catch(err => {
+          Message.error(err.message)
+      })
+    },
+    SavePoList({ },po){
+      return request.ReqSavePoList(po);
+    },
 
 };
 
@@ -136,6 +151,7 @@ const getters = {
     productVos:state=>state.productVos,
     purchaseWaitList:state=>state.purchaseWaitList,
     prList:state=>state.prList,
+    poList:state=>state.poList,
 };
 
 const mutations = {
@@ -170,6 +186,9 @@ const mutations = {
     },
     [types.PO_WAIT_LIST](state, data) {
       state.prList=data;
+    },
+    [types.PO_CREATE_LIST](state, data) {
+      state.poList=data;
     },
 };
 

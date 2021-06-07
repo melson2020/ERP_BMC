@@ -1,99 +1,119 @@
 <template>
   <div>
-    <div id="outTicketPdf" ref="outTicketPdf" class="poTemplate-div">
+    <div id="poTemplatecreate" ref="poTemplatecreate" class="poTemplate-div">
       <div class="poTemplate-header">
-        <span class="poTemplate-header-left">{{parentMsg}}</span>
+        <span class="poTemplate-header-left">{{ newPO.poNo }}</span>
         <span class="poTemplate-header-title">采购订单确认书</span>
       </div>
       <!-- <div class="poTemplate-buyer-info-div"> -->
-        <!-- <div class="poTemplate-buyer-info-div-left"> -->
-          <div class="poTemplate-buyer-info-div-left-firstfloor">
-            <div class="title-div-gray flex justify-content">
-              <span>供应方</span>
-            </div>
-            <div style="padding-top: 15px">
-              <el-form
-                ref="vendeeForm"
-                label-position="left"
-                label-width="80px"
-                size="mini"
-                :rules="vendeeRules"
-                :model="vendeeInfo"
+      <!-- <div class="poTemplate-buyer-info-div-left"> -->
+      <div class="poTemplate-buyer-info-div-left-firstfloor">
+        <div class="title-div-gray flex justify-content">
+          <span>供应方</span>
+        </div>
+        <div class="poTemplate-supply">
+          <el-form
+            ref="vendeeForm"
+            label-position="left"
+            label-width="80px"
+            :rules="rules"
+            size="mini"
+            :model="vendeeInfo"
+          >
+          <el-row :gutter="10">
+            <el-col :span="12">
+              <el-form-item label="公司名称" prop="supplyId">
+                <!-- <el-input
+                  class="form-input"
+                  v-model="vendeeInfo.supplyId"
+                ></el-input> -->
+                <el-select
+                  filterable
+                  v-model="vendeeInfo.supplyName"
+                  size="small"
+                  style="width:100%"
+                  @change="supplyChanged"
+                  placeholder="选择供应商">
+                  <el-option
+                    v-for="vo in supplyList"
+                    :label="vo.name"
+                    :value="vo"
+                    :key="vo.id"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="联系地址" prop="address">
+                <el-input
+                 
+                  v-model="vendeeInfo.address"
+                  disabled
+                ></el-input>
+              </el-form-item>
+            </el-col>
+            </el-row>
+            <el-row :gutter="10">
+            <el-col :span="12">
+              <el-form-item label="联系人员" prop="contact">
+                <el-input
+                 
+                  v-model="vendeeInfo.contact"
+                  disabled
+                ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="联系电话" prop="phone">
+                <el-input
+                 
+                  v-model="vendeeInfo.phone"
+                  disabled
+                ></el-input>
+              </el-form-item>
+            </el-col>
+            </el-row>
+          </el-form>
+        </div>
+      </div>
+      <div class="poTemplate-buyer-info-div-left-secfloor">
+        <div class="title-div-gray flex justify-content">
+          采购方:
+        </div>
+        <div class="PoTemplate-conten">
+          <div>
+            <el-col :span="12">
+              <span class="tempate-text-left-center"
+                >买方名称：{{ userInfo.company.companyName }}</span
               >
-                <el-col :span="12">
-                  <el-form-item label="公司名称" prop="name">
-                    <el-input
-                      class="form-input"
-                      v-model="vendeeInfo.name"
-                    ></el-input>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="12">
-                  <el-form-item label="联系地址" prop="address">
-                    <el-input
-                      class="form-input"
-                      v-model="vendeeInfo.address"
-                      disabled
-                    ></el-input>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="12">
-                  <el-form-item label="联系人员" prop="contactUser">
-                    <el-input
-                      class="form-input"
-                      v-model="vendeeInfo.contactUser"
-                      disabled
-                    ></el-input>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="12">
-                  <el-form-item label="联系电话" prop="phone">
-                    <el-input
-                      class="form-input"
-                      v-model="vendeeInfo.phone"
-                      disabled
-                    ></el-input>
-                  </el-form-item>
-                </el-col>
-              </el-form>
-            </div>
+            </el-col>
+            <el-col :span="12">
+              <span class="tempate-text-left-center"
+                >买方地址：{{ userInfo.company.provinceName
+                }}{{ userInfo.company.cityName }}{{ userInfo.company.areaName
+                }}{{ userInfo.company.address }}</span
+              >
+            </el-col>
           </div>
-          <div class="poTemplate-buyer-info-div-left-secfloor">
-            <div class="title-div-gray flex justify-content" >
-              采购方:
-            </div>
-            <div class="PoTemplate-conten">
-              <div>
-                <el-col :span="12">
-                  <span class="tempate-text-left-center"
-                    >买方名称：{{ userInfo.company.companyName }}</span
-                  >
-                </el-col>
-                <el-col :span="12">
-                  <span class="tempate-text-left-center"
-                    >买方地址：{{ userInfo.company.provinceName }}{{ userInfo.company.cityName }}{{ userInfo.company.areaName }}{{ userInfo.company.address }}</span
-                  >
-                </el-col>
-              </div>
-              <div>
-                <el-col :span="12">
-                  <span class="tempate-text-left-center"
-                    >联系人员：{{ userInfo.company.communicateName }}</span
-                  >
-                </el-col>
-                <el-col :span="12">
-                  <span class="tempate-text-left-center"
-                    >联系电话：{{ userInfo.company.phoneNumber }}</span
-                  >
-                </el-col>
-              </div>
-            </div>
+          <div>
+            <el-col :span="12">
+              <span class="tempate-text-left-center"
+                >联系人员：{{ userInfo.company.communicateName }}</span
+              >
+            </el-col>
+            <el-col :span="12">
+              <span class="tempate-text-left-center"
+                >联系电话：{{ userInfo.company.phoneNumber }}</span
+              >
+            </el-col>
           </div>
+        </div>
+      </div>
 
       <div class="poTemplate-product-detail-div">
         <el-table
           border
-          :data="contractProductList"
+          :data="poDetailList"
           style="width: 100%"
           size="mini"
           @cell-click="cellClick"
@@ -103,97 +123,43 @@
             weight: 'bold',
           }"
         >
-          <el-table-column prop="productName" label="名称" width="210px">
-            <template slot-scope="scope">
-              <div
-                v-if="scope.row.seen"
-                class="poTemplate-product-detail-select-div"
-              >
-                <el-select
-                  v-model="scope.row.productName"
-                  size="mini"
-                  filterable
-                  remote
-                  reserve-keyword
-                  placeholder="请输入名称"
-                  :remote-method="remoteMethod"
-                  :loading="loading"
-                  @change="onSelect($event, scope.row)"
-                >
-                  <el-option-group
-                    v-for="group in options"
-                    :key="group.groupName"
-                    :label="group.groupName"
-                  >
-                    <el-option
-                      v-for="item in group.list"
-                      :key="item.id"
-                      :label="item.alias"
-                      :value="item"
-                    >
-                    </el-option>
-                  </el-option-group>
-                </el-select>
-                <i
-                  class="el-icon-delete fz12"
-                  @click="removeContractProduct(scope.$index, scope.row)"
-                ></i>
-              </div>
-              <span v-else>{{ scope.row.productName }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="specification" label="规格" width="180px">
-          </el-table-column>
-          <el-table-column prop="remark" label="备注" width="200px">
-            <template slot-scope="scope">
-              <el-input
-                v-if="scope.row.seen"
-                size="mini"
-                v-model="scope.row.remark"
-                @blur="loseFcous(scope.$index, scope.row)"
-              ></el-input>
-              <span v-else>{{ scope.row.remark }}</span>
-            </template>
-          </el-table-column>
+          <el-table-column prop="materialName" label="名称"> </el-table-column>
+          <el-table-column prop="specification" label="规格"> </el-table-column>
           <el-table-column prop="count" label="数量" width="130px">
-            <template slot-scope="scope">
-              <div class="poTemplate-product-seen-div" v-if="scope.row.seen">
-                <el-input
-                  size="mini"
-                  v-model="scope.row.count"
-                  @blur="loseFcous(scope.$index, scope.row)"
-                ></el-input>
-                {{ scope.row.countUnit }}
-              </div>
-              <span v-else>{{ scope.row.count }}{{ scope.row.countUnit }}</span>
-            </template>
+              <template slot-scope="scope">
+                <span>{{ scope.row.count }}{{ scope.row.countUnit }}</span>
+              </template>
           </el-table-column>
-          <el-table-column prop="taxPrice" label="单价" width="130px">
+          <el-table-column prop="costPrice" label="单价" width="130px">
             <template slot-scope="scope">
               <el-input
                 v-if="scope.row.seen"
                 size="mini"
-                v-model="scope.row.taxPrice"
+                v-model="scope.row.costPrice"
                 @blur="loseFcous(scope.$index, scope.row)"
               ></el-input>
-              <span v-else>{{ scope.row.taxPrice }}</span>
+              <span v-else>{{ scope.row.costPrice }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="taxTotalPrice" label="总价">
-          </el-table-column>
+          <!-- <el-table-column prop="remark" label="备注">
+          </el-table-column> -->
         </el-table>
         <div class="poTemplate-product-detail-summary-div fz9">
           <div class="poTemplate-product-detail-summary-item">
             <span style="width: 180px; text-align: left">总额</span>
-            <span style="width: 150px; text-align: right">{{
-              contractProductTotal.price
-            }}</span>
+            <span style="width: 150px; text-align: right">{{poSum}}</span>
           </div>
         </div>
       </div>
 
       <div class="fz8">
-        <p class="poTemplate-content">{{ contractTemplate.content==null?'': contractTemplate.content.value}}</p>
+        <p class="poTemplate-content">
+          {{
+            contractTemplate.content == null
+              ? ""
+              : contractTemplate.content.value
+          }}
+        </p>
         <div class="poTemplate-remark-div">
           <div class="remark-title-div">备注</div>
           <div>
@@ -209,28 +175,36 @@
       </div>
       <div class="poTemplate-confirm-div fz9">
         <div class="poTemplate-confirm-box">
-          <span>卖方确认</span>
+          <span>买方确认</span>
           <span>名称：{{ userInfo.company.companyName }}</span>
-          <span>地址：{{ userInfo.company.provinceName }}{{ userInfo.company.cityName }}{{ userInfo.company.areaName }}{{ userInfo.company.address }}</span>
+          <span
+            >地址：{{ userInfo.company.provinceName
+            }}{{ userInfo.company.cityName }}{{ userInfo.company.areaName
+            }}{{ userInfo.company.address }}</span
+          >
           <span>联系人：{{ userInfo.company.communicateName }}</span>
           <span>电话：{{ userInfo.company.phoneNumber }}</span>
+          <span>日期：{{ Datetime }}</span>
         </div>
         <div class="poTemplate-confirm-box">
-          <span>买方确认</span>
-          <span>名称：{{ vendeeInfo.name }}</span>
+          <span>卖方确认</span>
+          <span>名称：{{ vendeeInfo.supplyName }}</span>
           <span>地址：{{ vendeeInfo.address }}</span>
-          <span>联系人：{{ vendeeInfo.bank }}</span>
-          <span>电话：{{ vendeeInfo.account }}</span>
+          <span>联系人：{{ vendeeInfo.contact }}</span>
+          <span>电话：{{ vendeeInfo.phone }}</span>
           <span>日期：</span>
         </div>
       </div>
       <p class="poTemplate-description">
-        {{ contractTemplate.description==null?"":contractTemplate.description.value}}
+        {{
+          contractTemplate.description == null
+            ? ""
+            : contractTemplate.description.value
+        }}
       </p>
     </div>
     <div class="edit-poTemplate-button-div">
-      <el-button @click="saveContract" type="primary">保存合同</el-button>
-      <el-button @click="clearContract" type="warning">清空内容</el-button>
+      <el-button @click="savePo('vendeeForm')" type="primary">生成采购单</el-button>
     </div>
   </div>
 </template>
@@ -241,229 +215,70 @@ export default {
   name: "m-create-intent-constract",
   data() {
     return {
-      // poNo:"PO" + new Date().valueOf(),
-
-      options: [],
-      selectedAddress: "",
-      diliveryAddressList: [],
-      loading: false,
+      Datetime:new Date().format("yyyy-MM-dd"),
+      poDetailList:[],
       vendeeInfo: {
-        name: "",
+        supplyId:"",
+        supplyName: "",
         address: "",
-        customerNo: "",
-        contactUser: "",
+        contact: "",
         phone: "",
-        taxNo: "",
-        account: "",
       },
-      purchaserConfirm:{},
-      goodReceveInfo: {
-        name: "",
-        addressId: "",
-        address: "",
-        contactUser: "",
-        phone: "",
-        taxNo: "",
-        account: "",
+      newPO: {
+        id: "",
+        poNo: "",
+        state: "",
+        supplyId: "",
+        deliveryDay: "",
+        payterm: "",
+        createDate: "",
+        createBy: "",
+        description: "",
+        purchaseDetailList: [],
+        supplyName: "",
+        poDetailList:[],
       },
-      companyInfo: {
-        id:'',
-        name: "",
-        addressId: "",
-        address: "",
-        contactUser: "",
-        phone: "",
-        taxNo: "",
-        account: "",
-      },
-      contractInfo: {
-        contractNo: "",
-        contractDate: "",
-        diliveryWay: "",
-        type: "",
-        orderTicketNo: "",
-        orderDes: "",
-        deliverType: "",
-        payDate: "",
-        payWay: "",
-        currency: "",
-        deliverDate: "",
-        contactUser: "",
-        quality: "",
-        taxRate: "",
-      },
-      contractProductList: [],
-      taxRateList: [],
-      vendeeRules: {
-        name: [{ required: true, message: "请输入名称", trigger: "blur" }],
-        address: [{ required: true, message: "请输入地址", trigger: "blur" }],
-        contactUser: [
-          { required: true, message: "请输入联系人", trigger: "blur" },
-        ],
-        phone: [{ required: true, message: "请输入电话", trigger: "blur" }],
-        taxNo: [{ required: true, message: "请输入税号", trigger: "blur" }],
-        account: [{ required: true, message: "请输入账户", trigger: "blur" }],
-      },
-      contractInfoRules: {
-        contractNo: [
-          { required: true, message: "请输入合同号", trigger: "blur" },
-        ],
-        orderTicketNo: [
-          { required: true, message: "请输入订单号", trigger: "blur" },
-        ],
-        payDate: [
-          { required: true, message: "请输入付款时间", trigger: "blur" },
-        ],
-        payWay: [
-          { required: true, message: "请输入付款方式", trigger: "blur" },
-        ],
-        currency: [{ required: true, message: "请输入币种", trigger: "blur" }],
-        deliverDate: [
-          { required: true, message: "请输入交货时间", trigger: "blur" },
+      rules: {
+        supplyId: [
+          { required: true, message: "请选择商品供应商", trigger: "blur" }
         ],
       },
     };
   },
-  watch: {
-    company(c) {
-      if (!this.companyInfo.id) {
-        this.companyInfo.name = c.companyName;
-        this.companyInfo.address = c.address;
-        this.companyInfo.bank = c.companyBankName;
-        this.companyInfo.account = c.companyBankNo;
-        this.companyInfo.taxNo = c.taxNo;
-      }
-    },
-  },
   computed: {
-    ...mapGetters(["contractTemplate","userInfo","supplyList"]),
-    contractProductTotal: function () {
-      var contractSummary = { price: 0, tax: 0 };
+    ...mapGetters(["contractTemplate", "userInfo", "supplyList","prList","poList"]),
+    poSum:function() {
+      var price = 0 ;
       var total = 0;
-      this.contractProductList.map((item) => {
-        item.taxTotalPrice = this.$my.NumberMul(item.count, item.taxPrice);
-        total = this.$my.NumberAdd(total, item.taxTotalPrice);
+      this.newPO.poDetailList.map((item) => {
+        total = this.$my.NumberAdd(total, this.$my.NumberMul(item.count, item.costPrice));
       });
-      contractSummary.price = total.toFixed(2);
-      contractSummary.tax = this.$my.NumberMul(
-        this.$my.NumberDiv(this.contractInfo.taxRate, 100),
-        contractSummary.price
-      );
-      return contractSummary;
+      price = total.toFixed(2);
+      return price;
     },
+
   },
   methods: {
     ...mapActions({
-      GetContractTemplate: "GetContractTemplate",
-      SaveIntentionContract: "SaveIntentionContract",
-      GetCustomerVoList: "GetCustomerVoList",
-      GetContractVoByCustomerNo: "GetContractVoByCustomerNo",
-      SearchContractIntentionProductList: "SearchContractIntentionProductList",
-      GetContractOne: "GetContractOne",
-      GetCompanyInfo: "GetCompanyInfo",
-      RemoveContractStock: "RemoveContractStock",
-      GetSupplyList:"GetSupplyList",
+      GetSupplyList: "GetSupplyList",
+      GetContractTemplate:"GetContractTemplate",
+      SavePoList:"SavePoList",
+      GetPRList:"GetPRList",
+      GetPOList:"GetPOList",
     }),
-    loadContract(contractId) {
-      const loading = this.$loading({
-        lock: true,
-        text: "Loading",
-        spinner: "el-icon-loading",
-        background: "rgba(0, 0, 0, 0.7)",
-      });
-      this.GetContractOne({ id: contractId })
-        .then((res) => {
-          if (res.resultStatus == 1) {
-            let existContract = res.data;
-            existContract.productList.map((item) => {
-              item.seen = false;
-            });
-            this.vendeeInfo = existContract.purchaser;
-            this.goodReceveInfo = existContract.goodReceiveInfo;
-            this.contractProductList = existContract.productList;
-            this.contractInfo = existContract.contract;
-            this.purchaserConfirm=existContract.purchaserConfirm
-            this.companyInfo = existContract.vendorConfirm;
-            console.log(existContract.vendorConfirm)
-             console.log(this.companyInfo)
-            loading.close();
-          } else {
-            loading.close();
-          }
-        })
-        .catch(() => {
-          loading.close();
-        });
+    getFullTime(time) {
+    return new Date(time).format("yyyy-MM-dd");
     },
-    addContractDetail() {
-      if (
-        this.contractProductList.filter((item) => {
-          return item.productId < 0;
-        }).length > 0
-      ) {
-        this.$message.warning("请先完成填写");
-        return;
-      }
-      this.contractProductList.map((item) => {
-        item.seen = false;
-      });
-      this.contractProductList.push({
-        productId: -1,
-        productName: "",
-        specification: "",
-        remark: "",
-        count: "0",
-        taxPrice: "",
-        taxTotalPrice: "",
-        supplyId:"",
-        seen: true,
-      });
+    supplyChanged(event){
+      this.vendeeInfo.supplyId=event.id;
+      this.vendeeInfo.supplyName=event.name;
+      this.vendeeInfo.address=event.address;
+      this.vendeeInfo.contact=event.contact;
+      this.vendeeInfo.phone=event.phone;
     },
-    remoteMethod(query) {
-      if (this.vendeeInfo.customerNo == "") {
-        return;
-      }
-      if (query !== "") {
-        this.loading = true;
-        this.SearchContractIntentionProductList({
-          searchValue: query,
-          customerNo: this.vendeeInfo.customerNo,
-        })
-          .then((res) => {
-            this.loading = false;
-            if (res.resultStatus == 1) {
-              var productList = res.data;
-              var options = [];
-              productList.map((group) => {
-                var subList = group.list.filter((item) => {
-                  return (
-                    item.alias.toLowerCase().indexOf(query.toLowerCase()) > -1
-                  );
-                });
-                if (subList.length > 0) {
-                  options.push({ groupName: group.groupName, list: subList });
-                }
-              });
-              this.options = options;
-            }
-          })
-          .catch(() => {
-            this.loading = false;
-          });
-      } else {
-        this.options = [];
-      }
-    },
-    onSelect(item, row) {
-      row.productId = item.id;
-      row.productName = item.name;
-      row.productNo = item.productNo;
-      row.specification = item.specification;
-      row.countUnit = item.unit;
-      row.seen = false;
-      row.remark = item.remark;
-      row.taxPrice = item.salesPrice == null ? 0 : item.salesPrice;
-      row.supplyId=item.supplyId;
+    loadPo(str) {
+      this.newPO = str;
+      this.poDetailList=str.poDetailList;
     },
     cellClick(row) {
       row.seen = true;
@@ -471,132 +286,72 @@ export default {
     loseFcous(index, row) {
       row.seen = false;
     },
-    removeContractProduct(index, row) {
-      if (!row.id) {
-        this.contractProductList.splice(index);
-      } else {
-        this.$messageBox
-          .confirm("确认删除？", "删除产品", {
-            confirmButtonText: "确定",
-            cancelButtonText: "取消",
-            type: "warning",
-          })
-          .then(() => {
-            this.RemoveContractStock({ id: row.id })
-              .then((res) => {
-                if (res.resultStatus == 1) {
-                  this.contractProductList.splice(index);
-                } else {
-                  this.$message.warning("删除失败");
-                }
-              })
-              .catch((err) => {
-                this.$message.error(err.message);
-              });
-          })
-          .catch((e) => e);
-      }
-    },
-    vendeeInfoChanged(customerNo) {
-      this.GetContractVoByCustomerNo({ customerNo: customerNo })
-        .then((res) => {
-          if (res.resultStatus == 1) {
-            var customer = res.data.customer;
-            this.vendeeInfo.name = customer.name;
-            this.vendeeInfo.address = customer.address;
-            this.vendeeInfo.phone = customer.phone;
-            this.vendeeInfo.customerNo = customer.customerNo;
-            this.vendeeInfo.contactUser = customer.contactName;
-            this.vendeeInfo.taxNo = customer.taxNo;
-            this.vendeeInfo.account = customer.bankNo;
-            this.contractInfo.contractDate = new Date().format("yyyy-MM-dd");
-            this.contractInfo.diliveryWay = customer.diliveryMethod;
-            this.contractInfo.type = "1";
-            this.contractInfo.orderDes = customer.description;
-            this.contractInfo.payDate = customer.payTerm;
-            this.contractInfo.payWay = customer.payWay;
-            this.contractInfo.currency = customer.currency;
-            this.contractInfo.deliverDate = customer.deliverTerm;
-            this.taxRateList = res.data.taxRates;
-            this.diliveryAddressList = res.data.deliverAddresses;
-          } else {
-            this.$message.warning(res.message);
-          }
-        })
-        .catch((err) => {
-          this.$message.error(err.message);
-        });
-      if (this.contractInfo.contractNo == "") {
-        var timeSpan = this.$my.ID2();
-        this.contractInfo.contractNo = "C" + timeSpan;
-        this.contractInfo.orderTicketNo = "R" + timeSpan;
-      }
-    },
-    diliveryAdrressChanged(addressId) {
-      var address = this.diliveryAddressList.find((item) => {
-        return item.id == addressId;
-      });
-      this.goodReceveInfo.name = this.vendeeInfo.name;
-      this.goodReceveInfo.address = address.deliverAddress;
-      this.goodReceveInfo.contactUser = address.contactName;
-      this.goodReceveInfo.phone = address.phone;
-      if (this.vendeeInfo.contactUser == "") {
-        this.vendeeInfo.contactUser = address.contactName;
-      }
-      this.goodReceveInfo.customerNo = this.vendeeInfo.customerNo;
-      this.goodReceveInfo.taxNo = this.vendeeInfo.taxNo;
-      this.goodReceveInfo.account = this.vendeeInfo.account;
-    },
-    clearContract() {
-      this.$refs["vendeeForm"].resetFields();
-      this.$refs["goodReceveForm"].resetFields();
-      this.$refs["contractForm"].resetFields();
-      this.contractProductList = [];
-      this.contractInfo.taxRate = "";
-    },
-    saveContract() {
-      this.$refs["vendeeForm"].validate((valid) => {
+    savePo(formName){
+      this.$refs[formName].validate(valid => {
         if (valid) {
-          this.$refs["goodReceveForm"].validate((v2) => {
-            if (v2) {
-              this.$refs["contractForm"].validate((v3) => {
-                if (v3) {
-                  var checkRes = this.checkProductList();
-                  if (checkRes) {
-                    if (this.contractInfo.taxRate != "") {
-                      var saveObj = {
-                        contract: this.contractInfo,
-                        purchaser: this.vendeeInfo,
-                        goodReceiveInfo: this.goodReceveInfo,
-                        productList: this.contractProductList,
-                        vendorConfirm: this.companyInfo,
-                        purchaserConfirm: this.purchaserConfirm.id?this.purchaserConfirm:this.vendeeInfo,
-                      };
-                      this.SaveIntentionContract(saveObj);
-                    } else {
-                      this.$message.warning("请选择税率");
-                    }
-                  } else {
-                    this.$message.warning("请完善产品信息");
-                  }
-                } else {
-                  this.$message.warning("请填写必要信息");
-                }
-              });
-            } else {
-              this.$message.warning("请填写必要信息");
+          var checkRes = this.checkProductList();
+          if (checkRes) 
+          {
+            var numbers = this.checkNumber();
+            if(numbers)
+            {
+              this.newPO.supplyId=this.vendeeInfo.supplyId;
+              this.newPO.state="CREATE";
+              this.newPO.createDate=new Date();
+              let list=this.pushbackprice(this.newPO.poDetailList,this.newPO.purchaseDetailList,this.newPO);
+              this.newPO.createBy=this.userInfo.id;
+              this.newPO.purchaseDetailList=list;
+              this.SavePoList(this.newPO)
+              let params = {
+                state: "APPROVE"
+              };
+              this.GetPRList(params);
+              let arg = {
+                state: "CREATE"
+              };
+              this.GetPOList(arg);
             }
-          });
+            else
+            {
+              this.$message.warning("单价信息为数字");
+            }
+          } else {
+            this.$message.warning("请完善单价信息");
+          }
         } else {
-          this.$message.warning("请填写必要信息");
+          this.$message.warning("请选择供应商信息");
         }
       });
     },
-    checkProductList: function () {
-      if (this.contractProductList.length <= 0) return false;
+    pushbackprice(arr1, arr2,po){
+      let list = [];
+      for (let index = 0;index < arr2.length;index++)
+      {
+        const element = arr2[index];
+        let existItem = arr1.find((item) => {
+          return item.materialNo === element.materialNo;
+        });
+        if (existItem) {
+          element.costPrice=existItem.costPrice;
+          element.supplyId=po.supplyId;
+          list.push(element);
+        }
+      }
+      return list;
+    },
+    checkProductList: function() {
       var pass = true;
-      this.contractProductList.map((item) => {
-        if (item.count <= 0 || item.taxPrice <= 0) {
+      this.poDetailList.map((item) => {
+        if (item.costPrice==null||item.costPrice==""||item.costPrice <= 0) {
+          pass = false;
+        }
+      });
+      return pass;
+    },
+    checkNumber(){
+      var pass = true;
+      this.poDetailList.map((item) => {
+        if (isNaN(item.costPrice)) {
           pass = false;
         }
       });
@@ -605,15 +360,13 @@ export default {
   },
   beforeMount() {
     this.GetContractTemplate();
-    this.GetCustomerVoList();
-    this.GetCompanyInfo();
     this.GetSupplyList();
   },
 };
 </script>
 <style lang="less">
 .poTemplate-div {
-  width: 1000px;
+  width: 950px;
   padding: 1rem;
   border: 1px solid rgb(233, 229, 229);
   display: flex;
@@ -627,7 +380,7 @@ export default {
   line-height: 60px;
   vertical-align: center;
 }
-.poTemplate-header-left{
+.poTemplate-header-left {
   margin-right: 10px;
   font-size: 1.5rem;
   color: #606266;
@@ -651,14 +404,14 @@ export default {
 //   width: 100%;
 // }
 .poTemplate-buyer-info-div-left-firstfloor {
-    margin-top: 15px;
+  margin-top: 15px;
   height: 50%;
   display: flex;
   flex-direction: column;
   border: 1px solid rgb(209, 205, 205);
 }
 .poTemplate-buyer-info-div-left-secfloor {
-    margin-top: 15px;
+  margin-top: 15px;
   display: flex;
   flex-direction: column;
   height: 50%;
@@ -748,8 +501,12 @@ export default {
   padding: 0.3rem;
   text-align: left;
 }
-.PoTemplate-conten{
-  padding-top:10px;
-  padding-bottom:10px;
+.PoTemplate-conten {
+  padding: 8px;
+}
+.poTemplate-supply{
+   padding-left: 10px;
+   padding-top:15px;
+   padding-right: 10px;
 }
 </style>

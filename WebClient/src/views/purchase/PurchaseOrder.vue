@@ -63,16 +63,16 @@
       </div>
     </div>
     <el-scrollbar  class="content-scrollbar scrollbar-height" wrap-style="overflow-x:hidden;">
-      <el-table :data="purchaseListPageShow" 
+      <el-table :data="poListShow" 
         border
         size="small"
         :header-row-style="{ height: '40px' }"
         :row-style="{ height: '40px' }"
         :cell-style="{ padding: '2px', color: '#909399' }"
         :header-cell-style="{ background: '#909399', color: 'white' }">
-        <el-table-column prop="planNo" label="PR-NO" width="180px"></el-table-column>
-        <el-table-column prop="requester" label="采购人" width="280px"> </el-table-column>
-        <el-table-column prop="type" label="采购类型" width="180px"> </el-table-column>
+        <el-table-column prop="poNo" label="PO-NO" width="180px"></el-table-column>
+        <el-table-column prop="supplyName" label="供应商" width="280px"> </el-table-column>
+        <!-- <el-table-column prop="deliveryDay" label="交期" width="180px"> </el-table-column> -->
         <el-table-column prop="state" label="状态" width="180px"> </el-table-column>
         <el-table-column prop="createDate" label="创建日期" width="140px"> 
           <template slot-scope="scope">
@@ -82,10 +82,10 @@
         <el-table-column prop="description" label="备注理由"> </el-table-column>
         <el-table-column prop="" label="操作" width="100px">
           <template slot-scope="scope">
-            <el-tooltip effect="light" content="批准" placement="top">
+            <el-tooltip effect="light" content="查看" placement="top">
               <el-button size="mini" @click="handleEdit(scope.$index,scope.row)" plain circle type="primary" icon="el-icon-edit"/>
             </el-tooltip>
-            <el-tooltip effect="light" content="驳回" placement="top">
+            <el-tooltip effect="light" content="打印" placement="top">
               <el-button size="mini" @click="handleReject(scope.$index, scope.row)" plain circle type="danger" icon="el-icon-delete"/>
             </el-tooltip>
           </template>
@@ -94,38 +94,6 @@
 
 
     </el-scrollbar>
-
-    <!-- <div class="po-content">
-      <el-table :data="purchaseListPageShow" 
-          border="" stripe           
-          :header-row-style="{height:'40px' ,'align':'center'}"
-          :row-style="{height:'40px'}"
-          style="width: 100%">
-        <el-table-column prop="planNo" label="PR-NO" width="180px"></el-table-column>
-        <el-table-column prop="requester" label="采购人" width="280px"> </el-table-column>
-        <el-table-column prop="type" label="采购类型" width="180px"> </el-table-column>
-        <el-table-column prop="state" label="状态" width="180px"> </el-table-column>
-        <el-table-column prop="createDate" label="创建日期" width="140px"> 
-          <template slot-scope="scope">
-            <span>{{getFullTime(scope.row.createDate) }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="description" label="备注理由"> </el-table-column>
-        <el-table-column prop="" label="操作" width="100px">
-          <template slot-scope="scope">
-            <el-tooltip effect="light" content="批准" placement="top">
-              <el-button size="mini" @click="handleEdit(scope.$index,scope.row)" plain circle type="primary" icon="el-icon-edit"/>
-            </el-tooltip>
-            <el-tooltip effect="light" content="驳回" placement="top">
-              <el-button size="mini" @click="handleReject(scope.$index, scope.row)" plain circle type="danger" icon="el-icon-delete"/>
-            </el-tooltip>
-          </template>
-        </el-table-column>
-      </el-table>
-
-    </div> -->
-
-
 
 
     <!-- <el-dialog :title=PRNo :visible.sync="purchaseEditDialog" width="1024px">
@@ -187,11 +155,10 @@
 
 
     <el-dialog
-      ref="dialog"
       title="生成采购单(PO)"
       :visible.sync="poTemplateVisible"
-      width="1100px">
-      <m-poTemplate ref="child" v-bind:parentMsg="PONo"></m-poTemplate>
+      width="1024px">
+      <m-poTemplate ref="child"></m-poTemplate>
     </el-dialog>
 
 
@@ -205,8 +172,6 @@ import { mapActions } from "vuex";
 export default {
     data(){
       return{
-        PRNo:'',
-        PONo:'',
         options: [],
         multipleSelection: [],
         poTemplateVisible:false,
@@ -232,11 +197,39 @@ export default {
           description:'',
           purchaseDetailList:[],
         },
+        newPO:{
+          id:'',
+          poNo:'',
+          state:'',
+          supplyId:'',
+          supplyName:'',
+          deliveryDay:'',
+          payterm:'',
+          createDate:'',
+          createBy:'',
+          description:'',
+          purchaseDetailList:[],
+          poDetailList:[],
+        },
+        editPO:{
+          id:'',
+          poNo:'',
+          state:'',
+          supplyId:'',
+          supplyName:'',
+          deliveryDay:'',
+          payterm:'',
+          createDate:'',
+          createBy:'',
+          description:'',
+          purchaseDetailList:[],
+          poDetailList:[],
+        }
       }
 
     },
     computed: {
-      ...mapGetters(["prList","userInfo"]),
+      ...mapGetters(["prList","poList","userInfo"]),
       prListPageShow(){
         return this.prList.filter((item)=>{
           let key=
@@ -248,24 +241,40 @@ export default {
           let index = key.toUpperCase().indexOf(this.searchContent.toUpperCase());
           return index != -1;
         });
-      }
+      },
+      poListShow(){
+        return this.poList.filter((item)=>{
+          let key=
+          item.poNo +
+          item.state +
+          item.supplyName +
+          item.createBy +
+          item.description ;
+          let index = key.toUpperCase().indexOf(this.searchContent2.toUpperCase());
+          return index != -1;
+        });
+      },
     },
     methods:{
       ...mapActions({
       GetPRList:"GetPRList",
-      ApprovePurchaseObj:"ApprovePurchaseObj",
-      PushPurchaseWaitList:"PushPurchaseWaitList",
-      QueryPurchaseObj:"QueryPurchaseObj",
-      RejectPurchaseWait:"RejectPurchaseWait",
+      GetPOList:"GetPOList",
+      // ApprovePurchaseObj:"ApprovePurchaseObj",
+      // PushPurchaseWaitList:"PushPurchaseWaitList",
+      // QueryPurchaseObj:"QueryPurchaseObj",
+      // RejectPurchaseWait:"RejectPurchaseWait",
     }),
     triggerSelection(){
+      let list=[]
       if(this.multipleSelection.length>0)
       {
-        this.PONo="PO" + new Date().valueOf(),
-console.log(this.PONo)
+        this.newPO.poNo="PO" + new Date().valueOf(),
+        list=this.generatedList(this.multipleSelection,this.newPO.poNo);
+        this.newPO.purchaseDetailList=this.generatedPrDetailList(this.multipleSelection,this.newPO.poNo);
+        this.newPO.poDetailList=list;
         this.poTemplateVisible = !this.poTemplateVisible;
         setTimeout(() => {
-          this.$refs["child"].loadPo();
+          this.$refs["child"].loadPo(this.newPO);
         }, 200);
       }
       else
@@ -273,6 +282,81 @@ console.log(this.PONo)
         this.$message.warning("请先选择物料信息");
         return false;
       }
+    },
+    generatedPrDetailList(arr,po){
+      let list = [];
+      for (let index = 0;index < arr.length;index++)
+      {
+        const element = arr[index];
+        let con = {
+            id: element.id,
+            type: element.type,
+            materialNo: element.materialNo,
+            materialName: element.materialName,
+            specification: element.specification,
+            remark: element.remark,
+            count: element.count,
+            countUnit: element.countUnit,
+            purchasePlanNo: element.purchasePlanNo,
+            createEmployeeNo: element.createEmployeeNo,
+            createBy: element.createBy,
+            createDate: element.createDate,
+            state: "BUYING",
+            sourceId: element.sourceId,
+            sourceNo: element.sourceNo,
+            requester: element.requester,
+            requesterId: element.requesterId,
+            supplyId: element.supplyId,
+            poNo:po,
+            costPrice:'',
+          };
+          list.push(con);
+      }
+      return list;
+    },
+    generatedList(arr,po){
+      let list = [];
+      for (
+        let index = 0;
+        index < arr.length;
+        index++
+      ) {
+        const element = arr[index];
+        let existItem = list.find((item) => {
+          return item.materialNo === element.materialNo;
+        });
+        if (existItem) {
+          existItem.count=this.$my.NumberAdd(existItem.count, element.count)
+        } else {
+          let con = {
+            id: element.id,
+            type: element.type,
+            materialNo: element.materialNo,
+            materialName: element.materialName,
+            specification: element.specification,
+            remark: element.remark,
+            count: element.count,
+            countUnit: element.countUnit,
+            purchasePlanNo: element.purchasePlanNo,
+            createEmployeeNo: element.createEmployeeNo,
+            createBy: element.createBy,
+            createDate: element.createDate,
+            state: "BUYING",
+            sourceId: element.sourceId,
+            sourceNo: element.sourceNo,
+            requester: element.requester,
+            requesterId: element.requesterId,
+            supplyId: element.supplyId,
+            poNo:po,
+            costPrice:'',
+            seen: false,
+            isEditable: false,
+            notSavedFlag: false,
+          };
+          list.push(con);
+        }
+      }
+      return list;
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
@@ -366,6 +450,10 @@ console.log(this.PONo)
         state: "APPROVE"
       };
       this.GetPRList(params);
+      let arg = {
+        state: "CREATE"
+      };
+      this.GetPOList(arg);
     },
 };
 </script>

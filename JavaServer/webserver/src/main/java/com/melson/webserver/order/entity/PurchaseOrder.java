@@ -31,6 +31,8 @@ public class PurchaseOrder {
 
     @Transient
     private List<PurchaseDetail> purchaseDetailList;
+    @Transient
+    private String supplyName;
 
     public Integer getId() {
         return id;
@@ -110,5 +112,13 @@ public class PurchaseOrder {
 
     public void setPurchaseDetailList(List<PurchaseDetail> purchaseDetailList) {
         this.purchaseDetailList = purchaseDetailList;
+    }
+
+    public String getSupplyName() {
+        return supplyName;
+    }
+
+    public void setSupplyName(String supplyName) {
+        this.supplyName = supplyName;
     }
 }

@@ -7,6 +7,7 @@ import com.melson.webserver.order.dao.IPurchaseDetailRepository;
 import com.melson.webserver.order.dao.IPurchasePlanRepository;
 import com.melson.webserver.order.entity.OrderFormDetail;
 import com.melson.webserver.order.entity.PurchaseDetail;
+import com.melson.webserver.order.entity.PurchaseOrder;
 import com.melson.webserver.order.entity.PurchasePlan;
 import com.melson.webserver.order.service.IPurchasePlanService;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -113,6 +114,8 @@ public class IPurchasePlanServiceImpl extends AbstractService<PurchasePlan> impl
         purchaseDetailRepository.UpdateStatus(purchase.getState(),purchase.getPlanNo());
         return count;
     }
+
+
 
 
 }
