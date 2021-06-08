@@ -13,4 +13,9 @@ public interface IPurchaseOrderService extends IService<PurchaseOrder> {
     List<PurchaseOrder> GetAllCreatedPoList(String state);
 
     Result Save(PurchaseOrder po);
+
+    PurchaseOrder QueryPo(PurchaseOrder po);
+
+    List<PurchaseOrder> GetAllWithCreate();
+
 }

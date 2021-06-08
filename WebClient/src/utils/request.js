@@ -294,6 +294,9 @@ ReqUpdatePurchaseStatus(params) {
 ReqDeletePurchase(params){
   return service.post("/purchase/deletePurchase",params)
 },
+ReqDeleteDetailPurchase(params){
+  return service.post("/purchase/deletePurchaseDetail",params)
+},
 ReqQueryProductVos(param){
   return service.get('/common/productVoList',param)
 },
@@ -318,6 +321,15 @@ ReqPOList(params){
 },
 ReqSavePoList(param){
   return service.post("/purchase/poSave",param)
+},
+ReqQueryPoObj(params){
+  return service.post("/purchase/queryPo",params);
+},
+ReqPrDetailList(params){
+  return service.get('/purchase/allPurchaseList',params)  
+},
+ReqPoDetailList(params){
+  return service.get('/purchase/allPoDetailList',params)  
 },
 
   //订单相关

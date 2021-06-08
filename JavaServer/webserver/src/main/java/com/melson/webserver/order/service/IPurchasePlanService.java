@@ -31,4 +31,6 @@ public interface IPurchasePlanService extends IService<PurchasePlan> {
 
     Integer RejectPurchase(PurchasePlan purchase);
 
+    List<PurchasePlan> findAllPR();
+
 }

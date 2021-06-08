@@ -115,7 +115,10 @@ public class IPurchasePlanServiceImpl extends AbstractService<PurchasePlan> impl
         return count;
     }
 
-
+    @Override
+    public List<PurchasePlan> findAllPR() {
+        return purchasePlanRepository.findAll();
+    }
 
 
 }

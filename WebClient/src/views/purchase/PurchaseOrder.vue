@@ -79,15 +79,16 @@
             <span>{{getFullTime(scope.row.createDate) }}</span>
           </template>
         </el-table-column>
+        <el-table-column prop="createName" label="创建人" width="180px"> </el-table-column>
         <el-table-column prop="description" label="备注理由"> </el-table-column>
-        <el-table-column prop="" label="操作" width="100px">
+        <el-table-column prop="" label="操作" width="60px">
           <template slot-scope="scope">
-            <el-tooltip effect="light" content="查看" placement="top">
+            <el-tooltip effect="light" content="查看/打印" placement="top">
               <el-button size="mini" @click="handleEdit(scope.$index,scope.row)" plain circle type="primary" icon="el-icon-edit"/>
             </el-tooltip>
-            <el-tooltip effect="light" content="打印" placement="top">
+            <!-- <el-tooltip effect="light" content="打印" placement="top">
               <el-button size="mini" @click="handleReject(scope.$index, scope.row)" plain circle type="danger" icon="el-icon-delete"/>
-            </el-tooltip>
+            </el-tooltip> -->
           </template>
         </el-table-column>
       </el-table>
@@ -96,77 +97,27 @@
     </el-scrollbar>
 
 
-    <!-- <el-dialog :title=PRNo :visible.sync="purchaseEditDialog" width="1024px">
-      <el-form status-icon :model="editpurchase" ref="purchaseEidtForm" label-width="100px">
-        <el-row>
-           <el-col :span="12">
-              <el-form-item label="申请人" prop="requester">
-                <el-input v-model="editpurchase.requester" autocomplete="off" disabled></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="采购类型" prop="type">
-                <el-input v-model="editpurchase.type" autocomplete="off" disabled></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="采购状态" prop="state">
-                <el-input v-model="editpurchase.state" autocomplete="off" disabled></el-input>
-              </el-form-item>
-            </el-col>
-        </el-row>
-        <el-row>
-          <el-form-item label="备注理由" prop="description">
-            <el-input
-              v-model="editpurchase.description"
-              autocomplete="off"
-              style="width: 100%;"
-              rows="3"
-              type="textarea"
-              maxlength="200"
-              show-word-limit
-            ></el-input>
-          </el-form-item>
-        </el-row>
-        <el-row>
-          <el-form-item label="采购明细">
-            <el-table
-              :data="editpurchase.purchaseDetailList"
-              border
-              style="width: 100%"
-              size="mini"
-            >
-              <el-table-column prop="materialName" label="物品" width="280px"></el-table-column>
-              <el-table-column prop="specification" label="规格" width="180px"></el-table-column>
-              <el-table-column prop="count" label="数量" width="180px"></el-table-column>
-              <el-table-column prop="remark" label="备注"></el-table-column>
-
-            </el-table>
-          </el-form-item>
-        </el-row>
-        <el-row>
-          <el-form-item>
-            <el-button type="primary" @click="onEditpurchase('purchaseEidtForm')" :loading="loading">批 准</el-button>
-            <el-button type="primary" @click="onEditreject()" :loading="loading">驳 回</el-button>
-          </el-form-item>
-        </el-row>
-      </el-form>
-    </el-dialog> -->
-
-
     <el-dialog
       title="生成采购单(PO)"
       :visible.sync="poTemplateVisible"
       width="1024px">
-      <m-poTemplate ref="child"></m-poTemplate>
+      <m-poTemplate ref="child" v-on:closePopWindow="closePopWindow"></m-poTemplate>
     </el-dialog>
 
+
+    <el-dialog
+      title="采购单(PO)"
+      :visible.sync="printTemplateVisible"
+      width="1024px">
+      <m-printTemplate ref="print" ></m-printTemplate>
+    </el-dialog>
 
 
     </div>
 </template>
 <script>
 import poTemplate from "./PoTemplate";
+import printTemplate from "./PrintTemplate.vue"
 import { mapGetters } from "vuex";
 import { mapActions } from "vuex";
 export default {
@@ -175,7 +126,7 @@ export default {
         options: [],
         multipleSelection: [],
         poTemplateVisible:false,
-        purchaseEditDialog: false,
+        printTemplateVisible: false,
         searchContent: "",
         searchContent2: "",
         loading: false,
@@ -210,6 +161,7 @@ export default {
           description:'',
           purchaseDetailList:[],
           poDetailList:[],
+          createName:'',
         },
         editPO:{
           id:'',
@@ -224,6 +176,8 @@ export default {
           description:'',
           purchaseDetailList:[],
           poDetailList:[],
+          createName:'',
+          supply:[],
         }
       }
 
@@ -259,11 +213,46 @@ export default {
       ...mapActions({
       GetPRList:"GetPRList",
       GetPOList:"GetPOList",
-      // ApprovePurchaseObj:"ApprovePurchaseObj",
-      // PushPurchaseWaitList:"PushPurchaseWaitList",
-      // QueryPurchaseObj:"QueryPurchaseObj",
-      // RejectPurchaseWait:"RejectPurchaseWait",
+      QueryPoObj:"QueryPoObj",
     }),
+    closePopWindow(str){
+      let params = {
+        state: "APPROVE"
+      };
+      this.GetPRList(params);
+      let arg = {
+        state: "CREATE"
+      };
+      this.GetPOList(arg);
+      this.poTemplateVisible = false;
+      this.$messageBox.confirm('打印采购单？',"提示",{
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+      })
+      .then(() => {
+          let cat={poNo:str}
+          this.QueryPoObj(cat)
+            .then(res=>{
+              if (res.resultStatus == 1) {
+                this.editPO=res.data;
+                let list=this.generatedEditList(this.editPO.purchaseDetailList);
+                this.editPO.poDetailList=list;
+                this.printTemplateVisible = true;
+                setTimeout(() => {
+                  this.$refs["print"].loadPo(this.editPO);
+                }, 200);
+              }
+              else{
+                this.$message.error(res.message);
+              }
+          })
+          .catch(err=>{
+                let alert = err.message ? err.message : err;
+                this.$message.error(alert);
+          });
+      })
+    },
     triggerSelection(){
       let list=[]
       if(this.multipleSelection.length>0)
@@ -358,92 +347,82 @@ export default {
       }
       return list;
     },
+    generatedEditList(arr){
+      let list = [];
+      for (
+        let index = 0;
+        index < arr.length;
+        index++
+      ) {
+        const element = arr[index];
+        let existItem = list.find((item) => {
+          return item.materialNo === element.materialNo;
+        });
+        if (existItem) {
+          existItem.count=this.$my.NumberAdd(existItem.count, element.count)
+        } else {
+          let con = {
+            id: element.id,
+            type: element.type,
+            materialNo: element.materialNo,
+            materialName: element.materialName,
+            specification: element.specification,
+            remark: element.remark,
+            count: element.count,
+            countUnit: element.countUnit,
+            purchasePlanNo: element.purchasePlanNo,
+            createEmployeeNo: element.createEmployeeNo,
+            createBy: element.createBy,
+            createDate: element.createDate,
+            state: element.state,
+            sourceId: element.sourceId,
+            sourceNo: element.sourceNo,
+            requester: element.requester,
+            requesterId: element.requesterId,
+            supplyId: element.supplyId,
+            poNo:element.poNo,
+            costPrice:element.costPrice,
+          };
+          list.push(con);
+        }
+      }
+      return list;
+    },
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },
     getFullTime(time) {
     return new Date(time).format("yyyy-MM-dd");
     },
-    // handleEdit(index,row){
-    //   this.editIndex=index;
-    //   let cat={id:row.id,planNo:row.planNo,index:index}
-    //   this.QueryPurchaseObj(cat)
-    //     .then(res=>{
-    //       if (res.resultStatus == 1) {
-    //         this.editpurchase=res.data;
-    //         this.editpurchase.purchaseDetailList=res.data.purchaseDetailList;
-    //         this.PRNo=this.editpurchase.planNo;
-    //         this.purchaseEditDialog = true;
-    //       }
-    //       else{
-    //         this.$message.error(res.message);
-    //       }
-    //   })
-    //   .catch(err=>{
-    //         let alert = err.message ? err.message : err;
-    //         this.$message.error(alert);
-    //   });
-    // },
-    // handleReject(index, row) {
-    //   let cat={id:row.id,planNo:row.planNo,index:index}
-    //    this.$messageBox.confirm('确认要驳回请求？',"提示",{
-    //       confirmButtonText: '确定',
-    //       cancelButtonText: '取消',
-    //       type: 'warning'
-    //     })
-    //       .then(() => {
-    //           this.RejectPurchaseWait(cat)
-    //       })
-    //       .catch(e=>e);
-    //   },
-    // onEditreject(){
-    //   this.$messageBox.confirm('确认要驳回请求？',"提示",{
-    //   confirmButtonText: '确定',
-    //   cancelButtonText: '取消',
-    //   type: 'warning'
-    //   })
-    //   .then(() => {
-    //       this.RejectPurchaseWait(this.editpurchase);
-    //       this.purchaseEditDialog=false;
-    //   })
-    //   .catch(e=>e);
-    // },
-    // onEditpurchase(formName){
-    //   this.$refs[formName].validate(valid=>{
-    //     if(valid){
-    //       this.ApprovePurchaseObj(this.editpurchase)
-    //       .then(res=>{
-    //         if(res.resultStatus==1){
-    //           let params = {
-    //             state: "GetPRList"
-    //           };
-    //           this.GetPurchaseWaitList(params);
-    //           this.purchaseEditDialog=false;
-    //           this.$message({
-    //             showClose:true,
-    //             message:"操作成功",
-    //             type:"success"
-    //           });
-    //         }
-    //         else{
-    //           this.$message.error(res.message);
-    //         }
-    //       })
-    //       .catch(err=>{
-    //           let alert = err.message ? err.message : err;
-    //           this.$message.error(alert);
-    //       });
-    //     }
-    //     else{
-    //       this.$message.warning("请填写准确信息");
-    //       return false;
-    //     }
-    //   })
-    // }
+    handleEdit(index,row){
+      this.editIndex=index;
+      let cat={id:row.id,poNo:row.poNo,index:index}
+      this.QueryPoObj(cat)
+        .then(res=>{
+          if (res.resultStatus == 1) {
+            this.editPO=res.data;
+            let list=this.generatedEditList(this.editPO.purchaseDetailList);
+            this.editPO.poDetailList=list;
+            this.printTemplateVisible = true;
+            setTimeout(() => {
+              this.$refs["print"].loadPo(this.editPO);
+            }, 200);
+          }
+          else{
+            this.$message.error(res.message);
+          }
+      })
+      .catch(err=>{
+            let alert = err.message ? err.message : err;
+            this.$message.error(alert);
+      });
+    },
+  
 
     },
     components: {
       "m-poTemplate": poTemplate,
+      "m-printTemplate":printTemplate,
     },
     beforeMount() {
       let params = {

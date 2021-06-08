@@ -28,4 +28,11 @@ public interface IPurchaseDetailRepository extends JpaRepository<PurchaseDetail,
     void deleteByPrNo(String planNo);
 
     List<PurchaseDetail> findByState(String state);
+
+    @Modifying
+    @Query(value = "delete from `purchase_detail` where id =?1",nativeQuery = true)
+    Integer deletePdById(Integer id);
+
+    List<PurchaseDetail> findByPoNo(String poNo);
+
 }

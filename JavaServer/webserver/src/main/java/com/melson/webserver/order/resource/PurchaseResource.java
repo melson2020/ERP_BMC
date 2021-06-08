@@ -71,6 +71,15 @@ public class PurchaseResource extends BaseResource {
         return result;
     }
 
+    @RequestMapping(value = "/deletePurchaseDetail",method = RequestMethod.POST)
+    public Result DeletePurchase(@RequestBody PurchaseDetail pd){
+        Result result=new Result();
+        Integer deleteCount=purchaseDetailService.DeletePurchase(pd);
+        result.setResultStatus(deleteCount>0?1:-1);
+        return result;
+    }
+
+
     @RequestMapping(value = "/underApprovePurchaseList",method = RequestMethod.GET)
     public Result GetUnderApprovePurchaseList(HttpServletRequest request){
         String state = request.getParameter("state");
@@ -82,7 +91,7 @@ public class PurchaseResource extends BaseResource {
 
     @RequestMapping(value = "/allPurchaseList",method = RequestMethod.GET)
     public Result GetAllPurchaseList(HttpServletRequest request){
-        List<PurchasePlan> purchaseList=purchasePlanService.getAll();
+        List<PurchasePlan> purchaseList=purchasePlanService.findAllPR();
         Result result=new Result();
         result.setData(purchaseList);
         return result;
@@ -124,5 +133,22 @@ public class PurchaseResource extends BaseResource {
     public Result SavePO(@RequestBody PurchaseOrder po){
         return purchaseOrderService.Save(po);
     }
+
+    @RequestMapping(value = "/queryPo",method = RequestMethod.POST)
+    public Result QueryPo(@RequestBody PurchaseOrder po){
+        PurchaseOrder pr=purchaseOrderService.QueryPo(po);
+        Result result=new Result();
+        result.setData(pr);
+        return result;
+    }
+
+    @RequestMapping(value = "/allPoDetailList",method = RequestMethod.GET)
+    public Result GetAllPurchaseOrderList(HttpServletRequest request){
+        List<PurchaseOrder> pos=purchaseOrderService.GetAllWithCreate();
+        Result result=new Result();
+        result.setData(pos);
+        return result;
+    }
+
 
 }

@@ -1,86 +1,48 @@
 <template>
   <div>
-    <div id="poTemplatecreate" ref="poTemplatecreate" class="poTemplate-div">
-      <div class="poTemplate-header">
-        <span class="poTemplate-header-left">{{ newPO.poNo }}</span>
-        <span class="poTemplate-header-title">采购订单确认书</span>
+    <div id="printTeamplate" ref="printTeamplate" class="printTeamplate-div">
+      <div class="printTeamplate-header">
+        <span class="printTeamplate-header-left">{{ newPO.poNo }}</span>
+        <span class="printTeamplate-header-title">采购订单</span>
       </div>
-      <!-- <div class="poTemplate-buyer-info-div"> -->
-      <!-- <div class="poTemplate-buyer-info-div-left"> -->
-      <div class="poTemplate-buyer-info-div-left-firstfloor">
+      <!-- <div class="printTeamplate-buyer-info-div"> -->
+      <!-- <div class="printTeamplate-buyer-info-div-left"> -->
+      <div class="printTeamplate-buyer-info-div-left-secfloor">
         <div class="title-div-gray flex justify-content">
-          <span>供应方</span>
+          卖方：
         </div>
-        <div class="poTemplate-supply">
-          <el-form
-            ref="vendeeForm"
-            label-position="left"
-            label-width="80px"
-            :rules="rules"
-            size="mini"
-            :model="vendeeInfo"
-          >
-          <el-row :gutter="10">
+        <div class="printTeamplate-conten">
+          <div>
             <el-col :span="12">
-              <el-form-item label="公司名称" prop="supplyId">
-                <!-- <el-input
-                  class="form-input"
-                  v-model="vendeeInfo.supplyId"
-                ></el-input> -->
-                <el-select
-                  filterable
-                  v-model="vendeeInfo.supplyName"
-                  size="small"
-                  style="width:100%"
-                  @change="supplyChanged"
-                  placeholder="选择供应商">
-                  <el-option
-                    v-for="vo in supplyList"
-                    :label="vo.name"
-                    :value="vo"
-                    :key="vo.id"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
+              <span class="tempate-text-left-center"
+                >卖方名称：{{ newPO.supply.name }}</span
+              >
             </el-col>
             <el-col :span="12">
-              <el-form-item label="联系地址" prop="address">
-                <el-input
-                 
-                  v-model="vendeeInfo.address"
-                  disabled
-                ></el-input>
-              </el-form-item>
+              <span class="tempate-text-left-center"
+                >买方地址：{{ newPO.supply.address}}</span
+              >
             </el-col>
-            </el-row>
-            <el-row :gutter="10">
+          </div>
+          <div>
             <el-col :span="12">
-              <el-form-item label="联系人员" prop="contact">
-                <el-input
-                 
-                  v-model="vendeeInfo.contact"
-                  disabled
-                ></el-input>
-              </el-form-item>
+              <span class="tempate-text-left-center"
+                >联系人员：{{ newPO.supply.contact }}</span
+              >
             </el-col>
             <el-col :span="12">
-              <el-form-item label="联系电话" prop="phone">
-                <el-input
-                 
-                  v-model="vendeeInfo.phone"
-                  disabled
-                ></el-input>
-              </el-form-item>
+              <span class="tempate-text-left-center"
+                >联系电话：{{ newPO.supply.phone }}</span
+              >
             </el-col>
-            </el-row>
-          </el-form>
+          </div>
         </div>
       </div>
-      <div class="poTemplate-buyer-info-div-left-secfloor">
+      <div class="printTeamplate-buyer-info-div-left-secfloor">
         <div class="title-div-gray flex justify-content">
-          采购方:
+          买方:
         </div>
-        <div class="PoTemplate-conten">
+        <div class="printTeamplate-conten">
           <div>
             <el-col :span="12">
               <span class="tempate-text-left-center"
@@ -110,13 +72,12 @@
         </div>
       </div>
 
-      <div class="poTemplate-product-detail-div">
+      <div class="printTeamplate-product-detail-div">
         <el-table
           border
           :data="poDetailList"
           style="width: 100%"
           size="mini"
-          @cell-click="cellClick"
           :header-cell-style="{
             background: 'lightgray',
             color: 'black',
@@ -136,7 +97,6 @@
                 v-if="scope.row.seen"
                 size="mini"
                 v-model="scope.row.costPrice"
-                @blur="loseFcous(scope.$index, scope.row)"
               ></el-input>
               <span v-else>{{ scope.row.costPrice }}</span>
             </template>
@@ -144,8 +104,8 @@
           <!-- <el-table-column prop="remark" label="备注">
           </el-table-column> -->
         </el-table>
-        <div class="poTemplate-product-detail-summary-div fz9">
-          <div class="poTemplate-product-detail-summary-item">
+        <div class="printTeamplate-product-detail-summary-div fz9">
+          <div class="printTeamplate-product-detail-summary-item">
             <span style="width: 180px; text-align: left">总额</span>
             <span style="width: 150px; text-align: right">{{poSum}}</span>
           </div>
@@ -153,18 +113,18 @@
       </div>
 
       <div class="fz8">
-        <p class="poTemplate-content">
+        <p class="printTeamplate-content">
           {{
             contractTemplate.content == null
               ? ""
               : contractTemplate.content.value
           }}
         </p>
-        <div class="poTemplate-remark-div">
+        <div class="printTeamplate-remark-div">
           <div class="remark-title-div">备注</div>
           <div>
             <div
-              class="poTemplate-remark-p"
+              class="printTeamplate-remark-p"
               v-for="remark in contractTemplate.remarkList"
               :key="remark.id"
             >
@@ -173,8 +133,8 @@
           </div>
         </div>
       </div>
-      <div class="poTemplate-confirm-div fz9">
-        <div class="poTemplate-confirm-box">
+      <div class="printTeamplate-confirm-div fz9">
+        <div class="printTeamplate-confirm-box">
           <span>买方确认</span>
           <span>名称：{{ userInfo.company.companyName }}</span>
           <span
@@ -186,16 +146,16 @@
           <span>电话：{{ userInfo.company.phoneNumber }}</span>
           <span>日期：{{ Datetime }}</span>
         </div>
-        <div class="poTemplate-confirm-box">
+        <div class="printTeamplate-confirm-box">
           <span>卖方确认</span>
-          <span>名称：{{ vendeeInfo.supplyName }}</span>
-          <span>地址：{{ vendeeInfo.address }}</span>
-          <span>联系人：{{ vendeeInfo.contact }}</span>
-          <span>电话：{{ vendeeInfo.phone }}</span>
+          <span>名称：{{ newPO.supply.name }}</span>
+          <span>地址：{{ newPO.supply.address }}</span>
+          <span>联系人：{{ newPO.supply.contact }}</span>
+          <span>电话：{{ newPO.supply.phone }}</span>
           <span>日期：</span>
         </div>
       </div>
-      <p class="poTemplate-description">
+      <p class="printTeamplate-description">
         {{
           contractTemplate.description == null
             ? ""
@@ -203,27 +163,22 @@
         }}
       </p>
     </div>
-    <div class="edit-poTemplate-button-div">
-      <el-button @click="savePo('vendeeForm')" type="primary">生成采购单</el-button>
+    <div class="edit-printTeamplate-button-div">
+      <!-- <el-button @click="savePo('vendeeForm')" type="primary">打印采购单</el-button> -->
+      <el-button type="primary" @click="printPdf">打印合同</el-button>
     </div>
   </div>
 </template>
 <script>
 import { mapGetters } from "vuex";
 import { mapActions } from "vuex";
+import print from "print-js";
 export default {
   name: "m-create-intent-constract",
   data() {
     return {
       Datetime:new Date().format("yyyy-MM-dd"),
       poDetailList:[],
-      vendeeInfo: {
-        supplyId:"",
-        supplyName: "",
-        address: "",
-        contact: "",
-        phone: "",
-      },
       newPO: {
         id: "",
         poNo: "",
@@ -237,6 +192,8 @@ export default {
         purchaseDetailList: [],
         supplyName: "",
         poDetailList:[],
+        createName:'',
+        supply:[],
       },
       rules: {
         supplyId: [
@@ -269,22 +226,17 @@ export default {
     getFullTime(time) {
     return new Date(time).format("yyyy-MM-dd");
     },
-    supplyChanged(event){
-      this.vendeeInfo.supplyId=event.id;
-      this.vendeeInfo.supplyName=event.name;
-      this.vendeeInfo.address=event.address;
-      this.vendeeInfo.contact=event.contact;
-      this.vendeeInfo.phone=event.phone;
+    printPdf() {
+      print({
+        printable: "printTeamplate",
+        type: "html",
+        maxWidth: "100%",
+        targetStyles: ["*"],
+      });
     },
     loadPo(str) {
       this.newPO = str;
       this.poDetailList=str.poDetailList;
-    },
-    cellClick(row) {
-      row.seen = true;
-    },
-    loseFcous(index, row) {
-      row.seen = false;
     },
     savePo(formName){
       this.$refs[formName].validate(valid => {
@@ -302,15 +254,15 @@ export default {
               this.newPO.createBy=this.userInfo.id;
               this.newPO.purchaseDetailList=list;
               this.SavePoList(this.newPO)
-              // let params = {
-              //   state: "APPROVE"
-              // };
-              // this.GetPRList(params);
-              // let arg = {
-              //   state: "CREATE"
-              // };
-              // this.GetPOList(arg);
-              this.$emit('closePopWindow',this.newPO.poNo);
+              let params = {
+                state: "APPROVE"
+              };
+              this.GetPRList(params);
+              let arg = {
+                state: "CREATE"
+              };
+              this.GetPOList(arg);
+              this.$emit('closePopWindow');
             }
             else
             {
@@ -361,12 +313,11 @@ export default {
   },
   beforeMount() {
     this.GetContractTemplate();
-    this.GetSupplyList();
   },
 };
 </script>
 <style lang="less">
-.poTemplate-div {
+.printTeamplate-div {
   width: 950px;
   padding: 1rem;
   border: 1px solid rgb(233, 229, 229);
@@ -375,43 +326,43 @@ export default {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
 }
 
-.poTemplate-header {
+.printTeamplate-header {
   height: 60px;
   display: inline;
   line-height: 60px;
   vertical-align: center;
 }
-.poTemplate-header-left {
+.printTeamplate-header-left {
   margin-right: 10px;
   font-size: 1.5rem;
   color: #606266;
   float: left;
 }
-.poTemplate-header-title {
+.printTeamplate-header-title {
   float: right;
   margin-right: 10px;
   letter-spacing: 7px;
   font-size: 1.5rem;
   color: #606266;
 }
-.poTemplate-buyer-info-div {
+.printTeamplate-buyer-info-div {
   display: flex;
   flex-direction: row;
   border: 1px solid rgb(209, 205, 205);
 }
-// .poTemplate-buyer-info-div-left {
+// .printTeamplate-buyer-info-div-left {
 //   height: 100%;
 //   border-right: 1px solid rgb(209, 205, 205);
 //   width: 100%;
 // }
-.poTemplate-buyer-info-div-left-firstfloor {
+.printTeamplate-buyer-info-div-left-firstfloor {
   margin-top: 15px;
   height: 50%;
   display: flex;
   flex-direction: column;
   border: 1px solid rgb(209, 205, 205);
 }
-.poTemplate-buyer-info-div-left-secfloor {
+.printTeamplate-buyer-info-div-left-secfloor {
   margin-top: 15px;
   display: flex;
   flex-direction: column;
@@ -427,26 +378,26 @@ export default {
   font-weight: bold;
 }
 
-.poTemplate-product-detail-div {
+.printTeamplate-product-detail-div {
   margin-top: 15px;
   border: 1px solid rgb(209, 205, 205);
 }
 
-.poTemplate-product-detail-summary-item {
+.printTeamplate-product-detail-summary-item {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
   padding: 3px 10px;
 }
-.poTemplate-content {
+.printTeamplate-content {
   text-align: left;
 }
-.poTemplate-remark-div {
+.printTeamplate-remark-div {
   display: flex;
   flex-direction: row;
 }
-.poTemplate-remark-p {
+.printTeamplate-remark-p {
   text-align: left;
   vertical-align: top;
 }
@@ -454,41 +405,41 @@ export default {
   min-width: 50px;
   text-align: left;
 }
-.poTemplate-confirm-div {
+.printTeamplate-confirm-div {
   display: flex;
   flex-direction: row;
-  margin-top: 1rem;
+  margin-top: 3rem;
 }
-.poTemplate-confirm-box {
+.printTeamplate-confirm-box {
   width: 50%;
   text-align: left;
   display: flex;
   flex-direction: column;
 }
-.poTemplate-description {
+.printTeamplate-description {
   text-align: left;
   font-size: 0.3rem;
   margin-top: 2rem;
 }
-.edit-poTemplate-button-div {
+.edit-printTeamplate-button-div {
   padding: 1rem 0;
   text-align: right;
 }
 .justify-content {
   justify-content: space-between;
 }
-.add-poTemplate-deail {
+.add-printTeamplate-deail {
   margin-top: 2px;
   width: 100%;
   color: #259dff;
   border: #dcdfe6 dashed 1px !important;
 }
-.poTemplate-product-detail-select-div {
+.printTeamplate-product-detail-select-div {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
-.poTemplate-product-seen-div {
+.printTeamplate-product-seen-div {
   display: flex;
   align-items: center;
 }
@@ -501,11 +452,12 @@ export default {
   font-size: 0.8rem;
   padding: 0.3rem;
   text-align: left;
+  width: 400px;
 }
-.PoTemplate-conten {
+.printTeamplate-conten {
   padding: 8px;
 }
-.poTemplate-supply{
+.printTeamplate-supply{
    padding-left: 10px;
    padding-top:15px;
    padding-right: 10px;

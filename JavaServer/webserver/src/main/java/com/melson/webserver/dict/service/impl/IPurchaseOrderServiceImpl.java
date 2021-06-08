@@ -2,7 +2,10 @@ package com.melson.webserver.dict.service.impl;
 
 import com.melson.base.AbstractService;
 import com.melson.base.Result;
+import com.melson.base.utils.EntityManagerUtil;
 import com.melson.webserver.dict.dao.IProductRepository;
+import com.melson.webserver.dict.dao.ISupplyRepository;
+import com.melson.webserver.dict.entity.Supply;
 import com.melson.webserver.order.dao.IPurchaseDetailRepository;
 import com.melson.webserver.order.dao.IPurchaseOrderRepository;
 import com.melson.webserver.order.dao.IPurchasePlanRepository;
@@ -14,7 +17,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -26,12 +31,16 @@ public class IPurchaseOrderServiceImpl extends AbstractService<PurchaseOrder> im
     private final IPurchaseDetailRepository purchaseDetailRepository;
     private final IPurchasePlanRepository purchasePlanRepository;
     private final IProductRepository productRepository;
+    private final ISupplyRepository supplyRepository;
+    private final EntityManagerUtil entityManagerUtil;
 
-    public IPurchaseOrderServiceImpl(IPurchaseOrderRepository purchaseOrderRepository, IPurchaseDetailRepository purchaseDetailRepository, IPurchasePlanRepository purchasePlanRepository, IProductRepository productRepository) {
+    public IPurchaseOrderServiceImpl(IPurchaseOrderRepository purchaseOrderRepository, IPurchaseDetailRepository purchaseDetailRepository, IPurchasePlanRepository purchasePlanRepository, IProductRepository productRepository, ISupplyRepository supplyRepository, EntityManagerUtil entityManagerUtil) {
         this.purchaseOrderRepository = purchaseOrderRepository;
         this.purchaseDetailRepository = purchaseDetailRepository;
         this.purchasePlanRepository = purchasePlanRepository;
         this.productRepository = productRepository;
+        this.supplyRepository = supplyRepository;
+        this.entityManagerUtil = entityManagerUtil;
     }
 
     @Override
@@ -41,7 +50,14 @@ public class IPurchaseOrderServiceImpl extends AbstractService<PurchaseOrder> im
 
     @Override
     public List<PurchaseOrder> GetAllCreatedPoList(String state) {
-        List<Object[]> objects=purchaseOrderRepository.findByStateWithName(state);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String yesterday=sdf.format(new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24));
+        String sql ="SELECT po.id,po.poNo,po.state,po.supplyId,po.deliverDay,po.payterm,po.createDate,po.createBy,po.description ,su.`name` as supplyName ,us.userName as createName FROM `purchase_order` po left JOIN supply su on po.supplyId=su.id LEFT JOIN `user` us on po.createBy=us.id ";
+        StringBuffer sBuffer = new StringBuffer(sql);
+        sBuffer.append(" where po.state='" + state + "'");
+        sBuffer.append("  and po.createDate>='" + yesterday + "' ORDER BY po.id desc ");
+        List<Object[]> objects = entityManagerUtil.ExcuteSql(sBuffer.toString());
+//        List<Object[]> objects=purchaseOrderRepository.findByStateWithName(state);
         List<PurchaseOrder> purchaseOrders=GeneratedList(objects);
         return purchaseOrders;
     }
@@ -60,6 +76,7 @@ public class IPurchaseOrderServiceImpl extends AbstractService<PurchaseOrder> im
             po.setCreateBy(obj[7] == null ? null : new Integer((Integer) obj[7]));
             po.setDescription(obj[8] == null ? null : obj[8].toString());
             po.setSupplyName(obj[9] == null ? null : obj[9].toString());
+            po.setCreateName(obj[10] == null ? null : obj[10].toString());
             list.add(po);
         }
         return list;
@@ -78,5 +95,24 @@ public class IPurchaseOrderServiceImpl extends AbstractService<PurchaseOrder> im
         }
         result.setData(saved);
         return result;
+    }
+
+    @Override
+    public PurchaseOrder QueryPo(PurchaseOrder po) {
+        List<Object[]> objects=purchaseOrderRepository.findByPoNoWithSupplyName(po.getPoNo());
+        List<PurchaseOrder> purchaseOrders=GeneratedList(objects);
+        PurchaseOrder newPo=purchaseOrders.get(0);
+        List<PurchaseDetail> details=purchaseDetailRepository.findByPoNo(po.getPoNo());
+        Supply sup=supplyRepository.findById(newPo.getSupplyId());
+        newPo.setPurchaseDetailList(details);
+        newPo.setSupply(sup);
+        return newPo;
+    }
+
+    @Override
+    public List<PurchaseOrder> GetAllWithCreate() {
+        List<Object[]> objects=purchaseOrderRepository.findAllWithCreate();
+        List<PurchaseOrder> purchaseOrders=GeneratedList(objects);
+        return purchaseOrders;
     }
 }
