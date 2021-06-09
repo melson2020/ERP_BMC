@@ -306,6 +306,7 @@ export default {
         packageUnit: "",
         convertCount: "",
         convertUnit: "",
+        baseUnit:this.storageUnitInfo.product.unit,
         seen: true,
       };
       this.storageUnitInfo.storageUnitList.push(addObj);

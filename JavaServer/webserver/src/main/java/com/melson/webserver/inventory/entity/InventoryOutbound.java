@@ -13,10 +13,14 @@ import java.util.Date;
 @Table(name = "inventory_outbound")
 public class InventoryOutbound {
 
+    public static final String TYPE_PICKING="PICKING";
+
+    public static final String TYPE_DELIVERY="DELIVERY";
+
     /**
      * 编码前缀
      */
-    public static final String CODE_PREFIX = "OUT";
+    public static final String CODE_PREFIX = "O";
 
     /**
      * 唯一自增id
@@ -30,10 +34,7 @@ public class InventoryOutbound {
      * 出库类型
      */
     private String type;
-    /**
-     * 客户
-     */
-    private String customerNo;
+
     /**
      * 描述
      */
@@ -46,6 +47,12 @@ public class InventoryOutbound {
      * 操作人
      */
     private Integer createUser;
+
+    /**
+     * 来源单号 当类型为其他的 数值为空
+     */
+    private String sourceNo;
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -73,14 +80,6 @@ public class InventoryOutbound {
         this.type = type;
     }
 
-    public String getCustomerNo() {
-        return customerNo;
-    }
-
-    public void setCustomerNo(String customerNo) {
-        this.customerNo = customerNo;
-    }
-
     public String getRemark() {
         return remark;
     }
@@ -103,5 +102,13 @@ public class InventoryOutbound {
 
     public void setCreateUser(Integer createUser) {
         this.createUser = createUser;
+    }
+
+    public String getSourceNo() {
+        return sourceNo;
+    }
+
+    public void setSourceNo(String sourceNo) {
+        this.sourceNo = sourceNo;
     }
 }

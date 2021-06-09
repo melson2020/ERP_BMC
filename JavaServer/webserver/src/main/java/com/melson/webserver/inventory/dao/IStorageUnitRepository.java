@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @Author Nelson
@@ -14,6 +15,7 @@ import java.util.List;
 @Repository
 public interface IStorageUnitRepository extends JpaRepository<StorageUnit,Integer> {
     List<StorageUnit> findByProductId(Integer productId);
+    List<StorageUnit> findByProductIdIn(Set<Integer> productIds);
     List<StorageUnit> findByProductIdAndConvertUnit(Integer productId,String convertUit);
     List<StorageUnit> findByProductIdAndPackageUnit(Integer productId,String packageUnit);
 }

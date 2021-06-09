@@ -2,14 +2,18 @@ package com.melson.webserver.inventory.resource;
 
 import com.melson.base.BaseResource;
 import com.melson.base.Result;
+import com.melson.base.ResultType;
 import com.melson.base.constants.SysRespCode;
 import com.melson.base.utils.DateUtil;
 import com.melson.webserver.inventory.entity.InventoryOutbound;
 import com.melson.webserver.inventory.service.IInventoryOutboundService;
+import com.melson.webserver.inventory.vo.InventoryInboundVo;
 import com.melson.webserver.inventory.vo.InventoryOutboundVo;
+import com.melson.webserver.order.service.IPickingTicketService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,6 +33,8 @@ public class InventoryOutboundResource extends BaseResource {
 
     @Autowired
     private IInventoryOutboundService inventoryOutboundService;
+    @Autowired
+    private IPickingTicketService pickingTicketService;
 
     @GetMapping(value = "/list")
     public Result list(HttpServletRequest request) {
@@ -69,5 +75,27 @@ public class InventoryOutboundResource extends BaseResource {
         }
         logger.info("用户[{}]出库[{}]成功", userId, form.getFormNo());
         return success(form.getFormNo());
+    }
+
+    @GetMapping(value = "/pickingOutBoundList")
+    public Result FindPickingTicketOutBoundList() {
+        return success(pickingTicketService.FindOutBoundPickingList());
+    }
+
+    @GetMapping(value = "/createOutBound")
+    public Result CreateOutBoundWithExistTicket(HttpServletRequest request, Integer ticketId, String ticketType) {
+        if (ticketId == null || StringUtils.isEmpty(ticketType)) return GenerateResult(ResultType.ParameterNeeded);
+        String token = request.getHeader("token");
+        Integer userId = Integer.parseInt(token);
+//        try {
+            InventoryOutboundVo vo = inventoryOutboundService.GenerateOutBoundWithExistTicket(ticketId, ticketType, userId);
+            if (vo == null) {
+                return failure(-1, "创建失败");
+            } else {
+                return success(vo);
+            }
+//        } catch (RuntimeException re) {
+//            return failure(-1, re.getMessage());
+//        }
     }
 }

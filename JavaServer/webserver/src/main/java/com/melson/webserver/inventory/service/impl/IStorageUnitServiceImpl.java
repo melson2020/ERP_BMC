@@ -10,6 +10,8 @@ import com.melson.webserver.inventory.dao.IStorageUnitRepository;
 import com.melson.webserver.inventory.entity.StorageUnit;
 import com.melson.webserver.inventory.service.IStorageUnitService;
 import com.melson.webserver.inventory.vo.StorageUnitVo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,7 @@ import java.util.List;
  */
 @Service
 public class IStorageUnitServiceImpl implements IStorageUnitService {
+    private static final Logger logger = LoggerFactory.getLogger(IStorageUnitServiceImpl.class);
     @Autowired
     private IStorageUnitRepository storageUnitRepository;
     @Autowired
@@ -38,6 +41,21 @@ public class IStorageUnitServiceImpl implements IStorageUnitService {
 
     @Override
     public StorageUnit SaveOne(StorageUnit unit) {
+        //如果基础单位和转换单位一致 则基础单位转换数量=转换数量
+        if(unit.getConvertUnit().equals(unit.getBaseUnit())){
+            unit.setBaseUnitConvertCount(unit.getConvertCount());
+            unit.setLevel(1);
+        }else {
+            //获取转换单位
+           List<StorageUnit> packageUnitList=storageUnitRepository.findByProductIdAndPackageUnit(unit.getProductId(), unit.getConvertUnit());
+           if(packageUnitList==null||packageUnitList.size()!=1){
+               logger.error("保存转换单位失败，为能获取到[{}]对应的基础转换数据",unit.getConvertUnit());
+               return null;
+           }
+           Integer baseUnitConvertNum=packageUnitList.get(0).getBaseUnitConvertCount()*unit.getConvertCount();
+           unit.setBaseUnitConvertCount(baseUnitConvertNum);
+           unit.setLevel(packageUnitList.get(0).getLevel()+1);
+        }
         StorageUnit saved= storageUnitRepository.save(unit);
         storageDetailService.SaveOneWhileNotExist(saved);
         return saved;

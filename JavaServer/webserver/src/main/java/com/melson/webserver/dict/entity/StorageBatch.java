@@ -11,9 +11,10 @@ import java.math.BigDecimal;
 public class StorageBatch {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String materialNo;
-    private String name;
+    private Integer id;
     private Integer materialId;
+    private String name;
+
     private String specification;
     private String batchNo;
     private Integer supplyId;
@@ -24,12 +25,12 @@ public class StorageBatch {
     private String batchType;
     private Integer finished;
 
-    public String getMaterialNo() {
-        return materialNo;
+    public Integer getId() {
+        return id;
     }
 
-    public void setMaterialNo(String materialNo) {
-        this.materialNo = materialNo;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getName() {

@@ -13,7 +13,8 @@ import java.util.Date;
 public class ProducePlan {
     public static  final  String CREATED="1";
     public static  final  String PROCESSING="2";
-    public static  final  String COMPLETED="3";
+    public static  final  String INBOUND="3";
+    public static  final  String COMPLETED="4";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -32,6 +33,26 @@ public class ProducePlan {
     private Date startDate;
 
     private Date endDate;
+
+    private String inboundTicketNo;
+
+    private String outboundTicketNo;
+
+    public String getInboundTicketNo() {
+        return inboundTicketNo;
+    }
+
+    public void setInboundTicketNo(String inboundTicketNo) {
+        this.inboundTicketNo = inboundTicketNo;
+    }
+
+    public String getOutboundTicketNo() {
+        return outboundTicketNo;
+    }
+
+    public void setOutboundTicketNo(String outboundTicketNo) {
+        this.outboundTicketNo = outboundTicketNo;
+    }
 
     public Integer getId() {
         return id;

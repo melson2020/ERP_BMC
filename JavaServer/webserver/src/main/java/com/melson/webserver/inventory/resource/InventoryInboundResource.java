@@ -8,6 +8,8 @@ import com.melson.base.utils.DateUtil;
 import com.melson.webserver.inventory.entity.InventoryInbound;
 import com.melson.webserver.inventory.service.IInventoryInboundService;
 import com.melson.webserver.inventory.vo.InventoryInboundVo;
+import com.melson.webserver.order.entity.PickingTicket;
+import com.melson.webserver.order.service.IPickingTicketService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,8 @@ public class InventoryInboundResource extends BaseResource {
 
     @Autowired
     private IInventoryInboundService inventoryInboundService;
+    @Autowired
+    private IPickingTicketService pickingTicketService;
 
     @GetMapping(value = "/list")
     public Result list(HttpServletRequest request) {
@@ -66,12 +70,16 @@ public class InventoryInboundResource extends BaseResource {
         if (vo == null) {
             return failure(SysRespCode.INBOUND_SAVE_IS_NULL, "待入库信息为空");
         }
-        InventoryInbound form = inventoryInboundService.save(vo, userId);
-        if (form == null) {
-            return failure(SysRespCode.INBOUND_SAVE_FAIL, "入库失败");
+        try {
+            InventoryInbound form = inventoryInboundService.save(vo, userId);
+            if (form == null) {
+                return failure(SysRespCode.INBOUND_SAVE_FAIL, "入库失败");
+            }
+            logger.info("用户[{}]入库[{}]成功", userId, form.getFormNo());
+            return success(form.getFormNo());
+        } catch (RuntimeException re) {
+            return failure(-1, re.getMessage());
         }
-        logger.info("用户[{}]入库[{}]成功", userId, form.getFormNo());
-        return success(form.getFormNo());
     }
 
     /**
@@ -90,5 +98,10 @@ public class InventoryInboundResource extends BaseResource {
         } else {
             return failure(-1, "创建失败");
         }
+    }
+
+    @GetMapping(value = "/pickingInBoundList")
+    public Result PickingInBoundList() {
+        return success(pickingTicketService.FindByCustomerMaterialFlagAndState(PickingTicket.CUSTOMER_MATERIAL_FLAY_Y, PickingTicket.STATE_CREATE));
     }
 }

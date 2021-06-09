@@ -3,11 +3,13 @@ package com.melson.webserver.inventory.service.impl;
 import com.melson.base.utils.NumUtil;
 import com.melson.webserver.inventory.dao.IInventoryOutboundDetailRepository;
 import com.melson.webserver.inventory.dao.IInventoryOutboundRepository;
+import com.melson.webserver.inventory.entity.InventoryInbound;
 import com.melson.webserver.inventory.entity.InventoryOutbound;
 import com.melson.webserver.inventory.entity.InventoryOutboundDetail;
 import com.melson.webserver.inventory.service.IInventoryOutboundService;
 import com.melson.webserver.inventory.vo.InventoryOutboundDetailVo;
 import com.melson.webserver.inventory.vo.InventoryOutboundVo;
+import com.melson.webserver.order.service.IPickingTicketService;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +36,8 @@ public class InventoryOutboundServiceImpl implements IInventoryOutboundService {
     private IInventoryOutboundRepository inventoryOutboundRepository;
     @Autowired
     private IInventoryOutboundDetailRepository inventoryOutboundDetailRepository;
+    @Autowired
+    private IPickingTicketService pickingTicketService;
 
     @Override
     public List<InventoryOutboundVo> list(Date date) {
@@ -104,5 +108,17 @@ public class InventoryOutboundServiceImpl implements IInventoryOutboundService {
         // 3.修改库存
         // todo : 关联库存表扣减 by wuhuan
         return form;
+    }
+
+    @Override
+    public InventoryOutboundVo GenerateOutBoundWithExistTicket(Integer ticketId,String ticketType,Integer userId) throws RuntimeException {
+        switch (ticketType) {
+            case InventoryOutbound.TYPE_PICKING:
+                return pickingTicketService.GenerateInventoryOutBound(ticketId, userId);
+            case InventoryOutbound.TYPE_DELIVERY:
+                return null;
+
+        }
+        return null;
     }
 }

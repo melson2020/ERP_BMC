@@ -25,6 +25,8 @@ public class InventoryOutboundDetail {
      * 物料号/产品编码
      */
     private String materialNo;
+
+    private Integer materialId;
     /**
      * 名称
      */
@@ -37,18 +39,24 @@ public class InventoryOutboundDetail {
      * 数量
      */
     private Integer count;
-    /**
-     * 最新价格
-     */
-    private BigDecimal latestPrice;
+
     /**
      * 数量单位
      */
     private String unit;
+
     /**
-     * 货位号
+     * 批次号，如果为多批次出库 则有多条出库详细
      */
+    private String batchNo;
+
+    /**
+     * 仓库码
+     */
+
     private String storageCode;
+
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -100,13 +108,6 @@ public class InventoryOutboundDetail {
         this.count = count;
     }
 
-    public BigDecimal getLatestPrice() {
-        return latestPrice;
-    }
-
-    public void setLatestPrice(BigDecimal latestPrice) {
-        this.latestPrice = latestPrice;
-    }
 
     public String getUnit() {
         return unit;
@@ -116,11 +117,27 @@ public class InventoryOutboundDetail {
         this.unit = unit;
     }
 
+    public String getBatchNo() {
+        return batchNo;
+    }
+
+    public void setBatchNo(String batchNo) {
+        this.batchNo = batchNo;
+    }
+
     public String getStorageCode() {
         return storageCode;
     }
 
     public void setStorageCode(String storageCode) {
         this.storageCode = storageCode;
+    }
+
+    public Integer getMaterialId() {
+        return materialId;
+    }
+
+    public void setMaterialId(Integer materialId) {
+        this.materialId = materialId;
     }
 }

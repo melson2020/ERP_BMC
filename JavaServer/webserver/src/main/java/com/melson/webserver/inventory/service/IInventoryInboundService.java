@@ -37,7 +37,7 @@ public interface IInventoryInboundService {
      * @param userId
      * @return
      */
-    InventoryInbound save(InventoryInboundVo vo, Integer userId);
+    InventoryInbound save(InventoryInboundVo vo, Integer userId) throws RuntimeException;
 
 
     InventoryInboundVo createInBoundWithTicket(Integer ticketId,String ticketType,Integer userId);

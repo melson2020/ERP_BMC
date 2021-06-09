@@ -7,6 +7,9 @@ import com.melson.webserver.dict.service.IStorageBatch;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Set;
+
 /**
  * Created by Messi on 2021/5/10
  */
@@ -21,5 +24,10 @@ public class IStorageBatchImpl extends AbstractService<StorageBatch> implements 
     @Override
     public JpaRepository<StorageBatch, String> getRepository() {
         return storageBatchRepository;
+    }
+
+    @Override
+    public List<StorageBatch> FindByProductIds(Set<Integer> productIds,Integer finish) {
+        return storageBatchRepository.findByMaterialIdInAndFinished(productIds,finish);
     }
 }

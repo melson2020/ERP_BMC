@@ -15,7 +15,11 @@ public class PickingTicket {
     public static final String TYPE_ORDER="ORDER";
     public static final String TYPE_PLAN="PLAN";
 
+    public static final String CUSTOMER_MATERIAL_FLAY_Y="Y";
+    public static final String CUSTOMER_MATERIAL_FLAY_N="N";
+
     public static final String STATE_CREATE="CREATE";
+    public static final String STATE_INBOUND="INBOUND";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -27,6 +31,14 @@ public class PickingTicket {
     private String type;
     private Date createDate;
     private String state;
+
+    //是否客户给料标志
+    private String customerMaterialFlag;
+
+    //入库单号
+    private String inboundTicketNo;
+
+    private String outboundTicketNo;
 
     public Integer getId() {
         return id;
@@ -82,5 +94,29 @@ public class PickingTicket {
 
     public void setSourceNo(String sourceNo) {
         this.sourceNo = sourceNo;
+    }
+
+    public String getCustomerMaterialFlag() {
+        return customerMaterialFlag;
+    }
+
+    public void setCustomerMaterialFlag(String customerMaterialFlag) {
+        this.customerMaterialFlag = customerMaterialFlag;
+    }
+
+    public String getInboundTicketNo() {
+        return inboundTicketNo;
+    }
+
+    public void setInboundTicketNo(String inboundTicketNo) {
+        this.inboundTicketNo = inboundTicketNo;
+    }
+
+    public String getOutboundTicketNo() {
+        return outboundTicketNo;
+    }
+
+    public void setOutboundTicketNo(String outboundTicketNo) {
+        this.outboundTicketNo = outboundTicketNo;
     }
 }

@@ -23,6 +23,7 @@ public class StorageDetail {
     private String feature;
     private String storageCode;
     private Integer productId;
+    private Integer level;  //库存单位优先级
 
     public Integer getId() {
         return id;
@@ -110,5 +111,13 @@ public class StorageDetail {
 
     public void setProductId(Integer productId) {
         this.productId = productId;
+    }
+
+    public Integer getLevel() {
+        return level;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
     }
 }
