@@ -237,6 +237,7 @@ export default {
         purchaseDetailList: [],
         supplyName: "",
         poDetailList:[],
+        amount:'',
       },
       rules: {
         supplyId: [
@@ -298,19 +299,24 @@ export default {
               this.newPO.supplyId=this.vendeeInfo.supplyId;
               this.newPO.state="CREATE";
               this.newPO.createDate=new Date();
+              this.newPO.amount=this.poSum;
               let list=this.pushbackprice(this.newPO.poDetailList,this.newPO.purchaseDetailList,this.newPO);
               this.newPO.createBy=this.userInfo.id;
               this.newPO.purchaseDetailList=list;
               this.SavePoList(this.newPO)
-              // let params = {
-              //   state: "APPROVE"
-              // };
-              // this.GetPRList(params);
-              // let arg = {
-              //   state: "CREATE"
-              // };
-              // this.GetPOList(arg);
-              this.$emit('closePopWindow',this.newPO.poNo);
+              let params = {
+                state: "APPROVE"
+              };
+              this.GetPRList(params);
+              let arg = {
+                state: "CREATE"
+              };
+              this.GetPOList(arg);
+
+              setTimeout(() => {
+                this.$emit('closePopWindow',this.newPO.poNo);
+              }, 10);
+              // this.$emit('closePopWindow',this.newPO.poNo);
             }
             else
             {

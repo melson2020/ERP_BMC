@@ -1,4 +1,4 @@
-package com.melson.webserver.dict.service.impl;
+package com.melson.webserver.order.service.impl;
 
 import com.melson.base.AbstractService;
 import com.melson.base.Result;
@@ -16,6 +16,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -52,7 +53,7 @@ public class IPurchaseOrderServiceImpl extends AbstractService<PurchaseOrder> im
     public List<PurchaseOrder> GetAllCreatedPoList(String state) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String yesterday=sdf.format(new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24));
-        String sql ="SELECT po.id,po.poNo,po.state,po.supplyId,po.deliverDay,po.payterm,po.createDate,po.createBy,po.description ,su.`name` as supplyName ,us.userName as createName FROM `purchase_order` po left JOIN supply su on po.supplyId=su.id LEFT JOIN `user` us on po.createBy=us.id ";
+        String sql ="SELECT po.id,po.poNo,po.state,po.supplyId,po.deliverDay,po.payterm,po.createDate,po.createBy,po.description ,su.`name` as supplyName ,us.userName as createName ,po.amount FROM `purchase_order` po left JOIN supply su on po.supplyId=su.id LEFT JOIN `user` us on po.createBy=us.id ";
         StringBuffer sBuffer = new StringBuffer(sql);
         sBuffer.append(" where po.state='" + state + "'");
         sBuffer.append("  and po.createDate>='" + yesterday + "' ORDER BY po.id desc ");
@@ -77,6 +78,7 @@ public class IPurchaseOrderServiceImpl extends AbstractService<PurchaseOrder> im
             po.setDescription(obj[8] == null ? null : obj[8].toString());
             po.setSupplyName(obj[9] == null ? null : obj[9].toString());
             po.setCreateName(obj[10] == null ? null : obj[10].toString());
+            po.setAmount(obj[11] == null ? null : new BigDecimal(obj[11].toString()));
             list.add(po);
         }
         return list;

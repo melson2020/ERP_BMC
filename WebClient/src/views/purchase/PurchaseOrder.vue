@@ -71,8 +71,8 @@
         :cell-style="{ padding: '2px', color: '#909399' }"
         :header-cell-style="{ background: '#909399', color: 'white' }">
         <el-table-column prop="poNo" label="PO-NO" width="180px"></el-table-column>
-        <el-table-column prop="supplyName" label="供应商" width="280px"> </el-table-column>
-        <!-- <el-table-column prop="deliveryDay" label="交期" width="180px"> </el-table-column> -->
+        <el-table-column prop="supplyName" label="供应商" width="380px"> </el-table-column>
+        <el-table-column prop="amount" label="金额" width="120px"> </el-table-column>
         <el-table-column prop="state" label="状态" width="180px"> </el-table-column>
         <el-table-column prop="createDate" label="创建日期" width="140px"> 
           <template slot-scope="scope">
@@ -188,8 +188,12 @@ export default {
         return this.prList.filter((item)=>{
           let key=
           item.purchasePlanNo +
-          item.type +
-          item.state +
+          item.materialNo +
+          item.materialName +
+          item.specification +
+          item.count +
+          item.countUnit +
+          item.createDate +
           item.requester +
           item.description ;
           let index = key.toUpperCase().indexOf(this.searchContent.toUpperCase());
@@ -200,6 +204,7 @@ export default {
         return this.poList.filter((item)=>{
           let key=
           item.poNo +
+          item.amount+
           item.state +
           item.supplyName +
           item.createBy +
@@ -216,14 +221,14 @@ export default {
       QueryPoObj:"QueryPoObj",
     }),
     closePopWindow(str){
-      let params = {
-        state: "APPROVE"
-      };
-      this.GetPRList(params);
-      let arg = {
-        state: "CREATE"
-      };
-      this.GetPOList(arg);
+      // let params = {
+      //   state: "APPROVE"
+      // };
+      // this.GetPRList(params);
+      // let arg = {
+      //   state: "CREATE"
+      // };
+      // this.GetPOList(arg);
       this.poTemplateVisible = false;
       this.$messageBox.confirm('打印采购单？',"提示",{
       confirmButtonText: '确定',

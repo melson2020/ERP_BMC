@@ -3,6 +3,7 @@ package com.melson.webserver.order.entity;
 import com.melson.webserver.dict.entity.Supply;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -30,6 +31,7 @@ public class PurchaseOrder {
     private Date createDate;
     private Integer createBy;
     private String description;
+    private BigDecimal amount;
 
     @Transient
     private List<PurchaseDetail> purchaseDetailList;
@@ -110,6 +112,14 @@ public class PurchaseOrder {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
     }
 
     public List<PurchaseDetail> getPurchaseDetailList() {

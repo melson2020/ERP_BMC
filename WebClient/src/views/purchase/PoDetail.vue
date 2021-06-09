@@ -18,7 +18,8 @@
         :cell-style="{ padding: '2px', color: '#909399' }"
         :header-cell-style="{ background: '#909399', color: 'white' }">
         <el-table-column prop="poNo" label="PO-NO" width="180px"></el-table-column>
-        <el-table-column prop="supplyName" label="供应商" width="280px"> </el-table-column>
+        <el-table-column prop="supplyName" label="供应商" width="380px"> </el-table-column>
+        <el-table-column prop="amount" label="金额" width="120px"> </el-table-column>
         <el-table-column prop="state" label="状态" width="180px"> </el-table-column>
         <el-table-column prop="createDate" label="创建日期" width="140px"> 
           <template slot-scope="scope">
