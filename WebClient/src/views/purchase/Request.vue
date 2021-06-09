@@ -338,15 +338,15 @@
                 </div>
               </template>
             </el-table-column>
-            <el-table-column width="90px" >>
-              <template slot-scope="scope">
+            <el-table-column width="90px" >
+              <template slot-scope="scope" >
                 <div class="purchaseOperation">
 
                   <el-tooltip effect="light" content="确定" placement="top">
-                    <el-button size="mini" circle @click.prevent.stop="newSavePR(scope.$index, scope.row)" icon="el-icon-check" type="primary" ></el-button>
+                    <el-button size="mini" :disabled="scope.row.state=='BUYING' || scope.row.state=='COMPLETE'" circle @click.prevent.stop="newSavePR(scope.$index, scope.row)" icon="el-icon-check" type="primary" ></el-button>
                   </el-tooltip>
                   <el-tooltip effect="light" content="删除" placement="top">
-                    <el-button size="mini" @click.prevent.stop="editDeletePR(scope.$index, scope.row)" plain circle type="danger" icon="el-icon-delete"/>
+                    <el-button size="mini" :disabled="scope.row.state=='BUYING' || scope.row.state=='COMPLETE'" @click.prevent.stop="editDeletePR(scope.$index, scope.row)" plain circle type="danger" icon="el-icon-delete"/>
                   </el-tooltip>
                 </div>
               </template>
@@ -364,7 +364,7 @@
         </el-row>
         <el-row>
           <el-form-item>
-            <el-button type="primary" @click="onEditpurchase('purchaseEidtForm')" :loading="loading">保存</el-button>
+            <el-button type="primary" :disabled="editpurchase.state=='BUYING' || editpurchase.state=='COMPLETE'" @click="onEditpurchase('purchaseEidtForm')" :loading="loading">保存</el-button>
             <el-button @click="purchaseEditDialog = false" v-if="!loading">取 消</el-button>
           </el-form-item>
         </el-row>
@@ -454,6 +454,7 @@ export default {
       DeletePurchase:"DeletePurchase",
       QueryProductVos: "QueryProductVos",
       GetEmployeeVos:"GetEmployeeVos",
+      DeleteDetailPurchase:"DeleteDetailPurchase",
       }),
     userChanged(event){
         this.newpurchase.requester=event.alias;
@@ -602,7 +603,7 @@ export default {
           type: 'warning'
         })
         .then(() => {
-          this.DeleteDetailBoms(row)
+          this.DeleteDetailPurchase(row)
           this.newpurchase.purchaseDetailList.splice(index,1)
         })
         .catch(e=>e);
@@ -622,8 +623,15 @@ export default {
           type: 'warning'
         })
         .then(() => {
-          this.DeleteDetailBoms(row)
-          this.editpurchase.purchaseDetailList.splice(index,1)
+          if(this.editpurchase.purchaseDetailList.length==1)
+          {
+            this.$messageBox('最后一个物料不能删除')
+          }
+          else
+          {
+            this.DeleteDetailPurchase(row)
+            this.editpurchase.purchaseDetailList.splice(index,1)
+          }
         })
         .catch(e=>e);
       }

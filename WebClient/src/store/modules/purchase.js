@@ -8,6 +8,10 @@ const state = {
     userVos:[],
     productVos:[],
     purchaseWaitList:[],
+    prList:[],
+    poList:[],
+    prDetailList:[],
+    poDetailList:[]
 };
 
 const actions = {
@@ -59,7 +63,24 @@ const actions = {
               let al = error.message ? error.message : error
               Message.error(al)
           })
-  },
+    },
+
+    DeleteDetailPurchase({ }, purchaseDetial) {
+      request
+        .ReqDeleteDetailPurchase(purchaseDetial)
+        .then(res=>{
+            if (res.resultStatus == 1) {
+                Message.warning("删除成功")
+            }
+            else {
+                Message.warning("删除失败");
+            }
+        })
+        .catch(error => {
+            let al = error.message ? error.message : error
+            Message.error(al)
+        })
+    },
 
     GetEmployeeVos({commit}, params) {
       request.ReqEmployeeVoList(params).then(res => {
@@ -115,7 +136,56 @@ const actions = {
           Message.error(al)
       })
     },
-
+    GetPRList({ commit }, params) {
+      request.ReqPRList(params).then(res => {
+          if (res.resultStatus == 1) {
+              commit(types.PO_WAIT_LIST, res.data)
+          } else {
+              Message.warning(res.message)
+          }
+      }).catch(err => {
+          Message.error(err.message)
+      })
+    },
+    GetPOList({ commit }, params) {
+      request.ReqPOList(params).then(res => {
+          if (res.resultStatus == 1) {
+              commit(types.PO_CREATE_LIST, res.data)
+          } else {
+              Message.warning(res.message)
+          }
+      }).catch(err => {
+          Message.error(err.message)
+      })
+    },
+    SavePoList({ },po){
+      return request.ReqSavePoList(po);
+    },
+    QueryPoObj({},po){
+      return request.ReqQueryPoObj(po);
+    },
+    GetAllPurchaseDetailList({ commit }, params) {
+      request.ReqPrDetailList(params).then(res => {
+          if (res.resultStatus == 1) {
+              commit(types.ALL_PRD_LIST, res.data)
+          } else {
+              Message.warning(res.message)
+          }
+      }).catch(err => {
+          Message.error(err.message)
+      })
+    },
+    GetAllPODetailList({ commit }, params) {
+      request.ReqPoDetailList(params).then(res => {
+          if (res.resultStatus == 1) {
+              commit(types.ALL_POD_LIST, res.data)
+          } else {
+              Message.warning(res.message)
+          }
+      }).catch(err => {
+          Message.error(err.message)
+      })
+    },
 };
 
 const getters = {
@@ -123,6 +193,10 @@ const getters = {
     userVos:state=>state.userVos,
     productVos:state=>state.productVos,
     purchaseWaitList:state=>state.purchaseWaitList,
+    prList:state=>state.prList,
+    poList:state=>state.poList,
+    prDetailList:state=>state.prDetailList,
+    poDetailList:state=>state.poDetailList,
 };
 
 const mutations = {
@@ -154,6 +228,18 @@ const mutations = {
     },
     [types.PURCHASE_REJECT_ITEM](state, data) {
       state.purchaseWaitList.splice(data.index, 1);
+    },
+    [types.PO_WAIT_LIST](state, data) {
+      state.prList=data;
+    },
+    [types.PO_CREATE_LIST](state, data) {
+      state.poList=data;
+    },
+    [types.ALL_PRD_LIST](state, data) {
+      state.prDetailList=data;
+    },
+    [types.ALL_POD_LIST](state, data) {
+      state.poDetailList=data;
     },
 };
 

@@ -13,6 +13,7 @@ import com.melson.webserver.order.service.IPurchaseDetailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -75,6 +76,12 @@ public class PurchaseDetailServiceImpl implements IPurchaseDetailService {
     @Override
     public List<PurchaseDetail> GetAllApprovedPurchaseDetailList(String state) {
         return purchaseDetailRepository.findByState(state);
+    }
+
+    @Override
+    @Transactional
+    public Integer DeletePurchase(PurchaseDetail pd) {
+        return purchaseDetailRepository.deletePdById(pd.getId());
     }
 
     private PurchaseDetail CreatePurchase(OrderFormDetail formDetail, PurchasePlan pr){

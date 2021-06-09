@@ -23,4 +23,6 @@ public interface IPurchaseDetailService {
     List<PurchaseDetail> FindByOrderFormId(Integer orderFormId);
 
     List<PurchaseDetail> GetAllApprovedPurchaseDetailList(String state);
+
+    Integer DeletePurchase(PurchaseDetail pd);
 }

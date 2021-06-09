@@ -14,7 +14,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -35,8 +34,9 @@ public class UserImpl extends AbstractService<User> implements IUser {
     private final IRoleMenuDao roleMenuDao;
     private final ISysSequence sysSequenceService;
     private final EntityManagerUtil entityManagerUtil;
+    private final ICompanyDao companyDao;
 
-    public UserImpl(IUserDao userDao, IUserRoleDao userRoleDao, IRoleDao roleDao, IMenuDao menuDao, IRoleMenuDao roleMenuDao, ISysSequence sysSequenceService, EntityManagerUtil entityManagerUtil) {
+    public UserImpl(IUserDao userDao, IUserRoleDao userRoleDao, IRoleDao roleDao, IMenuDao menuDao, IRoleMenuDao roleMenuDao, ISysSequence sysSequenceService, EntityManagerUtil entityManagerUtil, ICompanyDao companyDao) {
         this.userDao = userDao;
         this.userRoleDao = userRoleDao;
         this.roleDao = roleDao;
@@ -44,6 +44,7 @@ public class UserImpl extends AbstractService<User> implements IUser {
         this.roleMenuDao = roleMenuDao;
         this.sysSequenceService = sysSequenceService;
         this.entityManagerUtil = entityManagerUtil;
+        this.companyDao = companyDao;
     }
 
     @Override
@@ -255,7 +256,11 @@ public class UserImpl extends AbstractService<User> implements IUser {
         }
         List<Menu> menuList = menuDao.findByMenuIdIn(menuIds);
         List<Menu> sortedList = ReSortMenuList(menuList);
+
+            //设置公司信息，用于后面取用
+        Company company=companyDao.findByCompanyCode(existUser.getCompanyCode());
         existUser.setMenuList(sortedList);
+        existUser.setCompany(company);
         return existUser;
     }
 

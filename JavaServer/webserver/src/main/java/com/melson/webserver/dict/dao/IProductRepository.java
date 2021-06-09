@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -28,4 +29,8 @@ public interface IProductRepository extends JpaRepository<Product,Integer> {
 
     @Query(nativeQuery = true, value = "SELECT pr.productNo,pr.name,pr.specification,pr.categoryId,pc.`name` as category,pr.supplyId,pr.salesPrice,su.`name` as supplyName,null as bomNo,null as bomGenericId,CONCAT(pc.`name`,' / ',pr.`name`,' / ',pr.specification,' / ',su.`name`) as alias from product pr left JOIN supply su on pr.supplyId=su.id left JOIN product_category pc on pr.categoryId=pc.categoryId  WHERE pr.productNo not in (SELECT productNo from product_bom)  and pr.productNo<>?1")
     List<Object[]> findBySpecial(String productNo);
+
+    @Modifying
+    @Query(value = "update product set salesPrice=?1 where productNo=?2",nativeQuery = true)
+    void UpdatePrice(BigDecimal costPrice,String materialNo);
 }

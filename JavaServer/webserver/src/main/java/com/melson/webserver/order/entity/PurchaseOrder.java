@@ -1,6 +1,9 @@
 package com.melson.webserver.order.entity;
 
+import com.melson.webserver.dict.entity.Supply;
+
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -28,9 +31,16 @@ public class PurchaseOrder {
     private Date createDate;
     private Integer createBy;
     private String description;
+    private BigDecimal amount;
 
     @Transient
     private List<PurchaseDetail> purchaseDetailList;
+    @Transient
+    private String supplyName;
+    @Transient
+    private String createName;
+    @Transient
+    private Supply supply;
 
     public Integer getId() {
         return id;
@@ -104,11 +114,43 @@ public class PurchaseOrder {
         this.description = description;
     }
 
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
     public List<PurchaseDetail> getPurchaseDetailList() {
         return purchaseDetailList;
     }
 
     public void setPurchaseDetailList(List<PurchaseDetail> purchaseDetailList) {
         this.purchaseDetailList = purchaseDetailList;
+    }
+
+    public String getSupplyName() {
+        return supplyName;
+    }
+
+    public void setSupplyName(String supplyName) {
+        this.supplyName = supplyName;
+    }
+
+    public String getCreateName() {
+        return createName;
+    }
+
+    public void setCreateName(String createName) {
+        this.createName = createName;
+    }
+
+    public Supply getSupply() {
+        return supply;
+    }
+
+    public void setSupply(Supply supply) {
+        this.supply = supply;
     }
 }
