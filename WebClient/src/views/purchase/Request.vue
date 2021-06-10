@@ -153,7 +153,7 @@
                       v-if="scope.row.seen"
                       size="mini"
                     ></el-input>
-                    <span v-else>{{ scope.row.count }}</span>
+                    <span v-else>{{ scope.row.count }}{{ scope.row.countUnit }}</span>
                   </el-form-item>
                 </div>
               </template>
@@ -317,7 +317,7 @@
                       v-if="scope.row.seen"
                       size="mini"
                     ></el-input>
-                    <span v-else>{{ scope.row.count }}</span>
+                    <span v-else>{{ scope.row.count }}{{ scope.row.countUnit }}</span>
                   </el-form-item>
                 </div>
               </template>
@@ -556,12 +556,14 @@ export default {
           row.materialName=event.name;
           row.specification=event.specification;
           row.supplyId=event.supplyId;
+          row.countUnit=event.unit;
         }
         else{
           row.materialNo="";
           row.materialName="";
           row.specification="";
           row.supplyId="";
+          row.countUnit="";
           event=null;
         }
     },
@@ -572,12 +574,14 @@ export default {
           row.materialName=event.name;
           row.specification=event.specification;
           row.supplyId=event.supplyId;
+          row.countUnit=event.unit;
         }
         else{
           row.materialNo="";
           row.materialName="";
           row.specification="";
           row.supplyId="";
+          row.countUnit="";
           event=null;
         }
     },

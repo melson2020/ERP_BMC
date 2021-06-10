@@ -104,7 +104,7 @@ public class IProductImpl extends AbstractService<Product> implements IProduct {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String now=sdf.format(new Date());
         List<GroupProductVo> voList=new ArrayList<>();
-        String sql ="SELECT pb.productNo,pb.productName as name,pb.specification,pb.categoryId,pc.`name` as category,pb.supplyId,pb.costPrice as salesPrice,pb.supplyName, pb.bomNo,pb.bomGenericId,CONCAT(pc.`name`,' / ',pb.productName,' / ',pb.specification,' / ',pb.supplyName,' / ',pb.description,' / ',pb.version) as alias ,''as id,''as unit,'' as remark FROM `product_bom` pb left join product_category pc on pb.categoryId=pc.categoryId ";
+        String sql ="SELECT pb.productNo,pb.productName as name,pb.specification,pb.categoryId,pc.`name` as category,pb.supplyId,pb.costPrice as salesPrice,pb.supplyName, pb.bomNo,pb.bomGenericId,CONCAT(pc.`name`,' / ',pb.productName,' / ',pb.specification,' / ',pb.supplyName,' / ',pb.description,' / ',pb.version) as alias ,''as id, pr.unit,'' as remark FROM `product_bom` pb left join product_category pc on pb.categoryId=pc.categoryId LEFT JOIN product pr on pr.productNo=pb.productNo";
         StringBuffer sBuffer = new StringBuffer(sql);
         sBuffer.append(" where pb.status='Y'");
         sBuffer.append("  and pb.expirationDate>='" + now + "'");
@@ -147,6 +147,8 @@ public class IProductImpl extends AbstractService<Product> implements IProduct {
             pr.setBomNo(obj[8] == null ? null : obj[8].toString());
             pr.setBomGenericId(obj[9] == null ? null : obj[9].toString());
             pr.setAlias(obj[10] == null ? null : obj[10].toString());
+            pr.setUnit(obj[12] == null ? null : obj[12].toString());
+            pr.setRemark(obj[13] == null ? null : obj[13].toString());
             productVos.add(pr);
         }
         return productVos;
@@ -244,6 +246,7 @@ public class IProductImpl extends AbstractService<Product> implements IProduct {
         ne.setUnit(saved.getUnit());
         ne.setFeature("");
         ne.setStorageCode(saved.getStorageCode());
+        ne.setLevel(0);
         if (checkStorageDetail != null&&checkStorageDetail.getId()!=null) {
             ne.setId(checkStorageDetail.getId());
             ne.setCount(checkStorageDetail.getCount());
