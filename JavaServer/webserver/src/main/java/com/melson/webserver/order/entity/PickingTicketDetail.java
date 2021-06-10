@@ -48,6 +48,8 @@ public class PickingTicketDetail {
      */
     private String delegateFlag;
 
+    private Integer productId;
+
     public Integer getId() {
         return id;
     }
@@ -158,5 +160,13 @@ public class PickingTicketDetail {
 
     public void setTicketId(Integer ticketId) {
         this.ticketId = ticketId;
+    }
+
+    public Integer getProductId() {
+        return productId;
+    }
+
+    public void setProductId(Integer productId) {
+        this.productId = productId;
     }
 }

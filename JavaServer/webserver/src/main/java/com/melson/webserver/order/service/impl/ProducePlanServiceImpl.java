@@ -225,6 +225,11 @@ public class ProducePlanServiceImpl implements IProducePlanService {
         return inventoryInbound;
     }
 
+    @Override
+    public int UpdatePlanAfterInBound(Integer id, String inboundNo, String state) {
+        return producePlanRepository.UpdatePlanAfterInBound(id,inboundNo,state);
+    }
+
     private ProducePlanDetail CreateProducePlanDetail(OrderFormDetail detail) {
         ProducePlanDetail producePlanDetail = new ProducePlanDetail();
         producePlanDetail.setProductId(detail.getProductId());

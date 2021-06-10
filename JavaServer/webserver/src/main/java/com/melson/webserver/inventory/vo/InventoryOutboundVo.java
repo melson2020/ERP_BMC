@@ -1,5 +1,6 @@
 package com.melson.webserver.inventory.vo;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -19,13 +20,17 @@ public class InventoryOutboundVo {
      */
     private String type;
     /**
-     * 客户
+     * 来源单号
      */
-    private String customerNo;
+    private String sourceNo;
     /**
      * 描述
      */
     private String remark;
+
+    private Date createDate;
+
+    private Integer createUser;
     /**
      * 出库明细
      */
@@ -47,13 +52,7 @@ public class InventoryOutboundVo {
         this.type = type;
     }
 
-    public String getCustomerNo() {
-        return customerNo;
-    }
 
-    public void setCustomerNo(String customerNo) {
-        this.customerNo = customerNo;
-    }
 
     public String getRemark() {
         return remark;
@@ -69,5 +68,29 @@ public class InventoryOutboundVo {
 
     public void setDetailVoList(List<InventoryOutboundDetailVo> detailVoList) {
         this.detailVoList = detailVoList;
+    }
+
+    public String getSourceNo() {
+        return sourceNo;
+    }
+
+    public void setSourceNo(String sourceNo) {
+        this.sourceNo = sourceNo;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    public Integer getCreateUser() {
+        return createUser;
+    }
+
+    public void setCreateUser(Integer createUser) {
+        this.createUser = createUser;
     }
 }

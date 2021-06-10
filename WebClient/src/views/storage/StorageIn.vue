@@ -279,7 +279,7 @@
     <el-dialog title="入库选择" :visible.sync="dialogVisible" width="60%">
       <div v-if="inventoryInboundType == 'DELEGATE'">
         <span class="colorblue fl mb40">委外单</span>
-        <el-table script border size="mini" :data="delegateInBoundList">
+        <el-table key="4" script border size="mini" :data="delegateInBoundList">
           <el-table-column prop="ticketNo" label="单号"> </el-table-column>
           <el-table-column prop="customerName" label="客户"> </el-table-column>
           <el-table-column prop="supplyName" label="供货商"> </el-table-column>
@@ -303,7 +303,7 @@
       </div>
       <div v-if="inventoryInboundType == 'PURCHASE'">
         <span class="colorblue fl mb40">采购单</span>
-        <el-table script border size="mini">
+        <el-table key="1" script border size="mini">
           <el-table-column prop="materialNo" label="编号"> </el-table-column>
           <el-table-column prop="name" label="名称"> </el-table-column>
           <el-table-column prop="specification" label="规格"> </el-table-column>
@@ -316,24 +316,30 @@
       </div>
       <div v-if="inventoryInboundType == 'OEM'">
         <span class="colorblue fl mb40">代工给料</span>
-        <el-table script border size="mini">
-          <el-table-column prop="materialNo" label="编号"> </el-table-column>
-          <el-table-column prop="name" label="名称"> </el-table-column>
-          <el-table-column prop="specification" label="规格"> </el-table-column>
-          <el-table-column prop="count" label="数量">
+       <el-table key="2" script border size="mini" :data="pickingTicketInBoundList">
+          <el-table-column prop="ticketNo" label="编号"> </el-table-column>
+          <el-table-column prop="type" label="隶属"> </el-table-column>
+          <el-table-column prop="customerMaterialFlag" label="客户给料"> </el-table-column>
+          <el-table-column label="" width="80px">
             <template slot-scope="scope">
-              <span>{{ scope.row.count }}{{ scope.row.unit }}</span>
+              <el-button
+                @click="loadInBound(scope.row, 'OEM')"
+                type="success"
+                icon="el-icon-check"
+                size="mini"
+                circle
+              ></el-button>
             </template>
           </el-table-column>
         </el-table>
       </div>
       <div v-if="inventoryInboundType == 'PRODUCE'">
         <span class="colorblue fl mb40">生产入库</span>
-        <el-table script border size="mini" :data="produceInBoundList">
+        <el-table key="3" script border size="mini" :data="produceInBoundList">
           <el-table-column prop="planNo" label="编号"> </el-table-column>
           <el-table-column prop="customerName" label="客户"> </el-table-column>
           <el-table-column prop="orderFormNo" label="订单号"> </el-table-column>
-          <el-table-column prop="" label="" width="80px">
+          <el-table-column label="" width="80px">
             <template slot-scope="scope">
               <el-button
                 @click="loadInBound(scope.row, 'PRODUCE')"
@@ -363,6 +369,7 @@ export default {
       inventoryInboundType: "",
       delegateInBoundList: [],
       produceInBoundList: [],
+      pickingTicketInBoundList: [],
 
       packageUnitList: [],
       packageUnit: "",
@@ -385,12 +392,13 @@ export default {
   methods: {
     ...mapActions({
       FindDelegateInBoundList: "FindDelegateInBoundList",
+      FindPickingTicketInBoundList: "FindPickingTicketInBoundList",
+      FindProducePlanList: "FindProducePlanList",
       CreateInventoryInBound: "CreateInventoryInBound",
       GetStorageList: "GetStorageList",
       GetPackageUnitList: "GetPackageUnitList",
       GetUnPackageUnitList: "GetUnPackageUnitList",
       SaveInventoryInBound: "SaveInventoryInBound",
-      FindProducePlanList: "FindProducePlanList",
     }),
     inventoryInBoundTypeOnClick(type) {
       this.inventoryInboundType = type;
@@ -400,6 +408,9 @@ export default {
           break;
         case "PRODUCE":
           this.findProductInBoundList();
+          break;
+        case "OEM":
+          this.findPickingInBoundList();
           break;
       }
     },
@@ -425,6 +436,22 @@ export default {
           if (res.resultStatus == 1) {
             this.dialogVisible = true;
             this.produceInBoundList = res.data;
+          } else {
+            this.$message.warning(res.message);
+          }
+        })
+        .catch((err) => {
+          this.$message.error(err.message);
+        });
+    },
+
+    findPickingInBoundList() {
+         this.dialogVisible = true;
+      this.FindPickingTicketInBoundList()
+        .then((res) => {
+          if (res.resultStatus == 1) {
+            this.dialogVisible = true;
+            this.pickingTicketInBoundList = res.data;
           } else {
             this.$message.warning(res.message);
           }

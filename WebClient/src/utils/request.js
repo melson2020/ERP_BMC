@@ -455,6 +455,15 @@ ReqGetSummaryCount(params){
   },
   InventoryInBoundSave(param){
     return service.post("/inventory/inbound/save", param)
+  },
+  GetPickingTicketInboundList(param){
+    return service.get('/inventory/inbound/pickingInBoundList', param)
+  },
+  GetPickingTicketOutboundList(param){
+    return service.get('/inventory/outbound/pickingOutBoundList', param)
+  },
+  CreateInventoryOutBound(param){
+    return service.get('/inventory/outbound/createOutBound', param)
   }
 
 

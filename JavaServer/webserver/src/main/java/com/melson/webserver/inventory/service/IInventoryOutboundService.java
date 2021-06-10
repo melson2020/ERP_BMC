@@ -38,4 +38,6 @@ public interface IInventoryOutboundService {
      * @return
      */
     InventoryOutbound save(InventoryOutboundVo vo, Integer userId);
+
+    InventoryOutboundVo GenerateOutBoundWithExistTicket(Integer ticketId,String ticketType,Integer userId) throws RuntimeException;
 }

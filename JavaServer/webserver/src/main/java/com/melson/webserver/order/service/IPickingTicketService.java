@@ -1,5 +1,7 @@
 package com.melson.webserver.order.service;
 
+import com.melson.webserver.inventory.vo.InventoryInboundVo;
+import com.melson.webserver.inventory.vo.InventoryOutboundVo;
 import com.melson.webserver.order.entity.*;
 
 import java.util.List;
@@ -25,4 +27,14 @@ public interface IPickingTicketService {
     PickingTicket FindByPlanId(Integer planId);
 
     PickingTicket FindBySourceIdAndType(Integer sourceId,String type);
+
+    List<PickingTicket> FindByCustomerMaterialFlagAndState(String flag,String state);
+
+    List<PickingTicket> FindOutBoundPickingList();
+
+    InventoryInboundVo GenerateInventoryInBound(Integer ticketId, Integer userId);
+
+    int UpdateAfterInBound(Integer id,String inboundNo,String state);
+
+    InventoryOutboundVo GenerateInventoryOutBound (Integer ticketId, Integer userId) throws RuntimeException;
 }

@@ -1,6 +1,7 @@
 package com.melson.webserver.dict.service.impl;
 
 import com.melson.base.AbstractService;
+import com.melson.base.utils.EntityUtils;
 import com.melson.webserver.dict.dao.IStorageBatchRepository;
 import com.melson.webserver.dict.dao.IStorageDetailRepository;
 import com.melson.webserver.dict.entity.StorageBatch;
@@ -10,6 +11,7 @@ import com.melson.webserver.inventory.entity.InventoryInbound;
 import com.melson.webserver.inventory.entity.InventoryInboundDetail;
 import com.melson.webserver.inventory.entity.StorageUnit;
 import com.melson.webserver.inventory.resource.InventoryStocktakingResource;
+import com.melson.webserver.inventory.vo.StorageBatchVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -101,6 +103,7 @@ public class IStorageDetailImpl extends AbstractService<StorageDetail> implement
             storageDetail.setFeature(detail.getFeature());
             storageDetail.setStorageCode(detail.getStorageCode());
             storageDetail.setProductId(detail.getProductId());
+            storageDetail.setLevel(unit.getLevel());
             return storageDetailRepository.save(storageDetail);
         } else {
             return null;
@@ -118,7 +121,7 @@ public class IStorageDetailImpl extends AbstractService<StorageDetail> implement
     }
 
     @Override
-    public List<StorageDetail> InventoryIn(InventoryInbound inbound, List<InventoryInboundDetail> details) {
+    public List<StorageDetail> InventoryIn(InventoryInbound inbound, List<InventoryInboundDetail> details) throws RuntimeException{
         Set<Integer> productIdSet=new HashSet<>();
         details.forEach(inventoryInboundDetail -> {
             if(!productIdSet.contains(inventoryInboundDetail.getMaterialId())){
@@ -137,8 +140,9 @@ public class IStorageDetailImpl extends AbstractService<StorageDetail> implement
             String key=inboundDetail.getMaterialId()+inboundDetail.getUnit();
             StorageDetail storage=storageDetailMap.get(key);
             if(storage==null){
+                String log="未找到对应的库存详细:"+inboundDetail.getMaterialName()+"，单位："+inboundDetail.getUnit();
                 logger.error("入库error: 未找到对应的库存详细：productId=[{}]和 unit [{}]",inboundDetail.getMaterialId(),inboundDetail.getUnit());
-                continue;
+                throw new RuntimeException(log);
             }
             storage.setCount(inboundDetail.getCount().add(new BigDecimal(storage.getCount())).intValue());
             storageUpdateList.add(storage);
@@ -149,6 +153,19 @@ public class IStorageDetailImpl extends AbstractService<StorageDetail> implement
         storageBatchRepository.saveAll(storageBatchList);
         //更新库存列表
         return storageDetailRepository.saveAll(storageUpdateList);
+    }
+
+
+    @Override
+    public List<StorageBatchVo> FindStorageBatchInfo(Set<String> materialNos) {
+        List<Object[]> objects=storageDetailRepository.findStorageDetailBatchInfo(materialNos);
+        List<StorageBatchVo> storageBatchVos= EntityUtils.castEntity(objects,StorageBatchVo.class,new StorageBatchVo());
+        return storageBatchVos;
+    }
+
+    @Override
+    public List<StorageDetail> FindByProductIds(Set<Integer> productIds) {
+        return storageDetailRepository.findByProductIdIn(productIds);
     }
 
     private StorageBatch CreateBatch(StorageDetail storageDetail,InventoryInbound inbound,InventoryInboundDetail inboundDetail){

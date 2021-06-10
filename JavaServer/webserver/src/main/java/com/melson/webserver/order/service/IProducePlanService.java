@@ -50,4 +50,6 @@ public interface IProducePlanService {
     List<ProducePlan> FindProducePlanRecord(Map<String,String[]> kvMap);
 
     InventoryInboundVo GenerateInventoryInBound(Integer ticketId,Integer userId);
+
+    int UpdatePlanAfterInBound(Integer id,String inboundNo,String state);
 }

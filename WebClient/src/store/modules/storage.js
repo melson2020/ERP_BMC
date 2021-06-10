@@ -80,7 +80,16 @@ const actions = {
     },
     SaveInventoryInBound({},param){
         return request.InventoryInBoundSave(param)
-    }
+    },
+    FindPickingTicketInBoundList({},param){
+        return request.GetPickingTicketInboundList(param)
+    },
+    FindPickingTicketOutBoundList({}){
+        return request.GetPickingTicketOutboundList()
+    },
+    CreateInventoryOutBound({},param){
+        return request.CreateInventoryOutBound(param)
+    },
 
 };
 

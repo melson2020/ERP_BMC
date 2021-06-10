@@ -25,6 +25,12 @@ public class StorageUnit {
 
     private String convertUnit;
 
+    private String baseUnit;
+
+    private Integer baseUnitConvertCount;
+
+    private Integer level;
+
     public Integer getId() {
         return id;
     }
@@ -64,5 +70,29 @@ public class StorageUnit {
 
     public void setConvertUnit(String convertUnit) {
         this.convertUnit = convertUnit;
+    }
+
+    public String getBaseUnit() {
+        return baseUnit;
+    }
+
+    public void setBaseUnit(String baseUnit) {
+        this.baseUnit = baseUnit;
+    }
+
+    public Integer getBaseUnitConvertCount() {
+        return baseUnitConvertCount;
+    }
+
+    public void setBaseUnitConvertCount(Integer baseUnitConvertCount) {
+        this.baseUnitConvertCount = baseUnitConvertCount;
+    }
+
+    public Integer getLevel() {
+        return level;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
     }
 }

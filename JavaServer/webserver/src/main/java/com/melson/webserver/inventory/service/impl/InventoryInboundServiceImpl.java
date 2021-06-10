@@ -11,7 +11,10 @@ import com.melson.webserver.inventory.service.IInventoryInboundService;
 import com.melson.webserver.inventory.vo.InventoryInboundDetailVo;
 import com.melson.webserver.inventory.vo.InventoryInboundVo;
 import com.melson.webserver.order.entity.DelegateTicket;
+import com.melson.webserver.order.entity.PickingTicket;
+import com.melson.webserver.order.entity.ProducePlan;
 import com.melson.webserver.order.service.IDelegateTicketService;
+import com.melson.webserver.order.service.IPickingTicketService;
 import com.melson.webserver.order.service.IProducePlanService;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -46,6 +49,8 @@ public class InventoryInboundServiceImpl implements IInventoryInboundService {
     private IStorageDetail storageDetailService;
     @Autowired
     private IProducePlanService producePlanService;
+    @Autowired
+    private IPickingTicketService pickingTicketService;
 
     @Override
     public List<InventoryInboundVo> list(Date date) {
@@ -91,10 +96,14 @@ public class InventoryInboundServiceImpl implements IInventoryInboundService {
 
     @Override
     @Transactional
-    public InventoryInbound save(InventoryInboundVo vo, Integer userId) {
+    public InventoryInbound save(InventoryInboundVo vo, Integer userId) throws RuntimeException {
         // 1.保存入库单
         InventoryInbound form = new InventoryInbound();
         BeanUtils.copyProperties(vo, form);
+        if (vo.getDetailVoList() == null || vo.getDetailVoList().isEmpty()) {
+            logger.error("入库明细为空");
+            return form;
+        }
         Date date = new Date();
         form.setCreateDate(date);
         form.setCreateUser(userId);
@@ -102,10 +111,6 @@ public class InventoryInboundServiceImpl implements IInventoryInboundService {
         form.setFormNo(NumUtil.incrementCode(InventoryInbound.CODE_PREFIX, form.getId()));
         inventoryInboundRepository.saveAndFlush(form);
         // 2.保存入库明细
-        if (vo.getDetailVoList() == null || vo.getDetailVoList().isEmpty()) {
-            logger.error("入库明细为空");
-            return form;
-        }
         List<InventoryInboundDetail> detailList = new ArrayList<>();
         vo.getDetailVoList().forEach(detailVo -> {
             InventoryInboundDetail detail = new InventoryInboundDetail();
@@ -127,6 +132,8 @@ public class InventoryInboundServiceImpl implements IInventoryInboundService {
                 return delegateTicketService.GenerateInventoryInBound(ticketId, userId);
             case InventoryInbound.TYPE_PRODUCE:
                 return producePlanService.GenerateInventoryInBound(ticketId, userId);
+            case InventoryInbound.TYPE_OEM:
+                return pickingTicketService.GenerateInventoryInBound(ticketId, userId);
         }
         return null;
     }
@@ -134,9 +141,14 @@ public class InventoryInboundServiceImpl implements IInventoryInboundService {
     private void UpdateSourceTicketState(InventoryInbound inbound) {
         switch (inbound.getType()) {
             case InventoryInbound.TYPE_DELEGATE:
-                delegateTicketService.UpdateStateById(DelegateTicket.STATE_COMPLETE, inbound.getSourceId(),inbound.getFormNo());
+                delegateTicketService.UpdateStateById(DelegateTicket.STATE_COMPLETE, inbound.getSourceId(), inbound.getFormNo());
                 break;
-            default:break;
+            case InventoryInbound.TYPE_PRODUCE:
+                producePlanService.UpdatePlanAfterInBound(inbound.getSourceId(), inbound.getFormNo(), ProducePlan.INBOUND);
+            case InventoryInbound.TYPE_OEM:
+                pickingTicketService.UpdateAfterInBound(inbound.getSourceId(), inbound.getFormNo(), PickingTicket.STATE_INBOUND);
+            default:
+                break;
         }
     }
 }
