@@ -221,14 +221,14 @@ export default {
       QueryPoObj:"QueryPoObj",
     }),
     closePopWindow(str){
-      // let params = {
-      //   state: "APPROVE"
-      // };
-      // this.GetPRList(params);
-      // let arg = {
-      //   state: "CREATE"
-      // };
-      // this.GetPOList(arg);
+      let params = {
+        state: "APPROVE"
+      };
+      this.GetPRList(params);
+      let arg = {
+        state: "CREATE"
+      };
+      this.GetPOList(arg);
       this.poTemplateVisible = false;
       this.$messageBox.confirm('打印采购单？',"提示",{
       confirmButtonText: '确定',

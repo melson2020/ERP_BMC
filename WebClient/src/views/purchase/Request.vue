@@ -21,6 +21,7 @@
         <el-table-column prop="requester" label="采购人" width="280px"> </el-table-column>
         <el-table-column prop="type" label="采购类型" width="180px"> </el-table-column>
         <el-table-column prop="state" label="状态" width="180px"> </el-table-column>
+        <el-table-column prop="pickingNo" label="领料单号" width="180px"> </el-table-column>
         <el-table-column prop="createDate" label="创建日期" width="140px"> 
           <template slot-scope="scope">
             <span>{{getFullTime(scope.row.createDate) }}</span>
