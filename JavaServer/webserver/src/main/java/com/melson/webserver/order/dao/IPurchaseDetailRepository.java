@@ -35,4 +35,6 @@ public interface IPurchaseDetailRepository extends JpaRepository<PurchaseDetail,
 
     List<PurchaseDetail> findByPoNo(String poNo);
 
+    @Query(nativeQuery = true,value = "SELECT state,count(state) as count from `purchase_detail` where state='BUYING'")
+    List<Object[]> getAllStatueCount();
 }

@@ -11,7 +11,9 @@ const state = {
     prList:[],
     poList:[],
     prDetailList:[],
-    poDetailList:[]
+    poDetailList:[],
+    prBuyingList:[],
+    prSummaries:[],
 };
 
 const actions = {
@@ -147,6 +149,17 @@ const actions = {
           Message.error(err.message)
       })
     },
+    GetPRBuyingList({ commit }, params) {
+      request.ReqPRWithSupplyList(params).then(res => {
+          if (res.resultStatus == 1) {
+              commit(types.PR_BUYING_LIST, res.data)
+          } else {
+              Message.warning(res.message)
+          }
+      }).catch(err => {
+          Message.error(err.message)
+      })
+    },
     GetPOList({ commit }, params) {
       request.ReqPOList(params).then(res => {
           if (res.resultStatus == 1) {
@@ -186,6 +199,17 @@ const actions = {
           Message.error(err.message)
       })
     },
+    GetSummaryCount({ commit }, params) {
+      request.ReqGetSummaryCount(params).then(res => {
+          if (res.resultStatus == 1) {
+              commit(types.PR_SUMMARY_LIST, res.data)
+          } else {
+              Message.warning(res.message)
+          }
+      }).catch(err => {
+          Message.error(err.message)
+      })
+    },
 };
 
 const getters = {
@@ -197,6 +221,8 @@ const getters = {
     poList:state=>state.poList,
     prDetailList:state=>state.prDetailList,
     poDetailList:state=>state.poDetailList,
+    prBuyingList:state=>state.prBuyingList,
+    prSummaries:state=>state.prSummaries,
 };
 
 const mutations = {
@@ -240,6 +266,12 @@ const mutations = {
     },
     [types.ALL_POD_LIST](state, data) {
       state.poDetailList=data;
+    },
+    [types.PR_BUYING_LIST](state, data) {
+      state.prBuyingList=data;
+    },
+    [types.PR_SUMMARY_LIST](state, data) {
+      state.prSummaries=data;
     },
 };
 

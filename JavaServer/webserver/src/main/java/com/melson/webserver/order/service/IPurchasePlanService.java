@@ -4,6 +4,7 @@ import com.melson.base.IService;
 import com.melson.base.Result;
 import com.melson.webserver.order.entity.PurchaseOrder;
 import com.melson.webserver.order.entity.PurchasePlan;
+import com.melson.webserver.order.vo.PurchaseStateSummaryVo;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
@@ -32,5 +33,7 @@ public interface IPurchasePlanService extends IService<PurchasePlan> {
     Integer RejectPurchase(PurchasePlan purchase);
 
     List<PurchasePlan> findAllPR();
+
+    List<PurchaseStateSummaryVo> GetSummaryCount();
 
 }

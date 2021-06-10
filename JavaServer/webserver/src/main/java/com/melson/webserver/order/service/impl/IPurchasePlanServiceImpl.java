@@ -5,19 +5,16 @@ import com.melson.base.Result;
 import com.melson.base.utils.NumUtil;
 import com.melson.webserver.order.dao.IPurchaseDetailRepository;
 import com.melson.webserver.order.dao.IPurchasePlanRepository;
-import com.melson.webserver.order.entity.OrderFormDetail;
-import com.melson.webserver.order.entity.PurchaseDetail;
-import com.melson.webserver.order.entity.PurchaseOrder;
-import com.melson.webserver.order.entity.PurchasePlan;
+import com.melson.webserver.order.entity.*;
 import com.melson.webserver.order.service.IPurchasePlanService;
+import com.melson.webserver.order.vo.OrderStateSummaryVo;
+import com.melson.webserver.order.vo.PurchaseStateSummaryVo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Messi on 2021/6/3
@@ -118,6 +115,30 @@ public class IPurchasePlanServiceImpl extends AbstractService<PurchasePlan> impl
     @Override
     public List<PurchasePlan> findAllPR() {
         return purchasePlanRepository.findAll();
+    }
+
+    @Override
+    public List<PurchaseStateSummaryVo> GetSummaryCount() {
+        List<PurchaseStateSummaryVo> list=new ArrayList<>();
+        list.add(new PurchaseStateSummaryVo("采购申请", 0, "/request"));
+        List<Object[]> objects = purchasePlanRepository.getAllStatueCount();
+        Map<String, Integer> stateMap = new HashMap<>();
+        for (Object[] obj : objects) {
+            String key = obj[0].toString();
+            stateMap.put(key, Integer.parseInt(obj[1].toString()));
+        }
+        List<Object[]> objects2 = purchaseDetailRepository.getAllStatueCount();
+        for (Object[] obj : objects2) {
+            String key = obj[0].toString();
+            stateMap.put(key, Integer.parseInt(obj[1].toString()));
+        }
+        Integer waitApproveCount = stateMap.get(PurchasePlan.PURCHASE_STATE_CREATE) == null ? 0 : stateMap.get(PurchasePlan.PURCHASE_STATE_CREATE);
+        list.add(new PurchaseStateSummaryVo("待批列表", waitApproveCount, "/approve"));
+        Integer waitPoCount = stateMap.get(PurchasePlan.PURCHASE_STATE_APPROVE) == null ? 0 : stateMap.get(PurchasePlan.PURCHASE_STATE_APPROVE);
+        list.add(new PurchaseStateSummaryVo("等待下单", waitPoCount, "/purchaseOrder"));
+        Integer waitDeliver = stateMap.get(PurchasePlan.PURCHASE_STATE_BUYING) == null ? 0 : stateMap.get(PurchasePlan.PURCHASE_STATE_BUYING);
+        list.add(new PurchaseStateSummaryVo("待发货", waitDeliver, "/waiting"));
+        return list;
     }
 
 

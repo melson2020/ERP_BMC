@@ -8,6 +8,7 @@ import com.melson.webserver.order.entity.PurchasePlan;
 import com.melson.webserver.order.service.IPurchaseDetailService;
 import com.melson.webserver.order.service.IPurchaseOrderService;
 import com.melson.webserver.order.service.IPurchasePlanService;
+import com.melson.webserver.order.vo.PurchaseStateSummaryVo;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -120,6 +121,16 @@ public class PurchaseResource extends BaseResource {
         return result;
     }
 
+    @RequestMapping(value = "/approvedPdWithSupplyList",method = RequestMethod.GET)
+    public Result GetAllPdWithSupplyList(HttpServletRequest request){
+        String state = request.getParameter("state");
+        List<PurchaseDetail> prDetailList=purchaseDetailService.GetAllPdWithSupplyList(state);
+        Result result=new Result();
+        result.setData(prDetailList);
+        return result;
+    }
+
+
     @RequestMapping(value = "/createdPoList",method = RequestMethod.GET)
     public Result GetAllCreatedPoList(HttpServletRequest request){
         String state = request.getParameter("state");
@@ -150,5 +161,12 @@ public class PurchaseResource extends BaseResource {
         return result;
     }
 
+    @RequestMapping(value = "/purchaseStateSummary",method = RequestMethod.GET)
+    public Result GetSummaryCount(HttpServletRequest request){
+        List<PurchaseStateSummaryVo> pos=purchasePlanService.GetSummaryCount();
+        Result result=new Result();
+        result.setData(pos);
+        return result;
+    }
 
 }

@@ -316,6 +316,9 @@ ReqRejectPurchaseWait(params){
 ReqPRList(params){
   return service.get('/purchase/approvedPurchaseDetailList',params)    //  //
 },
+ReqPRWithSupplyList(params){
+  return service.get('/purchase/approvedPdWithSupplyList',params)    //  //
+},
 ReqPOList(params){
   return service.get('/purchase/createdPoList',params)    //  //
 },
@@ -331,6 +334,11 @@ ReqPrDetailList(params){
 ReqPoDetailList(params){
   return service.get('/purchase/allPoDetailList',params)  
 },
+ReqGetSummaryCount(params){
+  return service.get('/purchase/purchaseStateSummary',params)  
+},
+
+
 
   //订单相关
   GetCreatedOrderList(param) {

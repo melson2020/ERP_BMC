@@ -1,5 +1,7 @@
 package com.melson.webserver.order.entity;
 
+import com.melson.webserver.dict.entity.Supply;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -72,6 +74,9 @@ public class PurchaseDetail {
     private BigDecimal costPrice;
 
     private String poNo;
+
+    @Transient
+    private String supply;
 
 
     public Integer getId() {
@@ -232,5 +237,13 @@ public class PurchaseDetail {
 
     public void setPoNo(String poNo) {
         this.poNo = poNo;
+    }
+
+    public String getSupply() {
+        return supply;
+    }
+
+    public void setSupply(String supply) {
+        this.supply = supply;
     }
 }

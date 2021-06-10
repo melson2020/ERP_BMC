@@ -357,6 +357,7 @@
             icon="el-icon-plus"
             plain
             class="add-PR"
+            :disabled="editpurchase.state=='BUYING' || editpurchase.state=='COMPLETE'"
             @click="editPR"
             >添加清单</el-button
           >

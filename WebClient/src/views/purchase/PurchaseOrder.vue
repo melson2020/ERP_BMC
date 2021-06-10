@@ -499,7 +499,7 @@ export default {
     height: 40vh;
 }
 .title-name {
-  font-size: 16px;
+  font-size: 13px;
   font-weight: bold;
   color: #409eff;
 }

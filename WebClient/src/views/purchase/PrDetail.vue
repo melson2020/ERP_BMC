@@ -80,44 +80,52 @@
             border
             style="width: 100%"
             size="mini"
-            :show-header="false"
           >
-            <el-table-column prop="materialName" label="物品:" width="270px" >
-              <template slot-scope="scope" >
+            <el-table-column prop="materialName" label="物品" width="250px" >
+              <!-- <template slot-scope="scope" >
                 <div class="roleinformation" >
                   <el-form-item label="物品：" prop="materialName" label-width="65px" >
                     <span>{{ scope.row.materialName }}</span>
                   </el-form-item>
                 </div>
-              </template>
+              </template> -->
             </el-table-column>
-              <el-table-column prop="specification" label="规："  width="234px" >
-                <template slot-scope="scope">
+              <el-table-column prop="specification" label="规格"  width="220px" >
+                <!-- <template slot-scope="scope">
                   <div class="purchaseInformation">
                     <el-form-item label="规" prop="specification" label-width="35px" >
                       <span>{{ scope.row.specification }}</span>
                     </el-form-item>
                   </div>
-                </template>
+                </template> -->
               </el-table-column>
-            <el-table-column prop="count" label="数:" width="120px" >
-              <template slot-scope="scope" >
+            <el-table-column prop="count" label="数量" width="80px" >
+              <!-- <template slot-scope="scope" >
                 <div class="purchaseInformation">
                   <el-form-item label="数" prop="count" label-width="35px" >
                     <span>{{ scope.row.count }}</span>
                   </el-form-item>
                 </div>
-              </template>
+              </template> -->
+            </el-table-column>
+            <el-table-column prop="state" label="状态" width="90px" >
+              <!-- <template slot-scope="scope" >
+                <div class="purchaseInformation">
+                  <el-form-item label="数" prop="count" label-width="35px" >
+                    <span>{{ scope.row.count }}</span>
+                  </el-form-item>
+                </div>
+              </template> -->
             </el-table-column>
 
             <el-table-column prop="remark" label="备注" >
-              <template slot-scope="scope" >
+              <!-- <template slot-scope="scope" >
                 <div class="purchaseInformation">
                   <el-form-item label="备注" prop="remark" label-width="45px" >
                     <span>{{ scope.row.remark }}</span>
                   </el-form-item>
                 </div>
-              </template>
+              </template> -->
             </el-table-column>
 
           </el-table>

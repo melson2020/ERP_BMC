@@ -22,9 +22,9 @@
       </el-col>
     </el-row>
     <div class="center-dashboard-div">
-      <el-row :gutter="10"
-        ><el-col :span="7"
-          ><div class="center-dashborad-card">
+      <el-row :gutter="10">
+        <el-col :span="7">
+          <div class="center-dashborad-card">
             <div class="center-dashborad-card-header">
               <div class="center-dashborad-header">
                 <span class="center-font-bold">订单汇总</span>
@@ -55,10 +55,11 @@
               </div>
             </el-scrollbar>
             <div v-else class="order-status-scrollbar">暂无数据</div>
-            <div id="chart-1" class="chart-1-div"></div></div
-        ></el-col>
-        <el-col :span="17"
-          ><div class="center-table-card">
+            <div id="chart-1" class="chart-1-div"></div>
+          </div>
+        </el-col>
+        <el-col :span="17">
+          <div class="center-table-card">
             <div class="table-header-div">
               <span class="center-font-bold">订单进行中</span>
               <div>
@@ -129,8 +130,10 @@
                   ></el-button>
                 </template>
               </el-table-column>
-            </el-table></div></el-col
-      ></el-row>
+            </el-table>
+          </div>
+        </el-col>
+      </el-row>
     </div>
     <el-dialog
       ref="detailDialog"
@@ -390,7 +393,10 @@ export default {
     },
     navigationTo(path) {
       if (path != "") {
-        this.$router.push({ path: "/main/orderManagement" + path,query:{type: 'fromCenter'} });
+        this.$router.push({
+          path: "/main/orderManagement" + path,
+          query: { type: "fromCenter" },
+        });
       }
     },
 
@@ -410,11 +416,11 @@ export default {
       }
     },
 
-    Init: function () {
+    Init: function() {
       //父级div大小改变，图表跟着变化，也可以写成 Init(){}
       window.addEventListener(
         "resize",
-        function () {
+        function() {
           this.orderChart.resize();
         }.bind(this)
       );
