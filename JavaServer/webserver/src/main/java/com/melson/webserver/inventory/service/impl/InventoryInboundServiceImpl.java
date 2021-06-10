@@ -13,9 +13,7 @@ import com.melson.webserver.inventory.vo.InventoryInboundVo;
 import com.melson.webserver.order.entity.DelegateTicket;
 import com.melson.webserver.order.entity.PickingTicket;
 import com.melson.webserver.order.entity.ProducePlan;
-import com.melson.webserver.order.service.IDelegateTicketService;
-import com.melson.webserver.order.service.IPickingTicketService;
-import com.melson.webserver.order.service.IProducePlanService;
+import com.melson.webserver.order.service.*;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,6 +49,8 @@ public class InventoryInboundServiceImpl implements IInventoryInboundService {
     private IProducePlanService producePlanService;
     @Autowired
     private IPickingTicketService pickingTicketService;
+   @Autowired
+   private IPurchaseOrderService purchaseOrderService;
 
     @Override
     public List<InventoryInboundVo> list(Date date) {
@@ -134,6 +134,8 @@ public class InventoryInboundServiceImpl implements IInventoryInboundService {
                 return producePlanService.GenerateInventoryInBound(ticketId, userId);
             case InventoryInbound.TYPE_OEM:
                 return pickingTicketService.GenerateInventoryInBound(ticketId, userId);
+            case InventoryInbound.TYPE_PURCHASE:
+                return purchaseOrderService.GenerateInventoryInBound(ticketId, userId);
         }
         return null;
     }
@@ -147,6 +149,9 @@ public class InventoryInboundServiceImpl implements IInventoryInboundService {
                 producePlanService.UpdatePlanAfterInBound(inbound.getSourceId(), inbound.getFormNo(), ProducePlan.INBOUND);
             case InventoryInbound.TYPE_OEM:
                 pickingTicketService.UpdateAfterInBound(inbound.getSourceId(), inbound.getFormNo(), PickingTicket.STATE_INBOUND);
+            case InventoryInbound.TYPE_PURCHASE:
+                 //TO DO 更新purchase order, purchase plan 状态
+                break;
             default:
                 break;
         }

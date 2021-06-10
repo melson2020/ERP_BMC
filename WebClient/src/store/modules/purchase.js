@@ -158,6 +158,10 @@ const actions = {
           Message.error(err.message)
       })
     },
+
+    GetPurchaseOrderListByState({},params){
+      return request.ReqPOList(params);
+    },
     SavePoList({ },po){
       return request.ReqSavePoList(po);
     },

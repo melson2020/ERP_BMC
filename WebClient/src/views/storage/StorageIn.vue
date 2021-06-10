@@ -234,7 +234,7 @@
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column prop="count" label="数量">
+              <el-table-column prop="count" label="仓库">
                 <template slot-scope="scope">
                   <el-select
                     v-model="scope.row.storageCode"
@@ -295,6 +295,7 @@
                 type="success"
                 icon="el-icon-check"
                 size="mini"
+                plain
                 circle
               ></el-button>
             </template>
@@ -303,23 +304,41 @@
       </div>
       <div v-if="inventoryInboundType == 'PURCHASE'">
         <span class="colorblue fl mb40">采购单</span>
-        <el-table key="1" script border size="mini">
-          <el-table-column prop="materialNo" label="编号"> </el-table-column>
-          <el-table-column prop="name" label="名称"> </el-table-column>
-          <el-table-column prop="specification" label="规格"> </el-table-column>
-          <el-table-column prop="count" label="数量">
+        <el-table key="1" script border size="mini" :data="purchaseInBoundList">
+          <el-table-column prop="poNo" label="编号"> </el-table-column>
+          <el-table-column prop="createDate" label="创建日期"> 
+               <template slot-scope="scope">
+              <span>{{ getFullDate(scope.row.createDate) }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="amount" label="总价"> </el-table-column>
+          <el-table-column label="" width="80px">
             <template slot-scope="scope">
-              <span>{{ scope.row.count }}{{ scope.row.unit }}</span>
+              <el-button
+                @click="loadInBound(scope.row, 'PURCHASE')"
+                type="success"
+                icon="el-icon-check"
+                size="mini"
+                plain
+                circle
+              ></el-button>
             </template>
           </el-table-column>
         </el-table>
       </div>
       <div v-if="inventoryInboundType == 'OEM'">
         <span class="colorblue fl mb40">代工给料</span>
-       <el-table key="2" script border size="mini" :data="pickingTicketInBoundList">
+        <el-table
+          key="2"
+          script
+          border
+          size="mini"
+          :data="pickingTicketInBoundList"
+        >
           <el-table-column prop="ticketNo" label="编号"> </el-table-column>
           <el-table-column prop="type" label="隶属"> </el-table-column>
-          <el-table-column prop="customerMaterialFlag" label="客户给料"> </el-table-column>
+          <el-table-column prop="customerMaterialFlag" label="客户给料">
+          </el-table-column>
           <el-table-column label="" width="80px">
             <template slot-scope="scope">
               <el-button
@@ -327,6 +346,7 @@
                 type="success"
                 icon="el-icon-check"
                 size="mini"
+                plain
                 circle
               ></el-button>
             </template>
@@ -346,6 +366,7 @@
                 type="success"
                 icon="el-icon-check"
                 size="mini"
+                plain
                 circle
               ></el-button>
             </template>
@@ -370,6 +391,7 @@ export default {
       delegateInBoundList: [],
       produceInBoundList: [],
       pickingTicketInBoundList: [],
+      purchaseInBoundList: [],
 
       packageUnitList: [],
       packageUnit: "",
@@ -399,6 +421,7 @@ export default {
       GetPackageUnitList: "GetPackageUnitList",
       GetUnPackageUnitList: "GetUnPackageUnitList",
       SaveInventoryInBound: "SaveInventoryInBound",
+      GetPurchaseOrderListByState: "GetPurchaseOrderListByState",
     }),
     inventoryInBoundTypeOnClick(type) {
       this.inventoryInboundType = type;
@@ -411,6 +434,9 @@ export default {
           break;
         case "OEM":
           this.findPickingInBoundList();
+          break;
+        case "PURCHASE":
+          this.findPurchaseInBoundList();
           break;
       }
     },
@@ -446,12 +472,26 @@ export default {
     },
 
     findPickingInBoundList() {
-         this.dialogVisible = true;
       this.FindPickingTicketInBoundList()
         .then((res) => {
           if (res.resultStatus == 1) {
             this.dialogVisible = true;
             this.pickingTicketInBoundList = res.data;
+          } else {
+            this.$message.warning(res.message);
+          }
+        })
+        .catch((err) => {
+          this.$message.error(err.message);
+        });
+    },
+
+    findPurchaseInBoundList() {
+      this.GetPurchaseOrderListByState({ state: "CREATE" })
+        .then((res) => {
+          if (res.resultStatus == 1) {
+            this.dialogVisible = true;
+            this.purchaseInBoundList = res.data;
           } else {
             this.$message.warning(res.message);
           }

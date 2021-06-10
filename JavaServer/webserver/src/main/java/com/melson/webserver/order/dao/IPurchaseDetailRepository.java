@@ -35,4 +35,7 @@ public interface IPurchaseDetailRepository extends JpaRepository<PurchaseDetail,
 
     List<PurchaseDetail> findByPoNo(String poNo);
 
+    @Query(nativeQuery = true,value = "SELECT pd.materialNo,pd.materialName,pd.specification,pd.count, p.salesPrice as latestPrice,pd.countUnit as unit,p.storageCode,p.id as materialId FROM `purchase_detail` pd RIGHT JOIN product p on pd.materialNo=p.productNo WHERE pd.poNo= ?1")
+    List<Object[]> findInboundListByPlanNo(String planNo);
+
 }

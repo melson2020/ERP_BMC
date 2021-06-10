@@ -2,15 +2,21 @@ package com.melson.webserver.order.service.impl;
 
 import com.melson.base.AbstractService;
 import com.melson.base.Result;
+import com.melson.base.utils.DateUtil;
 import com.melson.base.utils.EntityManagerUtil;
+import com.melson.base.utils.EntityUtils;
 import com.melson.webserver.dict.dao.IProductRepository;
 import com.melson.webserver.dict.dao.ISupplyRepository;
 import com.melson.webserver.dict.entity.Supply;
+import com.melson.webserver.inventory.entity.InventoryInbound;
+import com.melson.webserver.inventory.vo.InventoryInboundDetailVo;
+import com.melson.webserver.inventory.vo.InventoryInboundVo;
 import com.melson.webserver.order.dao.IPurchaseDetailRepository;
 import com.melson.webserver.order.dao.IPurchaseOrderRepository;
 import com.melson.webserver.order.dao.IPurchasePlanRepository;
 import com.melson.webserver.order.entity.PurchaseDetail;
 import com.melson.webserver.order.entity.PurchaseOrder;
+import com.melson.webserver.order.entity.PurchasePlan;
 import com.melson.webserver.order.service.IPurchaseOrderService;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
@@ -116,5 +122,22 @@ public class IPurchaseOrderServiceImpl extends AbstractService<PurchaseOrder> im
         List<Object[]> objects=purchaseOrderRepository.findAllWithCreate();
         List<PurchaseOrder> purchaseOrders=GeneratedList(objects);
         return purchaseOrders;
+    }
+
+    @Override
+    public InventoryInboundVo GenerateInventoryInBound(Integer ticketId, Integer userId) {
+        PurchaseOrder purchaseOrder = purchaseOrderRepository.findById(ticketId).orElse(null);
+        List<Object[]> objects = purchaseDetailRepository.findInboundListByPlanNo(purchaseOrder.getPoNo());
+        List<InventoryInboundDetailVo> detailVos = EntityUtils.castEntity(objects, InventoryInboundDetailVo.class, new InventoryInboundDetailVo());
+        InventoryInboundVo inventoryInbound = new InventoryInboundVo();
+        inventoryInbound.setFormNo(InventoryInbound.CODE_PREFIX + System.currentTimeMillis());
+        inventoryInbound.setBatchNo(DateUtil.timeShortFormat(new Date()));
+        inventoryInbound.setType(InventoryInbound.TYPE_PURCHASE);
+        inventoryInbound.setSourceNo(purchaseOrder.getPoNo());
+        inventoryInbound.setSourceId(ticketId);
+        inventoryInbound.setCreateDate(new Date());
+        inventoryInbound.setCreateUser(userId);
+        inventoryInbound.setDetailVoList(detailVos);
+        return inventoryInbound;
     }
 }
