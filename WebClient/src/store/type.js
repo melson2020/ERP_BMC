@@ -60,4 +60,5 @@ export const PO_WAIT_LIST="PO_WAIT_LIST"
 export const PO_CREATE_LIST="PO_CREATE_LIST"
 export const ALL_PRD_LIST="ALL_PRD_LIST"
 export const ALL_POD_LIST="ALL_POD_LIST"
-
+export const PR_BUYING_LIST="PR_BUYING_LIST"
+export const PR_SUMMARY_LIST="PR_SUMMARY_LIST"

@@ -25,4 +25,6 @@ public interface IPurchaseDetailService {
     List<PurchaseDetail> GetAllApprovedPurchaseDetailList(String state);
 
     Integer DeletePurchase(PurchaseDetail pd);
+
+    List<PurchaseDetail> GetAllPdWithSupplyList(String state);
 }
