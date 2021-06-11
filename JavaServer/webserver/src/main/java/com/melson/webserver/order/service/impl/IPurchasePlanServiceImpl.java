@@ -47,6 +47,13 @@ public class IPurchasePlanServiceImpl extends AbstractService<PurchasePlan> impl
         PurchasePlan saved=purchasePlanRepository.save(pr);
         Integer length=8;
         pr.setPlanNo(NumUtil.incrementCode(pr.getId(), PurchasePlan.PURCHASE_NO_CHAR,length));
+        PickingTicket pt=new PickingTicket();                 //创建picking_ticket
+        pt.setTicketNo("L"+new Date().getTime());
+        pt.setSourceNo(pr.getPlanNo());
+        pt.setType(PurchasePlan.PURCHASE_TYPE_INDIRECT);
+        pt.setCreateDate(new Date());
+        pt.setState(PickingTicket.STATE_CREATE);
+        PickingTicket savedPT=pickingTicketRepository.save(pt);
         for(PurchaseDetail detail:pr.getPurchaseDetailList()){
             detail.setType(pr.getType());
             detail.setCreateDate(pr.getCreateDate());
@@ -55,16 +62,10 @@ public class IPurchasePlanServiceImpl extends AbstractService<PurchasePlan> impl
             detail.setCreateBy(pr.getCreateBy());
             detail.setRequester(pr.getRequester());
             detail.setRequesterId(pr.getRequesterId());
+            detail.setPickingTicketId(savedPT.getId());
         }
         List<PurchaseDetail> detailList=pr.getPurchaseDetailList();
         purchaseDetailRepository.saveAll(detailList);
-        PickingTicket pt=new PickingTicket();                 //创建picking_ticket
-        pt.setTicketNo("L"+new Date().getTime());
-        pt.setSourceNo(pr.getPlanNo());
-        pt.setType(PurchasePlan.PURCHASE_TYPE_INDIRECT);
-        pt.setCreateDate(new Date());
-        pt.setState(PickingTicket.STATE_CREATE);
-        pickingTicketRepository.save(pt);
         pr.setPickingNo(pt.getTicketNo());
         purchasePlanRepository.save(pr);
         result.setData(saved);
@@ -91,7 +92,9 @@ public class IPurchasePlanServiceImpl extends AbstractService<PurchasePlan> impl
     @Transactional
     public Integer DeletePurchase(PurchasePlan purchase) {
         purchaseDetailRepository.deleteByPrNo(purchase.getPlanNo());     //删除PR 详细表
+//        pickingTicketRepository.deleteBy
         return purchasePlanRepository.deletePrById(purchase.getId());    //删除PR
+
     }
 
     @Override

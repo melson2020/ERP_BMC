@@ -104,7 +104,7 @@ public class IProductImpl extends AbstractService<Product> implements IProduct {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String now=sdf.format(new Date());
         List<GroupProductVo> voList=new ArrayList<>();
-        String sql ="SELECT pb.productNo,pb.productName as name,pb.specification,pb.categoryId,pc.`name` as category,pb.supplyId,pb.costPrice as salesPrice,pb.supplyName, pb.bomNo,pb.bomGenericId,CONCAT(pc.`name`,' / ',pb.productName,' / ',pb.specification,' / ',pb.supplyName,' / ',pb.description,' / ',pb.version) as alias ,''as id, pr.unit,'' as remark FROM `product_bom` pb left join product_category pc on pb.categoryId=pc.categoryId LEFT JOIN product pr on pr.productNo=pb.productNo";
+        String sql ="SELECT pb.productNo,pb.productName as name,pb.specification,pb.categoryId,pc.`name` as category,pb.supplyId,pb.costPrice as salesPrice,pb.supplyName, pb.bomNo,pb.bomGenericId,CONCAT(pc.`name`,' / ',pb.productName,' / ',pb.specification,' / ',pb.supplyName,' / ',pb.description,' / ',pb.version) as alias ,pr.id as id, pr.unit,'' as remark FROM `product_bom` pb left join product_category pc on pb.categoryId=pc.categoryId LEFT JOIN product pr on pr.productNo=pb.productNo";
         StringBuffer sBuffer = new StringBuffer(sql);
         sBuffer.append(" where pb.status='Y'");
         sBuffer.append("  and pb.expirationDate>='" + now + "'");
@@ -116,7 +116,7 @@ public class IProductImpl extends AbstractService<Product> implements IProduct {
         GroupProductVo gpvo1=new GroupProductVo();
         gpvo1.setGroupName("成品/半成品");
         gpvo1.setList(productVos1);
-        String sql2 ="SELECT pr.productNo,pr.name,pr.specification,pr.categoryId,pc.`name` as category,pr.supplyId,pr.salesPrice,su.`name` as supplyName,''as bomNo,'' as bomGenericId,CONCAT(pc.`name`,' / ',pr.`name`,' / ',pr.specification,' / ',su.`name`) as alias ,''as id,''as unit,'' as remark from product pr left JOIN supply su on pr.supplyId=su.id left JOIN product_category pc on pr.categoryId=pc.categoryId left JOIN (SELECT productNo from product_bom) pb on pr.productNo=pb.productNo WHERE pb.productNo is null and pr.categoryId<>'CAT00000002' and pr.categoryId<>'CAT00000003'";
+        String sql2 ="SELECT pr.productNo,pr.name,pr.specification,pr.categoryId,pc.`name` as category,pr.supplyId,pr.salesPrice,su.`name` as supplyName,''as bomNo,'' as bomGenericId,CONCAT(pc.`name`,' / ',pr.`name`,' / ',pr.specification,' / ',su.`name`) as alias ,pr.id as id, pr.unit as unit,'' as remark from product pr left JOIN supply su on pr.supplyId=su.id left JOIN product_category pc on pr.categoryId=pc.categoryId left JOIN (SELECT productNo from product_bom) pb on pr.productNo=pb.productNo WHERE pb.productNo is null and pr.categoryId<>'CAT00000002' and pr.categoryId<>'CAT00000003'";
         StringBuffer sBuffer2 = new StringBuffer(sql2);
         sBuffer2.append("  and pr.expireDate>='" + now + "'");
         if (!org.springframework.util.StringUtils.isEmpty(productNo)) {
@@ -147,6 +147,7 @@ public class IProductImpl extends AbstractService<Product> implements IProduct {
             pr.setBomNo(obj[8] == null ? null : obj[8].toString());
             pr.setBomGenericId(obj[9] == null ? null : obj[9].toString());
             pr.setAlias(obj[10] == null ? null : obj[10].toString());
+            pr.setId(obj[11] == null ? null : new Integer((Integer) obj[11]));
             pr.setUnit(obj[12] == null ? null : obj[12].toString());
             pr.setRemark(obj[13] == null ? null : obj[13].toString());
             productVos.add(pr);

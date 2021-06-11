@@ -50,4 +50,7 @@ public interface IPurchaseDetailRepository extends JpaRepository<PurchaseDetail,
 
     @Query(nativeQuery = true,value = "SELECT state FROM `purchase_detail` where purchasePlanNo=?1")
     List<Object[]> findObjectByPurchasePlanNo(String prNo);
+
+    @Query(nativeQuery = true,value = "SELECT `type`,materialNo, materialName,specification,remark,count,countUnit,purchasePlanNo,createEmployeeNo,createDate,'CREATE' as state,'' as delegateFlag,pickingTicketId as ticketId,productId from purchase_detail WHERE purchasePlanNo=?1")
+    List<Object[]> findPickingDetail(String prNo);
 }
