@@ -37,4 +37,6 @@ public interface IStorageDetail extends IService<StorageDetail> {
     List<StorageBatchVo> FindStorageBatchInfo(Set<String> materialNos);
 
     List<StorageDetail> FindByProductIds(Set<Integer> productIds);
+
+    List<StorageDetail> FindByProductId(Integer productId);
 }

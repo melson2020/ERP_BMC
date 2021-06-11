@@ -1,6 +1,8 @@
 package com.melson.webserver.inventory.service.impl;
 
 import com.melson.base.utils.NumUtil;
+import com.melson.webserver.dict.dao.IStorageBatchRepository;
+import com.melson.webserver.dict.entity.StorageBatch;
 import com.melson.webserver.inventory.dao.IInventoryOutboundDetailRepository;
 import com.melson.webserver.inventory.dao.IInventoryOutboundRepository;
 import com.melson.webserver.inventory.entity.InventoryInbound;
@@ -38,6 +40,8 @@ public class InventoryOutboundServiceImpl implements IInventoryOutboundService {
     private IInventoryOutboundDetailRepository inventoryOutboundDetailRepository;
     @Autowired
     private IPickingTicketService pickingTicketService;
+    @Autowired
+    private IStorageBatchRepository storageBatchRepository;
 
     @Override
     public List<InventoryOutboundVo> list(Date date) {
@@ -120,5 +124,31 @@ public class InventoryOutboundServiceImpl implements IInventoryOutboundService {
 
         }
         return null;
+    }
+
+    @Override
+    public List<InventoryOutboundDetailVo> GenerateDetailVoBatchInfo(InventoryOutboundDetailVo vo) {
+        List<StorageBatch> storageBatchList=storageBatchRepository.findByMaterialIdAndFinishedAndCountUnitOrderByBatchNo(vo.getMaterialId(),0,vo.getOutCountUnit());
+        List<InventoryOutboundDetailVo> voList=new ArrayList<>();
+        Integer count=0;
+        for(StorageBatch storageBatch:storageBatchList){
+           count+=storageBatch.getCount();
+            InventoryOutboundDetailVo detailVo=new InventoryOutboundDetailVo();
+            BeanUtils.copyProperties(vo,detailVo);
+            detailVo.setBatchNo(storageBatch.getBatchNo());
+           if(count>vo.getOutCount()){
+              detailVo.setOutCount(vo.getOutCount()-count+storageBatch.getCount());
+              voList.add(detailVo);
+              break;
+           }else if(count==vo.getOutCount()){
+               detailVo.setOutCount(storageBatch.getCount());
+               voList.add(detailVo);
+               break;
+           }else {
+               detailVo.setOutCount(storageBatch.getCount());
+               voList.add(detailVo);
+           }
+        }
+        return voList;
     }
 }

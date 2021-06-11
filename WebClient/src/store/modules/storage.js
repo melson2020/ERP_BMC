@@ -90,6 +90,12 @@ const actions = {
     CreateInventoryOutBound({},param){
         return request.CreateInventoryOutBound(param)
     },
+    FindStorageDetaiListByProductId({},param){
+        return request.GetStorageDetailsByProductId(param)
+    },
+    CreateOutBoundBatchInfo({},param){
+        return request.CreateOutBoundBatchInfo(param)
+    }
 
 };
 

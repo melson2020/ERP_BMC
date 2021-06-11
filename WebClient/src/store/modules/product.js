@@ -65,6 +65,10 @@ const actions = {
         return request.ReqQueryProductBomDetailObj(productBom);
     },
 
+    QueryProductListBySearchValue({},params){
+        return request.QueryProductListBySearchValue(params)
+    },
+
     
     GetCategoryList({ commit }) {
         request.ReqCategoryList().then(res => {

@@ -74,7 +74,7 @@
                 <el-input
                   disabled
                   v-model="editInventoryInbound.sourceNo"
-                  placeholder="入库类型为其他时，不需要填写"
+                  placeholder="系统自动生成"
                 ></el-input> </el-form-item
             ></el-col>
             <el-col :span="12">
@@ -82,6 +82,7 @@
                 <el-select
                   v-model="editInventoryInbound.type"
                   placeholder="选择类型"
+                  @change="typeChanged"
                   class="w100"
                 >
                   <el-option label="采购入库" value="PURCHASE" disabled>
@@ -116,12 +117,40 @@
               <el-table-column prop="materialNo" label="编号">
               </el-table-column>
               <el-table-column prop="materialName" label="名称">
+                <template slot-scope="scope">
+                  <el-select
+                    v-if="scope.row.seen"
+                    v-model="scope.row.materialId"
+                    size="mini"
+                    remote
+                    filterable
+                    reserve-keyword
+                    placeholder="请输入名称"
+                    @change="onSelect($event, scope.row)"
+                    :remote-method="remoteMethod"
+                  >
+                    <el-option
+                      v-for="product in productList"
+                      :key="product.id"
+                      :label="product.name"
+                      :value="product.id"
+                    >
+                    </el-option>
+                  </el-select>
+                  <span v-else>{{ scope.row.materialName }}</span>
+                </template>
               </el-table-column>
               <el-table-column prop="specification" label="规格">
               </el-table-column>
               <el-table-column prop="count" label="数量">
                 <template slot-scope="scope">
-                  <div class="flex justs">
+                  <el-input
+                    size="mini"
+                    v-if="scope.row.seen"
+                    v-model="scope.row.count"
+                    placeholder="输入数量"
+                  ></el-input>
+                  <div v-else class="flex justs">
                     <span>{{ scope.row.count }}{{ scope.row.unit }}</span>
                     <div>
                       <el-popover
@@ -239,6 +268,7 @@
                   <el-select
                     v-model="scope.row.storageCode"
                     placeholder="选择仓库"
+                    disabled
                     size="mini"
                   >
                     <el-option
@@ -250,11 +280,42 @@
                   </el-select>
                 </template>
               </el-table-column>
+              <el-table-column prop="count" label="操作" width="120px">
+                <template slot-scope="scope">
+                  <el-button
+                    type="primary"
+                    v-if="!scope.row.seen"
+                    size="mini"
+                    icon="el-icon-edit"
+                    @click="editOnClick(scope.row)"
+                    circle
+                    :disabled="editDisable"
+                  ></el-button>
+                  <el-button
+                    type="success"
+                    icon="el-icon-check"
+                    v-if="scope.row.seen"
+                    size="mini"
+                    :disabled="editDisable"
+                    @click="addConfirmOnClick(scope.row)"
+                    circle
+                  ></el-button>
+                  <el-button
+                    type="danger"
+                    icon="el-icon-delete"
+                    size="mini"
+                    :disabled="editDisable"
+                    @click="removeOnClick(scope.$index)"
+                    circle
+                  ></el-button>
+                </template>
+              </el-table-column>
             </el-table>
             <el-button
               icon="el-icon-plus"
               v-if="editInventoryInbound.type == 'OTHERS'"
               plain
+              @click="addInboundDetail"
               class="add-storage-in-deail mt40"
               >添加详细</el-button
             >
@@ -306,8 +367,8 @@
         <span class="colorblue fl mb40">采购单</span>
         <el-table key="1" script border size="mini" :data="purchaseInBoundList">
           <el-table-column prop="poNo" label="编号"> </el-table-column>
-          <el-table-column prop="createDate" label="创建日期"> 
-               <template slot-scope="scope">
+          <el-table-column prop="createDate" label="创建日期">
+            <template slot-scope="scope">
               <span>{{ getFullDate(scope.row.createDate) }}</span>
             </template>
           </el-table-column>
@@ -382,6 +443,7 @@ import { mapActions } from "vuex";
 export default {
   data() {
     return {
+      editDisable: true,
       editInventoryInbound: {
         detailVoList: [],
         type: "",
@@ -397,6 +459,7 @@ export default {
       packageUnit: "",
       packageMaxCount: 0,
       packageCount: 0,
+      productList: [],
 
       unPackageUnitList: [],
       unPackageUnit: "",
@@ -422,6 +485,7 @@ export default {
       GetUnPackageUnitList: "GetUnPackageUnitList",
       SaveInventoryInBound: "SaveInventoryInBound",
       GetPurchaseOrderListByState: "GetPurchaseOrderListByState",
+      QueryProductListBySearchValue: "QueryProductListBySearchValue",
     }),
     inventoryInBoundTypeOnClick(type) {
       this.inventoryInboundType = type;
@@ -507,6 +571,7 @@ export default {
           if (res.resultStatus == 1) {
             this.editInventoryInbound = res.data;
             this.dialogVisible = false;
+            this.editDisable = true;
           } else {
             this.$message.warning(res.message);
           }
@@ -684,6 +749,31 @@ export default {
       this.$refs[`unPackagePopover-${index}`].doClose();
     },
 
+    typeChanged(type) {
+      if (type == "OTHERS") {
+        this.$refs["boundInForm"].resetFields();
+        this.editInventoryInbound.createDate = new Date();
+        this.editInventoryInbound.createUser = this.userInfo.id;
+        this.editInventoryInbound.type = "OTHERS";
+        this.editDisable = false;
+      }
+    },
+
+    addInboundDetail() {
+      var addObj = {
+        materialNo: "",
+        materialName: "",
+        specification: "",
+        count: "",
+        latestPrice: "",
+        unit: "",
+        storageCode: "",
+        materialId: "",
+        seen: true,
+      };
+      this.editInventoryInbound.detailVoList.push(addObj);
+    },
+
     getFullDate(time) {
       if (time) {
         return new Date(time).format("yyyy-MM-dd");
@@ -693,29 +783,79 @@ export default {
     },
 
     submitOnClick(formName) {
-      this.$refs[formName]
-        .validate((valid) => {
+      this.$refs[formName].validate((valid) => {
+        if (
+          this.editInventoryInbound.detailVoList.filter((item) => {
+            return item.seen;
+          }).length > 0
+        ) {
+          this.$message.warning("请完善入库信息");
+        } else {
           if (valid) {
-            this.SaveInventoryInBound(this.editInventoryInbound).then((res) => {
-              if (res.resultStatus == 1) {
-                this.$message.success("入库成功");
-                this.$refs[formName].resetFields();
-              } else {
-                this.$message.warning(res.message);
-              }
-            });
+            this.SaveInventoryInBound(this.editInventoryInbound)
+              .then((res) => {
+                if (res.resultStatus == 1) {
+                  this.$message.success("入库成功");
+                  this.$refs[formName].resetFields();
+                } else {
+                  this.$message.warning(res.message);
+                }
+              })
+              .catch((err) => {
+                this.$message.error(err.message);
+              });
           }
-        })
-        .catch((err) => {
-          this.$message.error(err.message);
-        });
+        }
+      });
     },
     cancelOnClick(formName) {
       this.$refs[formName].resetFields();
     },
+
+    remoteMethod(query) {
+      if (query !== "") {
+        this.QueryProductListBySearchValue({
+          searchValue: query,
+        })
+          .then((res) => {
+            if (res.resultStatus == 1) {
+              this.productList = res.data;
+            }
+          })
+          .catch(() => {});
+      } else {
+        return;
+      }
+    },
+    onSelect(productId, row) {
+      let item = this.productList.find((p) => {
+        return p.id == productId;
+      });
+      row.materialNo = item.productNo;
+      row.materialName = item.name;
+      (row.specification = item.specification), (row.count = 0);
+      row.latestPrice = item.salesPrice;
+      row.unit = item.unit;
+      row.storageCode = item.storageCode;
+      row.materialId = item.id;
+    },
+
+    removeOnClick(index) {
+      this.editInventoryInbound.detailVoList.splice(index, 1);
+    },
+    addConfirmOnClick(row) {
+      if (row.materialId == "" || row.count <= 0) {
+        this.$message.warning("请完善入库信息");
+        return;
+      }
+      row.seen = false;
+    },
+    editOnClick(row) {
+      row.seen = true;
+    },
   },
   computed: {
-    ...mapGetters(["storageList"]),
+    ...mapGetters(["storageList", "userInfo"]),
   },
 
   mounted() {

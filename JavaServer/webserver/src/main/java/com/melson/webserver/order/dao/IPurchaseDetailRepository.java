@@ -37,7 +37,7 @@ public interface IPurchaseDetailRepository extends JpaRepository<PurchaseDetail,
 
     @Query(nativeQuery = true,value = "SELECT pd.materialNo,pd.materialName,pd.specification,pd.count, p.salesPrice as latestPrice,pd.countUnit as unit,p.storageCode,p.id as materialId FROM `purchase_detail` pd RIGHT JOIN product p on pd.materialNo=p.productNo WHERE pd.poNo= ?1")
     List<Object[]> findInboundListByPlanNo(String planNo);
-    
+
     @Query(nativeQuery = true,value = "SELECT state,count(state) as count from `purchase_detail` where state='BUYING'")
     List<Object[]> getAllStatueCount();
 

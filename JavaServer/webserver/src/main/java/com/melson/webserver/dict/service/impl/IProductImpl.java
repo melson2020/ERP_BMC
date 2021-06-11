@@ -299,6 +299,8 @@ public class IProductImpl extends AbstractService<Product> implements IProduct {
         return product;
     }
 
-
-
+    @Override
+    public List<Product> QueryBySearchValue(String searchValue) {
+        return productRepository.findByNameLikeOrProductNoLikeOrSpecificationLike("%"+searchValue+"%","%"+searchValue+"%","%"+searchValue+"%");
+    }
 }
