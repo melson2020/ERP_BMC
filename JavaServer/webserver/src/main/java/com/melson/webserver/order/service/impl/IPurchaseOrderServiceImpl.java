@@ -172,8 +172,10 @@ public class IPurchaseOrderServiceImpl extends AbstractService<PurchaseOrder> im
             {
                 purchasePlanRepository.UpdateState(state,prNo);
                 List<Object[]> pickObjects= purchaseDetailRepository.findPickingDetail(prNo);
-                List<PickingTicketDetail> pickingTicketDetails=generateList(pickObjects);
-                pickingTicketDetailRepository.saveAll(pickingTicketDetails);
+                if(pickObjects.size()>0) {
+                    List<PickingTicketDetail> pickingTicketDetails = generateList(pickObjects);
+                    pickingTicketDetailRepository.saveAll(pickingTicketDetails);
+                }
             }
         }
     }

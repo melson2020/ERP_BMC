@@ -64,17 +64,9 @@ public class PurchaseDetailServiceImpl implements IPurchaseDetailService {
         PurchasePlan saved=purchasePlanRepository.save(pr);
         Integer length=8;
         pr.setPlanNo(NumUtil.incrementCode(pr.getId(), PurchasePlan.PURCHASE_NO_CHAR,length));
-        PickingTicket pt=new PickingTicket();                 //创建picking_ticket
-        pt.setTicketNo("L"+new Date().getTime());
-        pt.setSourceNo(pr.getPlanNo());
-        pt.setType(PurchasePlan.PURCHASE_TYPE_INDIRECT);
-        pt.setCreateDate(new Date());
-        pt.setState(PickingTicket.STATE_CREATE);
-        PickingTicket savedPT=pickingTicketRepository.save(pt);
-        pr.setPickingNo(pt.getTicketNo());
         purchasePlanRepository.save(pr);
         for(OrderFormDetail detail:detailList){
-            orderPurchaseList.add(CreatePurchase(detail,pr,savedPT));
+            orderPurchaseList.add(CreatePurchase(detail,pr));
         }
         return   purchaseDetailRepository.saveAll(orderPurchaseList);
     }
@@ -127,7 +119,7 @@ public class PurchaseDetailServiceImpl implements IPurchaseDetailService {
         return details;
     }
 
-    private PurchaseDetail CreatePurchase(OrderFormDetail formDetail, PurchasePlan pr, PickingTicket savedPT){
+    private PurchaseDetail CreatePurchase(OrderFormDetail formDetail, PurchasePlan pr){
         PurchaseDetail purchaseDetail=new PurchaseDetail();
         purchaseDetail.setType(pr.getType());
         purchaseDetail.setSourceId(formDetail.getOrderFormId());
@@ -144,7 +136,6 @@ public class PurchaseDetailServiceImpl implements IPurchaseDetailService {
         purchaseDetail.setRequester(pr.getRequester());
         purchaseDetail.setSupplyId(formDetail.getSupplyId());
         purchaseDetail.setProductId(formDetail.getProductId());
-        purchaseDetail.setPickingTicketId(savedPT.getId());
         return purchaseDetail;
     }
 }
