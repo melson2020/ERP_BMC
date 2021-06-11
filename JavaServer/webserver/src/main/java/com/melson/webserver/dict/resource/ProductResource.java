@@ -11,10 +11,8 @@ import com.melson.webserver.dict.entity.StorageDetail;
 import com.melson.webserver.dict.service.IProduct;
 import com.melson.webserver.dict.service.IProductBom;
 import com.melson.webserver.dict.service.IStorageDetail;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -84,5 +82,9 @@ public class ProductResource extends BaseResource {
         return result;
     }
 
+    @GetMapping(value = "/queryBySearchValue")
+    public Result QueryBySearchValue(String searchValue){
+        return success(productService.QueryBySearchValue(searchValue));
+    }
 
 }

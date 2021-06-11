@@ -34,4 +34,6 @@ public interface IProduct extends IService<Product> {
 
     List<UserPassVo> GetVos();    //used for common resource
 
+    List<Product> QueryBySearchValue(String searchValue);
+
 }

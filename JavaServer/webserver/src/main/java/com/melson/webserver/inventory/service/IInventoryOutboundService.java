@@ -1,6 +1,7 @@
 package com.melson.webserver.inventory.service;
 
 import com.melson.webserver.inventory.entity.InventoryOutbound;
+import com.melson.webserver.inventory.vo.InventoryOutboundDetailVo;
 import com.melson.webserver.inventory.vo.InventoryOutboundVo;
 
 import java.util.Date;
@@ -40,4 +41,6 @@ public interface IInventoryOutboundService {
     InventoryOutbound save(InventoryOutboundVo vo, Integer userId);
 
     InventoryOutboundVo GenerateOutBoundWithExistTicket(Integer ticketId,String ticketType,Integer userId) throws RuntimeException;
+
+    List<InventoryOutboundDetailVo> GenerateDetailVoBatchInfo(InventoryOutboundDetailVo vo);
 }

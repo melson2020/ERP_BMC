@@ -168,6 +168,11 @@ public class IStorageDetailImpl extends AbstractService<StorageDetail> implement
         return storageDetailRepository.findByProductIdIn(productIds);
     }
 
+    @Override
+    public List<StorageDetail> FindByProductId(Integer productId) {
+        return storageDetailRepository.findByProductId(productId);
+    }
+
     private StorageBatch CreateBatch(StorageDetail storageDetail,InventoryInbound inbound,InventoryInboundDetail inboundDetail){
         StorageBatch storageBatch=new StorageBatch();
         storageBatch.setMaterialId(storageDetail.getProductId());

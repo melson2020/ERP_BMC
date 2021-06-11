@@ -68,4 +68,9 @@ public class StorageDetailResource extends BaseResource {
     public Result FindUnPackageUnitList(Integer productId,String unit) {
         return success(storageUnitService.FindUnPackageUnitList(productId, unit));
     }
+
+    @GetMapping(value = "/listByProduct")
+    public Result FindStorageListByProductId(Integer productId) {
+        return success(storageDetailService.FindByProductId(productId));
+    }
 }

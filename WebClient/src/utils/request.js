@@ -136,6 +136,9 @@ export default {
   DeleteOneProduceLine(param) {
     return service.deleteOne('/produceSetting/deleteProduceLine', param)
   },
+  QueryProductListBySearchValue(param){
+    return service.get("/product/queryBySearchValue", param)
+  },
 
   ReqProductList(params) {
     return service.get('/product/list', params)
@@ -434,6 +437,9 @@ ReqGetSummaryCount(params){
   GetStorageDetails(param) {
     return service.get('/storageDetail/detailList', param)
   },
+  GetStorageDetailsByProductId(param) {
+    return service.get('/storageDetail/listByProduct', param)
+  },
   GetStorageUnitList(param) {
     return service.get('/storageDetail/storageUnitList', param)
   },
@@ -464,6 +470,9 @@ ReqGetSummaryCount(params){
   },
   CreateInventoryOutBound(param){
     return service.get('/inventory/outbound/createOutBound', param)
+  },
+  CreateOutBoundBatchInfo(param){
+    return service.post("/inventory/outbound/generateOutDetailVo",param)
   }
 
 

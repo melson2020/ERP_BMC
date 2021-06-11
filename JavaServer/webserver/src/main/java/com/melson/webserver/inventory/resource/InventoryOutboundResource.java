@@ -8,6 +8,7 @@ import com.melson.base.utils.DateUtil;
 import com.melson.webserver.inventory.entity.InventoryOutbound;
 import com.melson.webserver.inventory.service.IInventoryOutboundService;
 import com.melson.webserver.inventory.vo.InventoryInboundVo;
+import com.melson.webserver.inventory.vo.InventoryOutboundDetailVo;
 import com.melson.webserver.inventory.vo.InventoryOutboundVo;
 import com.melson.webserver.order.service.IPickingTicketService;
 import org.slf4j.Logger;
@@ -97,5 +98,16 @@ public class InventoryOutboundResource extends BaseResource {
 //        } catch (RuntimeException re) {
 //            return failure(-1, re.getMessage());
 //        }
+    }
+
+    /**
+     * 更具客户端相同单位出库数量 获取各批次出库详细
+     * @param vo 基础出库数据
+     * @return
+     */
+    @PostMapping(value = "/generateOutDetailVo")
+    public Result CreateOutBoundWithExistTicket(@RequestBody InventoryOutboundDetailVo vo) {
+        if (vo == null ||vo.getMaterialId()==null) return GenerateResult(ResultType.ParameterNeeded);
+        return success(inventoryOutboundService.GenerateDetailVoBatchInfo(vo));
     }
 }

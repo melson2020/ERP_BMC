@@ -33,4 +33,6 @@ public interface IProductRepository extends JpaRepository<Product,Integer> {
     @Modifying
     @Query(value = "update product set salesPrice=?1 where productNo=?2",nativeQuery = true)
     void UpdatePrice(BigDecimal costPrice,String materialNo);
+
+    List<Product> findByNameLikeOrProductNoLikeOrSpecificationLike(String value1,String value2,String value3);
 }

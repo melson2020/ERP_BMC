@@ -13,4 +13,5 @@ import java.util.Set;
 @Repository
 public interface IStorageBatchRepository extends JpaRepository<StorageBatch, String> {
     List<StorageBatch> findByMaterialIdInAndFinished(Set<Integer> productId,Integer finish);
+    List<StorageBatch> findByMaterialIdAndFinishedAndCountUnitOrderByBatchNo(Integer productId,Integer finish,String unit);
 }
