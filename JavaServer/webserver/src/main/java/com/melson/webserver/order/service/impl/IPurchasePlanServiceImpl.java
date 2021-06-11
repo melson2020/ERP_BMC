@@ -3,6 +3,7 @@ package com.melson.webserver.order.service.impl;
 import com.melson.base.AbstractService;
 import com.melson.base.Result;
 import com.melson.base.utils.NumUtil;
+import com.melson.webserver.order.dao.IPickingTicketRepository;
 import com.melson.webserver.order.dao.IPurchaseDetailRepository;
 import com.melson.webserver.order.dao.IPurchasePlanRepository;
 import com.melson.webserver.order.entity.*;
@@ -12,7 +13,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -22,10 +22,12 @@ import java.util.*;
 public class IPurchasePlanServiceImpl extends AbstractService<PurchasePlan> implements IPurchasePlanService {
     private final IPurchasePlanRepository purchasePlanRepository;
     private final IPurchaseDetailRepository purchaseDetailRepository;
+    private final IPickingTicketRepository pickingTicketRepository;
 
-    public IPurchasePlanServiceImpl(IPurchasePlanRepository purchasePlanRepository, IPurchaseDetailRepository purchaseDetailRepository) {
+    public IPurchasePlanServiceImpl(IPurchasePlanRepository purchasePlanRepository, IPurchaseDetailRepository purchaseDetailRepository, IPickingTicketRepository pickingTicketRepository) {
         this.purchasePlanRepository = purchasePlanRepository;
         this.purchaseDetailRepository = purchaseDetailRepository;
+        this.pickingTicketRepository = pickingTicketRepository;
     }
 
 
@@ -45,7 +47,6 @@ public class IPurchasePlanServiceImpl extends AbstractService<PurchasePlan> impl
         PurchasePlan saved=purchasePlanRepository.save(pr);
         Integer length=8;
         pr.setPlanNo(NumUtil.incrementCode(pr.getId(), PurchasePlan.PURCHASE_NO_CHAR,length));
-        purchasePlanRepository.save(pr);
         for(PurchaseDetail detail:pr.getPurchaseDetailList()){
             detail.setType(pr.getType());
             detail.setCreateDate(pr.getCreateDate());
@@ -57,6 +58,15 @@ public class IPurchasePlanServiceImpl extends AbstractService<PurchasePlan> impl
         }
         List<PurchaseDetail> detailList=pr.getPurchaseDetailList();
         purchaseDetailRepository.saveAll(detailList);
+        PickingTicket pt=new PickingTicket();                 //创建picking_ticket
+        pt.setTicketNo("L"+new Date().getTime());
+        pt.setSourceNo(pr.getPlanNo());
+        pt.setType(PurchasePlan.PURCHASE_TYPE_INDIRECT);
+        pt.setCreateDate(new Date());
+        pt.setState(PickingTicket.STATE_CREATE);
+        pickingTicketRepository.save(pt);
+        pr.setPickingNo(pt.getTicketNo());
+        purchasePlanRepository.save(pr);
         result.setData(saved);
         return result;
     }
@@ -127,9 +137,11 @@ public class IPurchasePlanServiceImpl extends AbstractService<PurchasePlan> impl
             stateMap.put(key, Integer.parseInt(obj[1].toString()));
         }
         List<Object[]> objects2 = purchaseDetailRepository.getAllStatueCount();
-        for (Object[] obj : objects2) {
-            String key = obj[0].toString();
-            stateMap.put(key, Integer.parseInt(obj[1].toString()));
+        for (Object[] ob : objects2) {
+            if(ob[0]!=null) {
+                String key = ob[0].toString();
+                stateMap.put(key, Integer.parseInt(ob[1].toString()));
+            }
         }
         Integer waitApproveCount = stateMap.get(PurchasePlan.PURCHASE_STATE_CREATE) == null ? 0 : stateMap.get(PurchasePlan.PURCHASE_STATE_CREATE);
         list.add(new PurchaseStateSummaryVo("待批列表", waitApproveCount, "/approve"));

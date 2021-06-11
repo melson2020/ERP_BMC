@@ -86,7 +86,10 @@
             >
               <el-table-column prop="materialName" label="物品" width="280px"></el-table-column>
               <el-table-column prop="specification" label="规格" width="180px"></el-table-column>
-              <el-table-column prop="count" label="数量" width="180px"></el-table-column>
+              <!-- <el-table-column prop="count" label="数量" width="180px"></el-table-column> -->
+              <el-table-column prop="count" label="数量" width="180px">
+                <template slot-scope="scope"><span>{{scope.row.count}}{{scope.row.countUnit}}</span></template>
+              </el-table-column>
               <el-table-column prop="remark" label="备注"></el-table-column>
 
             </el-table>

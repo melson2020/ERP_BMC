@@ -150,6 +150,7 @@ public class InventoryInboundServiceImpl implements IInventoryInboundService {
             case InventoryInbound.TYPE_OEM:
                 pickingTicketService.UpdateAfterInBound(inbound.getSourceId(), inbound.getFormNo(), PickingTicket.STATE_INBOUND);
             case InventoryInbound.TYPE_PURCHASE:
+                purchaseOrderService.UpdateAfterInBound(inbound.getFormNo(),inbound.getSourceNo(),inbound.getCreateDate());
                  //TO DO 更新purchase order, purchase plan 状态
                 break;
             default:

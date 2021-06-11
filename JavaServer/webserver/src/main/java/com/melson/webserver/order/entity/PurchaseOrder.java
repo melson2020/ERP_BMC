@@ -32,6 +32,8 @@ public class PurchaseOrder {
     private Integer createBy;
     private String description;
     private BigDecimal amount;
+    private String formNo;
+    private Date deliverDate;
 
     @Transient
     private List<PurchaseDetail> purchaseDetailList;
@@ -120,6 +122,22 @@ public class PurchaseOrder {
 
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
+    }
+
+    public String getFormNo() {
+        return formNo;
+    }
+
+    public void setFormNo(String formNo) {
+        this.formNo = formNo;
+    }
+
+    public Date getDeliverDate() {
+        return deliverDate;
+    }
+
+    public void setDeliverDate(Date deliverDate) {
+        this.deliverDate = deliverDate;
     }
 
     public List<PurchaseDetail> getPurchaseDetailList() {

@@ -939,6 +939,9 @@ export default {
         supplyId: [
           { required: true, message: "请选择商品供应商", trigger: "blur" }
         ],
+        unit:[
+          { required: true, message: "请选择商品单位", trigger: "blur" }
+        ],
         },
         rules2: {
         processId:[

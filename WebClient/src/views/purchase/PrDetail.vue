@@ -99,14 +99,10 @@
                   </div>
                 </template> -->
               </el-table-column>
-            <el-table-column prop="count" label="数量" width="80px" >
-              <!-- <template slot-scope="scope" >
-                <div class="purchaseInformation">
-                  <el-form-item label="数" prop="count" label-width="35px" >
-                    <span>{{ scope.row.count }}</span>
-                  </el-form-item>
-                </div>
-              </template> -->
+            <!-- <el-table-column prop="count" label="数量" width="80px" >
+            </el-table-column> -->
+            <el-table-column prop="count" label="数量" width="100px">
+              <template slot-scope="scope"><span>{{scope.row.count}}{{scope.row.countUnit}}</span></template>
             </el-table-column>
             <el-table-column prop="state" label="状态" width="90px" >
               <!-- <template slot-scope="scope" >

@@ -21,6 +21,7 @@
         <el-table-column prop="requester" label="采购人" width="280px"> </el-table-column>
         <el-table-column prop="type" label="采购类型" width="180px"> </el-table-column>
         <el-table-column prop="state" label="状态" width="180px"> </el-table-column>
+        <el-table-column prop="pickingNo" label="领料单号" width="180px"> </el-table-column>
         <el-table-column prop="createDate" label="创建日期" width="140px"> 
           <template slot-scope="scope">
             <span>{{getFullTime(scope.row.createDate) }}</span>
@@ -153,7 +154,7 @@
                       v-if="scope.row.seen"
                       size="mini"
                     ></el-input>
-                    <span v-else>{{ scope.row.count }}</span>
+                    <span v-else>{{ scope.row.count }}{{ scope.row.countUnit }}</span>
                   </el-form-item>
                 </div>
               </template>
@@ -317,7 +318,7 @@
                       v-if="scope.row.seen"
                       size="mini"
                     ></el-input>
-                    <span v-else>{{ scope.row.count }}</span>
+                    <span v-else>{{ scope.row.count }}{{ scope.row.countUnit }}</span>
                   </el-form-item>
                 </div>
               </template>
@@ -556,12 +557,14 @@ export default {
           row.materialName=event.name;
           row.specification=event.specification;
           row.supplyId=event.supplyId;
+          row.countUnit=event.unit;
         }
         else{
           row.materialNo="";
           row.materialName="";
           row.specification="";
           row.supplyId="";
+          row.countUnit="";
           event=null;
         }
     },
@@ -572,12 +575,14 @@ export default {
           row.materialName=event.name;
           row.specification=event.specification;
           row.supplyId=event.supplyId;
+          row.countUnit=event.unit;
         }
         else{
           row.materialNo="";
           row.materialName="";
           row.specification="";
           row.supplyId="";
+          row.countUnit="";
           event=null;
         }
     },

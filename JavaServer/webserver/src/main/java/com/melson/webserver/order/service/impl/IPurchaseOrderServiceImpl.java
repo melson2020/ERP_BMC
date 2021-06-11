@@ -25,9 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Messi on 2021/6/5
@@ -139,5 +137,41 @@ public class IPurchaseOrderServiceImpl extends AbstractService<PurchaseOrder> im
         inventoryInbound.setCreateUser(userId);
         inventoryInbound.setDetailVoList(detailVos);
         return inventoryInbound;
+    }
+
+    @Override
+    @Transactional
+    public void UpdateAfterInBound(String formNo, String sourceNo, Date createDate) {
+        String state=PurchaseOrder.PO_STATE_COMPLETE;
+        purchaseOrderRepository.updateInboundstate(formNo,state,createDate,sourceNo);
+        purchaseDetailRepository.updateInboundsDetail(state,sourceNo);
+        List<Object[]> details=purchaseDetailRepository.findPrByPoNo(sourceNo);
+        Map<String,String> prMap=new HashMap<>();
+        for(Object[] obj: details)
+        {
+            String key=obj[0].toString();
+            String existInMap=prMap.get(key);
+            if(existInMap==null){
+                prMap.put(key,obj[1].toString());
+            }
+        }
+        for(Map.Entry<String,String> entry:prMap.entrySet()){
+            String prNo=entry.getKey();
+            String prState=entry.getValue();
+            List<Object[]> objects=purchaseDetailRepository.findObjectByPurchasePlanNo(prNo);
+            Map<String,String> checkMap=new HashMap<>();
+            for(Object[] obj: objects)
+            {
+                String checkState=obj[0].toString();
+                String existInMap=checkMap.get(checkState);
+                if(existInMap==null){
+                    checkMap.put(checkState,prNo);
+                }
+            }
+            if(checkMap.size()==1)
+            {
+                purchasePlanRepository.UpdateState(state,prNo);
+            }
+        }
     }
 }

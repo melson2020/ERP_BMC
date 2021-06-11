@@ -46,7 +46,7 @@ public class PurchasePlan {
     private Date createDate;
     private Integer createBy;
     private String description;
-
+    private String pickingNo;
 
     @Transient
     private List<PurchaseDetail> purchaseDetailList;
@@ -162,6 +162,14 @@ public class PurchasePlan {
 
     public void setRequesterId(Integer requesterId) {
         this.requesterId = requesterId;
+    }
+
+    public String getPickingNo() {
+        return pickingNo;
+    }
+
+    public void setPickingNo(String pickingNo) {
+        this.pickingNo = pickingNo;
     }
 
     public List<PurchaseDetail> getPurchaseDetailList() {
