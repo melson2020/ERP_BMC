@@ -340,6 +340,9 @@ ReqPoDetailList(params){
 ReqGetSummaryCount(params){
   return service.get('/purchase/purchaseStateSummary',params)  
 },
+ReqGetPurchaseDashboardSummary(param) {
+  return service.get('/purchase/purchaseDashboardSummary', param)
+},
 
 
 

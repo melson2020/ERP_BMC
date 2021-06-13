@@ -29,4 +29,7 @@ public interface IPurchaseOrderRepository extends JpaRepository<PurchaseOrder,In
     @Modifying
     @Query(value = "update `purchase_order` set formNo=?1,`state`=?2,deliverDate=?3 where poNo=?4",nativeQuery = true)
     void updateInboundstate(String formNo, String state, Date createDate, String sourceNo);
+
+    @Query(nativeQuery = true,value = "SELECT su.`name` as `name` ,sum(po.amount) as `value` FROM `purchase_order` po LEFT JOIN supply su on su.id=po.supplyId where po.createDate>=?1 and po.createDate<?2 group by supplyId ORDER BY `value` desc LIMIT 10;")
+    List<Object[]> GetTopSupplyList(String startDate, String endDate);
 }

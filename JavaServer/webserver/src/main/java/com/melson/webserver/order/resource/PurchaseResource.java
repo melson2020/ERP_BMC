@@ -8,11 +8,11 @@ import com.melson.webserver.order.entity.PurchasePlan;
 import com.melson.webserver.order.service.IPurchaseDetailService;
 import com.melson.webserver.order.service.IPurchaseOrderService;
 import com.melson.webserver.order.service.IPurchasePlanService;
+import com.melson.webserver.order.vo.DashBoardVo;
+import com.melson.webserver.order.vo.OrderStateSummaryVo;
 import com.melson.webserver.order.vo.PurchaseStateSummaryVo;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
@@ -168,5 +168,15 @@ public class PurchaseResource extends BaseResource {
         result.setData(pos);
         return result;
     }
+
+    @RequestMapping(value = "/purchaseDashboardSummary",method = RequestMethod.GET)
+    public Result GetDashboardSummaryCount(HttpServletRequest request){
+        String date = request.getParameter("date");
+        DashBoardVo vos=purchasePlanService.GetDashboardSummaryCount(date);
+        Result result=new Result();
+        result.setData(vos);
+        return result;
+    }
+
 
 }

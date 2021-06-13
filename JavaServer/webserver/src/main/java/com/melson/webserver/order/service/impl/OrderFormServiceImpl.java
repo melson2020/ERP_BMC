@@ -84,7 +84,7 @@ public class OrderFormServiceImpl implements IOrderFormService {
                 return res ? -1 : 0;
             }
         });
-        //生产清单
+        //生产清单 P D
         List<OrderFormDetail> produceList = new ArrayList<>();
         //采购清单
         List<OrderFormDetail> purchaseList = new ArrayList<>();

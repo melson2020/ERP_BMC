@@ -551,7 +551,6 @@ export default {
       }
     },
     addMaterialChanged(event,row){
-console.log(event);
         if(!this.addCheckRepeated(event))
         {
           row.materialNo=event.productNo;
@@ -663,6 +662,7 @@ console.log(event);
                   if (res.resultStatus == 1) {
                     this.purchaseAddDialog = false;
                     this.PushPurchaseList(res.data);
+                    this.newpurchase.purchaseDetailList=[];
                     this.$message({
                       showClose: true,
                       message: "创建成功",
