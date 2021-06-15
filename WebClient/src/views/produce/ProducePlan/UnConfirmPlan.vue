@@ -43,7 +43,7 @@
       </el-table-column>
     </el-table>
     <el-dialog title="计划详情" :visible.sync="detailDialogVisible" width="80%">
-      <m-plan-detail ref="planDetai"></m-plan-detail>
+      <m-plan-detail ref="planDetai" v-on:closePopWindow="closePopWindow"></m-plan-detail>
     </el-dialog>
   </div>
 </template>
@@ -64,6 +64,9 @@ export default {
     }),
     getFullTime(time) {
       return new Date(time).format("yyyy-MM-dd hh:mm:ss");
+    },
+    closePopWindow(){
+      this.detailDialogVisible= false;
     },
     convertPlanType(type) {
       return type.replace("P", "生产").replace("D", "代工");

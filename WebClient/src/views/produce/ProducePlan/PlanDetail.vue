@@ -170,6 +170,7 @@ export default {
       FindWorkStationListByProcessId: "FindWorkStationListByProcessId",
       SaveProducePlanWorkStation: "SaveProducePlanWorkStation",
       DeletePlanWorkStation: "DeletePlanWorkStation",
+      FindUnConfirmPlanList: "FindUnConfirmPlanList",
     }),
     loadPlanDetails(plan) {
       this.producePlan = plan;
@@ -269,6 +270,10 @@ export default {
       });
       var obj = { plan: this.producePlan, workStationList: wsList,confirm:confirm };
       this.SaveProducePlanWorkStation(obj);
+      this.FindUnConfirmPlanList({ state: "1" });
+      setTimeout(() => {
+        this.$emit('closePopWindow');
+      }, 10);
     },
 
     workStationRemove(id, row) {

@@ -42,8 +42,14 @@
           <el-table-column prop="orderFormNo" label="订单号" width="180">
           </el-table-column>
           <el-table-column prop="createDate" label="创建时间">
+          <template slot-scope="scope">
+            <span>{{getFullTime(scope.row.createDate) }}</span>
+          </template>
           </el-table-column>
           <el-table-column prop="endDate" label="计划完成时间">
+          <template slot-scope="scope">
+            <span>{{getFullTime(scope.row.endDate) }}</span>
+          </template>
           </el-table-column>
           <el-table-column prop="pickingTicketNo" label="领料单号">
           </el-table-column>
@@ -59,6 +65,9 @@
                 @click="changeTableAreaView(scope.row.id)"
                 circle
               ></el-button>
+              <el-tooltip effect="light" content="打印" placement="top">
+                <el-button size="mini" @click="handlePrinter(scope.$index, scope.row)" plain circle icon="el-icon-printer"/>
+              </el-tooltip>
             </template>
           </el-table-column>
         </el-table>
@@ -147,6 +156,9 @@ export default {
     changeTableAreaView(planId) {
       this.detailInfoShowing = !this.detailInfoShowing;
       setTimeout(()=>{ this.$refs['planInfo'].loadPlanInfo(planId)},200)
+    },
+    getFullTime(time) {
+    return new Date(time).format("yyyy-MM-dd");
     },
   },
   components: {
