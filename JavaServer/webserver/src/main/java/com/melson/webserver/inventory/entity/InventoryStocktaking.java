@@ -27,25 +27,29 @@ public class InventoryStocktaking {
      */
     private String formNo;
     /**
-     * 盘点类型
+     * 盘点人员ID
      */
-    private String type;
+    private Integer userId;
     /**
-     * 盘点内容
+     * 盘点人员名称
      */
-    private String info;
+    private String userName;
+    /**
+     * 盘点仓库编码
+     */
+    private String storageCode;
+    /**
+     * 盘点仓库名称
+     */
+    private String storageAreaName;
+    /**
+     * 盘点单状态
+     */
+    private String state;
     /**
      * 描述
      */
     private String remark;
-    /**
-     * 操作时间
-     */
-    private Date createDate;
-    /**
-     * 操作人
-     */
-    private Integer createUser;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -65,20 +69,44 @@ public class InventoryStocktaking {
         this.formNo = formNo;
     }
 
-    public String getType() {
-        return type;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
-    public String getInfo() {
-        return info;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setInfo(String info) {
-        this.info = info;
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getStorageCode() {
+        return storageCode;
+    }
+
+    public void setStorageCode(String storageCode) {
+        this.storageCode = storageCode;
+    }
+
+    public String getStorageAreaName() {
+        return storageAreaName;
+    }
+
+    public void setStorageAreaName(String storageAreaName) {
+        this.storageAreaName = storageAreaName;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 
     public String getRemark() {
@@ -87,21 +115,5 @@ public class InventoryStocktaking {
 
     public void setRemark(String remark) {
         this.remark = remark;
-    }
-
-    public Date getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
-    }
-
-    public Integer getCreateUser() {
-        return createUser;
-    }
-
-    public void setCreateUser(Integer createUser) {
-        this.createUser = createUser;
     }
 }

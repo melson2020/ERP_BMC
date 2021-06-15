@@ -274,7 +274,7 @@
           <el-table-column prop="customerName" label="客户"> </el-table-column>
           <el-table-column prop="orderFormNo" label="订单号"> </el-table-column>
           <el-table-column label="" width="80px">
-            <template slot-scope="scope">
+            <template>
               <el-button
                 type="success"
                 icon="el-icon-check"

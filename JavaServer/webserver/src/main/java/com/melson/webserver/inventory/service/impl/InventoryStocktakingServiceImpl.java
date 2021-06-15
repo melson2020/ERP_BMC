@@ -1,6 +1,7 @@
 package com.melson.webserver.inventory.service.impl;
 
 import com.melson.base.utils.NumUtil;
+import com.melson.webserver.dict.dao.IStorageDetailRepository;
 import com.melson.webserver.inventory.dao.IInventoryStocktakingDetailRepository;
 import com.melson.webserver.inventory.dao.IInventoryStocktakingRepository;
 import com.melson.webserver.inventory.entity.InventoryStocktaking;
@@ -34,6 +35,8 @@ public class InventoryStocktakingServiceImpl implements IInventoryStocktakingSer
     private IInventoryStocktakingRepository inventoryStocktakingRepository;
     @Autowired
     private IInventoryStocktakingDetailRepository inventoryStocktakingDetailRepository;
+    @Autowired
+    private IStorageDetailRepository storageDetailRepository;
 
     @Override
     public List<InventoryStocktakingVo> list(Date date) {
@@ -78,31 +81,9 @@ public class InventoryStocktakingServiceImpl implements IInventoryStocktakingSer
     }
 
     @Override
-    public InventoryStocktaking save(InventoryStocktakingVo vo, Integer userId) {
-        // 1.保存盘点单
-        InventoryStocktaking form = new InventoryStocktaking();
-        BeanUtils.copyProperties(vo, form);
-        Date date = new Date();
-        form.setCreateDate(date);
-        form.setCreateUser(userId);
-        inventoryStocktakingRepository.saveAndFlush(form);
-        form.setFormNo(NumUtil.incrementCode(InventoryStocktaking.CODE_PREFIX, form.getId()));
-        inventoryStocktakingRepository.saveAndFlush(form);
-        // 2.保存盘点明细
-        if (vo.getDetailVoList() == null || vo.getDetailVoList().isEmpty()) {
-            logger.error("盘点明细为空");
-            return form;
-        }
-        List<InventoryStocktakingDetail> detailList = new ArrayList<>();
-        vo.getDetailVoList().forEach(detailVo -> {
-            InventoryStocktakingDetail detail = new InventoryStocktakingDetail();
-            BeanUtils.copyProperties(detailVo, detail);
-            detail.setFormNo(form.getFormNo());
-            detailList.add(detail);
-        });
-        inventoryStocktakingDetailRepository.saveAll(detailList);
-        // 3.修改库存
-        // todo : 关联库存表更新 by wuhuan
-        return form;
+    public InventoryStocktaking save(InventoryStocktaking inventoryStocktaking){
+         String formNo=InventoryStocktaking.CODE_PREFIX+System.currentTimeMillis();
+         inventoryStocktaking.setFormNo(formNo);
+
     }
 }

@@ -33,9 +33,8 @@ public interface IInventoryStocktakingService {
     /**
      * 盘点
      *
-     * @param vo
-     * @param userId
+     * @param inventoryStocktaking
      * @return
      */
-    InventoryStocktaking save(InventoryStocktakingVo vo, Integer userId);
+    InventoryStocktaking save(InventoryStocktaking inventoryStocktaking);
 }

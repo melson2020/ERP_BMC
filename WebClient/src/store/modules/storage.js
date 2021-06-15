@@ -4,6 +4,7 @@ import * as types from '../type'
 import { Message } from "element-ui";
 
 const state = {
+    //仓库列表
     storageList: [],
     storageDetailPage: {}
 };

@@ -2,6 +2,7 @@ package com.melson.webserver.inventory.resource;
 
 import com.melson.base.BaseResource;
 import com.melson.base.Result;
+import com.melson.base.ResultType;
 import com.melson.base.constants.SysRespCode;
 import com.melson.base.utils.DateUtil;
 import com.melson.webserver.inventory.entity.InventoryStocktaking;
@@ -48,26 +49,15 @@ public class InventoryStocktakingResource extends BaseResource {
     }
 
     /**
-     * 盘点
+     * 创建盘点单
      *
      * @param request
-     * @param vo
+     * @param inventoryStocktaking 盘点单
      * @return
      */
     @PostMapping(value = "/save")
-    public Result save(HttpServletRequest request, @RequestBody InventoryStocktakingVo vo) {
-        Integer userId = getLoginUserId(request);
-        if (userId == null) {
-            return failure(SysRespCode.LOGIN_TIME_OUT, "登录超时");
-        }
-        if (vo == null) {
-            return failure(SysRespCode.STOCKTAKING_SAVE_IS_NULL, "待盘点信息为空");
-        }
-        InventoryStocktaking form = inventoryStocktakingService.save(vo, userId);
-        if (form == null) {
-            return failure(SysRespCode.STOCKTAKING_SAVE_FAIL, "盘点失败");
-        }
-        logger.info("用户[{}]盘点[{}]成功", userId, form.getFormNo());
-        return success(form.getFormNo());
+    public Result save(HttpServletRequest request, @RequestBody InventoryStocktaking inventoryStocktaking) {
+       if(inventoryStocktaking==null)return this.GenerateResult(ResultType.ParameterNeeded);
+
     }
 }

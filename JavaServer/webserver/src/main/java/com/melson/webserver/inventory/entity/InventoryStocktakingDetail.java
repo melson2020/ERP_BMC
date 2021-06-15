@@ -34,21 +34,21 @@ public class InventoryStocktakingDetail {
      */
     private String specification;
     /**
-     * 数量
+     * 库存数量
      */
-    private Integer count;
+    private Integer storageCount;
     /**
-     * 最新价格
+     * 库存数量单位
      */
-    private BigDecimal latestPrice;
+    private String storageCountUnit;
     /**
-     * 数量单位
+     * 盘点数量
      */
-    private String unit;
+    private Integer tackingCount;
     /**
-     * 货位号
+     * 批次号
      */
-    private String storageCode;
+    private String batchNo;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -92,35 +92,35 @@ public class InventoryStocktakingDetail {
         this.specification = specification;
     }
 
-    public Integer getCount() {
-        return count;
+    public Integer getStorageCount() {
+        return storageCount;
     }
 
-    public void setCount(Integer count) {
-        this.count = count;
+    public void setStorageCount(Integer storageCount) {
+        this.storageCount = storageCount;
     }
 
-    public BigDecimal getLatestPrice() {
-        return latestPrice;
+    public String getStorageCountUnit() {
+        return storageCountUnit;
     }
 
-    public void setLatestPrice(BigDecimal latestPrice) {
-        this.latestPrice = latestPrice;
+    public void setStorageCountUnit(String storageCountUnit) {
+        this.storageCountUnit = storageCountUnit;
     }
 
-    public String getUnit() {
-        return unit;
+    public Integer getTackingCount() {
+        return tackingCount;
     }
 
-    public void setUnit(String unit) {
-        this.unit = unit;
+    public void setTackingCount(Integer tackingCount) {
+        this.tackingCount = tackingCount;
     }
 
-    public String getStorageCode() {
-        return storageCode;
+    public String getBatchNo() {
+        return batchNo;
     }
 
-    public void setStorageCode(String storageCode) {
-        this.storageCode = storageCode;
+    public void setBatchNo(String batchNo) {
+        this.batchNo = batchNo;
     }
 }
