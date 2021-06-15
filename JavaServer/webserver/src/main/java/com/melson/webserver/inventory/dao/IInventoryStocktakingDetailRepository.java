@@ -23,5 +23,5 @@ public interface IInventoryStocktakingDetailRepository extends JpaRepository<Inv
      * @return
      */
     @Query
-    List<InventoryStocktakingDetail> findByFormNo(String formNo);
+    List<InventoryStocktakingDetail> findByFormNoAndFinish(String formNo,Integer finish);
 }

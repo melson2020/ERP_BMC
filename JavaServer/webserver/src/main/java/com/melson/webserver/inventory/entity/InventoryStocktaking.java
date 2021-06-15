@@ -2,6 +2,7 @@ package com.melson.webserver.inventory.entity;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 盘点单实体
@@ -13,6 +14,10 @@ import java.util.Date;
 @Table(name = "inventory_stocktaking")
 public class InventoryStocktaking {
 
+    public static final String STATE_CREATED = "CREATED";
+    public static final String STATE_PROCESSING = "PROCESSING";
+    public static final String STATE_COMPLETED = "COMPLETED";
+
     /**
      * 编码前缀
      */
@@ -21,6 +26,8 @@ public class InventoryStocktaking {
     /**
      * 唯一自增id
      */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     /**
      * 盘点单号
@@ -51,8 +58,12 @@ public class InventoryStocktaking {
      */
     private String remark;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Date createDate;
+
+    @Transient
+    private List<InventoryStocktakingDetail> detailList;
+
+
     public Integer getId() {
         return id;
     }
@@ -115,5 +126,21 @@ public class InventoryStocktaking {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    public List<InventoryStocktakingDetail> getDetailList() {
+        return detailList;
+    }
+
+    public void setDetailList(List<InventoryStocktakingDetail> detailList) {
+        this.detailList = detailList;
     }
 }
