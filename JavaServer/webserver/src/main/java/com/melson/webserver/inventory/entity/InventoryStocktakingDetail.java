@@ -50,6 +50,10 @@ public class InventoryStocktakingDetail {
      */
     private String batchNo;
 
+    private Integer finish;
+
+    private Integer materialId;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getId() {
@@ -122,5 +126,21 @@ public class InventoryStocktakingDetail {
 
     public void setBatchNo(String batchNo) {
         this.batchNo = batchNo;
+    }
+
+    public Integer getFinish() {
+        return finish;
+    }
+
+    public void setFinish(Integer finish) {
+        this.finish = finish;
+    }
+
+    public Integer getMaterialId() {
+        return materialId;
+    }
+
+    public void setMaterialId(Integer materialId) {
+        this.materialId = materialId;
     }
 }

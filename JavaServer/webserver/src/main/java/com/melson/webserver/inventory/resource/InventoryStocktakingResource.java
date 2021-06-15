@@ -48,16 +48,38 @@ public class InventoryStocktakingResource extends BaseResource {
         return success(inventoryStocktakingService.get(formNo));
     }
 
-//    /**
-//     * 创建盘点单
-//     *
-//     * @param request
-//     * @param inventoryStocktaking 盘点单
-//     * @return
-//     */
-//    @PostMapping(value = "/save")
-//    public Result save(HttpServletRequest request, @RequestBody InventoryStocktaking inventoryStocktaking) {
-//       if(inventoryStocktaking==null)return this.GenerateResult(ResultType.ParameterNeeded);
-//
-//    }
+    @GetMapping(value = "/uncompletedOne")
+    public Result getUncompletedOne() {
+        return success(inventoryStocktakingService.FindUncompletedOne());
+    }
+
+
+    /**
+     * 创建盘点单
+     *
+     * @param request
+     * @param inventoryStocktaking 盘点单
+     * @return
+     */
+    @PostMapping(value = "/create")
+    public Result create(HttpServletRequest request, @RequestBody InventoryStocktaking inventoryStocktaking) {
+       if(inventoryStocktaking==null)return this.GenerateResult(ResultType.ParameterNeeded);
+        InventoryStocktaking saved= inventoryStocktakingService.Create(inventoryStocktaking);
+        if(saved==null){
+            return failure(-1,"创建失败");
+        }else {
+            return success(saved);
+        }
+    }
+
+    @PostMapping(value = "/save")
+    public Result save(HttpServletRequest request, @RequestBody InventoryStocktaking inventoryStocktaking) {
+        if(inventoryStocktaking==null)return this.GenerateResult(ResultType.ParameterNeeded);
+        InventoryStocktaking saved=inventoryStocktakingService.Save(inventoryStocktaking);
+        if(saved==null){
+            return failure(-1,"盘点失败");
+        }else {
+            return success(saved);
+        }
+    }
 }

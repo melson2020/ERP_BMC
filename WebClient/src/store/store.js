@@ -16,6 +16,7 @@ import produceMonitor from './modules/produceMonitor'
 import employee from './modules/employee'
 import delegate from './modules/delegate'
 import purchase from './modules/purchase'
+import storageStocktaking from './modules/storageStocktaking'
 import {setAsyncRoutes} from "../router/async"
 Vue.use(Vuex);
 
@@ -52,6 +53,7 @@ export default new Vuex.Store({
     produceMonitor,
     employee,
     delegate,
-    purchase
+    purchase,
+    storageStocktaking
   }
 });

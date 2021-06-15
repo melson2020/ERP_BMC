@@ -36,5 +36,14 @@ public interface IInventoryStocktakingService {
      * @param inventoryStocktaking
      * @return
      */
-    InventoryStocktaking save(InventoryStocktaking inventoryStocktaking);
+    InventoryStocktaking Create(InventoryStocktaking inventoryStocktaking);
+
+    /**
+     * 保存盘点单
+     * @param inventoryStocktaking
+     * @return
+     */
+    InventoryStocktaking Save(InventoryStocktaking inventoryStocktaking);
+
+    InventoryStocktaking FindUncompletedOne();
 }

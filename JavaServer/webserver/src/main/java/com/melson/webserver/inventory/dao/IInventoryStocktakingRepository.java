@@ -34,4 +34,6 @@ public interface IInventoryStocktakingRepository extends JpaRepository<Inventory
      */
     @Query
     InventoryStocktaking findByFormNo(String formNo);
+
+    InventoryStocktaking findByStateOrState(String state1,String state2);
 }

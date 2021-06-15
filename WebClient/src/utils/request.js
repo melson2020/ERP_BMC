@@ -476,7 +476,17 @@ ReqGetPurchaseDashboardSummary(param) {
   },
   CreateOutBoundBatchInfo(param){
     return service.post("/inventory/outbound/generateOutDetailVo",param)
-  }
+  },
 
+  //盘点相关
+  CreateInventoryTaking(param){
+    return service.post("/inventory/stocktaking/create",param)
+  },
+  GetUnCompletedInventoryTaking(param){
+    return service.get("/inventory/stocktaking/uncompletedOne",param)
+  },
+  SaveInventoryTaking(param){
+    return service.post("/inventory/stocktaking/save",param)
+  }
 
 };

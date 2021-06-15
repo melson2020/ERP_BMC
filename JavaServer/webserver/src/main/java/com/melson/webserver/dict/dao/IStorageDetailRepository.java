@@ -28,6 +28,8 @@ public interface IStorageDetailRepository extends JpaRepository<StorageDetail,St
 
     List<StorageDetail> findByProductId(Integer productId);
 
+    List<StorageDetail> findByStorageCode(String storageCode);
+
     @Query(nativeQuery = true,value = "SELECT sd.productId as materialId,sd.count as materialCount,sd.unit as materialUnit,sb.batchNo,sb.count as batchCount,sb.countUnit as batchUnit,sd.storageCode FROM `storage_detail` sd RIGHT JOIN storage_batch sb ON sd.productId=sb.materialId WHERE sb.finished=0 and sd.count>0 and sd.materialNo in ?1")
     List<Object[]> findStorageDetailBatchInfo(Set<String> materialNos);
 
