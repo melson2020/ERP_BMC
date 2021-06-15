@@ -75,6 +75,10 @@ public class PurchaseDetail {
 
     private String poNo;
 
+    private Integer productId;
+
+    private Integer pickingTicketId;
+
     @Transient
     private String supply;
 
@@ -237,6 +241,22 @@ public class PurchaseDetail {
 
     public void setPoNo(String poNo) {
         this.poNo = poNo;
+    }
+
+    public Integer getProductId() {
+        return productId;
+    }
+
+    public void setProductId(Integer productId) {
+        this.productId = productId;
+    }
+
+    public Integer getPickingTicketId() {
+        return pickingTicketId;
+    }
+
+    public void setPickingTicketId(Integer pickingTicketId) {
+        this.pickingTicketId = pickingTicketId;
     }
 
     public String getSupply() {

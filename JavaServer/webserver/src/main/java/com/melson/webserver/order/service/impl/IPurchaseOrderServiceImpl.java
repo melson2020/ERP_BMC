@@ -11,12 +11,8 @@ import com.melson.webserver.dict.entity.Supply;
 import com.melson.webserver.inventory.entity.InventoryInbound;
 import com.melson.webserver.inventory.vo.InventoryInboundDetailVo;
 import com.melson.webserver.inventory.vo.InventoryInboundVo;
-import com.melson.webserver.order.dao.IPurchaseDetailRepository;
-import com.melson.webserver.order.dao.IPurchaseOrderRepository;
-import com.melson.webserver.order.dao.IPurchasePlanRepository;
-import com.melson.webserver.order.entity.PurchaseDetail;
-import com.melson.webserver.order.entity.PurchaseOrder;
-import com.melson.webserver.order.entity.PurchasePlan;
+import com.melson.webserver.order.dao.*;
+import com.melson.webserver.order.entity.*;
 import com.melson.webserver.order.service.IPurchaseOrderService;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
@@ -38,14 +34,18 @@ public class IPurchaseOrderServiceImpl extends AbstractService<PurchaseOrder> im
     private final IProductRepository productRepository;
     private final ISupplyRepository supplyRepository;
     private final EntityManagerUtil entityManagerUtil;
+    private final IPickingTicketRepository pickingTicketRepository;
+    private final IPickingTicketDetailRepository pickingTicketDetailRepository;
 
-    public IPurchaseOrderServiceImpl(IPurchaseOrderRepository purchaseOrderRepository, IPurchaseDetailRepository purchaseDetailRepository, IPurchasePlanRepository purchasePlanRepository, IProductRepository productRepository, ISupplyRepository supplyRepository, EntityManagerUtil entityManagerUtil) {
+    public IPurchaseOrderServiceImpl(IPurchaseOrderRepository purchaseOrderRepository, IPurchaseDetailRepository purchaseDetailRepository, IPurchasePlanRepository purchasePlanRepository, IProductRepository productRepository, ISupplyRepository supplyRepository, EntityManagerUtil entityManagerUtil, IPickingTicketRepository pickingTicketRepository, IPickingTicketDetailRepository pickingTicketDetailRepository) {
         this.purchaseOrderRepository = purchaseOrderRepository;
         this.purchaseDetailRepository = purchaseDetailRepository;
         this.purchasePlanRepository = purchasePlanRepository;
         this.productRepository = productRepository;
         this.supplyRepository = supplyRepository;
         this.entityManagerUtil = entityManagerUtil;
+        this.pickingTicketRepository = pickingTicketRepository;
+        this.pickingTicketDetailRepository = pickingTicketDetailRepository;
     }
 
     @Override
@@ -171,7 +171,36 @@ public class IPurchaseOrderServiceImpl extends AbstractService<PurchaseOrder> im
             if(checkMap.size()==1)
             {
                 purchasePlanRepository.UpdateState(state,prNo);
+                List<Object[]> pickObjects= purchaseDetailRepository.findPickingDetail(prNo);
+                if(pickObjects.size()>0) {
+                    List<PickingTicketDetail> pickingTicketDetails = generateList(pickObjects);
+                    pickingTicketDetailRepository.saveAll(pickingTicketDetails);
+                }
             }
         }
+    }
+
+    private List<PickingTicketDetail> generateList(List<Object[]> pickObjects) {
+        List<PickingTicketDetail> list=new ArrayList<>();
+        for(Object[] obj: pickObjects)
+        {
+            PickingTicketDetail pd=new PickingTicketDetail();
+            pd.setType(obj[0] == null ? null : obj[0].toString());
+            pd.setMaterialNo(obj[1] == null ? null : obj[1].toString());
+            pd.setMaterialName(obj[2] == null ? null : obj[2].toString());
+            pd.setSpecification(obj[3] == null ? null : obj[3].toString());
+            pd.setRemark(obj[4] == null ? null : obj[4].toString());
+            pd.setCount(obj[5] == null ? null : new BigDecimal(obj[5].toString()));
+            pd.setCountUnit(obj[6] == null ? null : obj[6].toString());
+            pd.setPurchasePlanNo(obj[7] == null ? null : obj[7].toString());
+            pd.setCreateEmployeeNo(obj[8] == null ? null : obj[8].toString());
+            pd.setCreateDate(obj[9]==null?null:(Timestamp) obj[9]);
+            pd.setState(obj[10] == null ? null : obj[10].toString());
+            pd.setDelegateFlag(obj[11] == null ? null : obj[11].toString());
+            pd.setTicketId(obj[12] == null ? null : new Integer((Integer) obj[12]));
+            pd.setProductId(obj[13] == null ? null : new Integer((Integer) obj[13]));
+            list.add(pd);
+        }
+        return list;
     }
 }

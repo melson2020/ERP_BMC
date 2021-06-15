@@ -285,6 +285,7 @@ export default {
         let con = {
             id: element.id,
             type: element.type,
+            productId:element.productId,
             materialNo: element.materialNo,
             materialName: element.materialName,
             specification: element.specification,
@@ -302,6 +303,7 @@ export default {
             requesterId: element.requesterId,
             supplyId: element.supplyId,
             poNo:po,
+            pickingTicketId:element.pickingTicketId,
             costPrice:'',
           };
           list.push(con);

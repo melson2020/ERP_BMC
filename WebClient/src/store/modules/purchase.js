@@ -14,6 +14,7 @@ const state = {
     poDetailList:[],
     prBuyingList:[],
     prSummaries:[],
+    purchaseDashboardSummary:[]
 };
 
 const actions = {
@@ -214,6 +215,18 @@ const actions = {
           Message.error(err.message)
       })
     },
+    GetPurchaseDashboardSummary({ commit }, param) {
+      request.ReqGetPurchaseDashboardSummary(param).then(res => {
+          if (res.resultStatus == 1) {
+              commit(types.PR_SUMMARYDASHBOARD_LIST, res.data)
+          } else {
+              Message.warning(res.message)
+          }
+
+      }).catch(err => {
+          Message.error(err.message)
+      })
+  },
 };
 
 const getters = {
@@ -227,9 +240,13 @@ const getters = {
     poDetailList:state=>state.poDetailList,
     prBuyingList:state=>state.prBuyingList,
     prSummaries:state=>state.prSummaries,
+    purchaseDashboardSummary:state=>state.purchaseDashboardSummary,
 };
 
 const mutations = {
+    [types.PR_SUMMARYDASHBOARD_LIST](state, data) {
+        state.purchaseDashboardSummary = data
+    },
     [types.PURCHASE_DETAIL_LIST](state, data) {
       state.purchaseList=data;
     },

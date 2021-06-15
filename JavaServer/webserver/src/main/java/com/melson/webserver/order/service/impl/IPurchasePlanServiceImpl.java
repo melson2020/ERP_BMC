@@ -5,14 +5,21 @@ import com.melson.base.Result;
 import com.melson.base.utils.NumUtil;
 import com.melson.webserver.order.dao.IPickingTicketRepository;
 import com.melson.webserver.order.dao.IPurchaseDetailRepository;
+import com.melson.webserver.order.dao.IPurchaseOrderRepository;
 import com.melson.webserver.order.dao.IPurchasePlanRepository;
 import com.melson.webserver.order.entity.*;
 import com.melson.webserver.order.service.IPurchasePlanService;
+import com.melson.webserver.order.vo.DashBoardItemVo;
+import com.melson.webserver.order.vo.DashBoardVo;
 import com.melson.webserver.order.vo.PurchaseStateSummaryVo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -20,14 +27,17 @@ import java.util.*;
  */
 @Service
 public class IPurchasePlanServiceImpl extends AbstractService<PurchasePlan> implements IPurchasePlanService {
+    private static final Logger logger = LoggerFactory.getLogger(OrderFormServiceImpl.class);
     private final IPurchasePlanRepository purchasePlanRepository;
     private final IPurchaseDetailRepository purchaseDetailRepository;
     private final IPickingTicketRepository pickingTicketRepository;
+    private final IPurchaseOrderRepository purchaseOrderRepository;
 
-    public IPurchasePlanServiceImpl(IPurchasePlanRepository purchasePlanRepository, IPurchaseDetailRepository purchaseDetailRepository, IPickingTicketRepository pickingTicketRepository) {
+    public IPurchasePlanServiceImpl(IPurchasePlanRepository purchasePlanRepository, IPurchaseDetailRepository purchaseDetailRepository, IPickingTicketRepository pickingTicketRepository, IPurchaseOrderRepository purchaseOrderRepository) {
         this.purchasePlanRepository = purchasePlanRepository;
         this.purchaseDetailRepository = purchaseDetailRepository;
         this.pickingTicketRepository = pickingTicketRepository;
+        this.purchaseOrderRepository = purchaseOrderRepository;
     }
 
 
@@ -47,6 +57,13 @@ public class IPurchasePlanServiceImpl extends AbstractService<PurchasePlan> impl
         PurchasePlan saved=purchasePlanRepository.save(pr);
         Integer length=8;
         pr.setPlanNo(NumUtil.incrementCode(pr.getId(), PurchasePlan.PURCHASE_NO_CHAR,length));
+        PickingTicket pt=new PickingTicket();                 //创建picking_ticket
+        pt.setTicketNo("L"+new Date().getTime());
+        pt.setSourceNo(pr.getPlanNo());
+        pt.setType(PurchasePlan.PURCHASE_TYPE_INDIRECT);
+        pt.setCreateDate(new Date());
+        pt.setState(PickingTicket.STATE_CREATE);
+        PickingTicket savedPT=pickingTicketRepository.save(pt);
         for(PurchaseDetail detail:pr.getPurchaseDetailList()){
             detail.setType(pr.getType());
             detail.setCreateDate(pr.getCreateDate());
@@ -55,16 +72,10 @@ public class IPurchasePlanServiceImpl extends AbstractService<PurchasePlan> impl
             detail.setCreateBy(pr.getCreateBy());
             detail.setRequester(pr.getRequester());
             detail.setRequesterId(pr.getRequesterId());
+            detail.setPickingTicketId(savedPT.getId());
         }
         List<PurchaseDetail> detailList=pr.getPurchaseDetailList();
         purchaseDetailRepository.saveAll(detailList);
-        PickingTicket pt=new PickingTicket();                 //创建picking_ticket
-        pt.setTicketNo("L"+new Date().getTime());
-        pt.setSourceNo(pr.getPlanNo());
-        pt.setType(PurchasePlan.PURCHASE_TYPE_INDIRECT);
-        pt.setCreateDate(new Date());
-        pt.setState(PickingTicket.STATE_CREATE);
-        pickingTicketRepository.save(pt);
         pr.setPickingNo(pt.getTicketNo());
         purchasePlanRepository.save(pr);
         result.setData(saved);
@@ -91,7 +102,9 @@ public class IPurchasePlanServiceImpl extends AbstractService<PurchasePlan> impl
     @Transactional
     public Integer DeletePurchase(PurchasePlan purchase) {
         purchaseDetailRepository.deleteByPrNo(purchase.getPlanNo());     //删除PR 详细表
+        pickingTicketRepository.deleteByByPrNo(purchase.getPlanNo());
         return purchasePlanRepository.deletePrById(purchase.getId());    //删除PR
+
     }
 
     @Override
@@ -150,6 +163,43 @@ public class IPurchasePlanServiceImpl extends AbstractService<PurchasePlan> impl
         Integer waitDeliver = stateMap.get(PurchasePlan.PURCHASE_STATE_BUYING) == null ? 0 : stateMap.get(PurchasePlan.PURCHASE_STATE_BUYING);
         list.add(new PurchaseStateSummaryVo("待发货", waitDeliver, "/waiting"));
         return list;
+    }
+
+    @Override
+    public DashBoardVo GetDashboardSummaryCount(String date) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date date1Value = sdf.parse(date);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date1Value);
+            calendar.set(Calendar.DAY_OF_MONTH, 1);
+            Date beginDate = calendar.getTime();
+            calendar.add(Calendar.MONTH, 1);
+            Date endDate = calendar.getTime();
+
+            DashBoardVo vos = new DashBoardVo();
+            List<Object[]> productobjects = purchaseDetailRepository.GetTopProductList(sdf.format(beginDate), sdf.format(endDate));
+            List<DashBoardItemVo> topProductList = generate(productobjects);
+            List<Object[]> supplyObjects = purchaseOrderRepository.GetTopSupplyList(sdf.format(beginDate), sdf.format(endDate));
+            List<DashBoardItemVo> topSupplyList = generate(supplyObjects);
+            vos.setTopProductList(topProductList);
+            vos.setTopSupplyList(topSupplyList);
+            return vos;
+        }catch (Exception e) {
+            logger.error("funcation  GetDashboardSummaryCount error:" + e.getMessage());
+            return null;
+        }
+    }
+
+    private List<DashBoardItemVo> generate(List<Object[]> objects) {
+        List <DashBoardItemVo> itemVoList=new ArrayList<>();
+        for (Object[] obj : objects) {
+            DashBoardItemVo vo=new DashBoardItemVo();
+            vo.setItemName(obj[0] == null ? null : obj[0].toString());
+            vo.setItemValue(obj[1] == null ? null : new BigDecimal(obj[1].toString()));
+            itemVoList.add(vo);
+        }
+        return itemVoList;
     }
 
 

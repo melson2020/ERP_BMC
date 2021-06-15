@@ -25,7 +25,6 @@ public class ProductVo {
     public ProductVo() {
     }
 
-
     public ProductVo(String productNo, String name, String specification, String categoryId, String category, Integer supplyId, BigDecimal salesPrice, String supplyName, String bomNo, String bomGenericId, String alias, Integer id, String unit, String remark) {
         this.productNo = productNo;
         this.name = name;
@@ -154,4 +153,5 @@ public class ProductVo {
     public void setRemark(String remark) {
         this.remark = remark;
     }
+
 }

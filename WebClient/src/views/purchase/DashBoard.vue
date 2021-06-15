@@ -23,11 +23,11 @@
     </el-row>
     <div class="center-dashboard-div">
       <div class="po-header">
+        <!-- <div>
+        <span class="title-name">当月采购详情</span>
+        </div> -->
         <div>
-        <span class="title-name">待交货详情</span>
-        </div>
-        <div>
-          <span >选择日期： </span>
+          <span class="title-name">选择月份： </span>
           <el-date-picker
             v-model="selectMonth"
             type="month"
@@ -39,17 +39,15 @@
         </div>
       </div>
       <el-row :gutter="10">
-        <el-col :span="10">
+        <el-col :span="12">
           <div class="pr-dashborad-card">
-            <span >card 1</span>
             <!-- <div id="chart-1" class="echart-bar-1"></div> -->
-            <div id="myChart" :style="{width: '400px', height: '400px'}"></div>
+            <div id="myChart" class="echart-bar-1"></div>
           </div>
         </el-col>
-        <el-col :span="14">
+        <el-col :span="12">
           <div class="pr-dashborad-card">
-            <span >card 2</span>
-            <div id="chart-2" class="dashboard-main-right-content"></div>
+            <div id="myChart-2" class="echart-bar-1"></div>
           </div>
         </el-col>
       </el-row>
@@ -64,23 +62,13 @@ export default {
   data() {
     return {
       orderType: "",
-      orderState: "",
       selectMonth: "",
-      detailDialog: false,
-      orderFormInfo: {
-        orderForm: {},
-        orderFormDetailList: [],
-        producePlanList: [],
-        delegateTicketList: [],
-        purchaseDetailList: [],
-      },
     };
   },
   computed: {
     ...mapGetters([
       "prSummaries",
-      "orderProduceTypeSummary",
-      "orderFormProcessList",
+      "purchaseDashboardSummary",
     ]),
     // orderFormProcessListShow() {
     //   return this.orderFormProcessList.filter((item) => {
@@ -108,16 +96,14 @@ export default {
     // },
   },
   watch: {
-    orderProduceTypeSummary() {
-      this.drawCharts();
+    purchaseDashboardSummary() {
+      this.drawLine();
     },
   },
   methods: {
     ...mapActions({
       GetSummaryCount: "GetSummaryCount",
-      // GetOrderProduceTypeSummary: "GetOrderProduceTypeSummary",
-      // GetOrderFormProcessList: "GetOrderFormProcessList",
-      GetOrderFormInfo: "GetOrderFormInfo",
+      GetPurchaseDashboardSummary: "GetPurchaseDashboardSummary",
     }),
     navigationTo(path) {
       if (path != "") {
@@ -136,7 +122,7 @@ export default {
       );
     },
     monthChange(value) {
-      this.GetOrderProduceTypeSummary({ date: value.format("yyyy-MM-dd") });
+      this.GetPurchaseDashboardSummary({ date: value.format("yyyy-MM-dd") });
     },
 
     drawCharts() {
@@ -182,31 +168,148 @@ export default {
     drawLine(){
         // 基于准备好的dom，初始化echarts实例
         let myChart = echarts.init(document.getElementById('myChart'))
+        let myChart2 = echarts.init(document.getElementById('myChart-2'))
         // 绘制图表
-        myChart.setOption({
-            title: { text: 'TOP-10 物料' },
+        var option1 = {
+            title: { 
+              text: 'TOP-10 物料',
+              textStyle:{
+                fontSize:13,
+                color: "#009db2",//标题颜色
+                fontWeight: "bold",//粗体
+              }
+            },
             tooltip: {},
             xAxis: {
-                data: ["衬衫","羊毛衫","雪纺衫","裤子","高跟鞋","袜子"]
+                // data: ["衬衫","羊毛衫","雪纺衫","裤子","羽绒服","冲锋衣","汗衫-1000001-1"]
+                data: []
             },
             yAxis: {},
             series: [{
-                name: '销量',
+                name: '采购数量',
                 type: 'bar',
-                data: [5, 20, 36, 10, 10, 20]
+                itemStyle: {
+                  //通常情况下：
+                  normal: {
+                    //每个柱子的颜色即为colorList数组里的每一项，如果柱子数目多于colorList的长度，则柱子颜色循环使用该数组
+                    color: function (params) {
+                      var colorList = [
+                        "#9489fa",
+                        "#f06464",
+                        "#5690dd",
+                        "#f0da49",
+                        "#71c16f",
+                        "#2aaaef",
+                        "#f7af59",
+                        "#bd88f5",
+                        "#009db2",
+                        "#FFDAB9",
+                      ];
+                      return colorList[params.dataIndex % colorList.length];
+                    },
+                  },
+                  //鼠标悬停时：
+                  emphasis: {
+                    shadowBlur: 10,
+                    shadowOffsetX: 0,
+                    shadowColor: "rgba(0, 0, 0, 0.5)",
+                  },
+                },
+                barCategoryGap: "20%",
+                // data: [{value: 5, name: "衬衫"},{value: 6, name: "羊毛衫"},{value: 21, name: "雪纺衫"},{value: 23, name: "裤子"},{value: 9, name: "羽绒服"},{value: 31, name: "冲锋衣"},{value: 13, name: "汗衫"},{value: 26, name: "短裤"},{value: 20, name: "防晒服"},{value: 15, name: "雨衣"}]
+                data: []
             }]
+        };
+
+        var option2 = {
+            title: { 
+              text: 'TOP-10 供应商',
+              textStyle:{
+                fontSize:13,
+                color: "#009db2",//标题颜色
+                fontWeight: "bold",//粗体
+              }
+            },
+            tooltip: {},
+            xAxis: {
+                // data: ["衬衫","羊毛衫","雪纺衫","裤子","羽绒服","冲锋衣","汗衫-1000001-1"]
+                data: []
+            },
+            yAxis: {},
+            series: [{
+                name: '采购总额',
+                type: 'bar',
+                itemStyle: {
+                  //通常情况下：
+                  normal: {
+                    //每个柱子的颜色即为colorList数组里的每一项，如果柱子数目多于colorList的长度，则柱子颜色循环使用该数组
+                    color: function (params) {
+                      var colorList = [
+                        "#9489fa",
+                        "#f06464",
+                        "#5690dd",
+                        "#f0da49",
+                        "#71c16f",
+                        "#2aaaef",
+                        "#f7af59",
+                        "#bd88f5",
+                        "#009db2",
+                        "#FFDAB9",
+                      ];
+                      return colorList[params.dataIndex % colorList.length];
+                    },
+                  },
+                  //鼠标悬停时：
+                  emphasis: {
+                    shadowBlur: 10,
+                    shadowOffsetX: 0,
+                    shadowColor: "rgba(0, 0, 0, 0.5)",
+                  },
+                },
+                barCategoryGap: "20%",
+                data: []
+                // data: [{value: 5, name: "衬衫"},{value: 6, name: "羊毛衫"},{value: 21, name: "雪纺衫"},{value: 23, name: "裤子"},{value: 9, name: "羽绒服"},{value: 31, name: "冲锋衣"},{value: 13, name: "汗衫"},{value: 26, name: "短裤"},{value: 20, name: "防晒服"},{value: 15, name: "雨衣"}]
+            }]
+        };
+
+        if (this.purchaseDashboardSummary.topProductList.length > 0) {
+        this.purchaseDashboardSummary.topProductList.map((item) => {
+          option1.series[0].data.push({
+            value: item.itemValue,
+            name: item.itemName,
+          });
         });
+        } else {
+          option1.series[0].data.push({
+            value: 0,
+            name: "无",
+          });
+        }
+
+        if (this.purchaseDashboardSummary.topSupplyList.length > 0) {
+        this.purchaseDashboardSummary.topSupplyList.map((item) => {
+          option2.series[0].data.push({
+            value: item.itemValue,
+            name: item.itemName,
+          });
+        });
+        } else {
+          option2.series[0].data.push({
+            value: 0,
+            name: "无",
+          });
+        }
+        myChart.setOption(option1);
+        myChart2.setOption(option2);
     }
   },
   beforeMount() {
     this.GetSummaryCount();
   },
   mounted() {
-    // this.GetOrderCenterSummaryCount();
-    // this.selectMonth = new Date();
-    this.drawLine();
-    // this.GetOrderProduceTypeSummary({ date: new Date().format("yyyy-MM-dd") });
-    // this.GetOrderFormProcessList();
+    // this.drawLine();
+    this.selectMonth = new Date();
+    this.GetPurchaseDashboardSummary({ date: new Date().format("yyyy-MM-dd") });
   },
 };
 </script>
@@ -344,4 +447,6 @@ export default {
   margin-left: 10px;
   margin-top: 10px; */
 }
+
+
 </style>

@@ -471,7 +471,7 @@ export default {
       {
         if(!this.newCheckEidtable())
         {
-          this.newpurchase.purchaseDetailList.push({ id: "", type:"ORDER",materialNo:"",materialName:"",specification:"",remark:"",count:"",countUnit:"",purchasePlanNo:"",createEmployeeNo:"",createBy:"",createDate:"",state:"CREATE",sourceId:"",sourceNo:"",requester:"",requesterId:"",supplyId:"",seen: false, isEditable:true ,notSavedFlag:true})
+          this.newpurchase.purchaseDetailList.push({ id: "", type:"ORDER",productId:"",materialNo:"",materialName:"",specification:"",remark:"",count:"",countUnit:"",purchasePlanNo:"",createEmployeeNo:"",createBy:"",createDate:"",state:"CREATE",sourceId:"",sourceNo:"",requester:"",requesterId:"",supplyId:"",seen: false, isEditable:true ,notSavedFlag:true})
         }
       }
     },
@@ -480,7 +480,7 @@ export default {
       {
         if(!this.editCheckEidtable())
         {
-          this.editpurchase.purchaseDetailList.push({ id: "", type:"ORDER",materialNo:"",materialName:"",specification:"",remark:"",count:"",countUnit:"",purchasePlanNo:"",createEmployeeNo:"",createBy:"",createDate:"",state:"CREATE",sourceId:"",sourceNo:"",requester:"",requesterId:"",supplyId:"",seen: false, isEditable:true ,notSavedFlag:true})
+          this.editpurchase.purchaseDetailList.push({ id: "", type:"ORDER",productId:"",materialNo:"",materialName:"",specification:"",remark:"",count:"",countUnit:"",purchasePlanNo:"",createEmployeeNo:"",createBy:"",createDate:"",state:"CREATE",sourceId:"",sourceNo:"",requester:"",requesterId:"",supplyId:"",seen: false, isEditable:true ,notSavedFlag:true})
         }
       }
     },
@@ -558,6 +558,7 @@ export default {
           row.specification=event.specification;
           row.supplyId=event.supplyId;
           row.countUnit=event.unit;
+          row.productId=event.id;
         }
         else{
           row.materialNo="";
@@ -565,6 +566,7 @@ export default {
           row.specification="";
           row.supplyId="";
           row.countUnit="";
+          row.productId="";
           event=null;
         }
     },
@@ -576,6 +578,7 @@ export default {
           row.specification=event.specification;
           row.supplyId=event.supplyId;
           row.countUnit=event.unit;
+          row.productId=event.id;
         }
         else{
           row.materialNo="";
@@ -583,6 +586,7 @@ export default {
           row.specification="";
           row.supplyId="";
           row.countUnit="";
+          row.productId="";
           event=null;
         }
     },
@@ -658,6 +662,7 @@ export default {
                   if (res.resultStatus == 1) {
                     this.purchaseAddDialog = false;
                     this.PushPurchaseList(res.data);
+                    this.newpurchase.purchaseDetailList=[];
                     this.$message({
                       showClose: true,
                       message: "创建成功",
@@ -702,7 +707,7 @@ export default {
             let list = [];
             for (let index = 0; index < res.data.purchaseDetailList.length; index++) {
                 const element = res.data.purchaseDetailList[index];
-                let con = { id: element.id, type:element.type,materialNo:element.materialNo,materialName:element.materialName,specification:element.specification,remark:element.remark,count:element.count,countUnit:element.countUnit,purchasePlanNo:element.purchasePlanNo,createEmployeeNo:element.createEmployeeNo,createBy:element.createBy,createDate:element.createDate,state:element.state,sourceId:element.sourceId,sourceNo:element.sourceNo,requester:element.requester,requesterId:element.requesterId,supplyId:element.supplyId,seen: false, isEditable:false ,notSavedFlag:false};
+                let con = { id: element.id, type:element.type,productId:element.productId,materialNo:element.materialNo,materialName:element.materialName,specification:element.specification,remark:element.remark,count:element.count,countUnit:element.countUnit,purchasePlanNo:element.purchasePlanNo,createEmployeeNo:element.createEmployeeNo,createBy:element.createBy,createDate:element.createDate,state:element.state,sourceId:element.sourceId,sourceNo:element.sourceNo,requester:element.requester,requesterId:element.requesterId,supplyId:element.supplyId,seen: false, isEditable:false ,notSavedFlag:false};
                 list.push(con);
             }
             this.PRNo=this.editpurchase.planNo;

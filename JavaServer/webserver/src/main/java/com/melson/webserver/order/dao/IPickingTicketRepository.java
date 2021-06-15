@@ -24,4 +24,8 @@ public interface IPickingTicketRepository extends JpaRepository<PickingTicket, I
     @Query(nativeQuery = true, value = "UPDATE picking_ticket pt set pt.state= ?3,pt.inboundTicketNo= ?2 WHERE pt.id= ?1")
     @Modifying
     int updateAfterInBound(Integer id, String inboundNo, String state);
+
+    @Modifying
+    @Query(value = "delete from picking_ticket where sourceNo =?1",nativeQuery = true)
+    void deleteByByPrNo(String planNo);
 }

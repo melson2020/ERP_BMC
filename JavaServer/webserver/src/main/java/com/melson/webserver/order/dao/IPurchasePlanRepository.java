@@ -35,4 +35,8 @@ public interface IPurchasePlanRepository extends JpaRepository<PurchasePlan,Inte
 
     @Query(nativeQuery = true,value = "SELECT state,count(id) as count FROM `purchase_plan` where state='CREATE' or state='APPROVE' GROUP BY state;")
     List<Object[]> getAllStatueCount();
+
+    @Modifying
+    @Query(value = "update `purchase_plan` set `state`=?1,pickingNo=?2 where planNo=?3",nativeQuery = true)
+    void UpdateStateAndPickTicketNo(String state, String ticketNo, String prNo);
 }

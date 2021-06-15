@@ -3,6 +3,7 @@ package com.melson.webserver.order.service.impl;
 import com.melson.base.utils.EntityManagerUtil;
 import com.melson.base.utils.NumUtil;
 import com.melson.webserver.dict.dao.IBomsRepository;
+import com.melson.webserver.order.dao.IPickingTicketRepository;
 import com.melson.webserver.order.dao.IPurchaseDetailRepository;
 import com.melson.webserver.order.dao.IPurchasePlanRepository;
 import com.melson.webserver.order.entity.*;
@@ -29,12 +30,14 @@ public class PurchaseDetailServiceImpl implements IPurchaseDetailService {
     private final IPurchaseDetailRepository purchaseDetailRepository;
     private final IPurchasePlanRepository purchasePlanRepository;
     private final EntityManagerUtil entityManagerUtil;
+    private final IPickingTicketRepository pickingTicketRepository;
 
-    public PurchaseDetailServiceImpl(IBomsRepository bomsRepository, IPurchaseDetailRepository purchaseDetailRepository, IPurchasePlanRepository purchasePlanRepository, EntityManagerUtil entityManagerUtil) {
+    public PurchaseDetailServiceImpl(IBomsRepository bomsRepository, IPurchaseDetailRepository purchaseDetailRepository, IPurchasePlanRepository purchasePlanRepository, EntityManagerUtil entityManagerUtil, IPickingTicketRepository pickingTicketRepository) {
         this.bomsRepository = bomsRepository;
         this.purchaseDetailRepository = purchaseDetailRepository;
         this.purchasePlanRepository = purchasePlanRepository;
         this.entityManagerUtil = entityManagerUtil;
+        this.pickingTicketRepository = pickingTicketRepository;
     }
 
     /**
@@ -132,6 +135,7 @@ public class PurchaseDetailServiceImpl implements IPurchaseDetailService {
         purchaseDetail.setCreateBy(pr.getCreateBy());
         purchaseDetail.setRequester(pr.getRequester());
         purchaseDetail.setSupplyId(formDetail.getSupplyId());
+        purchaseDetail.setProductId(formDetail.getProductId());
         return purchaseDetail;
     }
 }
