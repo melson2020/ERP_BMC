@@ -72,12 +72,13 @@
             ></el-input>
           </div>
           <el-table
-            script
-            class="mt40"
-            border
-            size="mini"
             :data="inventoryStocktakingDetail"
-          >
+            border="" stripe
+            size="mini"
+            :header-row-style="{ height: '40px' }"
+            :row-style="{ height: '40px' }"
+            :cell-style="{ padding: '2px', color: '#909399' }"
+            :header-cell-style="{ background: '#909399', color: 'white' }">
             <el-table-column prop="checked" label="状态" width="80px">
               <template slot-scope="scope">
                 <i
@@ -126,7 +127,7 @@
                 <i v-else class="el-icon-check colorgreen"></i>
               </template>
             </el-table-column>
-            <el-table-column prop="tackingCount" label="盘点确认" width="60px">
+            <el-table-column prop="tackingCount" label="盘点确认" width="90px">
               <template slot-scope="scope">
                 <el-button
                   v-if="!scope.row.checked"

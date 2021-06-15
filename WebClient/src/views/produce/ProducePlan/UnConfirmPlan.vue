@@ -7,7 +7,13 @@
         <el-option label="代加工" value="replace"> </el-option>
       </el-select>
     </div>
-    <el-table :data="producePlanList" script border>
+    <el-table :data="producePlanList" 
+        border="" stripe
+        size="small"
+        :header-row-style="{ height: '40px' }"
+        :row-style="{ height: '40px' }"
+        :cell-style="{ padding: '2px', color: '#909399' }"
+        :header-cell-style="{ background: '#909399', color: 'white' }">
       <el-table-column prop="planNo" label="单号"> </el-table-column>
       <el-table-column prop="customerName" label="客户名称"> </el-table-column>
       <el-table-column prop="type" label="类型">

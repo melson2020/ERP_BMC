@@ -11,7 +11,7 @@
     </div>
     <div class="poDetail-content">
       <el-table :data="poListShow" 
-        border
+        border="" stripe
         size="small"
         :header-row-style="{ height: '40px' }"
         :row-style="{ height: '40px' }"

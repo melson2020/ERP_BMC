@@ -76,7 +76,13 @@
       </div>
     </div>
 
-    <el-table :data="delegateProcessingListshow" script border>
+    <el-table :data="delegateProcessingListshow" 
+      border="" stripe
+      size="small"
+      :header-row-style="{ height: '40px' }"
+      :row-style="{ height: '40px' }"
+      :cell-style="{ padding: '2px', color: '#909399' }"
+      :header-cell-style="{ background: '#909399', color: 'white' }">
       <el-table-column prop="ticketNo" label="单号"> </el-table-column>
       <el-table-column prop="customerName" label="客户名称"> </el-table-column>
       <el-table-column prop="type" label="类型">

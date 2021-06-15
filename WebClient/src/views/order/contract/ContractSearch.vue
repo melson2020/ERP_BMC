@@ -59,7 +59,13 @@
         >
       </el-popover>
     </div>
-    <el-table :data="formalContractList" border stripe style="width: 100%">
+    <el-table :data="formalContractList" 
+      border="" stripe
+      size="small"
+      :header-row-style="{ height: '40px' }"
+      :row-style="{ height: '40px' }"
+      :cell-style="{ padding: '2px', color: '#909399' }"
+      :header-cell-style="{ background: '#909399', color: 'white' }">
       <el-table-column prop="contractNo" label="合同号"> </el-table-column>
       <el-table-column prop="orderTicketNo" label="订单号"> </el-table-column>
       <el-table-column prop="customerName" label="客户名称"> </el-table-column>

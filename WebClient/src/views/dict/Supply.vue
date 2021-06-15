@@ -13,10 +13,12 @@
 
     <div class="supply-content">
       <el-table :data="supplyListPageShow" 
-          border="" stripe           
-          :header-row-style="{height:'40px' ,'align':'center'}"
-          :row-style="{height:'40px'}"
-          style="width: 100%">
+        border="" stripe
+        size="small"
+        :header-row-style="{ height: '40px' }"
+        :row-style="{ height: '40px' }"
+        :cell-style="{ padding: '2px', color: '#909399' }"
+        :header-cell-style="{ background: '#909399', color: 'white' }">
         <el-table-column prop="name" label="供应商"></el-table-column>
         <el-table-column prop="contact" label="联系人" width="120px"> </el-table-column>
                 <el-table-column prop="phone" label="电话" width="160px"> </el-table-column>

@@ -15,12 +15,12 @@
       </div>
     </div>
     <el-table :data="prListPageShow" 
-      border
-      size="small"
-      :header-row-style="{ height: '40px' }"
-      :row-style="{ height: '40px' }"
-      :cell-style="{ padding: '2px', color: '#909399' }"
-      :header-cell-style="{ background: '#909399', color: 'white' }">
+        border="" stripe
+        size="small"
+        :header-row-style="{ height: '40px' }"
+        :row-style="{ height: '40px' }"
+        :cell-style="{ padding: '2px', color: '#909399' }"
+        :header-cell-style="{ background: '#909399', color: 'white' }">
       <el-table-column prop="poNo" label="PO-NO" width="140px"></el-table-column>
       <el-table-column prop="purchasePlanNo" label="PR-NO" width="140px"></el-table-column>
       <el-table-column prop="materialNo" label="物料号" width="140px"> </el-table-column>

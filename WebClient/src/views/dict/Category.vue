@@ -13,10 +13,12 @@
 
     <div class="category-content">
       <el-table :data="categoryListPageShow" 
-          border="" stripe           
-          :header-row-style="{height:'40px' ,'align':'center'}"
-          :row-style="{height:'40px'}"
-          style="width: 100%">
+        border="" stripe
+        size="small"
+        :header-row-style="{ height: '40px' }"
+        :row-style="{ height: '40px' }"
+        :cell-style="{ padding: '2px', color: '#909399' }"
+        :header-cell-style="{ background: '#909399', color: 'white' }">
         <el-table-column prop="categoryId" label="类别代码" width="180px"></el-table-column>
         <el-table-column prop="name" label="类别名称" width="280px"> </el-table-column>
         <el-table-column prop="description" label="备注信息"> </el-table-column>

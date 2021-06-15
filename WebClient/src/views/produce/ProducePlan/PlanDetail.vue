@@ -46,13 +46,12 @@
           <template slot-scope="props">
             <el-table
               :data="props.row.processList"
-              border
-              :show-header="false"
-              size="mini"
-              style="width: 100%"
-              class="fz8"
-              stripe
-            >
+              border="" stripe
+              size="small"
+              :header-row-style="{ height: '40px' }"
+              :row-style="{ height: '40px' }"
+              :cell-style="{ padding: '2px', color: '#909399' }"
+              :header-cell-style="{ background: '#909399', color: 'white' }">
               <el-table-column label="序号" prop="index" width="50px">
               </el-table-column>
               <el-table-column label="名称" prop="processName" width="200px">

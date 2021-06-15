@@ -30,7 +30,13 @@
     <div class="produce-monitor-doing-plan-div">
       <div class="undoing-plan-div-title colorblue">生产列表</div>
       <el-scrollbar class="planing-scrollbar">
-        <el-table :data="processingPlanList" script border size="small">
+        <el-table :data="processingPlanList" 
+          border="" stripe
+          size="small"
+          :header-row-style="{ height: '40px' }"
+          :row-style="{ height: '40px' }"
+          :cell-style="{ padding: '2px', color: '#909399' }"
+          :header-cell-style="{ background: '#909399', color: 'white' }">
           <el-table-column prop="planNo" label="单号" width="180">
           </el-table-column>
           <el-table-column prop="orderFormNo" label="订单号" width="180">

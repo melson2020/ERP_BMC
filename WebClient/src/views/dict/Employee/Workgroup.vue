@@ -14,10 +14,12 @@
 
     <div class="workGroup-content">
       <el-table :data="workGroupListPageShow" 
-          border="" stripe           
-          :header-row-style="{height:'40px' ,'align':'center'}"
-          :row-style="{height:'40px'}"
-          style="width: 100%">
+        border="" stripe
+        size="small"
+        :header-row-style="{ height: '40px' }"
+        :row-style="{ height: '40px' }"
+        :cell-style="{ padding: '2px', color: '#909399' }"
+        :header-cell-style="{ background: '#909399', color: 'white' }">
         <el-table-column prop="workGroupCode" label="组别代码" width="180px"></el-table-column>
         <el-table-column prop="name" label="工作组名称" width="340px"> </el-table-column>
         <el-table-column prop="description" label="描述"> </el-table-column>

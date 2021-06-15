@@ -13,10 +13,12 @@
 
     <div class="Storage-content">
       <el-table :data="StorageListPageShow" 
-          border="" stripe           
-          :header-row-style="{height:'40px' ,'align':'center'}"
-          :row-style="{height:'40px'}"
-          style="width: 100%">
+        border="" stripe
+        size="small"
+        :header-row-style="{ height: '40px' }"
+        :row-style="{ height: '40px' }"
+        :cell-style="{ padding: '2px', color: '#909399' }"
+        :header-cell-style="{ background: '#909399', color: 'white' }">
         <el-table-column prop="storageCode" label="仓库代码" width="180px"></el-table-column>
         <el-table-column prop="name" label="仓库名称" width="220px"> </el-table-column>
         <el-table-column prop="location" label="仓库位置" width="220px"> </el-table-column>

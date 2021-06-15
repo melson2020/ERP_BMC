@@ -188,28 +188,31 @@ public class IProductImpl extends AbstractService<Product> implements IProduct {
     @Override
     public Result SaveAndUpdate(Product product) {
         Result result = new Result();
-        Product checkExist = productRepository.findByCeriteria(product.getName(),product.getCategoryId(),product.getSpecification(),product.getSupplyId());
-        if (checkExist != null) {
-            if (product.getId() == checkExist.getId()) {
-                Product saved = productRepository.save(product);
-                if (saved == null) {
-                    result.setResultStatus(-1);
-                    result.setMessage("保存失败！");
-                } else {
-                    StorageDetail checkStorageDetail = storageDetailRepository.findByMaterialNo(saved.getProductNo());
-                    UpdateStorageTable(checkStorageDetail, saved);
-                    StorageAreaLocation storage = storageAreaLocationRepository.findByStorageCode(saved.getStorageCode());
-                    saved.setStorageName(storage.getName());
-                    ProductCategory category = iProductCategoryRepository.findByCategoryId(saved.getCategoryId());
-                    saved.setCategory(category.getName());
-                    Supply supply = supplyRepository.findById(saved.getSupplyId());
-                    saved.setSupplyName(supply.getName());
-                    result.setData(saved);
-                }
-            } else {
+//        Product checkExist = productRepository.findByCeriteria(product.getName(),product.getCategoryId(),product.getSpecification(),product.getSupplyId());
+//        if (checkExist != null) {
+
+        if (product.getId() != null) {
+//            Product checkExist = productRepository.findByCeriteria(product.getName(),product.getCategoryId(),product.getSpecification(),product.getSupplyId());
+//            if (product.getId() == checkExist.getId()) {
+            Product saved = productRepository.save(product);
+            if (saved == null) {
                 result.setResultStatus(-1);
-                result.setMessage("已经存在此产品名称或联系管理员！");
+                result.setMessage("保存失败！");
+            } else {
+                StorageDetail checkStorageDetail = storageDetailRepository.findByMaterialNo(saved.getProductNo());
+                UpdateStorageTable(checkStorageDetail, saved);
+                StorageAreaLocation storage = storageAreaLocationRepository.findByStorageCode(saved.getStorageCode());
+                saved.setStorageName(storage.getName());
+                ProductCategory category = iProductCategoryRepository.findByCategoryId(saved.getCategoryId());
+                saved.setCategory(category.getName());
+                Supply supply = supplyRepository.findById(saved.getSupplyId());
+                saved.setSupplyName(supply.getName());
+                result.setData(saved);
             }
+//            } else {
+//                result.setResultStatus(-1);
+//                result.setMessage("已经存在此产品名称或联系管理员！");
+//            }
         } else {
 //            if(product.getId()==null) {
 //                product.setProductNo(sysSequenceService.GenerateCode(Product.PRODUCT_NO_CHAR));

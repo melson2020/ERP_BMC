@@ -12,10 +12,12 @@
     </div>
     <div class="customer-content">
       <el-table :data="customerListPageShow" 
-          border="" stripe           
-          :header-row-style="{height:'40px' ,'align':'center'}"
-          :row-style="{height:'40px'}"
-          style="width: 100%">
+        border="" stripe
+        size="small"
+        :header-row-style="{ height: '40px' }"
+        :row-style="{ height: '40px' }"
+        :cell-style="{ padding: '2px', color: '#909399' }"
+        :header-cell-style="{ background: '#909399', color: 'white' }">
         <el-table-column prop="customerNo" label="客户代码" width="140px"></el-table-column>
         <el-table-column prop="name" label="客户名称"> </el-table-column>
                 <el-table-column prop="address" label="地址"> </el-table-column>

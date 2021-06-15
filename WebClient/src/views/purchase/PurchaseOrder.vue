@@ -20,7 +20,7 @@
       <el-table :data="prListPageShow" 
         ref="multipleTable"
         @selection-change="handleSelectionChange"
-        border
+        border="" stripe
         size="small"
         :header-row-style="{ height: '40px' }"
         :row-style="{ height: '40px' }"

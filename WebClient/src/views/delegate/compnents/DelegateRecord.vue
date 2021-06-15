@@ -86,7 +86,13 @@
         >
       </div>
     </div>
-    <el-table :data="delegateRecordList" script border>
+    <el-table :data="delegateRecordList" 
+      border="" stripe
+      size="small"
+      :header-row-style="{ height: '40px' }"
+      :row-style="{ height: '40px' }"
+      :cell-style="{ padding: '2px', color: '#909399' }"
+      :header-cell-style="{ background: '#909399', color: 'white' }">
       <el-table-column prop="ticketNo" label="单号" width="150px">
       </el-table-column>
       <el-table-column prop="customerName" label="客户名称"> </el-table-column>

@@ -15,13 +15,15 @@
       </div>
     </div>
     <el-table
-      script
-      border
-      size="small"
       class="storage-detail-table"
       :data="storageDetailPage.content"
       :span-method="objectSpanMethod"
-    >
+      border="" stripe
+      size="small"
+      :header-row-style="{ height: '40px' }"
+      :row-style="{ height: '40px' }"
+      :cell-style="{ padding: '2px', color: '#909399' }"
+      :header-cell-style="{ background: '#909399', color: 'white' }">
       <el-table-column prop="materialNo" label="编号"> </el-table-column>
       <el-table-column prop="name" label="名称"> </el-table-column>
       <el-table-column prop="specification" label="规格"> </el-table-column>

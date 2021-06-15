@@ -11,11 +11,12 @@
     </div>
     <div class="prDetail-content">
       <el-table :data="purchaseListPageShow" 
-        border
+        border="" stripe
         size="small"
         :header-row-style="{ height: '40px' }"
         :row-style="{ height: '40px' }"
         :cell-style="{ padding: '2px', color: '#909399' }"
+        :header-cell-style="{ background: '#909399', color: 'white' }">
         :header-cell-style="{ background: '#909399', color: 'white' }">
         <el-table-column prop="planNo" label="PR-NO" width="180px"></el-table-column>
         <el-table-column prop="requester" label="采购人" width="280px"> </el-table-column>

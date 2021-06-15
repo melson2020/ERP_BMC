@@ -13,10 +13,12 @@
 
     <div class="productBom-content">
       <el-table :data="productBomListPageShow" 
-          border="" stripe           
-          :header-row-style="{height:'40px' ,'align':'center'}"
-          :row-style="{height:'40px'}"
-          style="width: 100%">
+        border="" stripe
+        size="small"
+        :header-row-style="{ height: '40px' }"
+        :row-style="{ height: '40px' }"
+        :cell-style="{ padding: '2px', color: '#909399' }"
+        :header-cell-style="{ background: '#909399', color: 'white' }">
         <el-table-column prop="productNo" label="产品编码" width="140px"> </el-table-column>
         <el-table-column prop="productName" label="产品名称" > </el-table-column>
         <el-table-column prop="bomNo" label="Bom编码" width="140px"> </el-table-column>

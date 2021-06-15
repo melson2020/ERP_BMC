@@ -14,10 +14,12 @@
 
     <div class="employee-content">
       <el-table :data="employeeListPageShow" 
-          border="" stripe           
-          :header-row-style="{height:'40px' ,'align':'center'}"
-          :row-style="{height:'40px'}"
-          style="width: 100%">
+        border="" stripe
+        size="small"
+        :header-row-style="{ height: '40px' }"
+        :row-style="{ height: '40px' }"
+        :cell-style="{ padding: '2px', color: '#909399' }"
+        :header-cell-style="{ background: '#909399', color: 'white' }">
         <el-table-column prop="userName" label="用户名称" width="200px"></el-table-column>
         <el-table-column prop="department" label="部门名称" width="200px"></el-table-column>
         <el-table-column prop="loginName" label="登录名" width="180px"></el-table-column>

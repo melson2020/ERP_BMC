@@ -10,7 +10,13 @@
         >添加产线</el-button
       >
     </div>
-    <el-table :data="produceLineList" border style="width: 100%">
+    <el-table :data="produceLineList"
+        border="" stripe
+        size="small"
+        :header-row-style="{ height: '40px' }"
+        :row-style="{ height: '40px' }"
+        :cell-style="{ padding: '2px', color: '#909399' }"
+        :header-cell-style="{ background: '#909399', color: 'white' }">
       <el-table-column prop="code" label="编号" width="200"> </el-table-column>
       <el-table-column prop="name" label="名称" width="200"> </el-table-column>
       <el-table-column prop="location" label="位置"> </el-table-column>

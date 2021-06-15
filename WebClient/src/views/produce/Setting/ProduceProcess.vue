@@ -10,7 +10,13 @@
         >添加工序</el-button
       >
     </div>
-    <el-table :data="produceProcessList" border style="width: 100%" stripe>
+    <el-table :data="produceProcessList"         
+        border="" stripe
+        size="small"
+        :header-row-style="{ height: '40px' }"
+        :row-style="{ height: '40px' }"
+        :cell-style="{ padding: '2px', color: '#909399' }"
+        :header-cell-style="{ background: '#909399', color: 'white' }">
       <el-table-column prop="processNo" label="编号" width="200">
       </el-table-column>
       <el-table-column prop="name" label="工序名称" width="200">

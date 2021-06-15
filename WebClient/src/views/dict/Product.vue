@@ -13,10 +13,12 @@
 
     <div class="product-content">
       <el-table :data="productListPageShow" 
-          border="" stripe           
-          :header-row-style="{height:'40px' ,'align':'center'}"
-          :row-style="{height:'40px'}"
-          style="width: 100%">
+        border="" stripe
+        size="small"
+        :header-row-style="{ height: '40px' }"
+        :row-style="{ height: '40px' }"
+        :cell-style="{ padding: '2px', color: '#909399' }"
+        :header-cell-style="{ background: '#909399', color: 'white' }">
         <el-table-column prop="productNo" label="商品代码" width="100px"></el-table-column>
         <el-table-column prop="name" label="商品名称"> </el-table-column>
         <el-table-column prop="supplyName" label="供应商"> </el-table-column>
