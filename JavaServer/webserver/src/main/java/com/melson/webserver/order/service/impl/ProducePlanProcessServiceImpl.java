@@ -36,6 +36,43 @@ public class ProducePlanProcessServiceImpl implements IProducePlanProcessService
     private IProducePlanWorkStationRepository producePlanWorkStationRepository;
 
     @Override
+    public void GeneratePlanProcessSeperately(ProducePlan savedPP, ProducePlanDetail savePPD) {
+        Set<String> bomNos = new HashSet<>();
+        String[] bomIdArr = savePPD.getBomNos().split("-");
+        for (String no : bomIdArr) {
+            if (!StringUtils.isEmpty(no)) {
+                bomNos.add(no);
+            }
+        }
+        List<BomProcessVo> bomProcessVoList = bomsService.findBomProcessVoInBomNos(bomNos);
+        //按照bomNo 分类 防止detail 出现相同product 的bug 以detail 生成ProducePlanProcess
+        Map<String, List<BomProcessVo>> bomProcessVoMap = new HashMap<>();
+        for (BomProcessVo vo : bomProcessVoList) {
+            List<BomProcessVo> existList = bomProcessVoMap.get(vo.getBomNo());
+            if (existList == null) {
+                existList = new ArrayList<>();
+                existList.add(vo);
+                bomProcessVoMap.put(vo.getBomNo(), existList);
+            } else {
+                existList.add(vo);
+            }
+        }
+        List<ProducePlanProcess> planProcessList = new ArrayList<>();
+        //生成 ProducePlanProcess
+        List<BomProcessVo> boms = new ArrayList<>();
+        String[] detialBomNos = savePPD.getBomNos().split("-");
+        for (String bomNo : detialBomNos) {
+            boms.addAll(bomProcessVoMap.get(bomNo));
+        }
+        List<BomProcessVo> sortedList = GenerateBomTree(boms, savePPD.getBomNo());
+        for (BomProcessVo vo : sortedList) {
+            ProducePlanProcess p = CreatePlanProcess(vo, savedPP, savePPD);
+            planProcessList.add(p);
+        }
+        producePlanProcessRepository.saveAll(planProcessList);
+    }
+
+    @Override
     public List<ProducePlanProcess> GeneratePlanProcess(ProducePlan plan, List<ProducePlanDetail> detailList) {
         if (detailList == null || detailList.size() <= 0) return null;
         Set<String> bomNos = new HashSet<>();

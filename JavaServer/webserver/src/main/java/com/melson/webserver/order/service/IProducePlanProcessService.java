@@ -16,4 +16,6 @@ public interface IProducePlanProcessService {
     List<ProducePlanProcess> GeneratePlanProcess(ProducePlan plan,List<ProducePlanDetail>  detailList);
     List<ProducePlanProcess> FindByPlanId(Integer planId);
     List<ProducePlanProcessVo> FindPlanProcess(Integer planId, Integer planDetailId);
+
+    void GeneratePlanProcessSeperately(ProducePlan savedPP, ProducePlanDetail savePPD);
 }

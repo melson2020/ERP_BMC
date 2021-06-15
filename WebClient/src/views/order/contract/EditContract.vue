@@ -680,6 +680,7 @@ export default {
                         purchaserConfirm: this.purchaserConfirm.id?this.purchaserConfirm:this.vendeeInfo,
                       };
                       this.SaveIntentionContract(saveObj);
+                      this.clearContract();
                     } else {
                       this.$message.warning("请选择税率");
                     }

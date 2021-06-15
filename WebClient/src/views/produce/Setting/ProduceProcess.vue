@@ -185,6 +185,7 @@ export default {
             .then((res) => {
               if (res.resultStatus == 1) {
                 this.productionTechDialog = false;
+                this.FindAllProduceProcessList();
                 this.$message.success("保存成功");
               } else {
                 this.$message.warning(res.message);

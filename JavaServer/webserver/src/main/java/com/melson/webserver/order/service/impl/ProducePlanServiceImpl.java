@@ -69,33 +69,54 @@ public class ProducePlanServiceImpl implements IProducePlanService {
     @Override
     public ProducePlan GeneratePlan(List<OrderFormDetail> details, OrderForm form) {
         if (details == null || details.size() <= 0) return null;
-        ProducePlan producePlan = new ProducePlan();
-        producePlan.setOrderFormId(form.getId());
-        producePlan.setOrderFormNo(form.getFormNo());
-        producePlan.setCustomerNo(form.getCustomerNo());
-        producePlan.setCustomerName(form.getCustomerName());
-        producePlan.setContractNo(form.getContractNo());
-        producePlan.setPlanNo("PL" + System.currentTimeMillis());
-        producePlan.setCreateDate(new Date());
-        producePlan.setState(ProducePlan.CREATED);
-
-        List<ProducePlanDetail> producePlanDetails = new ArrayList<>();
-        String producePlanType = "";
+        ProducePlan pp = new ProducePlan();
         for (OrderFormDetail detail : details) {
-            producePlanDetails.add(CreateProducePlanDetail(detail));
-            if (!producePlanType.contains(detail.getProduceType())) {
-                producePlanType += (detail.getProduceType());
-            }
+            ProducePlan producePlan = new ProducePlan();
+            producePlan.setOrderFormId(form.getId());
+            producePlan.setOrderFormNo(form.getFormNo());
+            producePlan.setCustomerNo(form.getCustomerNo());
+            producePlan.setCustomerName(form.getCustomerName());
+            producePlan.setContractNo(form.getContractNo());
+            producePlan.setPlanNo("PL" + System.currentTimeMillis());
+            producePlan.setCreateDate(new Date());
+            producePlan.setState(ProducePlan.CREATED);
+            producePlan.setType(detail.getProduceType());
+            ProducePlan savedPP = producePlanRepository.saveAndFlush(producePlan);
+            ProducePlanDetail producePlanDetail=CreateProducePlanDetail(detail);
+            producePlanDetail.setProducePlanId(savedPP.getId());
+            ProducePlanDetail savePPD=producePlanDetailRepository.save(producePlanDetail);
+            //生成工序记录
+            producePlanProcessService.GeneratePlanProcessSeperately(savedPP, savePPD);
         }
-        producePlan.setType(producePlanType);
-        producePlanRepository.saveAndFlush(producePlan);
-        producePlanDetails.forEach(producePlanDetail -> {
-            producePlanDetail.setProducePlanId(producePlan.getId());
-        });
-        List<ProducePlanDetail> savedDetails = producePlanDetailRepository.saveAll(producePlanDetails);
-        //生成工序记录
-        producePlanProcessService.GeneratePlanProcess(producePlan, savedDetails);
-        return producePlan;
+        return pp;
+
+//        ProducePlan producePlan = new ProducePlan();
+//        producePlan.setOrderFormId(form.getId());
+//        producePlan.setOrderFormNo(form.getFormNo());
+//        producePlan.setCustomerNo(form.getCustomerNo());
+//        producePlan.setCustomerName(form.getCustomerName());
+//        producePlan.setContractNo(form.getContractNo());
+//        producePlan.setPlanNo("PL" + System.currentTimeMillis());
+//        producePlan.setCreateDate(new Date());
+//        producePlan.setState(ProducePlan.CREATED);
+//
+//        List<ProducePlanDetail> producePlanDetails = new ArrayList<>();
+//        String producePlanType = "";
+//        for (OrderFormDetail detail : details) {
+//            producePlanDetails.add(CreateProducePlanDetail(detail));
+//            if (!producePlanType.contains(detail.getProduceType())) {
+//                producePlanType += (detail.getProduceType());
+//            }
+//        }
+//        producePlan.setType(producePlanType);
+//        producePlanRepository.saveAndFlush(producePlan);
+//        producePlanDetails.forEach(producePlanDetail -> {
+//            producePlanDetail.setProducePlanId(producePlan.getId());
+//        });
+//        List<ProducePlanDetail> savedDetails = producePlanDetailRepository.saveAll(producePlanDetails);
+//        //生成工序记录
+//        producePlanProcessService.GeneratePlanProcess(producePlan, savedDetails);
+//        return producePlan;
     }
 
     @Override

@@ -48,16 +48,16 @@ public class InventoryStocktakingResource extends BaseResource {
         return success(inventoryStocktakingService.get(formNo));
     }
 
-    /**
-     * 创建盘点单
-     *
-     * @param request
-     * @param inventoryStocktaking 盘点单
-     * @return
-     */
-    @PostMapping(value = "/save")
-    public Result save(HttpServletRequest request, @RequestBody InventoryStocktaking inventoryStocktaking) {
-       if(inventoryStocktaking==null)return this.GenerateResult(ResultType.ParameterNeeded);
-
-    }
+//    /**
+//     * 创建盘点单
+//     *
+//     * @param request
+//     * @param inventoryStocktaking 盘点单
+//     * @return
+//     */
+//    @PostMapping(value = "/save")
+//    public Result save(HttpServletRequest request, @RequestBody InventoryStocktaking inventoryStocktaking) {
+//       if(inventoryStocktaking==null)return this.GenerateResult(ResultType.ParameterNeeded);
+//
+//    }
 }

@@ -50,6 +50,9 @@ public class InventoryStocktaking {
      * 描述
      */
     private String remark;
+    private Date createDate;
+
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -115,5 +118,13 @@ public class InventoryStocktaking {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
     }
 }

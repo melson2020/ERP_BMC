@@ -84,6 +84,6 @@ public class InventoryStocktakingServiceImpl implements IInventoryStocktakingSer
     public InventoryStocktaking save(InventoryStocktaking inventoryStocktaking){
          String formNo=InventoryStocktaking.CODE_PREFIX+System.currentTimeMillis();
          inventoryStocktaking.setFormNo(formNo);
-
+         return null;
     }
 }

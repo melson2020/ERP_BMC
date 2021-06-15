@@ -157,11 +157,11 @@ public class IPurchasePlanServiceImpl extends AbstractService<PurchasePlan> impl
             }
         }
         Integer waitApproveCount = stateMap.get(PurchasePlan.PURCHASE_STATE_CREATE) == null ? 0 : stateMap.get(PurchasePlan.PURCHASE_STATE_CREATE);
-        list.add(new PurchaseStateSummaryVo("待批列表", waitApproveCount, "/approve"));
+        list.add(new PurchaseStateSummaryVo("等待批准", waitApproveCount, "/approve"));
         Integer waitPoCount = stateMap.get(PurchasePlan.PURCHASE_STATE_APPROVE) == null ? 0 : stateMap.get(PurchasePlan.PURCHASE_STATE_APPROVE);
         list.add(new PurchaseStateSummaryVo("等待下单", waitPoCount, "/purchaseOrder"));
         Integer waitDeliver = stateMap.get(PurchasePlan.PURCHASE_STATE_BUYING) == null ? 0 : stateMap.get(PurchasePlan.PURCHASE_STATE_BUYING);
-        list.add(new PurchaseStateSummaryVo("待发货", waitDeliver, "/waiting"));
+        list.add(new PurchaseStateSummaryVo("等待收货", waitDeliver, "/waiting"));
         return list;
     }
 
