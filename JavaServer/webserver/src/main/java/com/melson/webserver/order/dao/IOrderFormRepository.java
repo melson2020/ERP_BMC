@@ -43,4 +43,7 @@ public interface IOrderFormRepository extends JpaRepository<OrderForm, Integer> 
      */
     @Query(nativeQuery = true,value = "SELECT produceType, count(id) as count from order_form o WHERE o.state >1 and o.createDate BETWEEN ?1 and ?2  GROUP BY o.produceType;")
     List<Object[]> getAllProduceTypeCount(String dateBegin,String dateEnd);
+
+    OrderForm findByFormNo(String formNo);
+
 }

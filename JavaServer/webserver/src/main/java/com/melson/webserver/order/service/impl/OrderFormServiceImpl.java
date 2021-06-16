@@ -1,6 +1,7 @@
 package com.melson.webserver.order.service.impl;
 
 import com.melson.base.constants.SysConstants;
+import com.melson.webserver.contract.dao.IContractOrgRepository;
 import com.melson.webserver.contract.dao.IContractRepository;
 import com.melson.webserver.contract.entity.Contract;
 import com.melson.webserver.contract.entity.ContractOrg;
@@ -48,6 +49,10 @@ public class OrderFormServiceImpl implements IOrderFormService {
     private IDelegateTicketService delegateTicketService;
     @Autowired
     private IContractRepository contractRepository;
+    @Autowired
+    private IOrderDeliveryService orderDeliveryService;
+    @Autowired
+    private IContractOrgRepository contractOrgRepository;
 
     @Override
     public OrderForm list(Integer contractId) {
@@ -253,5 +258,20 @@ public class OrderFormServiceImpl implements IOrderFormService {
         infoVo.setDelegateTicketList(delegateTicketList);
         infoVo.setPurchaseDetailList(purchaseDetailList);
         return infoVo;
+    }
+
+    @Override
+    public OrderDelivery GetOrderDelivery(String formNo) {
+       OrderDelivery existOne=orderDeliveryService.FindByOrderFormNo(formNo);
+       if(existOne!=null){
+           return existOne;
+       }else {
+           OrderForm orderForm=orderFormRepository.findByFormNo(formNo);
+           List<OrderFormDetail> formDetails=orderFormDetailService.findDetailListByFormId(orderForm.getId());
+           Contract contract=contractRepository.findByContractNo(orderForm.getContractNo());
+           ContractOrg deliveryOrg=contractOrgRepository.findByContractIdAndType(contract.getId(),ContractOrg.TYPE_GOOD_RECEIVE);
+           OrderDelivery created=orderDeliveryService.CreateOrderDelivery(orderForm,formDetails,contract,deliveryOrg);
+           return created;
+       }
     }
 }

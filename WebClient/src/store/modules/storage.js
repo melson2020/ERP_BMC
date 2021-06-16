@@ -96,6 +96,9 @@ const actions = {
     },
     CreateOutBoundBatchInfo({},param){
         return request.CreateOutBoundBatchInfo(param)
+    },
+    GetOrderDeliveryByState({},param){
+        return request.GetOrderDeliveryByState(param)
     }
 
 };

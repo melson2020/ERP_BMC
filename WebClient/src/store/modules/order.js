@@ -10,7 +10,8 @@ const state = {
     closeDrawer: false,
     orderStateSummary: [],
     orderProduceTypeSummary: [],
-    orderFormProcessList: []
+    orderFormProcessList: [],
+    deliveryOrderList:[]
 };
 
 const actions = {
@@ -96,8 +97,26 @@ const actions = {
             Message.error(err.message)
         })
     },
+    GetOrderFormDeliveryList({ commit }) {
+        request.GetOrderFormDeliveryList().then(res => {
+            if (res.resultStatus == 1) {
+                commit(types.ORDER_FORM_DELIVERY_LIST, res.data)
+            } else {
+                Message.warning(res.message)
+            }
+
+        }).catch(err => {
+            Message.error(err.message)
+        })
+    },
     GetOrderFormInfo({ }, param) {
         return request.GetOrderFormInfo(param)
+    },
+    GetOrderDelviery({},param){
+        return request.GetOrderDelviery(param)
+    },
+    OrderDeliveryConfirm({},param){
+        return request.OrderDeliveryConfirm(param)
     }
 
 };
@@ -108,7 +127,8 @@ const getters = {
     closeDrawer: state => state.closeDrawer,
     orderStateSummary: state => state.orderStateSummary,
     orderProduceTypeSummary: state => state.orderProduceTypeSummary,
-    orderFormProcessList: state => state.orderFormProcessList
+    orderFormProcessList: state => state.orderFormProcessList,
+    deliveryOrderList:state=>state.deliveryOrderList
 };
 
 const mutations = {
@@ -131,6 +151,9 @@ const mutations = {
     },
     [types.ORDER_FORM_PROCESS_LIST](state, data) {
         state.orderFormProcessList = data
+    },
+    [types.ORDER_FORM_DELIVERY_LIST](state, data) {
+        state.deliveryOrderList = data
     },
     RemoveOrderFormReadyRleaseList(state, data) {
         state.orderReadyToReleaseList.splice(state.orderReadyToReleaseList.indexOf(item => {

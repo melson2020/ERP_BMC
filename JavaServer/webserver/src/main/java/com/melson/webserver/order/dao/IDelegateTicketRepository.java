@@ -1,7 +1,6 @@
 package com.melson.webserver.order.dao;
 
 import com.melson.webserver.order.entity.DelegateTicket;
-import com.melson.webserver.order.entity.ProducePlan;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;

@@ -19,9 +19,9 @@
           >
         </el-col>
         <el-col :span="6">
-          <el-button class="storage-out-larg-button" type="warning"
+          <!-- <el-button class="storage-out-larg-button" type="warning"
             >其他</el-button
-          >
+          > -->
         </el-col>
         <el-col :span="6"> </el-col>
       </el-row>
@@ -202,12 +202,12 @@
                   >
                 </template>
               </el-table-column>
-                <el-table-column prop="count" label="操作" width="120px">
+              <el-table-column prop="count" label="操作" width="120px">
                 <template slot-scope="scope">
                   <el-button
                     type="danger"
                     icon="el-icon-delete"
-                     :disabled="editDisable"
+                    :disabled="editDisable"
                     size="mini"
                     @click="removeOnClick(scope.$index)"
                     circle
@@ -269,15 +269,23 @@
 
       <div v-if="inventoryOutboundType == 'DELIVERY'">
         <span class="colorblue fl mb40">发货出库</span>
-        <el-table key="2" script border size="mini" :data="produceInBoundList">
-          <el-table-column prop="planNo" label="编号"> </el-table-column>
+        <el-table key="2" script border size="mini" :data="deliveryOutBoundList">
+          <el-table-column prop="ticketNo" label="编号"> </el-table-column>
           <el-table-column prop="customerName" label="客户"> </el-table-column>
           <el-table-column prop="orderFormNo" label="订单号"> </el-table-column>
+           <el-table-column prop="deliveryDate" label="发货日"> 
+             <template slot-scope="scope">
+              <span class="fl">
+                  {{ getFullDate(scope.row.deliveryDate) }}
+                </span>
+             </template>
+           </el-table-column>
           <el-table-column label="" width="80px">
             <template>
               <el-button
                 type="success"
                 icon="el-icon-check"
+                 @click="loadOutBound(scope.row, 'DELIVERY')"
                 size="mini"
                 circle
               ></el-button>
@@ -294,7 +302,7 @@ import { mapActions } from "vuex";
 export default {
   data() {
     return {
-       editDisable: true,
+      editDisable: true,
       selectStorageDetailId: "",
       selectStorageDetailDes: "",
       detailDialogVisible: false,
@@ -322,6 +330,7 @@ export default {
       QueryProductListBySearchValue: "QueryProductListBySearchValue",
       FindStorageDetaiListByProductId: "FindStorageDetaiListByProductId",
       CreateOutBoundBatchInfo: "CreateOutBoundBatchInfo",
+      GetOrderDeliveryByState: "GetOrderDeliveryByState",
     }),
     getFullDate(time) {
       if (time) {
@@ -336,6 +345,9 @@ export default {
       switch (type) {
         case "PICKING":
           this.findPickingTicketOutBoundList();
+          break;
+        case "DELIVERY":
+          this.findOrderDeliveryOutBoundList();
           break;
       }
     },
@@ -354,9 +366,23 @@ export default {
         });
     },
 
+    findOrderDeliveryOutBoundList() {
+      this.GetOrderDeliveryByState({state:'2'})
+        .then((res) => {
+          if (res.resultStatus == 1) {
+            this.deliveryOutBoundList = res.data;
+          } else {
+            this.$message.warning(res.message);
+          }
+        })
+        .catch((err) => {
+          this.$message.error(err.message);
+        });
+    },
+
     typeChanged(type) {
       if (type == "OTHERS") {
-        this.editDisable=false;
+        this.editDisable = false;
         this.$refs["boundOutForm"].resetFields();
         this.editInventoryOutbound.createDate = new Date();
         this.editInventoryOutbound.createUser = this.userInfo.id;
@@ -370,7 +396,7 @@ export default {
           if (res.resultStatus == 1) {
             this.editInventoryOutbound = res.data;
             this.detailDialogVisible = false;
-             this.editDisable=true;
+            this.editDisable = true;
           } else {
             this.$message.warning(res.message);
           }
@@ -397,17 +423,21 @@ export default {
     },
 
     onSelect(productId, row) {
-      if(productId=='')return
+      if (productId == "") return;
       let item = this.productList.find((p) => {
         return p.id == productId;
       });
-       if(this.editInventoryOutbound.detailVoList.filter(item=>{return item.materialId==productId}).length>1){
-        this.$message.warning('已存在相同出库记录，如要编辑请删除，重新配置')
-        row.materialId='';
-        row.name='';
-        row.specification='';
-        row.materialNo=''
-        return
+      if (
+        this.editInventoryOutbound.detailVoList.filter((item) => {
+          return item.materialId == productId;
+        }).length > 1
+      ) {
+        this.$message.warning("已存在相同出库记录，如要编辑请删除，重新配置");
+        row.materialId = "";
+        row.name = "";
+        row.specification = "";
+        row.materialNo = "";
+        return;
       }
       row.materialNo = item.productNo;
       row.name = item.name;
@@ -419,9 +449,13 @@ export default {
     },
 
     addOutboundDetail() {
-      if(this.editInventoryOutbound.detailVoList.filter(item=>{return item.seen}).length>0){
-        this.$message.warning('请先完成配置')
-        return
+      if (
+        this.editInventoryOutbound.detailVoList.filter((item) => {
+          return item.seen;
+        }).length > 0
+      ) {
+        this.$message.warning("请先完成配置");
+        return;
       }
       let addObj = {
         materialNo: "",
@@ -440,10 +474,10 @@ export default {
     },
 
     setOutCount(materialId) {
-      this.storageDetailList=[];
-      this.selectStorageDetailId=''
-      this.outCountMax=0;
-      this.selectStorageDetailDes=""
+      this.storageDetailList = [];
+      this.selectStorageDetailId = "";
+      this.outCountMax = 0;
+      this.selectStorageDetailDes = "";
       if (materialId == "") return;
       this.FindStorageDetaiListByProductId({ productId: materialId })
         .then((res) => {
@@ -466,15 +500,15 @@ export default {
       row.outCountUnit = selectStorage.unit;
     },
     outCountConfirm(index, row) {
-      if(row.outBoundTypeOnClick<=0||row.outCountUnit=='')return
+      if (row.outBoundTypeOnClick <= 0 || row.outCountUnit == "") return;
       this.CreateOutBoundBatchInfo(row)
         .then((res) => {
           if (res.resultStatus == 1) {
-            console.log(res.data)
+            console.log(res.data);
             this.editInventoryOutbound.detailVoList.splice(index, 1);
-            res.data.map(item=>{
-               this.editInventoryOutbound.detailVoList.push(item)
-            })
+            res.data.map((item) => {
+              this.editInventoryOutbound.detailVoList.push(item);
+            });
           } else {
             this.$message.warning(res.message);
           }
@@ -484,7 +518,7 @@ export default {
         });
     },
 
-     removeOnClick(index) {
+    removeOnClick(index) {
       this.editInventoryOutbound.detailVoList.splice(index, 1);
     },
     addConfirmOnClick(row) {

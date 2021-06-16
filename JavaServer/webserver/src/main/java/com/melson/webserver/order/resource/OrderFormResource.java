@@ -51,6 +51,11 @@ public class OrderFormResource extends BaseResource {
         return success(orderFormService.GetOrderFormListByState(OrderForm.STATE_CREATE));
     }
 
+    @GetMapping(value = "/deliveryList")
+    public Result deliveryOrderList() {
+        return success(orderFormService.GetOrderFormListByState(OrderForm.STATE_DELIVERY));
+    }
+
     @GetMapping(value = "/processList")
     public Result ProcessOrderList() {
         return success(orderFormService.GetProcessingOrderForms());
@@ -133,5 +138,10 @@ public class OrderFormResource extends BaseResource {
     public Result GetOrderFormInfo(Integer id){
         OrderFormInfoVo orderFormInfo=orderFormService.GetOrderFormInfo(id);
         return success(orderFormInfo);
+    }
+
+    @GetMapping(value = "/orderDelivery")
+    public Result GetOrderDelivery(String formNo){
+       return success(orderFormService.GetOrderDelivery(formNo));
     }
 }

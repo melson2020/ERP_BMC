@@ -371,8 +371,17 @@ ReqGetPurchaseDashboardSummary(param) {
   GetOrderFormProcessList() {
     return service.get('/orderForm/manage/processList')
   },
+  GetOrderFormDeliveryList() {
+    return service.get('/orderForm/manage/deliveryList')
+  },
   GetOrderFormInfo(param) {
     return service.get('/orderForm/manage/orderFormInfo', param)
+  },
+  GetOrderDelviery(param){
+    return service.get('/orderForm/manage/orderDelivery', param)
+  },
+  OrderDeliveryConfirm(param){
+    return service.post('/orderDelivery/confirm', param)
   },
 
 
@@ -476,6 +485,9 @@ ReqGetPurchaseDashboardSummary(param) {
   },
   CreateOutBoundBatchInfo(param){
     return service.post("/inventory/outbound/generateOutDetailVo",param)
+  },
+  GetOrderDeliveryByState(param){
+    return service.get('/orderDelivery/list', param)
   },
 
   //盘点相关

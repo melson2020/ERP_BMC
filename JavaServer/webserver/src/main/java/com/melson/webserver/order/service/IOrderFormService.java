@@ -3,6 +3,7 @@ package com.melson.webserver.order.service;
 import com.melson.webserver.contract.entity.Contract;
 import com.melson.webserver.contract.entity.ContractOrg;
 import com.melson.webserver.contract.entity.ContractStock;
+import com.melson.webserver.order.entity.OrderDelivery;
 import com.melson.webserver.order.entity.OrderForm;
 import com.melson.webserver.order.entity.OrderFormDetail;
 import com.melson.webserver.order.vo.OrderFormConfirmVo;
@@ -98,4 +99,6 @@ public interface IOrderFormService {
      * @return
      */
     OrderFormInfoVo GetOrderFormInfo(Integer id);
+
+    OrderDelivery GetOrderDelivery(String formNo);
 }

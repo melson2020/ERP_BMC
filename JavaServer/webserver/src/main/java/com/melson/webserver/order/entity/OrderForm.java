@@ -34,14 +34,19 @@ public class OrderForm {
     public static  final String STATE_PROCESS="3";
 
     /**
-     * 订单状态:4 待发货
+     * 订单状态:4 待发货确认
      */
     public static  final String STATE_DELIVERY="4";
 
     /**
+     * 订单状态:4 待出库
+     */
+    public static  final String STATE_OUTBOUND="5";
+
+    /**
      * 订单状态:5 已完成
      */
-    public static  final String STATE_COMPLETE="5";
+    public static  final String STATE_COMPLETE="6";
 
     /**
      * 订单唯一自增id,用于其他表关联
