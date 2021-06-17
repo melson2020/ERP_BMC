@@ -43,6 +43,7 @@
         </template>
       </el-table-column>
     </el-table>
+    
     <el-dialog title="发货确认" :visible.sync="deliveryDialogVisible" width="1100px">
       <div id="deliveryPrintTable">
       <span class="fw600 mb40">发货单</span>

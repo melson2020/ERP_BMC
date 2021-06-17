@@ -617,6 +617,7 @@ public class PickingTicketServiceImpl implements IPickingTicketService {
         detail.setCreateDate(new Date());
         detail.setDelegateFlag(process.getDelegateFlag());
         detail.setState(PickingTicketDetail.STATE_CREATE);
+        detail.setSpecification(producePlanDetail.getSpecification());
         return detail;
     }
 

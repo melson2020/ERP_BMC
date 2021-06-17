@@ -15,10 +15,7 @@ import com.melson.webserver.order.service.IDelegateTicketService;
 import com.melson.webserver.order.service.IPickingTicketService;
 import com.melson.webserver.order.service.IProducePlanProcessService;
 import com.melson.webserver.order.service.IProducePlanService;
-import com.melson.webserver.produce.vo.ProducePlanConfirmInfoVo;
-import com.melson.webserver.produce.vo.ProducePlanInfoVo;
-import com.melson.webserver.produce.vo.ProducePlanPickingTicketVo;
-import com.melson.webserver.produce.vo.ProducePlanStateSummaryVo;
+import com.melson.webserver.produce.vo.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,7 +123,13 @@ public class ProducePlanServiceImpl implements IProducePlanService {
 
     @Override
     public List<ProducePlanDetail> FindPlanDetailList(Integer planId) {
-        return producePlanDetailRepository.findByProducePlanId(planId);
+        List<ProducePlanDetail> list=producePlanDetailRepository.findByProducePlanId(planId);
+        for(ProducePlanDetail ppd:list)
+        {
+            List<ProducePlanProcessVo> pppList=producePlanProcessService.FindPlanProcess(planId,ppd.getId());
+            ppd.setProcessList(pppList);
+        }
+        return list;
     }
 
     @Override
@@ -180,6 +183,11 @@ public class ProducePlanServiceImpl implements IProducePlanService {
         ProducePlan producePlan = producePlanRepository.findById(planId).orElse(null);
         infoVo.setProducePlan(producePlan);
         List<ProducePlanDetail> details = producePlanDetailRepository.findByProducePlanId(planId);
+        for(ProducePlanDetail ppd:details)
+        {
+            List<ProducePlanProcessVo> pppList=producePlanProcessService.FindPlanProcess(planId,ppd.getId());
+            ppd.setProcessList(pppList);
+        }
         infoVo.setPlanDetails(details);
         DelegateTicket delegateTicket = delegateTicketService.FindByPlanId(planId);
         if (delegateTicket != null) {
@@ -261,6 +269,7 @@ public class ProducePlanServiceImpl implements IProducePlanService {
         producePlanDetail.setCountUnit(detail.getCountUnit());
         producePlanDetail.setProduceType(detail.getProduceType());
         producePlanDetail.setBomNo(detail.getBomNo());
+        producePlanDetail.setMaterialNo(detail.getProductNo());
         String bomNos = "";
         if (detail.getBomNos() != null && detail.getBomNos().size() > 0) {
             for (String bomId : detail.getBomNos()) {

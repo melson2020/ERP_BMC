@@ -15,6 +15,8 @@ public class ProduceProcess {
     private Integer id;
     private String processNo;      // 生产工序编码，8位编码规则 例：PP000001
     private String name;           // 工序名称
+    private Integer time;
+    private String timeUnit;
     private BigDecimal cost;       // 工序费用，将来用于计算工序计件费用
     private String description;    // 描述备注
     private String createBy;       // 工序创建人
@@ -42,6 +44,22 @@ public class ProduceProcess {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Integer getTime() {
+        return time;
+    }
+
+    public void setTime(Integer time) {
+        this.time = time;
+    }
+
+    public String getTimeUnit() {
+        return timeUnit;
+    }
+
+    public void setTimeUnit(String timeUnit) {
+        this.timeUnit = timeUnit;
     }
 
     public BigDecimal getCost() {

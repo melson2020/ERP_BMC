@@ -35,32 +35,30 @@
     <div>
       <el-table
         :data="planDetails"
-        border
         :loading="loading"
-        style="width: 100%"
-        stripe
-        @expand-change="expandChanged"
+        default-expand-all
         class="mt20 plan-detail-table"
-      >
+        border="" stripe
+        size="small"
+        :header-row-style="{ height: '40px' }"
+        :row-style="{ height: '40px' }"
+        :cell-style="{ padding: '2px', color: '#909399' }"
+        :header-cell-style="{ background: '#909399', color: 'white' }">
         <el-table-column type="expand" width="50px">
           <template slot-scope="props">
             <el-table
               :data="props.row.processList"
               border="" stripe
-              size="small"
-              :header-row-style="{ height: '40px' }"
-              :row-style="{ height: '40px' }"
-              :cell-style="{ padding: '2px', color: '#909399' }"
-              :header-cell-style="{ background: '#909399', color: 'white' }">
+              style="width: 100%">
               <el-table-column label="序号" prop="index" width="50px">
               </el-table-column>
-              <el-table-column label="名称" prop="processName" width="200px">
+              <el-table-column label="工序名称" prop="processName" width="200px">
                 <template slot-scope="scope">
                   <span>{{scope.row.processName}}</span>
                   <el-tag  v-if="scope.row.delegateFlag=='Y'" type="danger" size="mini" class="ml10">委外</el-tag>
                 </template>
               </el-table-column>
-              <el-table-column label="料号">
+              <el-table-column label="详细料号">
                 <template slot-scope="scope">
                   <el-tag
                     class="ml10"
@@ -177,9 +175,9 @@ export default {
       this.FindPlanDetailList({ planId: plan.id })
         .then((res) => {
           if (res.resultStatus == 1) {
-            res.data.map((item) => {
-              item.processList = [];
-            });
+            // res.data.map((item) => {
+            //   item.processList = [];
+            // });
             this.planDetails = res.data;
           } else {
             this.$message.warning(res.message);
@@ -261,19 +259,31 @@ export default {
 
     SavePlanWorkStations(confirm) {
       var wsList = [];
+      var flag=false;
       this.planDetails.map((product) => {
         product.processList.map((process) => {
-          process.workStationList.map((station) => {
-            wsList.push(station);
-          });
+          if(process.workStationList.length>0)
+          {
+            flag=true;
+            process.workStationList.map((station) => {
+              wsList.push(station);
+            });
+          }
         });
       });
-      var obj = { plan: this.producePlan, workStationList: wsList,confirm:confirm };
-      this.SaveProducePlanWorkStation(obj);
-      this.FindUnConfirmPlanList({ state: "1" });
-      setTimeout(() => {
-        this.$emit('closePopWindow');
-      }, 10);
+      if(flag)
+      {
+        var obj = { plan: this.producePlan, workStationList: wsList,confirm:confirm };
+        this.SaveProducePlanWorkStation(obj);
+        this.FindUnConfirmPlanList({ state: "1" });
+        setTimeout(() => {
+          this.$emit('closePopWindow');
+        }, 10);
+      }
+      else
+      {
+        this.$message.warning("请选择产线工位");
+      }
     },
 
     workStationRemove(id, row) {

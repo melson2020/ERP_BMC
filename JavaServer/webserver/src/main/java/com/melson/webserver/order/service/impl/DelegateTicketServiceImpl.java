@@ -229,6 +229,8 @@ public class DelegateTicketServiceImpl implements IDelegateTicketService {
         delegateDetail.setCountUnit(producePlanDetail.getCountUnit());
         delegateDetail.setObjectNo(process.getProcessNo());
         delegateDetail.setBomNo(producePlanDetail.getBomNo());
+
+        //TODO:DelegateDetail添加materialNo字段
         delegateDetail.setMaterialInfo(process.getMaterialName() + "x" + process.getMaterialCount());
         return delegateDetail;
 

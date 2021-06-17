@@ -2,76 +2,92 @@
   <div v-loading="loading">
     <div>
       <el-form
-        class="demo-form-inline"
-        label-position="left"
-        label-width="80px"
+        class="printProduceOrder-form-header"
       >
-        <el-row :gutter="10">
-          <el-col :span="6">
-            <el-form-item label="客户名称">
+        <el-row class="printProduceOrder-row">
+          <el-col :span="6" class="printProduceOrder-col">
+            <span class="printProduceOrder-form-title" style="width:70px">客户名称:</span>
+            <div class="printProduceOrder-form-content">{{ planInfo.producePlan.customerName }}</div>
+            <!-- <el-form-item label="客户名称">
               <el-input
                 v-model="planInfo.producePlan.customerName"
-              ></el-input></el-form-item
-          ></el-col>
-          <el-col :span="6">
-            <el-form-item label="创建时间">
+              ></el-input></el-form-item> -->
+            </el-col>
+          <el-col :span="6" class="printProduceOrder-col">
+              <span class="printProduceOrder-form-title" style="width:70px">创建时间:</span>
+              <div class="printProduceOrder-form-content">{{ getFullTime(planInfo.producePlan.createDate) }}</div>
+          </el-col>
+          <!-- <el-form-item label="创建时间">
               <el-input
                 v-model="planInfo.producePlan.createDate"
               ></el-input> </el-form-item
-          ></el-col>
-          <el-col :span="6">
-            <el-form-item label="计划结束">
+          ></el-col> -->
+          <el-col :span="6" class="printProduceOrder-col">
+            <span class="printProduceOrder-form-title" style="width:70px">计划结束:</span>
+            <div class="printProduceOrder-form-content">{{ getFullTime(planInfo.producePlan.endDate) }}</div>
+            <!-- <el-form-item label="计划结束">
               <el-input
                 v-model="planInfo.producePlan.endDate"
-              ></el-input> </el-form-item
-          ></el-col>
-          <el-col :span="6">
-            <el-form-item label="计划类型">
+              ></el-input> </el-form-item> -->
+          </el-col>
+          <el-col :span="6" class="printProduceOrder-col">
+            <span class="printProduceOrder-form-title" style="width:70px">计划类型:</span>
+            <div class="printProduceOrder-form-content">{{ planInfo.producePlan.type }}</div>
+            <!-- <el-form-item label="计划类型">
               <el-input
                 v-model="planInfo.producePlan.type"
-              ></el-input> </el-form-item
-          ></el-col>
+              ></el-input> </el-form-item> -->
+          </el-col>
         </el-row>
-        <el-row :gutter="10">
-          <el-col :span="6">
-            <el-form-item label="订单编号">
+        <el-row class="printProduceOrder-row">
+          <el-col :span="6" class="printProduceOrder-col">
+            <span class="printProduceOrder-form-title" style="width:70px">订单编号:</span>
+            <div class="printProduceOrder-form-content">{{ planInfo.producePlan.orderFormNo }}</div>
+            <!-- <el-form-item label="订单编号">
               <el-input
                 v-model="planInfo.producePlan.orderFormNo"
-              ></el-input> </el-form-item
-          ></el-col>
-          <el-col :span="6">
-            <el-form-item label="合同编号">
+              ></el-input> </el-form-item> -->
+          </el-col>
+          <el-col :span="6" class="printProduceOrder-col">
+            <span class="printProduceOrder-form-title" style="width:70px">合同编号:</span>
+            <div class="printProduceOrder-form-content">{{ planInfo.producePlan.contractNo }}</div>
+            <!-- <el-form-item label="合同编号">
               <el-input
                 v-model="planInfo.producePlan.contractNo"
-              ></el-input> </el-form-item
-          ></el-col>
-          <el-col :span="6">
-            <el-form-item label="领料单号">
+              ></el-input> </el-form-item> -->
+          </el-col>
+          <el-col :span="6" class="printProduceOrder-col">
+            <span class="printProduceOrder-form-title" style="width:70px">领料单号:</span>
+            <div class="printProduceOrder-form-content">{{ planInfo.producePlan.pickingTicketNo }}</div>
+            <!-- <el-form-item label="领料单号">
               <el-input
                 v-model="planInfo.producePlan.pickingTicketNo"
-              ></el-input> </el-form-item
-          ></el-col>
-          <el-col :span="6">
-            <el-form-item label="计划单号">
+              ></el-input> </el-form-item> -->
+          </el-col>
+          <el-col :span="6" class="printProduceOrder-col">
+            <span class="printProduceOrder-form-title" style="width:70px">计划单号:</span>
+            <div class="printProduceOrder-form-content">{{ planInfo.producePlan.planNo }}</div>
+            <!-- <el-form-item label="计划单号">
               <el-input
                 v-model="planInfo.producePlan.planNo"
-              ></el-input> </el-form-item
-          ></el-col>
+              ></el-input> </el-form-item> -->
+          </el-col>
         </el-row>
       </el-form>
     </div>
 
     <div>
-      <span class="colorblue fl mb40 fz9">生产详细</span>
+      <span class="colorblue fl mb40 fz9" style="padding-top:8px">生产详细</span>
       <el-table
         :data="planInfo.planDetails"
-        border
-        style="width: 100%"
-        stripe
-        size="mini"
         class="mt20 plan-detail-table"
-        @expand-change="expandChanged"
-      >
+        default-expand-all
+        border="" stripe
+        size="mini"
+        :header-row-style="{ height: '40px' }"
+        :row-style="{ height: '40px' }"
+        :cell-style="{ padding: '2px', color: '#909399' }"
+        :header-cell-style="{ background: '#909399', color: 'white' }">
         <el-table-column type="expand" width="50px">
           <template slot-scope="props">
             <el-table
@@ -150,12 +166,13 @@
       </div>
       <el-table
         :data="planInfo.pickingTicketDetails"
-        border
-        style="width: 100%"
-        stripe
-        size="mini"
         class="mt20 plan-detail-table"
-      >
+        border="" stripe
+        size="mini"
+        :header-row-style="{ height: '40px' }"
+        :row-style="{ height: '40px' }"
+        :cell-style="{ padding: '2px', color: '#909399' }"
+        :header-cell-style="{ background: '#909399', color: 'white' }">
         <el-table-column label="编号" prop="materialNo"> </el-table-column>
         <el-table-column label="名称" prop="materialName"> </el-table-column>
         <el-table-column label="规格" prop="specification"> </el-table-column>
@@ -233,9 +250,9 @@ export default {
       this.LoadPlanInfo({ planId: planId })
         .then((res) => {
           if (res.resultStatus == 1) {
-            res.data.planDetails.map((item) => {
-              item.processList = [];
-            });
+            // res.data.planDetails.map((item) => {
+            //   item.processList = [];
+            // });
             this.planInfo = res.data;
             this.loading = false;
           } else {
@@ -247,6 +264,9 @@ export default {
           this.$message.error(err.message);
           this.loading = false;
         });
+    },
+    getFullTime(time) {
+    return new Date(time).format("yyyy-MM-dd");
     },
     expandChanged(row, sec) {
       let index = sec.indexOf(row);
@@ -286,5 +306,28 @@ export default {
   padding-top: 0px !important;
   padding-right: 0px !important;
   padding-bottom: 0px !important;
+}
+.printProduceOrder-form-title {
+  width: 50px;
+  padding-top: 5px;
+  padding-left: 5px;
+}
+.printProduceOrder-form-content {
+  text-align: left;
+  height: 30px;
+  line-height: 30px;
+  float: left;
+  padding-top: 5px;
+}
+.printProduceOrder-form-header {
+  border: 1px solid rgb(209, 205, 205);
+}
+.printProduceOrder-row{
+  border: 1px solid rgb(209, 205, 205);
+  width: 100%;
+  padding: 3px;
+}
+.printProduceOrder-col{
+  border: 1px solid rgb(209, 205, 205);
 }
 </style>
