@@ -6,15 +6,17 @@
       >
         <el-row class="printProduceOrder-row">
           <el-col :span="6" class="printProduceOrder-col">
-            <span class="printProduceOrder-form-title" style="width:70px">客户名称:</span>
-            <div class="printProduceOrder-form-content">{{ planInfo.producePlan.customerName }}</div>
+              <!-- <span class="printProduceOrder-form-title" style="width:70px">客户名称:</span> -->
+              <div class="printProduceOrder-form-content">客户名称 : </div>
+              <div class="printProduceOrder-form-content">{{ planInfo.producePlan.customerName }}</div>
             <!-- <el-form-item label="客户名称">
               <el-input
                 v-model="planInfo.producePlan.customerName"
               ></el-input></el-form-item> -->
             </el-col>
           <el-col :span="6" class="printProduceOrder-col">
-              <span class="printProduceOrder-form-title" style="width:70px">创建时间:</span>
+              <!-- <span class="printProduceOrder-form-title" style="width:70px">创建时间:</span> -->
+              <div class="printProduceOrder-form-content">创建时间 : </div>
               <div class="printProduceOrder-form-content">{{ getFullTime(planInfo.producePlan.createDate) }}</div>
           </el-col>
           <!-- <el-form-item label="创建时间">
@@ -23,7 +25,8 @@
               ></el-input> </el-form-item
           ></el-col> -->
           <el-col :span="6" class="printProduceOrder-col">
-            <span class="printProduceOrder-form-title" style="width:70px">计划结束:</span>
+            <!-- <span class="printProduceOrder-form-title" style="width:70px">计划结束:</span> -->
+            <div class="printProduceOrder-form-content">计划结束 : </div>
             <div class="printProduceOrder-form-content">{{ getFullTime(planInfo.producePlan.endDate) }}</div>
             <!-- <el-form-item label="计划结束">
               <el-input
@@ -31,7 +34,8 @@
               ></el-input> </el-form-item> -->
           </el-col>
           <el-col :span="6" class="printProduceOrder-col">
-            <span class="printProduceOrder-form-title" style="width:70px">计划类型:</span>
+            <!-- <span class="printProduceOrder-form-title" style="width:70px">计划类型:</span> -->
+            <div class="printProduceOrder-form-content">计划类型 : </div>
             <div class="printProduceOrder-form-content">{{ planInfo.producePlan.type }}</div>
             <!-- <el-form-item label="计划类型">
               <el-input
@@ -41,7 +45,8 @@
         </el-row>
         <el-row class="printProduceOrder-row">
           <el-col :span="6" class="printProduceOrder-col">
-            <span class="printProduceOrder-form-title" style="width:70px">订单编号:</span>
+            <!-- <span class="printProduceOrder-form-title" style="width:70px">订单编号:</span> -->
+            <div class="printProduceOrder-form-content">订单编号 : </div>
             <div class="printProduceOrder-form-content">{{ planInfo.producePlan.orderFormNo }}</div>
             <!-- <el-form-item label="订单编号">
               <el-input
@@ -49,7 +54,8 @@
               ></el-input> </el-form-item> -->
           </el-col>
           <el-col :span="6" class="printProduceOrder-col">
-            <span class="printProduceOrder-form-title" style="width:70px">合同编号:</span>
+            <!-- <span class="printProduceOrder-form-title" style="width:70px">合同编号:</span> -->
+            <div class="printProduceOrder-form-content">合同编号 : </div>
             <div class="printProduceOrder-form-content">{{ planInfo.producePlan.contractNo }}</div>
             <!-- <el-form-item label="合同编号">
               <el-input
@@ -57,7 +63,8 @@
               ></el-input> </el-form-item> -->
           </el-col>
           <el-col :span="6" class="printProduceOrder-col">
-            <span class="printProduceOrder-form-title" style="width:70px">领料单号:</span>
+            <!-- <span class="printProduceOrder-form-title" style="width:70px">领料单号:</span> -->
+            <div class="printProduceOrder-form-content">领料单号 : </div>
             <div class="printProduceOrder-form-content">{{ planInfo.producePlan.pickingTicketNo }}</div>
             <!-- <el-form-item label="领料单号">
               <el-input
@@ -65,7 +72,8 @@
               ></el-input> </el-form-item> -->
           </el-col>
           <el-col :span="6" class="printProduceOrder-col">
-            <span class="printProduceOrder-form-title" style="width:70px">计划单号:</span>
+            <!-- <span class="printProduceOrder-form-title" style="width:70px">计划单号:</span> -->
+            <div class="printProduceOrder-form-content">计划单号 : </div>
             <div class="printProduceOrder-form-content">{{ planInfo.producePlan.planNo }}</div>
             <!-- <el-form-item label="计划单号">
               <el-input
@@ -307,7 +315,7 @@ export default {
   padding-right: 0px !important;
   padding-bottom: 0px !important;
 }
-.printProduceOrder-form-title {
+/* .printProduceOrder-form-title {
   width: 50px;
   padding-top: 5px;
   padding-left: 5px;
@@ -322,12 +330,30 @@ export default {
 .printProduceOrder-form-header {
   border: 1px solid rgb(209, 205, 205);
 }
+/* .printProduceOrder-row{
+  border: 1px solid rgb(209, 205, 205);
+  width: 100%;
+  padding: 3px;
+}
+/* .printProduceOrder-div{
+  display: flex;
+}  */
+.printProduceOrder-col{
+  border: 1px solid rgb(209, 205, 205);
+} 
 .printProduceOrder-row{
   border: 1px solid rgb(209, 205, 205);
   width: 100%;
   padding: 3px;
 }
-.printProduceOrder-col{
+.printProduceOrder-form-content {
+  text-align: left;
+  height: 30px;
+  line-height: 30px;
+  float: left;
+  padding-top: 5px;
+}
+.printProduceOrder-form-header {
   border: 1px solid rgb(209, 205, 205);
 }
 </style>

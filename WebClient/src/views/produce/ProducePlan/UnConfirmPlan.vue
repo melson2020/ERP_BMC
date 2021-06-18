@@ -45,9 +45,19 @@
     <el-dialog title="计划详情" :visible.sync="detailDialogVisible" width="80%">
       <m-plan-detail ref="planDetai" v-on:closePopWindow="closePopWindow"></m-plan-detail>
     </el-dialog>
+
+    <el-dialog
+      title="打印生产工单"
+      :visible.sync="printerPPShowing"
+      width="70%"
+    >
+    <m-print-info ref="printerpp"></m-print-info>
+    </el-dialog>
+
   </div>
 </template>
 <script>
+import printerpp from '../PrintProduceOrder.vue';
 import planDetail from "./PlanDetail";
 import { mapGetters } from "vuex";
 import { mapActions } from "vuex";
@@ -56,6 +66,7 @@ export default {
     return {
       value: "",
       detailDialogVisible: false,
+      printerPPShowing:false,
     };
   },
   methods: {
@@ -65,8 +76,19 @@ export default {
     getFullTime(time) {
       return new Date(time).format("yyyy-MM-dd hh:mm:ss");
     },
-    closePopWindow(){
+    closePopWindow(str){
+      this.FindUnConfirmPlanList({ state: "1" });
       this.detailDialogVisible= false;
+      this.$messageBox.confirm('打印生产工单？',"提示",{
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+      })
+      .then(() => {
+        this.printerPPShowing = !this.printerPPShowing;
+        setTimeout(()=>{ 
+          this.$refs['printerpp'].loadPlanInfo(str)},200)
+      })
     },
     convertPlanType(type) {
       return type.replace("P", "生产").replace("D", "代工");
@@ -95,6 +117,7 @@ export default {
   },
   components: {
     "m-plan-detail": planDetail,
+    "m-print-info":printerpp ,
   },
   beforeMount() {
     this.FindUnConfirmPlanList({ state: "1" });

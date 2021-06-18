@@ -277,7 +277,7 @@ export default {
         this.SaveProducePlanWorkStation(obj);
         this.FindUnConfirmPlanList({ state: "1" });
         setTimeout(() => {
-          this.$emit('closePopWindow');
+          this.$emit('closePopWindow',this.producePlan.id);
         }, 10);
       }
       else

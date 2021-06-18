@@ -10,66 +10,95 @@
           基础信息：
         </div>
         <div class="printProduceOrder-conten">
-          <div>
-            <el-col :span="8">
-              <span class="printProduceOrder-form-title">客户名称：</span>
-              <div class="printProduceOrder-form-content">{{ planInfo.producePlan.customerName }}</div>
+          <el-row class="printProduceOrder-row">
+            <el-col :span="8" class="printProduceOrder-col">
+              <div class="printProduceOrder-form-content" style="width:75px">生产单号 : </div>
+              <div class="printProduceOrder-form-content" style="width:280px">{{ planInfo.producePlan.planNo }}</div>
             </el-col>
-            <el-col :span="8">
-              <span class="printProduceOrder-form-title">创建日期</span>
-              <div class="printProduceOrder-form-content">{{ planInfo.producePlan.customerName }}</div>
+            <el-col :span="8" class="printProduceOrder-col">
+              <div class="printProduceOrder-form-content" style="width:75px">创建日期 : </div>
+              <div class="printProduceOrder-form-content" style="width:280px">{{ getFullTime(planInfo.producePlan.createDate) }}</div>
             </el-col>
-            <el-col :span="8">
-              <span class="printProduceOrder-form-title">客户名称：</span>
-              <div class="printProduceOrder-form-content">{{ planInfo.producePlan.customerName }}</div>
+            <el-col :span="8" class="printProduceOrder-col">
+              <div class="printProduceOrder-form-content" style="width:75px">客户名称 : </div>
+              <div class="printProduceOrder-form-content" style="width:280px">{{ planInfo.producePlan.customerName }}</div>
             </el-col>
-          </div>
-          <div>
-            <el-col :span="12">
-              <span class="tempate-text-left-center"
-                >联系人员：{{ planInfo.supply.contact }}</span
-              >
+          </el-row>
+          <el-row class="printProduceOrder-row">
+            <el-col :span="8" class="printProduceOrder-col">
+              <div class="printProduceOrder-form-content" style="width:75px">产品名称 : </div>
+              <div class="printProduceOrder-form-content" style="width:280px">{{ planDetail.productName }}</div>
             </el-col>
-            <el-col :span="12">
-              <span class="tempate-text-left-center"
-                >联系电话：{{ planInfo.supply.phone }}</span
-              >
+            <el-col :span="8" class="printProduceOrder-col">
+              <div class="printProduceOrder-form-content" style="width:75px">产品规格 : </div>
+              <div class="printProduceOrder-form-content" style="width:280px">{{ planDetail.specification }}</div>
             </el-col>
-          </div>
+            <el-col :span="8" class="printProduceOrder-col">
+              <div class="printProduceOrder-form-content" style="width:75px">产品料号 : </div>
+              <div class="printProduceOrder-form-content" style="width:280px">{{ planDetail.materialNo }}</div>
+            </el-col>
+          </el-row>
+          <el-row class="printProduceOrder-row">
+            <el-col :span="8" class="printProduceOrder-col">
+              <div class="printProduceOrder-form-content" style="width:75px">指令数量 : </div>
+              <div class="printProduceOrder-form-content" style="width:280px">{{ planDetail.count }}{{planDetail.countUnit}}</div>
+            </el-col>
+            <el-col :span="8" class="printProduceOrder-col">
+              <div class="printProduceOrder-form-content" style="width:75px">完工日期 : </div>
+              <div class="printProduceOrder-form-content" style="width:280px">{{ getFullTime(planInfo.producePlan.endDate) }}</div>
+            </el-col>
+            <el-col :span="8" class="printProduceOrder-col">
+              <div class="printProduceOrder-form-content" style="width:75px">领料单号 : </div>
+              <div class="printProduceOrder-form-content" style="width:280px">{{ planInfo.producePlan.pickingTicketNo }}</div>
+            </el-col>
+          </el-row>
         </div>
       </div>
       <div class="printProduceOrder-buyer-info-div-left-secfloor">
         <div class="title-div-gray flex justify-content">
           生产工序:
         </div>
-        <div class="printProduceOrder-conten">
-          <div>
-            <el-col :span="12">
-              <span class="tempate-text-left-center"
-                >买方名称：{{ userInfo.company.companyName }}</span
-              >
-            </el-col>
-            <el-col :span="12">
-              <span class="tempate-text-left-center"
-                >买方地址：{{ userInfo.company.provinceName
-                }}{{ userInfo.company.cityName }}{{ userInfo.company.areaName
-                }}{{ userInfo.company.address }}</span
-              >
-            </el-col>
-          </div>
-          <div>
-            <el-col :span="12">
-              <span class="tempate-text-left-center"
-                >联系人员：{{ userInfo.company.communicateName }}</span
-              >
-            </el-col>
-            <el-col :span="12">
-              <span class="tempate-text-left-center"
-                >联系电话：{{ userInfo.company.phoneNumber }}</span
-              >
-            </el-col>
-          </div>
-        </div>
+            <el-table
+              :data="planDetail.processList"
+              border
+              size="mini"
+              style="width: 100%"
+              stripe
+            >
+              <el-table-column label="名称" prop="processName" width="150px">
+                <template slot-scope="scope">
+                  <span>{{ scope.row.processName }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column label="物料需求">
+                <template slot-scope="scope">
+                  <el-tag
+                    class="ml10"
+                    style="width:110px"
+                    type="warning"
+                    effect="plain"
+                    v-for="item in scope.row.materialVos"
+                    :key="item.materialNo"
+                    >{{ item.materialName }}X{{ item.count }}</el-tag
+                  >
+                </template>
+              </el-table-column>
+              <el-table-column label="工作组"  width="350px">
+                <template slot-scope="scope">
+                  <el-tag
+                    class="ml10"
+                    style="width:300px"
+                    effect="plain"
+                    v-for="item in scope.row.workStationList"
+                    :key="item.workStationId"
+                    >{{ item.produceLineName }}|{{ item.workStationName }}|{{
+                      item.employeeGroupName
+                    }}</el-tag
+                  >
+                </template>
+              </el-table-column>
+              <el-table-column label="签字" width="80px"></el-table-column>
+            </el-table>
       </div>
 
       <div class="printProduceOrder-product-detail-div">
@@ -78,26 +107,22 @@
         </div>
         <el-table
           border
-          :data="poDetailList"
+          :data="planInfo.pickingTicketDetails"
           style="width: 100%"
           size="mini"
-          :header-cell-style="{
-            background: 'lightgray',
-            color: 'black',
-            weight: 'bold',
-          }"
+          stripe
         >
-          <el-table-column prop="materialName" label="名称"> </el-table-column>
-          <el-table-column prop="materialName" label="名称"> </el-table-column>
+          <el-table-column prop="materialNo" label="物料号"> </el-table-column>
+          <el-table-column prop="materialName" label="物料名称"> </el-table-column>
           <el-table-column prop="specification" label="规格"> </el-table-column>
           <el-table-column prop="count" label="数量" width="130px">
               <template slot-scope="scope">
                 <span>{{ scope.row.count }}{{ scope.row.countUnit }}</span>
               </template>
           </el-table-column>
-          <el-table-column label="签字确认" width="130px"></el-table-column>
-          <!-- <el-table-column prop="remark" label="备注">
-          </el-table-column> -->
+          <el-table-column prop="remark" label="备注"></el-table-column>
+          <el-table-column label="签字确认" ></el-table-column>
+
         </el-table>
       </div>
     </div>
@@ -116,6 +141,7 @@ export default {
     return {
       Datetime:new Date().format("yyyy-MM-dd"),
       poDetailList:[],
+      planDetail:[],
       planInfo: {
         producePlan: {},
         planDetails: [],
@@ -124,6 +150,7 @@ export default {
         pickingTicket: {},
         pickingTicketDetails: [],
       },
+
     };
   },
   computed: {
@@ -160,7 +187,7 @@ export default {
         .then((res) => {
           if (res.resultStatus == 1) {
             this.planInfo = res.data;
-console.log(this.planInfo);
+            this.planDetail=res.data.planDetails[0];
             this.loading = false;
           } else {
             this.$message.warning(res.message);
@@ -174,14 +201,13 @@ console.log(this.planInfo);
     },
 
   },
-  beforeMount() {
-    this.GetContractTemplate();
-  },
+  // beforeMount() {
+  //   this.GetContractTemplate();
+  // },
 };
 </script>
 <style lang="less">
 .printProduceOrder-div {
-  width: 950px;
   padding: 1rem;
   border: 1px solid rgb(233, 229, 229);
   display: flex;
@@ -303,16 +329,19 @@ console.log(this.planInfo);
    padding-top:15px;
    padding-right: 10px;
 }
-.printProduceOrder-form-title {
-  width: 120px;
-  text-align: left;
-  height: 30px;
-  line-height: 30px;
-  float: left;
-}
 .printProduceOrder-form-content {
   text-align: left;
   height: 30px;
   line-height: 30px;
+  float: left;
+  padding-top: 5px;
+}
+.printProduceOrder-row{
+  border: 1px solid rgb(209, 205, 205);
+  width: 100%;
+  padding: 3px;
+}
+.printProduceOrder-col{
+  border: 1px solid rgb(209, 205, 205);
 }
 </style>
