@@ -7,9 +7,8 @@ import com.melson.webserver.dict.dao.IStorageDetailRepository;
 import com.melson.webserver.dict.entity.StorageBatch;
 import com.melson.webserver.dict.entity.StorageDetail;
 import com.melson.webserver.dict.service.IStorageDetail;
-import com.melson.webserver.inventory.entity.InventoryInbound;
-import com.melson.webserver.inventory.entity.InventoryInboundDetail;
-import com.melson.webserver.inventory.entity.StorageUnit;
+import com.melson.webserver.inventory.dao.IStorageUnitRepository;
+import com.melson.webserver.inventory.entity.*;
 import com.melson.webserver.inventory.resource.InventoryStocktakingResource;
 import com.melson.webserver.inventory.vo.StorageBatchVo;
 import org.slf4j.Logger;
@@ -41,10 +40,12 @@ public class IStorageDetailImpl extends AbstractService<StorageDetail> implement
     private static final Logger logger = LoggerFactory.getLogger(IStorageDetailImpl.class);
     private final IStorageDetailRepository storageDetailRepository;
     private final IStorageBatchRepository storageBatchRepository;
+    private final IStorageUnitRepository storageUnitRepository;
 
-    public IStorageDetailImpl(IStorageDetailRepository storageDetailRepository, IStorageBatchRepository storageBatchRepository) {
+    public IStorageDetailImpl(IStorageDetailRepository storageDetailRepository, IStorageBatchRepository storageBatchRepository, IStorageUnitRepository storageUnitRepository) {
         this.storageDetailRepository = storageDetailRepository;
         this.storageBatchRepository = storageBatchRepository;
+        this.storageUnitRepository = storageUnitRepository;
     }
 
     @Override
@@ -117,36 +118,36 @@ public class IStorageDetailImpl extends AbstractService<StorageDetail> implement
 
     @Override
     public void DeleteOne(StorageDetail storageDetail) {
-         storageDetailRepository.delete(storageDetail);
+        storageDetailRepository.delete(storageDetail);
     }
 
     @Override
-    public List<StorageDetail> InventoryIn(InventoryInbound inbound, List<InventoryInboundDetail> details) throws RuntimeException{
-        Set<Integer> productIdSet=new HashSet<>();
+    public List<StorageDetail> InventoryIn(InventoryInbound inbound, List<InventoryInboundDetail> details) throws RuntimeException {
+        Set<Integer> productIdSet = new HashSet<>();
         details.forEach(inventoryInboundDetail -> {
-            if(!productIdSet.contains(inventoryInboundDetail.getMaterialId())){
+            if (!productIdSet.contains(inventoryInboundDetail.getMaterialId())) {
                 productIdSet.add(inventoryInboundDetail.getMaterialId());
             }
         });
-        List<StorageDetail> storageDetails=storageDetailRepository.findByProductIdIn(productIdSet);
-        Map<String,StorageDetail> storageDetailMap=new HashMap<>(storageDetails.size());
-        for(StorageDetail storageDetail:storageDetails){
-            String key=storageDetail.getProductId()+storageDetail.getUnit();
-            storageDetailMap.put(key,storageDetail);
+        List<StorageDetail> storageDetails = storageDetailRepository.findByProductIdIn(productIdSet);
+        Map<String, StorageDetail> storageDetailMap = new HashMap<>(storageDetails.size());
+        for (StorageDetail storageDetail : storageDetails) {
+            String key = storageDetail.getProductId() + storageDetail.getUnit();
+            storageDetailMap.put(key, storageDetail);
         }
-        List<StorageDetail> storageUpdateList=new ArrayList<>();
-        List<StorageBatch> storageBatchList=new ArrayList<>();
-        for(InventoryInboundDetail inboundDetail:details){
-            String key=inboundDetail.getMaterialId()+inboundDetail.getUnit();
-            StorageDetail storage=storageDetailMap.get(key);
-            if(storage==null){
-                String log="未找到对应的库存详细:"+inboundDetail.getMaterialName()+"，单位："+inboundDetail.getUnit();
-                logger.error("入库error: 未找到对应的库存详细：productId=[{}]和 unit [{}]",inboundDetail.getMaterialId(),inboundDetail.getUnit());
+        List<StorageDetail> storageUpdateList = new ArrayList<>();
+        List<StorageBatch> storageBatchList = new ArrayList<>();
+        for (InventoryInboundDetail inboundDetail : details) {
+            String key = inboundDetail.getMaterialId() + inboundDetail.getUnit();
+            StorageDetail storage = storageDetailMap.get(key);
+            if (storage == null) {
+                String log = "未找到对应的库存详细:" + inboundDetail.getMaterialName() + "，单位：" + inboundDetail.getUnit();
+                logger.error("入库error: 未找到对应的库存详细：productId=[{}]和 unit [{}]", inboundDetail.getMaterialId(), inboundDetail.getUnit());
                 throw new RuntimeException(log);
             }
             storage.setCount(inboundDetail.getCount().add(new BigDecimal(storage.getCount())).intValue());
             storageUpdateList.add(storage);
-            storageBatchList.add(CreateBatch(storage,inbound,inboundDetail));
+            storageBatchList.add(CreateBatch(storage, inbound, inboundDetail));
         }
 
         //插入新增批次
@@ -155,11 +156,82 @@ public class IStorageDetailImpl extends AbstractService<StorageDetail> implement
         return storageDetailRepository.saveAll(storageUpdateList);
     }
 
+    @Override
+    public List<StorageDetail> InventoryOut(InventoryOutbound outVBound, List<InventoryOutboundDetail> details) throws RuntimeException {
+        Set<Integer> productIds = new HashSet<>();
+        details.forEach(inventoryOutboundDetail -> {
+            productIds.add(inventoryOutboundDetail.getMaterialId());
+        });
+        //获取当前转换单位备用
+        List<StorageUnit> units = storageUnitRepository.findByProductIdIn(productIds);
+        //按照productId 分组
+        Map<String, StorageUnit> storageUnitMap = new HashMap<>();
+        for (StorageUnit unit : units) {
+            String key = unit.getProductId() + unit.getPackageUnit();
+            storageUnitMap.put(key, unit);
+        }
+        //获取库存备用
+        List<StorageDetail> storageDetailList = storageDetailRepository.findByProductIdIn(productIds);
+        //按照productId 分组
+        Map<String, StorageDetail> storageDetailMap = new HashMap<>();
+        for (StorageDetail storageDetail : storageDetailList) {
+            String key = storageDetail.getProductId() + storageDetail.getUnit();
+            storageDetailMap.put(key, storageDetail);
+        }
+        //获取库存批次备用
+        List<StorageBatch> storageBatchList = storageBatchRepository.findByMaterialIdInAndFinished(productIds, 0);
+        //按照productId 分组
+        Map<String, StorageBatch> storageBatchMap = new HashMap<>();
+        for (StorageBatch storageBatch : storageBatchList) {
+            String key = storageBatch.getMaterialId() + storageBatch.getBatchNo() + storageBatch.getCountUnit();
+            storageBatchMap.put(key, storageBatch);
+        }
+        for (InventoryOutboundDetail detail : details) {
+            //扣除总库存数量
+            String storageKey = detail.getMaterialId() + detail.getOutCountUnit();
+            StorageDetail storageDetail = storageDetailMap.get(storageKey);
+            if (storageDetail == null) {
+                throw new RuntimeException("未能找到库存数据");
+            }
+            if(storageDetail.getCount()< detail.getOutCount()){
+                throw new RuntimeException(detail.getName()+"库存不足");
+            }
+            storageDetail.setCount(storageDetail.getCount() - detail.getOutCount());
+            //拆包处理  由于只能拆为最小包装 所以默认数量未baseUnit
+            if (detail.getUnPackageCount() !=null&&detail.getUnPackageCount()>0) {
+                String packageKey = detail.getMaterialId() + detail.getUnit();
+                StorageDetail unPackageStorage = storageDetailMap.get(packageKey);
+                if (unPackageStorage == null) {
+                    throw new RuntimeException("未能找到拆包库存数据");
+                }
+                //获取拆包剩余数量 单位是baseUnit
+                String unitKey = detail.getMaterialId() + detail.getUnPackageCountUnit();
+                StorageUnit unit = storageUnitMap.get(unitKey);
+                Integer remaindCount = unit.getBaseUnitConvertCount() - detail.getUnPackagePickCount();
+                unPackageStorage.setCount(unPackageStorage.getCount() + remaindCount);
+            }
+            if (!StringUtils.isEmpty(detail.getBatchNo())) {
+                String batchKey = detail.getMaterialId() + detail.getBatchNo() + detail.getOutCountUnit();
+                StorageBatch storageBatch = storageBatchMap.get(batchKey);
+                if (storageBatch == null) {
+                    throw new RuntimeException("未能找到批次库存数据");
+                }
+                storageBatch.setCount(storageBatch.getCount() - detail.getOutCount());
+                if (storageBatch.getCount() == 0) {
+                    storageBatch.setFinished(1);
+                }
+            }
+        }
+        storageBatchRepository.saveAll(storageBatchMap.values());
+        List<StorageDetail> saved = storageDetailRepository.saveAll(storageDetailMap.values());
+        return saved;
+    }
+
 
     @Override
     public List<StorageBatchVo> FindStorageBatchInfo(Set<String> materialNos) {
-        List<Object[]> objects=storageDetailRepository.findStorageDetailBatchInfo(materialNos);
-        List<StorageBatchVo> storageBatchVos= EntityUtils.castEntity(objects,StorageBatchVo.class,new StorageBatchVo());
+        List<Object[]> objects = storageDetailRepository.findStorageDetailBatchInfo(materialNos);
+        List<StorageBatchVo> storageBatchVos = EntityUtils.castEntity(objects, StorageBatchVo.class, new StorageBatchVo());
         return storageBatchVos;
     }
 
@@ -173,8 +245,8 @@ public class IStorageDetailImpl extends AbstractService<StorageDetail> implement
         return storageDetailRepository.findByProductId(productId);
     }
 
-    private StorageBatch CreateBatch(StorageDetail storageDetail,InventoryInbound inbound,InventoryInboundDetail inboundDetail){
-        StorageBatch storageBatch=new StorageBatch();
+    private StorageBatch CreateBatch(StorageDetail storageDetail, InventoryInbound inbound, InventoryInboundDetail inboundDetail) {
+        StorageBatch storageBatch = new StorageBatch();
         storageBatch.setMaterialId(storageDetail.getProductId());
         storageBatch.setName(storageDetail.getName());
         storageBatch.setSpecification(storageDetail.getSpecification());
@@ -185,6 +257,6 @@ public class IStorageDetailImpl extends AbstractService<StorageDetail> implement
         storageBatch.setBatchType(inbound.getType());
         storageBatch.setStorageInCode(inbound.getFormNo());
         storageBatch.setFinished(0);
-       return storageBatch;
+        return storageBatch;
     }
 }

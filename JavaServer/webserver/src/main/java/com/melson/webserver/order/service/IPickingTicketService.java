@@ -1,5 +1,6 @@
 package com.melson.webserver.order.service;
 
+import com.melson.webserver.inventory.dto.OutboundRequireDto;
 import com.melson.webserver.inventory.vo.InventoryInboundVo;
 import com.melson.webserver.inventory.vo.InventoryOutboundVo;
 import com.melson.webserver.order.entity.*;
@@ -37,4 +38,8 @@ public interface IPickingTicketService {
     int UpdateAfterInBound(Integer id,String inboundNo,String state);
 
     InventoryOutboundVo GenerateInventoryOutBound (Integer ticketId, Integer userId) throws RuntimeException;
+
+    List<OutboundRequireDto> GenerateOutRequireList(Integer ticketId);
+
+    PickingTicket FindById(Integer id);
 }

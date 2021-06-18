@@ -2,9 +2,7 @@ package com.melson.webserver.dict.service;
 
 import com.melson.base.IService;
 import com.melson.webserver.dict.entity.StorageDetail;
-import com.melson.webserver.inventory.entity.InventoryInbound;
-import com.melson.webserver.inventory.entity.InventoryInboundDetail;
-import com.melson.webserver.inventory.entity.StorageUnit;
+import com.melson.webserver.inventory.entity.*;
 import com.melson.webserver.inventory.vo.StorageBatchVo;
 import org.springframework.data.domain.Page;
 
@@ -33,6 +31,8 @@ public interface IStorageDetail extends IService<StorageDetail> {
     void DeleteOne(StorageDetail storageDetail);
 
     List<StorageDetail> InventoryIn(InventoryInbound inbound,List<InventoryInboundDetail> details) throws RuntimeException;
+
+    List<StorageDetail> InventoryOut(InventoryOutbound outVBound, List<InventoryOutboundDetail> details) throws RuntimeException;
 
     List<StorageBatchVo> FindStorageBatchInfo(Set<String> materialNos);
 

@@ -18,15 +18,17 @@ public class InventoryOutboundDetail {
      */
     private Integer id;
     /**
+     * 物料号
+     */
+    private String materialNo;
+    /**
+     * 物料ID
+     */
+    private Integer materialId;
+    /**
      * 出库单号
      */
     private String formNo;
-    /**
-     * 物料号/产品编码
-     */
-    private String materialNo;
-
-    private Integer materialId;
     /**
      * 名称
      */
@@ -36,24 +38,46 @@ public class InventoryOutboundDetail {
      */
     private String specification;
     /**
-     * 数量
+     * 应出数量
      */
     private Integer count;
-
     /**
-     * 数量单位
+     * 应出数量单位
      */
     private String unit;
 
     /**
-     * 批次号，如果为多批次出库 则有多条出库详细
+     * 批次号
      */
     private String batchNo;
 
     /**
-     * 仓库码
+     * 出库数量
      */
+    private Integer outCount;
 
+    /**
+     * 出库数量单位
+     */
+    private String outCountUnit;
+
+    /**
+     * 拆包数量 如拆1包
+     */
+    private Integer unPackageCount;
+
+    /**
+     * 拆包数量单位
+     */
+    private String unPackageCountUnit;
+
+    /**
+     * 拆包取出数量 如拆1包 取走10支
+     */
+    private Integer unPackagePickCount;
+    /**
+     * 货位号
+     */
     private String storageCode;
 
 
@@ -139,5 +163,45 @@ public class InventoryOutboundDetail {
 
     public void setMaterialId(Integer materialId) {
         this.materialId = materialId;
+    }
+
+    public Integer getOutCount() {
+        return outCount;
+    }
+
+    public void setOutCount(Integer outCount) {
+        this.outCount = outCount;
+    }
+
+    public String getOutCountUnit() {
+        return outCountUnit;
+    }
+
+    public void setOutCountUnit(String outCountUnit) {
+        this.outCountUnit = outCountUnit;
+    }
+
+    public Integer getUnPackageCount() {
+        return unPackageCount;
+    }
+
+    public void setUnPackageCount(Integer unPackageCount) {
+        this.unPackageCount = unPackageCount;
+    }
+
+    public String getUnPackageCountUnit() {
+        return unPackageCountUnit;
+    }
+
+    public void setUnPackageCountUnit(String unPackageCountUnit) {
+        this.unPackageCountUnit = unPackageCountUnit;
+    }
+
+    public Integer getUnPackagePickCount() {
+        return unPackagePickCount;
+    }
+
+    public void setUnPackagePickCount(Integer unPackagePickCount) {
+        this.unPackagePickCount = unPackagePickCount;
     }
 }

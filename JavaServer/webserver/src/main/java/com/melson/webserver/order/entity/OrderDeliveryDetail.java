@@ -17,6 +17,7 @@ public class OrderDeliveryDetail {
     private String specification;
     private Integer count;
     private String unit;
+    private String productNo;
 
     private Integer orderDeliveryId;
 
@@ -75,5 +76,13 @@ public class OrderDeliveryDetail {
 
     public void setOrderDeliveryId(Integer orderDeliveryId) {
         this.orderDeliveryId = orderDeliveryId;
+    }
+
+    public String getProductNo() {
+        return productNo;
+    }
+
+    public void setProductNo(String productNo) {
+        this.productNo = productNo;
     }
 }

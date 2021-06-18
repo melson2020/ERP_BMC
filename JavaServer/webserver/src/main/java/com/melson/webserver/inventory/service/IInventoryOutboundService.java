@@ -32,13 +32,13 @@ public interface IInventoryOutboundService {
     InventoryOutboundVo get(String formNo);
 
     /**
-     * 入库
+     * 出库
      *
      * @param vo
      * @param userId
      * @return
      */
-    InventoryOutbound save(InventoryOutboundVo vo, Integer userId);
+    InventoryOutbound save(InventoryOutboundVo vo, Integer userId) throws RuntimeException;
 
     InventoryOutboundVo GenerateOutBoundWithExistTicket(Integer ticketId,String ticketType,Integer userId) throws RuntimeException;
 

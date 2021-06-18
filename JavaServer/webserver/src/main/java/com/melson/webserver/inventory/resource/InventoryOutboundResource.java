@@ -63,19 +63,24 @@ public class InventoryOutboundResource extends BaseResource {
      */
     @PostMapping(value = "/save")
     public Result save(HttpServletRequest request, @RequestBody InventoryOutboundVo vo) {
-        Integer userId = getLoginUserId(request);
+        String token = request.getHeader("token");
+        Integer userId = Integer.parseInt(token);
         if (userId == null) {
             return failure(SysRespCode.LOGIN_TIME_OUT, "登录超时");
         }
         if (vo == null) {
             return failure(SysRespCode.OUTBOUND_SAVE_IS_NULL, "待出库信息为空");
         }
-        InventoryOutbound form = inventoryOutboundService.save(vo, userId);
-        if (form == null) {
-            return failure(SysRespCode.OUTBOUND_SAVE_FAIL, "出库失败");
-        }
-        logger.info("用户[{}]出库[{}]成功", userId, form.getFormNo());
-        return success(form.getFormNo());
+//        try {
+            InventoryOutbound form = inventoryOutboundService.save(vo, userId);
+            if (form == null) {
+                return failure(SysRespCode.OUTBOUND_SAVE_FAIL, "出库失败");
+            }
+            logger.info("用户[{}]出库[{}]成功", userId, form.getFormNo());
+            return success(form.getFormNo());
+//        } catch (Exception e) {
+//            return failure(-1, e.getMessage());
+//        }
     }
 
     @GetMapping(value = "/pickingOutBoundList")
@@ -88,26 +93,27 @@ public class InventoryOutboundResource extends BaseResource {
         if (ticketId == null || StringUtils.isEmpty(ticketType)) return GenerateResult(ResultType.ParameterNeeded);
         String token = request.getHeader("token");
         Integer userId = Integer.parseInt(token);
-//        try {
+        try {
             InventoryOutboundVo vo = inventoryOutboundService.GenerateOutBoundWithExistTicket(ticketId, ticketType, userId);
             if (vo == null) {
                 return failure(-1, "创建失败");
             } else {
                 return success(vo);
             }
-//        } catch (RuntimeException re) {
-//            return failure(-1, re.getMessage());
-//        }
+        } catch (RuntimeException re) {
+            return failure(-1, re.getMessage());
+        }
     }
 
     /**
      * 更具客户端相同单位出库数量 获取各批次出库详细
+     *
      * @param vo 基础出库数据
      * @return
      */
     @PostMapping(value = "/generateOutDetailVo")
     public Result CreateOutBoundWithExistTicket(@RequestBody InventoryOutboundDetailVo vo) {
-        if (vo == null ||vo.getMaterialId()==null) return GenerateResult(ResultType.ParameterNeeded);
+        if (vo == null || vo.getMaterialId() == null) return GenerateResult(ResultType.ParameterNeeded);
         return success(inventoryOutboundService.GenerateDetailVoBatchInfo(vo));
     }
 }

@@ -6,7 +6,7 @@ import { Message } from "element-ui";
 const state = {
     //仓库列表
     storageList: [],
-    storageDetailPage: {}
+    storageDetailPage: {},
 };
 
 const actions = {
@@ -82,6 +82,9 @@ const actions = {
     SaveInventoryInBound({},param){
         return request.InventoryInBoundSave(param)
     },
+    SaveInventoryOutBound({},param){
+        return request.InventoryOutBoundSave(param)
+    },
     FindPickingTicketInBoundList({},param){
         return request.GetPickingTicketInboundList(param)
     },
@@ -99,13 +102,13 @@ const actions = {
     },
     GetOrderDeliveryByState({},param){
         return request.GetOrderDeliveryByState(param)
-    }
-
+    },
 };
 
 const getters = {
     storageList: state => state.storageList,
-    storageDetailPage: state => state.storageDetailPage
+    storageDetailPage: state => state.storageDetailPage,
+    storagePurchaseList:state=>state.storagePurchaseList
 };
 
 const mutations = {
@@ -121,7 +124,7 @@ const mutations = {
     },
     [types.STORAGE_DETAIL_LIST](state, data) {
         state.storageDetailPage = data;
-    }
+    },
 };
 
 export default {

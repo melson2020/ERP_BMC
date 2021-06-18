@@ -474,6 +474,9 @@ ReqGetPurchaseDashboardSummary(param) {
   InventoryInBoundSave(param){
     return service.post("/inventory/inbound/save", param)
   },
+  InventoryOutBoundSave(param){
+    return service.post("/inventory/outbound/save", param)
+  },
   GetPickingTicketInboundList(param){
     return service.get('/inventory/inbound/pickingInBoundList', param)
   },

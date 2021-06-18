@@ -74,6 +74,11 @@ public class InventoryOutboundDetailVo {
      */
     private String storageDes;
 
+    /**
+     * 库存数量 已换算成基础单位
+     */
+    private Integer storageCount;
+
 
     /**
      * 库存是否充足 1充足
@@ -198,5 +203,13 @@ public class InventoryOutboundDetailVo {
 
     public void setUnPackagePickCount(Integer unPackagePickCount) {
         this.unPackagePickCount = unPackagePickCount;
+    }
+
+    public Integer getStorageCount() {
+        return storageCount;
+    }
+
+    public void setStorageCount(Integer storageCount) {
+        this.storageCount = storageCount;
     }
 }

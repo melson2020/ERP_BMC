@@ -13,6 +13,7 @@ import com.melson.webserver.dict.vo.BomVo;
 import com.melson.webserver.inventory.dao.IInventoryInboundDetailRepository;
 import com.melson.webserver.inventory.dao.IInventoryInboundRepository;
 import com.melson.webserver.inventory.dao.IStorageUnitRepository;
+import com.melson.webserver.inventory.dto.OutboundRequireDto;
 import com.melson.webserver.inventory.entity.*;
 import com.melson.webserver.inventory.vo.*;
 import com.melson.webserver.order.dao.IPickingTicketDetailRepository;
@@ -306,6 +307,22 @@ public class PickingTicketServiceImpl implements IPickingTicketService {
         return inventoryOutbound;
     }
 
+    @Override
+    public List<OutboundRequireDto> GenerateOutRequireList(Integer ticketId) {
+        List<PickingTicketDetail> pickingTicketDetailList = pickingTicketDetailRepository.findByTicketId(ticketId);
+        List<OutboundRequireDto> outList=new ArrayList<>();
+        for(PickingTicketDetail pickingTicketDetail:pickingTicketDetailList){
+            OutboundRequireDto dto=new OutboundRequireDto(pickingTicketDetail.getProductId(),pickingTicketDetail.getMaterialNo(),pickingTicketDetail.getMaterialName(),pickingTicketDetail.getSpecification(),pickingTicketDetail.getCountUnit(),pickingTicketDetail.getCount().intValue(),pickingTicketDetail.getType().equals(OrderFormDetail.PRODUCE_TYPE_D)?PickingTicket.CUSTOMER_MATERIAL_FLAY_Y:PickingTicket.CUSTOMER_MATERIAL_FLAY_N);
+            outList.add(dto);
+        }
+        return outList;
+    }
+
+    @Override
+    public PickingTicket FindById(Integer id) {
+        return pickingTicketRepository.findById(id).orElse(null);
+    }
+
     private List<InventoryOutboundDetailVo> GenerateOutListWithInBoundList(String inBoundNo,List<PickingTicketDetail> oemList,Map<Integer, List<StorageDetail>> storageDetailMap) {
         InventoryInbound inventoryInbound = iInventoryInboundRepository.findByFormNo(inBoundNo);
         List<InventoryInboundDetail> inventoryInboundDetails = iInventoryInboundDetailRepository.findByFormNo(inBoundNo);
@@ -341,8 +358,6 @@ public class PickingTicketServiceImpl implements IPickingTicketService {
     private List<InventoryOutboundDetailVo> GenerateOutListWithPickingList(List<PickingTicketDetail> produceList,Map<Integer, List<StorageDetail>> storageDetailMap,Map<Integer, List<StorageUnit>> storageUnitMap,Map<Integer, List<StorageBatch>> storageBatchMap) {
         List<InventoryOutboundDetailVo> voList = new ArrayList<>();
         for (PickingTicketDetail detail : produceList) {
-            String storageDes = "";
-            String storageCode = "";
             //计算出库存总量 并且把批次数量转化为 基础单位数量
             Integer pTotalCount = ComputedTotalStorage(storageDetailMap.get(detail.getProductId()), detail.getCountUnit(), storageUnitMap.get(detail.getProductId()));
             //按照先进先出原则 获取出库批次

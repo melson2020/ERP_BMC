@@ -2,6 +2,7 @@ package com.melson.webserver.order.service;
 
 import com.melson.webserver.contract.entity.Contract;
 import com.melson.webserver.contract.entity.ContractOrg;
+import com.melson.webserver.inventory.dto.OutboundRequireDto;
 import com.melson.webserver.order.entity.OrderDelivery;
 import com.melson.webserver.order.entity.OrderForm;
 import com.melson.webserver.order.entity.OrderFormDetail;
@@ -18,4 +19,6 @@ public interface IOrderDeliveryService {
     OrderDelivery CreateOrderDelivery(OrderForm form, List<OrderFormDetail> orderFormDetails, Contract contract, ContractOrg contractOrg);
     OrderDelivery Confirm(OrderDelivery orderDelivery);
     List<OrderDelivery> FindByState(String state);
+    List<OutboundRequireDto> GenerateOutRequires(Integer ticketId);
+    OrderDelivery FindById(Integer id);
 }

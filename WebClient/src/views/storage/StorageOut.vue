@@ -36,6 +36,7 @@
           label-position="left"
           :model="editInventoryOutbound"
           label-width="80px"
+          :rules="rules"
           class="mt40"
         >
           <el-row :gutter="10">
@@ -59,7 +60,7 @@
                 <el-input
                   disabled
                   placeholder="系统生成"
-                  v-model="editInventoryOutbound.formNo"
+                  v-model="editInventoryOutbound.sourceNo"
                 ></el-input> </el-form-item
             ></el-col>
             <el-col :span="12">
@@ -224,6 +225,14 @@
               >添加详细</el-button
             >
           </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="submitOnClick('boundOutForm')"
+              >提交</el-button
+            >
+            <el-button icon="el-icon-goods" @click="purchaseOnClick"
+              >采购</el-button
+            ></el-form-item
+          >
         </el-form>
       </div>
     </div>
@@ -269,23 +278,29 @@
 
       <div v-if="inventoryOutboundType == 'DELIVERY'">
         <span class="colorblue fl mb40">发货出库</span>
-        <el-table key="2" script border size="mini" :data="deliveryOutBoundList">
+        <el-table
+          key="2"
+          script
+          border
+          size="mini"
+          :data="deliveryOutBoundList"
+        >
           <el-table-column prop="ticketNo" label="编号"> </el-table-column>
           <el-table-column prop="customerName" label="客户"> </el-table-column>
           <el-table-column prop="orderFormNo" label="订单号"> </el-table-column>
-           <el-table-column prop="deliveryDate" label="发货日"> 
-             <template slot-scope="scope">
+          <el-table-column prop="deliveryDate" label="发货日">
+            <template slot-scope="scope">
               <span class="fl">
-                  {{ getFullDate(scope.row.deliveryDate) }}
-                </span>
-             </template>
-           </el-table-column>
+                {{ getFullDate(scope.row.deliveryDate) }}
+              </span>
+            </template>
+          </el-table-column>
           <el-table-column label="" width="80px">
-            <template>
+            <template slot-scope="scope">
               <el-button
                 type="success"
                 icon="el-icon-check"
-                 @click="loadOutBound(scope.row, 'DELIVERY')"
+                @click="loadOutBound(scope.row, 'DELIVERY')"
                 size="mini"
                 circle
               ></el-button>
@@ -293,6 +308,39 @@
           </el-table-column>
         </el-table>
       </div>
+    </el-dialog>
+    <el-dialog title="采购单" :visible.sync="purchaseDialogVisible" width="70%">
+      <el-form ref="form" :model="storagePurchase" label-width="80px">
+        <el-form-item label="采购类型">
+          <el-input v-model="storagePurchase.type"></el-input>
+        </el-form-item>
+        <el-form-item label="采购来源">
+          <el-input v-model="storagePurchase.pickingNo"></el-input>
+        </el-form-item>
+          <el-form-item label="采购详细">
+           <el-table
+          key="3"
+          script
+          border
+          size="mini"
+          :data="storagePurchase.purchaseDetailList"
+        >
+          <el-table-column prop="materialNo" label="编号"> </el-table-column>
+          <el-table-column prop="materialName" label="名称"> </el-table-column>
+          <el-table-column prop="specification" label="规格"> </el-table-column>
+          <el-table-column prop="count" label="数量"> 
+             <template slot-scope="scope">
+                  <span>{{ scope.row.count }}{{ scope.row.countUnit }}</span>
+                </template>
+          </el-table-column>
+    
+        </el-table>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="onSubmit">立即创建</el-button>
+          <el-button>取消</el-button>
+        </el-form-item>
+      </el-form>
     </el-dialog>
   </div>
 </template>
@@ -306,21 +354,31 @@ export default {
       selectStorageDetailId: "",
       selectStorageDetailDes: "",
       detailDialogVisible: false,
+      purchaseDialogVisible: false,
       inventoryOutboundType: "",
       editInventoryOutbound: {
         detailVoList: [],
       },
       storageDetailList: [],
+      storagePurchase: {
+        purchaseDetailList: [],
+      },
 
       pickingTicketOutBoundList: [],
       deliveryOutBoundList: [],
       productList: [],
       outCountMax: 0,
+      rules: {
+        type: [{ required: true, message: "请选择类型", trigger: "blur" }],
+        detailVoList: [
+          { required: true, message: "填入入库详细", trigger: "blur" },
+        ],
+      },
     };
   },
 
   computed: {
-    ...mapGetters(["userInfo"]),
+    ...mapGetters(["userInfo", "storagePurchaseList"]),
   },
 
   methods: {
@@ -331,6 +389,8 @@ export default {
       FindStorageDetaiListByProductId: "FindStorageDetaiListByProductId",
       CreateOutBoundBatchInfo: "CreateOutBoundBatchInfo",
       GetOrderDeliveryByState: "GetOrderDeliveryByState",
+      SaveInventoryOutBound: "SaveInventoryOutBound",
+      AddToStoragePurchaseList: "AddToStoragePurchaseList",
     }),
     getFullDate(time) {
       if (time) {
@@ -367,7 +427,7 @@ export default {
     },
 
     findOrderDeliveryOutBoundList() {
-      this.GetOrderDeliveryByState({state:'2'})
+      this.GetOrderDeliveryByState({ state: "2" })
         .then((res) => {
           if (res.resultStatus == 1) {
             this.deliveryOutBoundList = res.data;
@@ -521,22 +581,69 @@ export default {
     removeOnClick(index) {
       this.editInventoryOutbound.detailVoList.splice(index, 1);
     },
-    addConfirmOnClick(row) {
-      if (row.materialId == "" || row.count <= 0) {
-        this.$message.warning("请完善入库信息");
-        return;
-      }
-      row.seen = false;
-    },
     editOnClick(row) {
       row.seen = true;
+    },
+
+    purchaseOnClick() {
+      this.storagePurchase = {
+        purchaseDetailList: [],
+      };
+      if (
+        this.editInventoryOutbound.detailVoList.filter((item) => {
+          return item.storageFlag == 0;
+        }).length <= 0
+      )
+        return;
+      this.purchaseDialogVisible = !this.purchaseDialogVisible;
+      this.editInventoryOutbound.detailVoList.map((item) => {
+        if (item.storageFlag == 0) {
+          var obj = {
+            materialNo: item.materialNo,
+            materialName: item.name,
+            specification: item.specification,
+            count: this.$my.NumberSub(item.count, item.storageCount),
+            countUnit: item.unit,
+          };
+          this.storagePurchase.purchaseDetailList.push(obj);
+        }
+      });
+      this.storagePurchase.type = "PLAN";
+      this.storagePurchase.pickingNo = this.editInventoryOutbound.sourceNo;
+    },
+
+    submitOnClick(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (
+          this.editInventoryOutbound.detailVoList.filter((item) => {
+            return item.storageFlag == 0;
+          }).length > 0
+        ) {
+          this.$message.warning("库存不足,不能出库");
+        } else {
+          if (valid) {
+            this.SaveInventoryOutBound(this.editInventoryOutbound)
+              .then((res) => {
+                if (res.resultStatus == 1) {
+                  this.$message.success("出库成功");
+                  this.$refs[formName].resetFields();
+                } else {
+                  this.$message.warning(res.message);
+                }
+              })
+              .catch((err) => {
+                this.$message.error(err.message);
+              });
+          }
+        }
+      });
     },
   },
 };
 </script>
 <style>
 .storage-out-main {
-  padding: 5px 10px;
+  padding: 10px;
 }
 .storage-out-larg-button {
   width: 100%;
