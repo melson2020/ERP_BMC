@@ -72,11 +72,10 @@ public class IPurchasePlanServiceImpl extends AbstractService<PurchasePlan> impl
             detail.setCreateBy(pr.getCreateBy());
             detail.setRequester(pr.getRequester());
             detail.setRequesterId(pr.getRequesterId());
-            detail.setPickingTicketId(savedPT.getId());
+
         }
         List<PurchaseDetail> detailList=pr.getPurchaseDetailList();
         purchaseDetailRepository.saveAll(detailList);
-        pr.setPickingNo(pt.getTicketNo());
         purchasePlanRepository.save(pr);
         result.setData(saved);
         return result;

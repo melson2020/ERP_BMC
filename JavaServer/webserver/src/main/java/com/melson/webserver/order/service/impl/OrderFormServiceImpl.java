@@ -7,6 +7,7 @@ import com.melson.webserver.contract.entity.Contract;
 import com.melson.webserver.contract.entity.ContractOrg;
 import com.melson.webserver.contract.entity.ContractStock;
 import com.melson.webserver.order.dao.IOrderFormRepository;
+import com.melson.webserver.order.dao.IPurchasePlanRepository;
 import com.melson.webserver.order.entity.*;
 import com.melson.webserver.order.service.*;
 import com.melson.webserver.order.vo.OrderFormConfirmVo;
@@ -45,6 +46,8 @@ public class OrderFormServiceImpl implements IOrderFormService {
     private IProducePlanService producePlanService;
     @Autowired
     private IPurchaseDetailService purchaseDetailService;
+    @Autowired
+    private IPurchasePlanRepository purchasePlanRepository;
     @Autowired
     private IDelegateTicketService delegateTicketService;
     @Autowired
@@ -243,7 +246,8 @@ public class OrderFormServiceImpl implements IOrderFormService {
         List<OrderFormDetail> orderFormDetails = orderFormDetailService.findDetailListByFormId(orderForm.getId());
         ProducePlan producePlan = producePlanService.FindByOrderFormId(orderForm.getId());
         DelegateTicket delegateTicket = delegateTicketService.FindByOrderFormId(orderForm.getId());
-        List<PurchaseDetail> purchaseDetailList = purchaseDetailService.FindByOrderFormId(orderForm.getId());
+        PurchasePlan purchasePlan=purchasePlanRepository.findById(orderForm.getId()).orElse(null);
+        List<PurchaseDetail> purchaseDetailList = purchaseDetailService.FindByPlanNo(purchasePlan.getPlanNo());
         infoVo.setOrderForm(orderForm);
         infoVo.setOrderFormDetailList(orderFormDetails);
         List<ProducePlan> producePlanList = new ArrayList<>();
