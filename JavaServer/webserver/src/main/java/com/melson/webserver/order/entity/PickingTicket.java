@@ -19,7 +19,14 @@ public class PickingTicket {
     public static final String CUSTOMER_MATERIAL_FLAY_N="N";
 
     public static final String STATE_CREATE="CREATE";
+    //已入库 只有在客户给料时才会使用
     public static final String STATE_INBOUND="INBOUND";
+    //库存不足采购中
+    public static final String STATE_PURCHASE="PURCHASE";
+    //库存不足采购中
+    public static final String STATE_PURCHASED="PURCHASED";
+    //已出库 领料完成
+    public static final String STATE_OUTBOUND="OUTBOUND";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

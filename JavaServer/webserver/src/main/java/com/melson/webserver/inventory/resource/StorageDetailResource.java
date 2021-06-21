@@ -2,11 +2,16 @@ package com.melson.webserver.inventory.resource;
 
 import com.melson.base.BaseResource;
 import com.melson.base.Result;
+import com.melson.webserver.dict.service.IStorageBatch;
 import com.melson.webserver.dict.service.IStorageDetail;
 import com.melson.webserver.inventory.entity.StorageUnit;
 import com.melson.webserver.inventory.service.IStorageUnitService;
+import com.melson.webserver.order.entity.PurchasePlan;
+import com.melson.webserver.order.service.IPurchasePlanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @Author Nelson
@@ -20,6 +25,10 @@ public class StorageDetailResource extends BaseResource {
     private IStorageDetail storageDetailService;
     @Autowired
     private IStorageUnitService storageUnitService;
+    @Autowired
+    private IPurchasePlanService purchasePlanService;
+    @Autowired
+    private IStorageBatch storageBatchService;
 
     @GetMapping(value = "/detailList")
     public Result FindAllStorageList(String searchValue, Integer page, Integer pageSize) {
@@ -72,5 +81,23 @@ public class StorageDetailResource extends BaseResource {
     @GetMapping(value = "/listByProduct")
     public Result FindStorageListByProductId(Integer productId) {
         return success(storageDetailService.FindByProductId(productId));
+    }
+
+    @GetMapping(value = "/storageBatchList")
+    public Result FindStorageBatchList(Integer productId) {
+        return success(storageBatchService.FindByProductId(productId));
+    }
+
+    /**
+     * 库存不足时生产采购清单
+     * @param request
+     * @param purchasePlan
+     * @return
+     */
+    @PostMapping(value = "/createPurchasePlan")
+    public Result CreatePurchasePlan(HttpServletRequest request, @RequestBody PurchasePlan purchasePlan) {
+        String token = request.getHeader("token");
+        Integer userId = Integer.parseInt(token);
+        return success(purchasePlanService.CreatePurchaseByStorage(purchasePlan,userId));
     }
 }

@@ -12,4 +12,5 @@ import java.util.Set;
  */
 public interface IStorageBatch extends IService<StorageBatch> {
     List<StorageBatch> FindByProductIds(Set<Integer> productIds,Integer finish);
+    List<StorageBatch> FindByProductId(Integer productId);
 }

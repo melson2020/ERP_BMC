@@ -15,6 +15,8 @@ import java.util.Set;
 public interface IStorageBatchRepository extends JpaRepository<StorageBatch, String> {
     List<StorageBatch> findByMaterialIdInAndFinished(Set<Integer> productId, Integer finish);
 
+    List<StorageBatch> findByMaterialIdAndFinished(Integer productId,Integer finish);
+
     List<StorageBatch> findByMaterialIdAndFinishedAndCountUnitOrderByBatchNo(Integer productId, Integer finish, String unit);
 
     @Query(nativeQuery = true, value = "SELECT sb.materialId,sb.`name`,sb.batchNo,sb.count,sb.countUnit FROM `storage_batch` sb RIGHT JOIN product  p on sb.materialId=p.id WHERE p.storageCode=?1")

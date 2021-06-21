@@ -18,12 +18,14 @@
       class="storage-detail-table"
       :data="storageDetailPage.content"
       :span-method="objectSpanMethod"
-      border="" stripe
+      border=""
+      stripe
       size="small"
       :header-row-style="{ height: '40px' }"
       :row-style="{ height: '40px' }"
       :cell-style="{ padding: '2px', color: '#909399' }"
-      :header-cell-style="{ background: '#909399', color: 'white' }">
+      :header-cell-style="{ background: '#909399', color: 'white' }"
+    >
       <el-table-column prop="materialNo" label="编号"> </el-table-column>
       <el-table-column prop="name" label="名称"> </el-table-column>
       <el-table-column prop="specification" label="规格"> </el-table-column>
@@ -35,7 +37,6 @@
       <el-table-column prop="" width="100px">
         <template slot-scope="scope">
           <el-tooltip
-            class="item"
             effect="light"
             content="配置包装单位"
             placement="top-start"
@@ -45,6 +46,19 @@
               circle
               @click="packageSettingOnClick(scope.row)"
               type="primary"
+              size="mini"
+            ></el-button>
+          </el-tooltip>
+          <el-tooltip
+            effect="light"
+            content="查看批次详细"
+            placement="top-start"
+          >
+            <el-button
+              icon="el-icon-more"
+              circle
+              @click="bacthDetailOnClick(scope.row)"
+              type="info"
               size="mini"
             ></el-button>
           </el-tooltip>
@@ -181,6 +195,19 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+    <el-dialog
+      title="提示"
+      :visible.sync="batchDialogVisible"
+      width="70%"
+    >
+      <span>这是一段信息</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="batchDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="batchDialogVisible = false"
+          >确 定</el-button
+        >
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -192,7 +219,9 @@ export default {
       searchValue: "",
       currentPage: 1,
       pageSize: 14,
+      storageBatchList: [],
       storagePackageSetting: false,
+      batchDialogVisible: false,
       storageUnitInfo: {
         product: {},
         storageUnitList: [],
@@ -206,6 +235,7 @@ export default {
       GetStorageUnitListByProductId: "GetStorageUnitListByProductId",
       SaveStorageUnitOne: "SaveStorageUnitOne",
       DeleteStorageUnitOne: "DeleteStorageUnitOne",
+      GetStorageBatchList: "GetStorageBatchList",
     }),
 
     pageChanged(page) {
@@ -234,16 +264,31 @@ export default {
       this.GetStorageDetail(params);
     },
     packageSettingOnClick(row) {
-      this.storagePackageSetting = !this.storagePackageSetting;
       this.GetStorageUnitListByProductId({ productId: row.productId })
         .then((res) => {
           if (res.resultStatus == 1) {
+            this.storagePackageSetting = !this.storagePackageSetting;
             if (res.data.storageUnitList) {
               res.data.storageUnitList.map((item) => {
                 item.seen = false;
               });
             }
             this.storageUnitInfo = res.data;
+          } else {
+            this.$message.warning(res.message);
+          }
+        })
+        .catch((err) => {
+          this.$message.error(err.message);
+        });
+    },
+
+    bacthDetailOnClick(row) {
+      this.GetStorageBatchList({ productId: row.productId })
+        .then((res) => {
+          if (res.resultStatus == 1) {
+            this.batchDialogVisible = !this.batchDialogVisible;
+            this.storageBatchList = res.data;
           } else {
             this.$message.warning(res.message);
           }
@@ -308,7 +353,7 @@ export default {
         packageUnit: "",
         convertCount: "",
         convertUnit: "",
-        baseUnit:this.storageUnitInfo.product.unit,
+        baseUnit: this.storageUnitInfo.product.unit,
         seen: true,
       };
       this.storageUnitInfo.storageUnitList.push(addObj);

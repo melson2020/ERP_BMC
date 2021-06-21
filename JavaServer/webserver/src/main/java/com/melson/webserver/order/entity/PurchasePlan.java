@@ -38,7 +38,6 @@ public class PurchasePlan {
     private String state;
     private Date createDate;
     private Integer createBy;
-    private Integer sourceId;
     private String sourceNo;
     private String customerNo;
     private String customerName;
@@ -150,13 +149,6 @@ public class PurchasePlan {
         this.requesterId = requesterId;
     }
 
-    public Integer getSourceId() {
-        return sourceId;
-    }
-
-    public void setSourceId(Integer sourceId) {
-        this.sourceId = sourceId;
-    }
 
     public String getSourceNo() {
         return sourceNo;

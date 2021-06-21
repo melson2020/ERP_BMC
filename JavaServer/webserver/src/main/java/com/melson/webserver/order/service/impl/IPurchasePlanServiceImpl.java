@@ -190,6 +190,34 @@ public class IPurchasePlanServiceImpl extends AbstractService<PurchasePlan> impl
         }
     }
 
+    @Override
+    @Transactional
+    public PurchasePlan CreatePurchaseByStorage(PurchasePlan purchasePlan,Integer userId){
+        purchasePlan.setState(PurchasePlan.PURCHASE_STATE_CREATE);
+        purchasePlan.setCreateDate(new Date());
+        purchasePlan.setCreateBy(userId);
+        purchasePlan.setRequesterId(userId);
+        purchasePlanRepository.saveAndFlush(purchasePlan);
+        purchasePlan.setPlanNo(NumUtil.incrementCode(purchasePlan.getId(), PurchasePlan.PURCHASE_NO_CHAR,8));
+        PurchasePlan saved=purchasePlanRepository.save(purchasePlan);
+        List<PurchaseDetail> details=purchasePlan.getPurchaseDetailList();
+        for(PurchaseDetail detail:details){
+            detail.setType(saved.getType());
+            detail.setPurchasePlanNo(saved.getPlanNo());
+            detail.setCreateBy(saved.getCreateBy());
+            detail.setCreateDate(saved.getCreateDate());
+            detail.setState(PurchaseDetail.PURCHASE_STATE_CREATE);
+            detail.setRequester(saved.getRequester());
+            detail.setRequesterId(saved.getRequesterId());
+        }
+        purchaseDetailRepository.saveAll(details);
+        //由领料单生成 需要去更新领料单状态
+        if(saved.getType().equals(PurchasePlan.PURCHASE_TYPE_PLAN)){
+            pickingTicketRepository.updateAfterPurchase(saved.getSourceNo(),PickingTicket.STATE_PURCHASE);
+        }
+        return saved;
+    }
+
     private List<DashBoardItemVo> generate(List<Object[]> objects) {
         List <DashBoardItemVo> itemVoList=new ArrayList<>();
         for (Object[] obj : objects) {

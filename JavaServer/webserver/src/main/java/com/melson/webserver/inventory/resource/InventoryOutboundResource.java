@@ -10,7 +10,9 @@ import com.melson.webserver.inventory.service.IInventoryOutboundService;
 import com.melson.webserver.inventory.vo.InventoryInboundVo;
 import com.melson.webserver.inventory.vo.InventoryOutboundDetailVo;
 import com.melson.webserver.inventory.vo.InventoryOutboundVo;
+import com.melson.webserver.order.entity.PurchasePlan;
 import com.melson.webserver.order.service.IPickingTicketService;
+import com.melson.webserver.order.service.IPurchasePlanService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +38,7 @@ public class InventoryOutboundResource extends BaseResource {
     private IInventoryOutboundService inventoryOutboundService;
     @Autowired
     private IPickingTicketService pickingTicketService;
+
 
     @GetMapping(value = "/list")
     public Result list(HttpServletRequest request) {
@@ -116,4 +119,6 @@ public class InventoryOutboundResource extends BaseResource {
         if (vo == null || vo.getMaterialId() == null) return GenerateResult(ResultType.ParameterNeeded);
         return success(inventoryOutboundService.GenerateDetailVoBatchInfo(vo));
     }
+
+
 }

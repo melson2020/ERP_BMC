@@ -30,4 +30,9 @@ public class IStorageBatchImpl extends AbstractService<StorageBatch> implements 
     public List<StorageBatch> FindByProductIds(Set<Integer> productIds,Integer finish) {
         return storageBatchRepository.findByMaterialIdInAndFinished(productIds,finish);
     }
+
+    @Override
+    public List<StorageBatch> FindByProductId(Integer productId) {
+        return storageBatchRepository.findByMaterialIdAndFinished(productId,0);
+    }
 }

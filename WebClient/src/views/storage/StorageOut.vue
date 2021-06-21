@@ -251,6 +251,11 @@
         >
           <el-table-column prop="ticketNo" label="单号"> </el-table-column>
           <el-table-column prop="type" label="类型"> </el-table-column>
+          <el-table-column prop="state" label="状态">
+            <template slot-scope="scope">
+              <span>{{ getPickingTicketState(scope.row.state) }} </span>
+            </template>
+          </el-table-column>
           <el-table-column prop="orderFormNo" label="客户给料标记">
             <template slot-scope="scope">
               <span
@@ -318,7 +323,7 @@
           <el-input v-model="storagePurchase.type"></el-input>
         </el-form-item>
         <el-form-item label="采购来源">
-          <el-input v-model="storagePurchase.pickingNo"></el-input>
+          <el-input v-model="storagePurchase.sourceNo"></el-input>
         </el-form-item>
         <el-form-item label="采购详细">
           <el-table
@@ -341,7 +346,9 @@
           </el-table>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="onSubmit">立即创建</el-button>
+          <el-button type="primary" @click="createPurchasePlan('boundOutForm')"
+            >立即创建</el-button
+          >
           <el-button>取消</el-button>
         </el-form-item>
       </el-form>
@@ -361,6 +368,7 @@ export default {
       purchaseDialogVisible: false,
       inventoryOutboundType: "",
       purchaseType: "",
+      purchaseState:'',
       editInventoryOutbound: {
         detailVoList: [],
       },
@@ -396,12 +404,27 @@ export default {
       GetOrderDeliveryByState: "GetOrderDeliveryByState",
       SaveInventoryOutBound: "SaveInventoryOutBound",
       AddToStoragePurchaseList: "AddToStoragePurchaseList",
+      CreatePurchasePlanByStorage: "CreatePurchasePlanByStorage",
     }),
     getFullDate(time) {
       if (time) {
         return new Date(time).format("yyyy-MM-dd");
       } else {
         return "";
+      }
+    },
+    getPickingTicketState(state) {
+      switch (state) {
+        case "CREATE":
+          return "待出库";
+        case "INBOUND":
+          return "已入库";
+        case "PURCHASE":
+          return "采购中";
+        case "OUTBOUND":
+          return "已完成";
+        default:
+          return "未知";
       }
     },
     outBoundTypeOnClick(type) {
@@ -462,6 +485,7 @@ export default {
             this.editInventoryOutbound = res.data;
             this.detailDialogVisible = false;
             this.purchaseType = row.type;
+            this.purchaseState=row.state;
             this.editDisable = true;
           } else {
             this.$message.warning(res.message);
@@ -605,10 +629,15 @@ export default {
         this.$message.warning("间接采购出库，不能再次采购");
         return;
       }
+      if(this.purchaseState&&this.purchaseState=='PURCHASE'){
+          this.$message.warning("采购中，不能再次采购");
+        return;
+      }
       this.purchaseDialogVisible = !this.purchaseDialogVisible;
       this.editInventoryOutbound.detailVoList.map((item) => {
         if (item.storageFlag == 0) {
           var obj = {
+            productId: item.materialId,
             materialNo: item.materialNo,
             materialName: item.name,
             specification: item.specification,
@@ -619,7 +648,8 @@ export default {
         }
       });
       this.storagePurchase.type = this.purchaseType;
-      this.storagePurchase.pickingNo = this.editInventoryOutbound.sourceNo;
+      this.storagePurchase.sourceNo = this.editInventoryOutbound.sourceNo;
+      this.storagePurchase.requester = this.userInfo.userName;
     },
 
     submitOnClick(formName) {
@@ -647,6 +677,22 @@ export default {
           }
         }
       });
+    },
+
+    createPurchasePlan() {
+      this.CreatePurchasePlanByStorage(this.storagePurchase)
+        .then((res) => {
+          if (res.resultStatus == 1) {
+            this.purchaseDialogVisible = !this.purchaseDialogVisible;
+            this.$message.success("成功发起采购请求");
+              this.$refs[formName].resetFields();
+          } else {
+            this.$message.warning(res.message);
+          }
+        })
+        .catch((err) => {
+          this.$message.error(err.message);
+        });
     },
   },
 };

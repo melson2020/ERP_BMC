@@ -39,4 +39,6 @@ public interface IPurchasePlanService extends IService<PurchasePlan> {
     List<PurchaseStateSummaryVo> GetSummaryCount();
 
     DashBoardVo GetDashboardSummaryCount(String sdate);
+
+    PurchasePlan CreatePurchaseByStorage(PurchasePlan purchasePlan,Integer userId);
 }

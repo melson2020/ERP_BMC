@@ -462,6 +462,10 @@ ReqGetPurchaseDashboardSummary(param) {
     return service.post("/storageDetail/deleteStorageUnit", param)
   },
 
+  GetStorageBatchList(param){
+    return service.get('/storageDetail/storageBatchList', param)
+  },
+
   GetPackageUnitList(param) {
     return service.get('/storageDetail/packageUnitList', param)
   },
@@ -491,6 +495,9 @@ ReqGetPurchaseDashboardSummary(param) {
   },
   GetOrderDeliveryByState(param){
     return service.get('/orderDelivery/list', param)
+  },
+  CreatePurchasePlanByStorage(param){
+    return service.post("/storageDetail/createPurchasePlan",param)
   },
 
   //盘点相关

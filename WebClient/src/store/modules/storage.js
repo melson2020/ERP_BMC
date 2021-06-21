@@ -103,6 +103,12 @@ const actions = {
     GetOrderDeliveryByState({},param){
         return request.GetOrderDeliveryByState(param)
     },
+    CreatePurchasePlanByStorage({},param){
+        return request.CreatePurchasePlanByStorage(param)
+    },
+    GetStorageBatchList({},param){
+        return request.GetStorageBatchList(param)
+    }
 };
 
 const getters = {
