@@ -20,7 +20,7 @@ public interface IPurchaseDetailService {
      */
     List<PurchaseDetail> GenerateOrderPurchase(List<OrderFormDetail> detailList, OrderForm formVo);
 
-    List<PurchaseDetail> FindByOrderFormId(Integer orderFormId);
+    List<PurchaseDetail> FindByPlanNo(String planNo);
 
     List<PurchaseDetail> GetAllApprovedPurchaseDetailList(String state);
 

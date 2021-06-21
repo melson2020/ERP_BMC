@@ -193,12 +193,11 @@ public class IPurchaseOrderServiceImpl extends AbstractService<PurchaseOrder> im
             pd.setCount(obj[5] == null ? null : new BigDecimal(obj[5].toString()));
             pd.setCountUnit(obj[6] == null ? null : obj[6].toString());
             pd.setPurchasePlanNo(obj[7] == null ? null : obj[7].toString());
-            pd.setCreateEmployeeNo(obj[8] == null ? null : obj[8].toString());
-            pd.setCreateDate(obj[9]==null?null:(Timestamp) obj[9]);
-            pd.setState(obj[10] == null ? null : obj[10].toString());
-            pd.setDelegateFlag(obj[11] == null ? null : obj[11].toString());
-            pd.setTicketId(obj[12] == null ? null : new Integer((Integer) obj[12]));
-            pd.setProductId(obj[13] == null ? null : new Integer((Integer) obj[13]));
+            pd.setCreateDate(obj[8]==null?null:(Timestamp) obj[8]);
+            pd.setState(obj[9] == null ? null : obj[9].toString());
+            pd.setDelegateFlag(obj[10] == null ? null : obj[10].toString());
+            pd.setTicketId(obj[11] == null ? null : new Integer((Integer) obj[11]));
+            pd.setProductId(obj[12] == null ? null : new Integer((Integer) obj[12]));
             list.add(pd);
         }
         return list;

@@ -16,7 +16,6 @@ import java.util.List;
  */
 @Repository
 public interface IPurchaseDetailRepository extends JpaRepository<PurchaseDetail,Integer> {
-    List<PurchaseDetail> findBySourceIdAndType(Integer sourceId,String type);
 
     List<PurchaseDetail> findByPurchasePlanNo(String planNo);
 
@@ -52,7 +51,7 @@ public interface IPurchaseDetailRepository extends JpaRepository<PurchaseDetail,
     @Query(nativeQuery = true,value = "SELECT state FROM `purchase_detail` where purchasePlanNo=?1")
     List<Object[]> findObjectByPurchasePlanNo(String prNo);
 
-    @Query(nativeQuery = true,value = "SELECT `type`,materialNo, materialName,specification,remark,count,countUnit,purchasePlanNo,createEmployeeNo,createDate,'CREATE' as state,'' as delegateFlag,pickingTicketId as ticketId,productId from purchase_detail WHERE purchasePlanNo=?1 and `type`<>'ORDER'")
+    @Query(nativeQuery = true,value = "SELECT `type`,materialNo, materialName,specification,remark,count,countUnit,purchasePlanNo,createDate,'CREATE' as state,'' as delegateFlag,pickingTicketId as ticketId,productId from purchase_detail WHERE purchasePlanNo=?1 and `type`<>'ORDER'")
     List<Object[]> findPickingDetail(String prNo);
 
     @Query(nativeQuery = true,value = "SELECT CONCAT(pr.productNo,'/',pr.name) as `name`, sum(pd.count) as `value` from purchase_detail pd LEFT JOIN product pr on pr.id=pd.productId where pd.createDate>=?1 and pd.createDate<?2 GROUP BY pd.productId ORDER BY `value` desc LIMIT 10")

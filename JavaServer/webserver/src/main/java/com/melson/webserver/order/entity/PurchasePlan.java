@@ -31,13 +31,6 @@ public class PurchasePlan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private Integer orderFormId;
-    private String orderFormNo;
-    private String customerNo;
-    private String customerName;
-    private String contractNo;
-    private String requester;     // 1:MRP , 系统生成的采购单  ；  2：根据页面获取系统的用户名，
-    private Integer requesterId;
     private String planNo;
     // 类型 标明 生产源头 如:订单生成,生产生成,间接采购等
     private String type;
@@ -45,8 +38,15 @@ public class PurchasePlan {
     private String state;
     private Date createDate;
     private Integer createBy;
+    private Integer sourceId;
+    private String sourceNo;
+    private String customerNo;
+    private String customerName;
+    private String contractNo;
+    private String requester;     // 1:MRP , 系统生成的采购单  ；  2：根据页面获取系统的用户名，
+    private Integer requesterId;
     private String description;
-    private String pickingNo;
+
 
     @Transient
     private List<PurchaseDetail> purchaseDetailList;
@@ -60,21 +60,7 @@ public class PurchasePlan {
         this.id = id;
     }
 
-    public Integer getOrderFormId() {
-        return orderFormId;
-    }
 
-    public void setOrderFormId(Integer orderFormId) {
-        this.orderFormId = orderFormId;
-    }
-
-    public String getOrderFormNo() {
-        return orderFormNo;
-    }
-
-    public void setOrderFormNo(String orderFormNo) {
-        this.orderFormNo = orderFormNo;
-    }
 
     public String getCustomerNo() {
         return customerNo;
@@ -164,12 +150,20 @@ public class PurchasePlan {
         this.requesterId = requesterId;
     }
 
-    public String getPickingNo() {
-        return pickingNo;
+    public Integer getSourceId() {
+        return sourceId;
     }
 
-    public void setPickingNo(String pickingNo) {
-        this.pickingNo = pickingNo;
+    public void setSourceId(Integer sourceId) {
+        this.sourceId = sourceId;
+    }
+
+    public String getSourceNo() {
+        return sourceNo;
+    }
+
+    public void setSourceNo(String sourceNo) {
+        this.sourceNo = sourceNo;
     }
 
     public List<PurchaseDetail> getPurchaseDetailList() {

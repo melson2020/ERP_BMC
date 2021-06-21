@@ -52,15 +52,11 @@ public class PurchaseDetail {
 
     private String purchasePlanNo;                // purchase_plan 传过来
 
-    private String createEmployeeNo;
 
     private Integer createBy;                     // purchase_plan 传过来
 
     private Date createDate;
 
-    private Integer sourceId;
-
-    private String sourceNo;
 
     private String requester;                     // purchase_plan 传过来
 
@@ -77,7 +73,6 @@ public class PurchaseDetail {
 
     private Integer productId;
 
-    private Integer pickingTicketId;
 
     @Transient
     private String supply;
@@ -155,13 +150,7 @@ public class PurchaseDetail {
         this.purchasePlanNo = purchasePlanNo;
     }
 
-    public String getCreateEmployeeNo() {
-        return createEmployeeNo;
-    }
 
-    public void setCreateEmployeeNo(String createEmployeeNo) {
-        this.createEmployeeNo = createEmployeeNo;
-    }
 
     public Integer getCreateBy() {
         return createBy;
@@ -187,21 +176,7 @@ public class PurchaseDetail {
         this.state = state;
     }
 
-    public Integer getSourceId() {
-        return sourceId;
-    }
 
-    public void setSourceId(Integer sourceId) {
-        this.sourceId = sourceId;
-    }
-
-    public String getSourceNo() {
-        return sourceNo;
-    }
-
-    public void setSourceNo(String sourceNo) {
-        this.sourceNo = sourceNo;
-    }
 
     public String getRequester() {
         return requester;
@@ -251,13 +226,6 @@ public class PurchaseDetail {
         this.productId = productId;
     }
 
-    public Integer getPickingTicketId() {
-        return pickingTicketId;
-    }
-
-    public void setPickingTicketId(Integer pickingTicketId) {
-        this.pickingTicketId = pickingTicketId;
-    }
 
     public String getSupply() {
         return supply;

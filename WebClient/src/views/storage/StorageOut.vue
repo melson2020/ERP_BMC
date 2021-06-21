@@ -229,7 +229,10 @@
             <el-button type="primary" @click="submitOnClick('boundOutForm')"
               >提交</el-button
             >
-            <el-button icon="el-icon-goods" @click="purchaseOnClick"
+            <el-button
+              v-if="inventoryOutboundType == 'PICKING'"
+              icon="el-icon-goods"
+              @click="purchaseOnClick"
               >采购</el-button
             ></el-form-item
           >
@@ -317,24 +320,25 @@
         <el-form-item label="采购来源">
           <el-input v-model="storagePurchase.pickingNo"></el-input>
         </el-form-item>
-          <el-form-item label="采购详细">
-           <el-table
-          key="3"
-          script
-          border
-          size="mini"
-          :data="storagePurchase.purchaseDetailList"
-        >
-          <el-table-column prop="materialNo" label="编号"> </el-table-column>
-          <el-table-column prop="materialName" label="名称"> </el-table-column>
-          <el-table-column prop="specification" label="规格"> </el-table-column>
-          <el-table-column prop="count" label="数量"> 
-             <template slot-scope="scope">
-                  <span>{{ scope.row.count }}{{ scope.row.countUnit }}</span>
-                </template>
-          </el-table-column>
-    
-        </el-table>
+        <el-form-item label="采购详细">
+          <el-table
+            key="3"
+            script
+            border
+            size="mini"
+            :data="storagePurchase.purchaseDetailList"
+          >
+            <el-table-column prop="materialNo" label="编号"> </el-table-column>
+            <el-table-column prop="materialName" label="名称">
+            </el-table-column>
+            <el-table-column prop="specification" label="规格">
+            </el-table-column>
+            <el-table-column prop="count" label="数量">
+              <template slot-scope="scope">
+                <span>{{ scope.row.count }}{{ scope.row.countUnit }}</span>
+              </template>
+            </el-table-column>
+          </el-table>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit">立即创建</el-button>
@@ -356,6 +360,7 @@ export default {
       detailDialogVisible: false,
       purchaseDialogVisible: false,
       inventoryOutboundType: "",
+      purchaseType: "",
       editInventoryOutbound: {
         detailVoList: [],
       },
@@ -456,6 +461,7 @@ export default {
           if (res.resultStatus == 1) {
             this.editInventoryOutbound = res.data;
             this.detailDialogVisible = false;
+            this.purchaseType = row.type;
             this.editDisable = true;
           } else {
             this.$message.warning(res.message);
@@ -595,6 +601,10 @@ export default {
         }).length <= 0
       )
         return;
+      if (this.purchaseType && this.purchaseType == "INDIRECT") {
+        this.$message.warning("间接采购出库，不能再次采购");
+        return;
+      }
       this.purchaseDialogVisible = !this.purchaseDialogVisible;
       this.editInventoryOutbound.detailVoList.map((item) => {
         if (item.storageFlag == 0) {
@@ -608,7 +618,7 @@ export default {
           this.storagePurchase.purchaseDetailList.push(obj);
         }
       });
-      this.storagePurchase.type = "PLAN";
+      this.storagePurchase.type = this.purchaseType;
       this.storagePurchase.pickingNo = this.editInventoryOutbound.sourceNo;
     },
 

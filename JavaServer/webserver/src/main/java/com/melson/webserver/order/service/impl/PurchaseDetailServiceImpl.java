@@ -50,8 +50,6 @@ public class PurchaseDetailServiceImpl implements IPurchaseDetailService {
         if(detailList==null||detailList.size()<=0)return null;
         List<PurchaseDetail> orderPurchaseList=new ArrayList<>();
         PurchasePlan pr=new PurchasePlan();
-        pr.setOrderFormId(formVo.getId());
-        pr.setOrderFormNo(formVo.getFormNo());
         pr.setCustomerNo(formVo.getCustomerNo());
         pr.setCustomerName(formVo.getCustomerName());
         pr.setContractNo(formVo.getContractNo());
@@ -72,8 +70,8 @@ public class PurchaseDetailServiceImpl implements IPurchaseDetailService {
     }
 
     @Override
-    public List<PurchaseDetail> FindByOrderFormId(Integer orderFormId) {
-        return purchaseDetailRepository.findBySourceIdAndType(orderFormId,PurchasePlan.PURCHASE_TYPE_ORDER);
+    public List<PurchaseDetail> FindByPlanNo(String planNo) {
+        return purchaseDetailRepository.findByPurchasePlanNo(planNo);
     }
 
     @Override
@@ -122,7 +120,6 @@ public class PurchaseDetailServiceImpl implements IPurchaseDetailService {
     private PurchaseDetail CreatePurchase(OrderFormDetail formDetail, PurchasePlan pr){
         PurchaseDetail purchaseDetail=new PurchaseDetail();
         purchaseDetail.setType(pr.getType());
-        purchaseDetail.setSourceId(formDetail.getOrderFormId());
         purchaseDetail.setMaterialNo(formDetail.getProductNo());
         purchaseDetail.setMaterialName(formDetail.getProductName());
         purchaseDetail.setSpecification(formDetail.getSpecification());
