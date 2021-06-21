@@ -1,7 +1,10 @@
 package com.melson.webserver.order.entity;
 
+import com.melson.webserver.produce.vo.ProducePlanProcessVo;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @Author Nelson
@@ -28,6 +31,10 @@ public class ProducePlanDetail {
     private String produceType;
     //选择的bomNo
     private String bomNos;
+    private String materialNo;
+
+    @Transient
+    private List<ProducePlanProcessVo> processList;
 
     public Integer getId() {
         return id;
@@ -131,5 +138,21 @@ public class ProducePlanDetail {
 
     public void setBomNos(String bomNos) {
         this.bomNos = bomNos;
+    }
+
+    public String getMaterialNo() {
+        return materialNo;
+    }
+
+    public void setMaterialNo(String materialNo) {
+        this.materialNo = materialNo;
+    }
+
+    public List<ProducePlanProcessVo> getProcessList() {
+        return processList;
+    }
+
+    public void setProcessList(List<ProducePlanProcessVo> processList) {
+        this.processList = processList;
     }
 }

@@ -164,7 +164,6 @@
       </p>
     </div>
     <div class="edit-printTeamplate-button-div">
-      <!-- <el-button @click="savePo('vendeeForm')" type="primary">打印采购单</el-button> -->
       <el-button type="primary" @click="printPdf">打印合同</el-button>
     </div>
   </div>
@@ -237,78 +236,6 @@ export default {
     loadPo(str) {
       this.newPO = str;
       this.poDetailList=str.poDetailList;
-    },
-    savePo(formName){
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          var checkRes = this.checkProductList();
-          if (checkRes) 
-          {
-            var numbers = this.checkNumber();
-            if(numbers)
-            {
-              this.newPO.supplyId=this.vendeeInfo.supplyId;
-              this.newPO.state="CREATE";
-              this.newPO.createDate=new Date();
-              let list=this.pushbackprice(this.newPO.poDetailList,this.newPO.purchaseDetailList,this.newPO);
-              this.newPO.createBy=this.userInfo.id;
-              this.newPO.purchaseDetailList=list;
-              this.SavePoList(this.newPO)
-              let params = {
-                state: "APPROVE"
-              };
-              this.GetPRList(params);
-              let arg = {
-                state: "CREATE"
-              };
-              this.GetPOList(arg);
-              this.$emit('closePopWindow');
-            }
-            else
-            {
-              this.$message.warning("单价信息为数字");
-            }
-          } else {
-            this.$message.warning("请完善单价信息");
-          }
-        } else {
-          this.$message.warning("请选择供应商信息");
-        }
-      });
-    },
-    pushbackprice(arr1, arr2,po){
-      let list = [];
-      for (let index = 0;index < arr2.length;index++)
-      {
-        const element = arr2[index];
-        let existItem = arr1.find((item) => {
-          return item.materialNo === element.materialNo;
-        });
-        if (existItem) {
-          element.costPrice=existItem.costPrice;
-          element.supplyId=po.supplyId;
-          list.push(element);
-        }
-      }
-      return list;
-    },
-    checkProductList: function() {
-      var pass = true;
-      this.poDetailList.map((item) => {
-        if (item.costPrice==null||item.costPrice==""||item.costPrice <= 0) {
-          pass = false;
-        }
-      });
-      return pass;
-    },
-    checkNumber(){
-      var pass = true;
-      this.poDetailList.map((item) => {
-        if (isNaN(item.costPrice)) {
-          pass = false;
-        }
-      });
-      return pass;
     },
   },
   beforeMount() {

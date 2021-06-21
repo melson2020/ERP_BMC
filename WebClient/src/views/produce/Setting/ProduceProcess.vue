@@ -89,7 +89,6 @@
                 class="produce-process-edit-select"
                 v-model="editProduceProcess.timeUnit"
                 placeholder="单位"
-                @change="employeeChange"
               >
                 <el-option
                   v-for="timeUnit in timeUnitList"
@@ -219,12 +218,12 @@ export default {
     cancelOnClick() {
       this.productionTechDialog = !this.productionTechDialog;
     },
-    employeeChange(item) {
-      var selectGroup = this.employeeGroupList.find((g) => {
-        return g.groupNo == item;
-      });
-      this.editProductionTech.employeeGroupName = selectGroup.groupName;
-    },
+    // employeeChange(item) {
+    //   var selectGroup = this.employeeGroupList.find((g) => {
+    //     return g.groupNo == item;
+    //   });
+    //   this.editProductionTech.employeeGroupName = selectGroup.groupName;
+    // },
   },
 
   beforeMount() {

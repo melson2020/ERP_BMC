@@ -66,7 +66,7 @@
                 circle
               ></el-button>
               <el-tooltip effect="light" content="打印" placement="top">
-                <el-button size="mini" @click="handlePrinter(scope.$index, scope.row)" plain circle icon="el-icon-printer"/>
+                <el-button size="mini" @click="handlePrinter(scope.row.id)" plain circle icon="el-icon-printer"/>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -122,22 +122,33 @@
       </div>
     </div>
     <el-dialog
-      title="生产计划详细"
+      title="生产工单详情"
       :visible.sync="detailInfoShowing"
       width="70%"
     >
     <m-plan-info ref="planInfo"></m-plan-info>
     </el-dialog>
+
+    <el-dialog
+      title="打印生产工单"
+      :visible.sync="printerPPShowing"
+      width="70%"
+    >
+    <m-print-info ref="printerpp"></m-print-info>
+    </el-dialog>
+
   </div>
 </template>
 <script>
 import { mapGetters } from "vuex";
 import { mapActions } from "vuex";
 import planInfo from './Monitor/PlanInfo';
+import printerpp from './PrintProduceOrder.vue';
 export default {
   data() {
     return {
       detailInfoShowing: false,
+      printerPPShowing:false,
     };
   },
   computed: {
@@ -157,12 +168,17 @@ export default {
       this.detailInfoShowing = !this.detailInfoShowing;
       setTimeout(()=>{ this.$refs['planInfo'].loadPlanInfo(planId)},200)
     },
+    handlePrinter(planId){
+      this.printerPPShowing = !this.printerPPShowing;
+      setTimeout(()=>{ this.$refs['printerpp'].loadPlanInfo(planId)},200)
+    },
     getFullTime(time) {
     return new Date(time).format("yyyy-MM-dd");
     },
   },
   components: {
     "m-plan-info":planInfo ,
+    "m-print-info":printerpp ,
   },
   beforeMount() {
     this.GetProduceLineStateInfo();
