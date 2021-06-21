@@ -74,6 +74,10 @@ export default {
       this.SystemLogin(this.loginUser)
         .then((res) => {
           if (res.resultStatus == 1) {
+            if(res.data.msg!=null)
+            {
+              this.$message.warning(res.data.msg);
+            }
             var initState = JSON.parse(localStorage.getItem("initState"));
             localStorage.setItem("userInfo", JSON.stringify(res.data));
             this.ReSetAllStates(initState);

@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -70,16 +71,32 @@ public class LoginResource extends BaseResource {
         if (user == null) {
             return failure(SysRespCode.LOGIN_FAIL, "登录失败");
         }
-        HttpSession httpSession = request.getSession(true);
-        httpSession.setAttribute(SysConstants.LOGIN_SESSION_USER_ID, user.getId());
-        LoginUserSession userSession = new LoginUserSession(user.getId(), user.getLoginName(), user.getUserName(), new Date(), httpSession.getId());
-        httpSession.setAttribute(SysConstants.LOGIN_SESSION_USER_SESSION, userSession);
-        Map<String, String> cookieMap = new HashMap<>();
-        cookieMap.put(SysConstants.SYS_COOKIE_LOGIN_CODE, user.getLoginName());
-        cookieMap.put(SysConstants.SYS_COOKIE_USER_ID, user.getUserId());
-        CookieUtil.saveCookies(response, cookieMap);
-        logger.info("用户[{}]登录成功", user.getId() + "-" + user.getLoginName() + "-" + user.getUserName());
-        return success(user);
+        Date date=new Date();
+        Date date2 = user.getCompany().getExpireDate();
+        long today=date.getTime();
+        long defineDate=date2.getTime();
+        int days = (int) Math.floor((defineDate-today)/(24*3600*1000));
+
+        if (today > defineDate) {
+            return failure(SysRespCode.LOGIN_FAIL, "商户已过期，请联系软件服务商 melson2020@163.com续费！");
+        }
+        else
+        {
+            if(days<30)
+            {
+                user.setMsg("商户还有"+days+"天过期，请尽快联系软件服务商 melson2020@163.com！");
+            }
+            HttpSession httpSession = request.getSession(true);
+            httpSession.setAttribute(SysConstants.LOGIN_SESSION_USER_ID, user.getId());
+            LoginUserSession userSession = new LoginUserSession(user.getId(), user.getLoginName(), user.getUserName(), new Date(), httpSession.getId());
+            httpSession.setAttribute(SysConstants.LOGIN_SESSION_USER_SESSION, userSession);
+            Map<String, String> cookieMap = new HashMap<>();
+            cookieMap.put(SysConstants.SYS_COOKIE_LOGIN_CODE, user.getLoginName());
+            cookieMap.put(SysConstants.SYS_COOKIE_USER_ID, user.getUserId());
+            CookieUtil.saveCookies(response, cookieMap);
+            logger.info("用户[{}]登录成功", user.getId() + "-" + user.getLoginName() + "-" + user.getUserName());
+            return success(user);
+        }
     }
 
     /**
