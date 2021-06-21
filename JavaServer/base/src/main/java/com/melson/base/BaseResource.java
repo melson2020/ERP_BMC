@@ -83,6 +83,12 @@ public class BaseResource {
         return new Result(respCode, msg);
     }
 
+    protected Result warning(String msg) {
+        Result result=new Result();
+        result.setMessage(msg);
+        return result;
+    }
+
     protected Integer getLoginUserId(HttpServletRequest request) {
         HttpSession httpSession = request.getSession(false);
         if (httpSession == null) {

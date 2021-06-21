@@ -36,6 +36,11 @@ public class User {
     private List<UserRole> userRoleList;
     @Transient
     private Company company;
+    @Transient
+    private String msg;
+    @Transient
+    private Integer expireFlag;
+
 
 
 
@@ -173,5 +178,21 @@ public class User {
 
     public void setCompany(Company company) {
         this.company = company;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
+    public Integer getExpireFlag() {
+        return expireFlag;
+    }
+
+    public void setExpireFlag(Integer expireFlag) {
+        this.expireFlag = expireFlag;
     }
 }
